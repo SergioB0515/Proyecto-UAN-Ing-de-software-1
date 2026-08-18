@@ -1,6 +1,6 @@
 from datetime import datetime
 from app.extensions import db
-from app.models.enum import Categoria, Prioridad, EstadoTicket
+from app.Models.enum import Categoria, Prioridad, EstadoTicket
 class Ticket(db.Model):
     __tablename__ = "tickets"
     id = db.Column(db.Integer, primary_key=True)
