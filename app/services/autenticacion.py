@@ -2,7 +2,14 @@ from app.Models.enum import NivelUsuario
 from sqlalchemy import select
 from app import db
 from app.Models.usuario import Usuario
+from datetime import datetime,timedelta
 import bcrypt
+class ResultadoLogin:
+    EXITOSO = "exitoso"
+    CREDENCIALES_INVALIDAS = "credenciales_invalidas"       # falló, quedan intentos
+    BLOQUEADO_AHORA = "bloqueado_ahora"                       # este intento causó el bloqueo
+    YA_BLOQUEADO = "ya_bloqueado"                             # llegó bloqueado desde antes
+    USUARIO_NO_EXISTE = "usuario_no_existe"
 class ServicioAutenticacion:
   
     @staticmethod
@@ -52,12 +59,37 @@ class ServicioAutenticacion:
 
     @staticmethod
     def iniciar_sesion(email, contrasena):
-        ...
+        usuario = db.session.execute(select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
+        if usuario is None:
+            return None, ResultadoLogin.USUARIO_NO_EXISTE
 
+        elif ServicioAutenticacion.esta_bloqueado(usuario):
+            return None, ResultadoLogin.YA_BLOQUEADO
+
+        password = ServicioAutenticacion._verificar_contrasena(contrasena,usuario.contrasena_hash)
+
+        if not password:
+            usuario.intentos_fallidos += 1
+            if usuario.intentos_fallidos == 5:
+                usuario.bloqueado_hasta = datetime.now() + timedelta(hours=5)
+                db.session.commit()
+                return None, ResultadoLogin.BLOQUEADO_AHORA
+            else:
+                db.session.commit()
+                return None, ResultadoLogin.CREDENCIALES_INVALIDAS
+
+        usuario.intentos_fallidos = 0
+        db.session.commit()
+        return usuario, ResultadoLogin.EXITOSO
 
 
         
 
     @staticmethod
     def esta_bloqueado(usuario):
-        ...
+        if usuario.bloqueado_hasta is None :
+            return False
+        elif usuario.bloqueado_hasta > datetime.now():
+            return True
+        else:
+            return True
