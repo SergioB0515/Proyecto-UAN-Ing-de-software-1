@@ -19,7 +19,7 @@ from datetime import datetime
 from app import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
-from app.services.tickets import ServicioTickets
+from app.services.tickets import ServicioTickets, ORDEN_PRIORIDAD
 from app.Models.usuario import Usuario
 from app.Models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad
 
@@ -134,6 +134,46 @@ def test_ticket_vip_categoria_baja_se_eleva_a_alta():
     print("OK: la prioridad base BAJA se elevo a ALTA por ser el creador VIP")
 
 
+def test_listar_tickets_por_area_ordenados_por_prioridad():
+    print("\n--- Prueba 4: listar tickets por area, ordenados Alta -> Media -> Baja ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+
+    usuario_vip = Usuario.query.filter_by(email=EMAIL_VIP).first()
+
+    # Software tiene prioridad base BAJA. Creamos primero el de prioridad Baja
+    # (usuario normal) y despues el de prioridad Alta (usuario VIP, se eleva),
+    # ambos en la misma categoria/area, para confirmar que listar_tickets_por_area
+    # de verdad reordena y no solo devuelve el orden de inserción.
+    ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="el programa de facturación se cierra solo",  # Software -> BAJA
+    )
+    ServicioTickets.crear_ticket(
+        creador=usuario_vip,
+        texto="no abre el programa de nomina",  # Software -> BAJA, pero VIP -> se eleva a ALTA
+    )
+
+    tickets_del_area = ServicioTickets.listar_tickets_por_area(Categoria.SOFTWARE)
+
+    if len(tickets_del_area) < 2:
+        print(f"FALLO: se esperaban al menos 2 tickets en Software, se obtuvieron {len(tickets_del_area)}")
+        return
+
+    prioridades_obtenidas = [t.prioridad for t in tickets_del_area]
+
+    if Prioridad.ALTA not in prioridades_obtenidas or Prioridad.BAJA not in prioridades_obtenidas:
+        print(f"FALLO: la prueba necesita prioridades mixtas para validar el orden, se obtuvo {prioridades_obtenidas}")
+        return
+
+    prioridades_ordenadas = sorted(prioridades_obtenidas, key=lambda p: ORDEN_PRIORIDAD[p])
+
+    if prioridades_obtenidas != prioridades_ordenadas:
+        print(f"FALLO: la lista no vino ordenada por prioridad: {prioridades_obtenidas}")
+        return
+
+    print(f"OK: {len(tickets_del_area)} tickets de Software, con prioridades mixtas, orden correcto: {prioridades_obtenidas}")
+
+
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
@@ -141,3 +181,4 @@ if __name__ == "__main__":
         test_ticket_normal_categoria_seguridad()
         test_ticket_vip_mismo_texto_sla_mas_corto()
         test_ticket_vip_categoria_baja_se_eleva_a_alta()
+        test_listar_tickets_por_area_ordenados_por_prioridad()

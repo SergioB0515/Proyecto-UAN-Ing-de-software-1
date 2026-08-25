@@ -12,6 +12,11 @@ PRIORIDAD_BASE_POR_CATEGORIA={
     Categoria.SOFTWARE : Prioridad.BAJA,
     Categoria.OTROS : Prioridad.BAJA
 }
+ORDEN_PRIORIDAD={
+    Prioridad.ALTA : 0,
+    Prioridad.MEDIA : 1,
+    Prioridad.BAJA : 2,
+}
 class ServicioTickets:
     @staticmethod
     def crear_ticket(creador, texto):
@@ -36,3 +41,7 @@ class ServicioTickets:
             db.session.rollback()
             print(f"No se ha podido realizar el guardado u registro error : {e}")  
             return False,None
+    @staticmethod
+    def listar_tickets_por_area(area):
+        tickets_del_area = Ticket.query.filter_by(categoria=area).all()
+        return sorted(tickets_del_area, key=lambda ticket: ORDEN_PRIORIDAD[ticket.prioridad])
