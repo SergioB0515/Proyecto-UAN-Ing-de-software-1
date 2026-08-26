@@ -24,6 +24,10 @@ from app.services.autenticacion import ServicioAutenticacion
 from app.services.tickets import ServicioTickets, ORDEN_PRIORIDAD
 from app.Models.usuario import Usuario
 from app.Models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad
+from app.services.exceptions import (
+    TransicionInvalidaError, AgenteYaAsignadoError,
+    TicketNoEncontradoError, TicketNoEnProgresoError, ComentarioVacioError
+)
 
 EMAIL_AGENTE_2 = "prueba_agente_2@empresa.com"
 EMAIL_NORMAL = "prueba_ticket_normal@empresa.com"
@@ -380,6 +384,64 @@ def test_reasignar_agente_mismo_agente():
         print("FALLO: se esperaba AgenteYaAsignadoError")
     except AgenteYaAsignadoError:
         print("OK: fallo correctamente, mismo agente detectado como conflicto")
+def test_agregar_comentario_valido():
+    print("\n--- Prueba 14: agregar comentario valido a un ticket ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+    agente_1 = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
+
+    _, ticket = ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="no puedo entrar a mi correo",
+    )
+
+    exito, comentario = ServicioTickets.agregar_comentario(
+        ticket_id=ticket.id,
+        autor_id=agente_1.id,
+        texto="Estamos revisando tu caso, te contactaremos pronto.",
+    )
+
+    if not exito or comentario is None:
+        print("FALLO: se esperaba que el comentario se creara exitosamente")
+        return
+
+    if comentario.ticket_id != ticket.id or comentario.autor_id != agente_1.id:
+        print(f"FALLO: ticket_id o autor_id no coinciden, se obtuvo ticket_id={comentario.ticket_id}, autor_id={comentario.autor_id}")
+        return
+
+    print("OK: comentario agregado correctamente con los datos esperados")
+
+
+def test_agregar_comentario_ticket_inexistente():
+    print("\n--- Prueba 15: agregar_comentario con ticket_id inexistente ---")
+    try:
+        ServicioTickets.agregar_comentario(
+            ticket_id=999999,
+            autor_id=1,
+            texto="comentario sobre ticket que no existe",
+        )
+        print("FALLO: se esperaba TicketNoEncontradoError")
+    except TicketNoEncontradoError:
+        print("OK: fallo correctamente, ticket inexistente detectado")
+
+
+def test_agregar_comentario_texto_vacio():
+    print("\n--- Prueba 16: agregar_comentario con texto vacio o solo espacios ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+
+    _, ticket = ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="no puedo entrar a mi correo",
+    )
+
+    try:
+        ServicioTickets.agregar_comentario(
+            ticket_id=ticket.id,
+            autor_id=usuario_normal.id,
+            texto="   ",
+        )
+        print("FALLO: se esperaba ComentarioVacioError")
+    except ComentarioVacioError:
+        print("OK: fallo correctamente, texto vacio/espacios detectado")
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
@@ -396,3 +458,6 @@ if __name__ == "__main__":
         test_reasignar_agente_ticket_inexistente()
         test_reasignar_agente_ticket_no_en_progreso()
         test_reasignar_agente_mismo_agente()
+        test_agregar_comentario_valido()
+        test_agregar_comentario_ticket_inexistente()
+        test_agregar_comentario_texto_vacio()

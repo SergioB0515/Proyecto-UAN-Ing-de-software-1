@@ -1,8 +1,9 @@
 from app.Models.enum import Categoria,Prioridad,EstadoTicket
 from app.Models.ticket import Ticket
+from app.Models.comentario import Comentario
 from app.services.clasificador import ClasificadorTickets
 from app.services.gestor_sla import GestorSLA
-from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError
+from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError
 from app import db
 from sqlalchemy import select
 PRIORIDAD_BASE_POR_CATEGORIA={
@@ -110,3 +111,29 @@ class ServicioTickets:
             db.session.refresh(ticket)
             print(f"No se ha podido realizar la reasignacion error : {e}")  
             return False,None
+    @staticmethod
+    def agregar_comentario(ticket_id,autor_id,texto):
+        ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar()
+        if not ticket:
+            raise TicketNoEncontradoError("El ticket no a sido encontrado")
+        
+        if not texto.strip():
+            raise ComentarioVacioError("El comentario no puede estar vacio")
+        nuevo_comentario = Comentario(
+            ticket_id = ticket_id,
+            autor_id = autor_id,
+            texto=texto
+        )
+        try:
+            db.session.add(nuevo_comentario)
+            db.session.commit()
+            print(f"El comentario agregado correctamente")
+            return True,nuevo_comentario
+       
+        except Exception as e:
+            db.session.rollback()
+            print(f"No se ha podido agregar el comentario : {e}")  
+            return False,None
+        
+        
+    
