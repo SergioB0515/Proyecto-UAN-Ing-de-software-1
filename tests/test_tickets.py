@@ -13,9 +13,11 @@ Que verifica:
 3. Un ticket sin ninguna palabra clave conocida cae en OTROS con
    prioridad BAJA.
 """
-
+from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError, TicketNoEnProgresoError
 from datetime import datetime
-
+from app.services.tickets import ServicioTickets, ORDEN_PRIORIDAD
+from app.Models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, EstadoTicket
+from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError
 from app import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
@@ -23,14 +25,14 @@ from app.services.tickets import ServicioTickets, ORDEN_PRIORIDAD
 from app.Models.usuario import Usuario
 from app.Models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad
 
-
+EMAIL_AGENTE_2 = "prueba_agente_2@empresa.com"
 EMAIL_NORMAL = "prueba_ticket_normal@empresa.com"
 EMAIL_VIP = "prueba_ticket_vip@empresa.com"
-
+EMAIL_AGENTE = "prueba_agente@empresa.com"
 
 def preparar_usuarios_de_prueba():
     """Limpia restos de corridas anteriores y crea un usuario normal y uno VIP."""
-    for email in (EMAIL_NORMAL, EMAIL_VIP):
+    for email in (EMAIL_NORMAL, EMAIL_VIP,EMAIL_AGENTE):
         usuario_existente = Usuario.query.filter_by(email=email).first()
         if usuario_existente:
             db.session.delete(usuario_existente)
@@ -49,6 +51,20 @@ def preparar_usuarios_de_prueba():
         contrasena="ClaveSegura123",
         rol=RolUsuario.FINAL,
         nivel=NivelUsuario.VIP,
+    )
+    ServicioAutenticacion.registrar(
+        nombre="Agente Prueba",
+        email=EMAIL_AGENTE,
+        contrasena="ClaveSegura123",
+        rol=RolUsuario.AGENTE,  # <-- confirma que este valor exista en tu enum
+        nivel=NivelUsuario.NORMAL,
+    )
+    ServicioAutenticacion.registrar(
+        nombre="Agente Prueba 2",
+        email=EMAIL_AGENTE_2,
+        contrasena="ClaveSegura123",
+        rol=RolUsuario.AGENTE,
+        nivel=NivelUsuario.NORMAL,
     )
 
 
@@ -172,8 +188,198 @@ def test_listar_tickets_por_area_ordenados_por_prioridad():
         return
 
     print(f"OK: {len(tickets_del_area)} tickets de Software, con prioridades mixtas, orden correcto: {prioridades_obtenidas}")
+def test_cambiar_estado_abierto_a_en_progreso():
+    print("\n--- Prueba 5: ABIERTO -> EN_PROGRESO con agente_id valido ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+    agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
+
+    _, ticket = ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="no puedo entrar a mi correo",
+    )
+
+    exito, estado = ServicioTickets.cambiar_estado(
+        ticket_id=ticket.id,
+        nuevo_estado=EstadoTicket.EN_PROGRESO,
+        agente_id=agente.id,
+    )
+
+    if not exito or estado != EstadoTicket.EN_PROGRESO:
+        print(f"FALLO: se esperaba EN_PROGRESO exitoso, se obtuvo exito={exito}, estado={estado}")
+        return
+
+    print("OK: ABIERTO -> EN_PROGRESO con agente asignado correctamente")
 
 
+def test_cambiar_estado_sin_agente_falla():
+    print("\n--- Prueba 6: ABIERTO -> EN_PROGRESO sin agente_id debe fallar ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+
+    _, ticket = ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="no puedo entrar a mi correo",
+    )
+
+    try:
+        ServicioTickets.cambiar_estado(
+            ticket_id=ticket.id,
+            nuevo_estado=EstadoTicket.EN_PROGRESO,
+            agente_id=None,
+        )
+        print("FALLO: se esperaba TransicionInvalidaError por falta de agente_id")
+    except TransicionInvalidaError:
+        print("OK: fallo correctamente por falta de agente_id")
+
+
+def test_cambiar_estado_agente_en_conflicto():
+    print("\n--- Prueba 7: reasignar agente distinto al ya asignado debe fallar ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+    agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
+
+    _, ticket = ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="no puedo entrar a mi correo",
+    )
+    ServicioTickets.cambiar_estado(
+        ticket_id=ticket.id,
+        nuevo_estado=EstadoTicket.EN_PROGRESO,
+        agente_id=agente.id,
+    )
+
+    otro_agente_id = agente.id + 1  # id distinto, no necesita existir para esta prueba de conflicto
+
+    try:
+        ServicioTickets.cambiar_estado(
+            ticket_id=ticket.id,
+            nuevo_estado=EstadoTicket.EN_PROGRESO,
+            agente_id=otro_agente_id,
+        )
+        print("FALLO: se esperaba AgenteYaAsignadoError")
+    except AgenteYaAsignadoError:
+        print("OK: fallo correctamente por conflicto de agente")
+
+
+def test_cambiar_estado_transicion_invalida():
+    print("\n--- Prueba 8: EN_PROGRESO -> ABIERTO debe fallar (transicion no permitida) ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+    agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
+
+    _, ticket = ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="no puedo entrar a mi correo",
+    )
+    ServicioTickets.cambiar_estado(
+        ticket_id=ticket.id,
+        nuevo_estado=EstadoTicket.EN_PROGRESO,
+        agente_id=agente.id,
+    )
+
+    try:
+        ServicioTickets.cambiar_estado(
+            ticket_id=ticket.id,
+            nuevo_estado=EstadoTicket.ABIERTO,
+        )
+        print("FALLO: se esperaba TransicionInvalidaError")
+    except TransicionInvalidaError:
+        print("OK: fallo correctamente, EN_PROGRESO -> ABIERTO bloqueado")
+
+
+def test_cambiar_estado_ticket_inexistente():
+    print("\n--- Prueba 9: ticket_id inexistente debe lanzar TicketNoEncontradoError ---")
+    try:
+        ServicioTickets.cambiar_estado(
+            ticket_id=999999,
+            nuevo_estado=EstadoTicket.EN_PROGRESO,
+            agente_id=1,
+        )
+        print("FALLO: se esperaba TicketNoEncontradoError")
+    except TicketNoEncontradoError:
+        print("OK: fallo correctamente, ticket inexistente detectado")
+
+def test_reasignar_agente_valido():
+    print("\n--- Prueba 10: reasignar agente sobre ticket EN_PROGRESO ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+    agente_1 = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
+    agente_2 = Usuario.query.filter_by(email=EMAIL_AGENTE_2).first()
+
+    _, ticket = ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="no puedo entrar a mi correo",
+    )
+    ServicioTickets.cambiar_estado(
+        ticket_id=ticket.id,
+        nuevo_estado=EstadoTicket.EN_PROGRESO,
+        agente_id=agente_1.id,
+    )
+
+    exito, agente_resultante = ServicioTickets.reasignar_agente(
+        ticket_id=ticket.id,
+        nuevo_agente_id=agente_2.id,
+    )
+
+    if not exito or agente_resultante != agente_2.id:
+        print(f"FALLO: se esperaba reasignacion exitosa a agente_2, se obtuvo exito={exito}, agente={agente_resultante}")
+        return
+
+    print("OK: agente reasignado correctamente de agente_1 a agente_2")
+
+
+def test_reasignar_agente_ticket_inexistente():
+    print("\n--- Prueba 11: reasignar_agente con ticket_id inexistente ---")
+    try:
+        ServicioTickets.reasignar_agente(
+            ticket_id=999999,
+            nuevo_agente_id=1,
+        )
+        print("FALLO: se esperaba TicketNoEncontradoError")
+    except TicketNoEncontradoError:
+        print("OK: fallo correctamente, ticket inexistente detectado")
+
+
+def test_reasignar_agente_ticket_no_en_progreso():
+    print("\n--- Prueba 12: reasignar_agente sobre ticket ABIERTO debe fallar ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+    agente_2 = Usuario.query.filter_by(email=EMAIL_AGENTE_2).first()
+
+    _, ticket = ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="no puedo entrar a mi correo",
+    )
+    # ticket recien creado queda en ABIERTO, nunca paso por cambiar_estado
+
+    try:
+        ServicioTickets.reasignar_agente(
+            ticket_id=ticket.id,
+            nuevo_agente_id=agente_2.id,
+        )
+        print("FALLO: se esperaba TicketNoEnProgresoError")
+    except TicketNoEnProgresoError:
+        print("OK: fallo correctamente, ticket no estaba EN_PROGRESO")
+
+
+def test_reasignar_agente_mismo_agente():
+    print("\n--- Prueba 13: reasignar al mismo agente que ya tenia debe fallar ---")
+    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+    agente_1 = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
+
+    _, ticket = ServicioTickets.crear_ticket(
+        creador=usuario_normal,
+        texto="no puedo entrar a mi correo",
+    )
+    ServicioTickets.cambiar_estado(
+        ticket_id=ticket.id,
+        nuevo_estado=EstadoTicket.EN_PROGRESO,
+        agente_id=agente_1.id,
+    )
+
+    try:
+        ServicioTickets.reasignar_agente(
+            ticket_id=ticket.id,
+            nuevo_agente_id=agente_1.id,
+        )
+        print("FALLO: se esperaba AgenteYaAsignadoError")
+    except AgenteYaAsignadoError:
+        print("OK: fallo correctamente, mismo agente detectado como conflicto")
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
@@ -182,3 +388,11 @@ if __name__ == "__main__":
         test_ticket_vip_mismo_texto_sla_mas_corto()
         test_ticket_vip_categoria_baja_se_eleva_a_alta()
         test_listar_tickets_por_area_ordenados_por_prioridad()
+        test_cambiar_estado_abierto_a_en_progreso()
+        test_cambiar_estado_sin_agente_falla()
+        test_cambiar_estado_transicion_invalida()
+        test_cambiar_estado_ticket_inexistente()
+        test_reasignar_agente_valido()
+        test_reasignar_agente_ticket_inexistente()
+        test_reasignar_agente_ticket_no_en_progreso()
+        test_reasignar_agente_mismo_agente()
