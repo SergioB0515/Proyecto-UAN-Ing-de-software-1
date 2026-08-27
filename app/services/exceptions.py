@@ -9,3 +9,5 @@ class TicketNoEnProgresoError(Exception):
     pass
 class ComentarioVacioError(Exception):
     pass
+class NoHayTickets(Exception):
+    pass
