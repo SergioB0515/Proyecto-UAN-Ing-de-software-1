@@ -4,7 +4,8 @@ from app.Models.comentario import Comentario
 from app.services.clasificador import ClasificadorTickets
 from app.services.gestor_sla import GestorSLA
 from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError
-from app import db
+from app.extensions import db
+from app.services.auditoria import ServicioAuditoria
 from sqlalchemy import select
 PRIORIDAD_BASE_POR_CATEGORIA={
     Categoria.SEGURIDAD : Prioridad.ALTA,
@@ -44,6 +45,11 @@ class ServicioTickets:
             db.session.add(nuevo_ticket)
             db.session.commit()
             print(f"El ticket se ha resgistrado con exito")
+            ServicioAuditoria.registrar(
+                usuario_id=creador.id,  
+                accion="crear_ticket",
+                detalle=f"Ticket #{nuevo_ticket.id} creado: categoria={nuevo_ticket.categoria}, prioridad={nuevo_ticket.prioridad}",
+            )
             return True,nuevo_ticket
         except Exception as e:
             db.session.rollback()
@@ -60,7 +66,7 @@ class ServicioTickets:
        
         if not ticket:
             raise TicketNoEncontradoError("El ticket no a sido encontrado")
-       
+        
         if nuevo_estado not in TRANSICIONES_VALIDAS[ticket.estado]:
             raise TransicionInvalidaError("La transicion no es valida")
        
@@ -74,13 +80,18 @@ class ServicioTickets:
        
             if agente_id is not None:
                 ticket.agente_id = agente_id
-       
+        estado_anterior=ticket.estado
         ticket.estado = nuevo_estado
        
         try:
             db.session.add(ticket)
             db.session.commit()
             print(f"El estado del Ticket a sido cambiado con exito")
+            ServicioAuditoria.registrar(
+                usuario_id=agente_id if agente_id is not None else ticket.agente_id,
+                accion="cambiar_estado",
+                detalle=f"Ticket #{ticket.id}: {estado_anterior} -> {nuevo_estado}",
+            )
             return True,ticket.estado
        
         except Exception as e:
@@ -98,12 +109,17 @@ class ServicioTickets:
             raise TicketNoEnProgresoError("Este ticket no esta en un estado valido para su reasignacion")
         if nuevo_agente_id == ticket.agente_id:
             raise AgenteYaAsignadoError("Este ticket ya tiene asignado a este mismo agente")
-        
+        agente_anterior=ticket.agente_id
         ticket.agente_id = nuevo_agente_id
         try:
             db.session.add(ticket)
             db.session.commit()
             print(f"El agente del ticket a sido reasignado correctamente")
+            ServicioAuditoria.registrar(
+                usuario_id=nuevo_agente_id,
+                accion="reasignar_agente",
+                detalle=f"Ticket #{ticket.id}: agente {agente_anterior} -> {nuevo_agente_id}",
+            )   
             return True,ticket.agente_id
        
         except Exception as e:
@@ -128,12 +144,17 @@ class ServicioTickets:
             db.session.add(nuevo_comentario)
             db.session.commit()
             print(f"El comentario agregado correctamente")
+            ServicioAuditoria.registrar(
+                usuario_id=autor_id,
+                accion="agregar_comentario",
+                detalle=f"Se agrego un comentario al ticket #{ticket_id}",
+            )
             return True,nuevo_comentario
        
         except Exception as e:
             db.session.rollback()
             print(f"No se ha podido agregar el comentario : {e}")  
             return False,None
-        
+
         
     

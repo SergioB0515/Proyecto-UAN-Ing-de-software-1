@@ -1,6 +1,6 @@
 from app.Models.enum import NivelUsuario
 from sqlalchemy import select
-from app import db
+from app.extensions import db
 from app.Models.usuario import Usuario
 from datetime import datetime,timedelta
 import bcrypt

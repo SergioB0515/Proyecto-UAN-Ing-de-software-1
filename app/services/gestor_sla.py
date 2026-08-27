@@ -1,7 +1,7 @@
 from app.Models.enum import Prioridad,NivelUsuario,EstadoTicket
 from app.Models.ticket import Ticket
 from app.services.exceptions import NoHayTickets
-from app import db
+from app.extensions import db
 from sqlalchemy import select
 from datetime import datetime, timedelta
 HORAS_SLA_NORMAL={
