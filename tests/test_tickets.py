@@ -33,13 +33,22 @@ EMAIL_AGENTE_2 = "prueba_agente_2@empresa.com"
 EMAIL_NORMAL = "prueba_ticket_normal@empresa.com"
 EMAIL_VIP = "prueba_ticket_vip@empresa.com"
 EMAIL_AGENTE = "prueba_agente@empresa.com"
-
+EMAIL_ADMIN_PRUEBA = "prueba_admin@empresa.com"
 def preparar_usuarios_de_prueba():
-    """Limpia restos de corridas anteriores y crea un usuario normal y uno VIP."""
-    for email in (EMAIL_NORMAL, EMAIL_VIP,EMAIL_AGENTE):
+    for email in (EMAIL_NORMAL, EMAIL_VIP, EMAIL_AGENTE, EMAIL_AGENTE_2, EMAIL_ADMIN_PRUEBA):
         usuario_existente = Usuario.query.filter_by(email=email).first()
         if usuario_existente:
             db.session.delete(usuario_existente)
+    db.session.commit()
+
+    admin_prueba = Usuario(
+        nombre="Admin Prueba",
+        email=EMAIL_ADMIN_PRUEBA,
+        contrasena_hash=ServicioAutenticacion._generar_hash("ClaveSegura123"),
+        rol=RolUsuario.ADMIN,
+        nivel=NivelUsuario.NORMAL,
+    )
+    db.session.add(admin_prueba)
     db.session.commit()
 
     ServicioAutenticacion.registrar(
@@ -48,6 +57,7 @@ def preparar_usuarios_de_prueba():
         contrasena="ClaveSegura123",
         rol=RolUsuario.FINAL,
         nivel=NivelUsuario.NORMAL,
+        admin_id=admin_prueba.id,
     )
     ServicioAutenticacion.registrar(
         nombre="Usuario VIP",
@@ -55,13 +65,15 @@ def preparar_usuarios_de_prueba():
         contrasena="ClaveSegura123",
         rol=RolUsuario.FINAL,
         nivel=NivelUsuario.VIP,
+        admin_id=admin_prueba.id,
     )
     ServicioAutenticacion.registrar(
         nombre="Agente Prueba",
         email=EMAIL_AGENTE,
         contrasena="ClaveSegura123",
-        rol=RolUsuario.AGENTE,  # <-- confirma que este valor exista en tu enum
+        rol=RolUsuario.AGENTE,
         nivel=NivelUsuario.NORMAL,
+        admin_id=admin_prueba.id,
     )
     ServicioAutenticacion.registrar(
         nombre="Agente Prueba 2",
@@ -69,6 +81,7 @@ def preparar_usuarios_de_prueba():
         contrasena="ClaveSegura123",
         rol=RolUsuario.AGENTE,
         nivel=NivelUsuario.NORMAL,
+        admin_id=admin_prueba.id,
     )
 
 

@@ -27,3 +27,14 @@ class EstadoTicket(str, Enum):
     ABIERTO = "abierto"
     EN_PROGRESO = "en_progreso"
     CERRADO = "cerrado"
+    
+class AccionAuditoria(str, Enum):
+    CREAR_TICKET = "crear_ticket"
+    CAMBIAR_ESTADO = "cambiar_estado"
+    REASIGNAR_AGENTE = "reasignar_agente"
+    AGREGAR_COMENTARIO = "agregar_comentario"
+    LOGIN_EXITOSO = "login_exitoso"
+    LOGIN_FALLIDO = "login_fallido"
+    CUENTA_BLOQUEADA = "cuenta_bloqueada"
+    DESBLOQUEO_USUARIO = "desbloqueo_usuario"
+    REGISTRO_EXITOSO ="registro_exitoso"

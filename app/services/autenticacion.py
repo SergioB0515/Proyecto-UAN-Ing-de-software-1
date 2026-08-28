@@ -1,19 +1,20 @@
-from app.Models.enum import NivelUsuario
+from app.Models.enum import NivelUsuario, AccionAuditoria
 from sqlalchemy import select
 from app.extensions import db
 from app.Models.usuario import Usuario
 from datetime import datetime,timedelta
+from app.services.auditoria import ServicioAuditoria
 import bcrypt
 class ResultadoLogin:
     EXITOSO = "exitoso"
-    CREDENCIALES_INVALIDAS = "credenciales_invalidas"       # falló, quedan intentos
-    BLOQUEADO_AHORA = "bloqueado_ahora"                       # este intento causó el bloqueo
-    YA_BLOQUEADO = "ya_bloqueado"                             # llegó bloqueado desde antes
+    CREDENCIALES_INVALIDAS = "credenciales_invalidas"      
+    BLOQUEADO_AHORA = "bloqueado_ahora"                       
+    YA_BLOQUEADO = "ya_bloqueado"                             
     USUARIO_NO_EXISTE = "usuario_no_existe"
 class ServicioAutenticacion:
   
     @staticmethod
-    def registrar(nombre, email, contrasena, rol, area_soporte=None, nivel=NivelUsuario.NORMAL):
+    def registrar(nombre, email, contrasena, rol, admin_id, area_soporte=None, nivel=NivelUsuario.NORMAL):
         existe =db.session.execute(select(Usuario.email).where(Usuario.email ==email)).scalar() is not None
         if existe:
             return False
@@ -33,6 +34,11 @@ class ServicioAutenticacion:
             db.session.add(nuevo_usuario)
             db.session.commit()
             print(f"El usuario {nombre} se ha resgistrado con exito")
+            ServicioAuditoria.registrar(
+                usuario_id=admin_id,
+                accion=AccionAuditoria.REGISTRO_EXITOSO,
+                detalle=f"Se registro al usuario {nuevo_usuario.email} (rol={rol}, nivel={nivel})",
+            )
             return True
         except Exception as e:
             db.session.rollback()
@@ -63,6 +69,15 @@ class ServicioAutenticacion:
         if usuario is None:
             return None, ResultadoLogin.USUARIO_NO_EXISTE
 
+        if usuario.bloqueado_hasta is not None and usuario.bloqueado_hasta < datetime.now():
+            usuario.bloqueado_hasta = None
+            usuario.intentos_fallidos = 0
+            db.session.commit()
+            ServicioAuditoria.registrar(
+                usuario_id=usuario.id,
+                accion=AccionAuditoria.DESBLOQUEO_USUARIO,
+                detalle=f"Se levanto el bloqueo para {usuario.email}",
+            )
         elif ServicioAutenticacion.esta_bloqueado(usuario):
             return None, ResultadoLogin.YA_BLOQUEADO
 
@@ -73,13 +88,28 @@ class ServicioAutenticacion:
             if usuario.intentos_fallidos == 5:
                 usuario.bloqueado_hasta = datetime.now() + timedelta(hours=5)
                 db.session.commit()
+                ServicioAuditoria.registrar(
+                    usuario_id=usuario.id,
+                    accion=AccionAuditoria.CUENTA_BLOQUEADA,
+                    detalle=f"Cuenta bloqueada por 5 intentos fallidos: {usuario.email}"
+                )
                 return None, ResultadoLogin.BLOQUEADO_AHORA
             else:
                 db.session.commit()
+                ServicioAuditoria.registrar(
+                    usuario_id=usuario.id,
+                    accion=AccionAuditoria.LOGIN_FALLIDO,
+                    detalle=f"Intento fallido de login para {usuario.email} (intento {usuario.intentos_fallidos})"
+            )
                 return None, ResultadoLogin.CREDENCIALES_INVALIDAS
 
         usuario.intentos_fallidos = 0
         db.session.commit()
+        ServicioAuditoria.registrar(
+            usuario_id=usuario.id,
+            accion=AccionAuditoria.LOGIN_EXITOSO,
+            detalle=f"Login exitoso para {usuario.email}",
+        )
         return usuario, ResultadoLogin.EXITOSO
 
 
@@ -92,4 +122,4 @@ class ServicioAutenticacion:
         elif usuario.bloqueado_hasta > datetime.now():
             return True
         else:
-            return True
+            return False

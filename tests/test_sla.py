@@ -18,11 +18,23 @@ from app.Models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, Esta
 
 EMAIL_NORMAL = "prueba_sla_normal@empresa.com"
 
+EMAIL_ADMIN_PRUEBA = "prueba_admin_sla@empresa.com"
 
 def preparar_usuario_de_prueba():
-    usuario_existente = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
-    if usuario_existente:
-        db.session.delete(usuario_existente)
+    for email in (EMAIL_NORMAL, EMAIL_ADMIN_PRUEBA):
+        usuario_existente = Usuario.query.filter_by(email=email).first()
+        if usuario_existente:
+            db.session.delete(usuario_existente)
+    db.session.commit()
+
+    admin_prueba = Usuario(
+        nombre="Admin Prueba SLA",
+        email=EMAIL_ADMIN_PRUEBA,
+        contrasena_hash=ServicioAutenticacion._generar_hash("ClaveSegura123"),
+        rol=RolUsuario.ADMIN,
+        nivel=NivelUsuario.NORMAL,
+    )
+    db.session.add(admin_prueba)
     db.session.commit()
 
     ServicioAutenticacion.registrar(
@@ -31,6 +43,7 @@ def preparar_usuario_de_prueba():
         contrasena="ClaveSegura123",
         rol=RolUsuario.FINAL,
         nivel=NivelUsuario.NORMAL,
+        admin_id=admin_prueba.id,
     )
 
 

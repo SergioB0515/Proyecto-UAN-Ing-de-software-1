@@ -1,4 +1,4 @@
-from app.Models.enum import Categoria,Prioridad,EstadoTicket
+from app.Models.enum import Categoria,Prioridad,EstadoTicket,AccionAuditoria
 from app.Models.ticket import Ticket
 from app.Models.comentario import Comentario
 from app.services.clasificador import ClasificadorTickets
@@ -89,7 +89,7 @@ class ServicioTickets:
             print(f"El estado del Ticket a sido cambiado con exito")
             ServicioAuditoria.registrar(
                 usuario_id=agente_id if agente_id is not None else ticket.agente_id,
-                accion="cambiar_estado",
+                accion=AccionAuditoria.CAMBIAR_ESTADO,
                 detalle=f"Ticket #{ticket.id}: {estado_anterior} -> {nuevo_estado}",
             )
             return True,ticket.estado
@@ -117,7 +117,7 @@ class ServicioTickets:
             print(f"El agente del ticket a sido reasignado correctamente")
             ServicioAuditoria.registrar(
                 usuario_id=nuevo_agente_id,
-                accion="reasignar_agente",
+                accion=AccionAuditoria.REASIGNAR_AGENTE,
                 detalle=f"Ticket #{ticket.id}: agente {agente_anterior} -> {nuevo_agente_id}",
             )   
             return True,ticket.agente_id
@@ -146,7 +146,7 @@ class ServicioTickets:
             print(f"El comentario agregado correctamente")
             ServicioAuditoria.registrar(
                 usuario_id=autor_id,
-                accion="agregar_comentario",
+                accion=AccionAuditoria.AGREGAR_COMENTARIO,
                 detalle=f"Se agrego un comentario al ticket #{ticket_id}",
             )
             return True,nuevo_comentario
