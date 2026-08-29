@@ -16,14 +16,14 @@ Que verifica:
 from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError, TicketNoEnProgresoError
 from datetime import datetime
 from app.services.tickets import ServicioTickets, ORDEN_PRIORIDAD
-from app.Models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, EstadoTicket
+from app.models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, EstadoTicket
 from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError
 from app import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
 from app.services.tickets import ServicioTickets, ORDEN_PRIORIDAD
-from app.Models.usuario import Usuario
-from app.Models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad
+from app.models.usuario import Usuario
+from app.models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad
 from app.services.exceptions import (
     TransicionInvalidaError, AgenteYaAsignadoError,
     TicketNoEncontradoError, TicketNoEnProgresoError, ComentarioVacioError
@@ -218,6 +218,7 @@ def test_cambiar_estado_abierto_a_en_progreso():
     exito, estado = ServicioTickets.cambiar_estado(
         ticket_id=ticket.id,
         nuevo_estado=EstadoTicket.EN_PROGRESO,
+        actor_id=agente.id,
         agente_id=agente.id,
     )
 
@@ -231,6 +232,7 @@ def test_cambiar_estado_abierto_a_en_progreso():
 def test_cambiar_estado_sin_agente_falla():
     print("\n--- Prueba 6: ABIERTO -> EN_PROGRESO sin agente_id debe fallar ---")
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+    agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
     _, ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
@@ -241,6 +243,7 @@ def test_cambiar_estado_sin_agente_falla():
         ServicioTickets.cambiar_estado(
             ticket_id=ticket.id,
             nuevo_estado=EstadoTicket.EN_PROGRESO,
+            actor_id=agente.id,
             agente_id=None,
         )
         print("FALLO: se esperaba TransicionInvalidaError por falta de agente_id")
@@ -260,6 +263,7 @@ def test_cambiar_estado_agente_en_conflicto():
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id,
         nuevo_estado=EstadoTicket.EN_PROGRESO,
+        actor_id=agente.id,
         agente_id=agente.id,
     )
 
@@ -269,11 +273,12 @@ def test_cambiar_estado_agente_en_conflicto():
         ServicioTickets.cambiar_estado(
             ticket_id=ticket.id,
             nuevo_estado=EstadoTicket.EN_PROGRESO,
+            actor_id=agente.id,
             agente_id=otro_agente_id,
         )
-        print("FALLO: se esperaba AgenteYaAsignadoError")
-    except AgenteYaAsignadoError:
-        print("OK: fallo correctamente por conflicto de agente")
+        print("FALLO: se esperaba TransicionInvalidaError")
+    except TransicionInvalidaError:
+        print("OK: fallo correctamente, EN_PROGRESO->EN_PROGRESO no es transicion valida")
 
 
 def test_cambiar_estado_transicion_invalida():
@@ -288,6 +293,7 @@ def test_cambiar_estado_transicion_invalida():
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id,
         nuevo_estado=EstadoTicket.EN_PROGRESO,
+        actor_id=agente.id,
         agente_id=agente.id,
     )
 
@@ -295,6 +301,7 @@ def test_cambiar_estado_transicion_invalida():
         ServicioTickets.cambiar_estado(
             ticket_id=ticket.id,
             nuevo_estado=EstadoTicket.ABIERTO,
+            actor_id=agente.id,
         )
         print("FALLO: se esperaba TransicionInvalidaError")
     except TransicionInvalidaError:
@@ -307,6 +314,7 @@ def test_cambiar_estado_ticket_inexistente():
         ServicioTickets.cambiar_estado(
             ticket_id=999999,
             nuevo_estado=EstadoTicket.EN_PROGRESO,
+            actor_id=1,
             agente_id=1,
         )
         print("FALLO: se esperaba TicketNoEncontradoError")
@@ -326,6 +334,7 @@ def test_reasignar_agente_valido():
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id,
         nuevo_estado=EstadoTicket.EN_PROGRESO,
+        actor_id=agente_1.id,
         agente_id=agente_1.id,
     )
 
@@ -386,6 +395,7 @@ def test_reasignar_agente_mismo_agente():
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id,
         nuevo_estado=EstadoTicket.EN_PROGRESO,
+        actor_id=agente_1.id,
         agente_id=agente_1.id,
     )
 
@@ -465,6 +475,7 @@ if __name__ == "__main__":
         test_listar_tickets_por_area_ordenados_por_prioridad()
         test_cambiar_estado_abierto_a_en_progreso()
         test_cambiar_estado_sin_agente_falla()
+        test_cambiar_estado_agente_en_conflicto()
         test_cambiar_estado_transicion_invalida()
         test_cambiar_estado_ticket_inexistente()
         test_reasignar_agente_valido()

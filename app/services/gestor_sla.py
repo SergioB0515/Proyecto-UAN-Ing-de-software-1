@@ -1,5 +1,5 @@
-from app.Models.enum import Prioridad,NivelUsuario,EstadoTicket
-from app.Models.ticket import Ticket
+from app.models.enum import Prioridad,NivelUsuario,EstadoTicket
+from app.models.ticket import Ticket
 from app.services.exceptions import NoHayTickets
 from app.extensions import db
 from sqlalchemy import select

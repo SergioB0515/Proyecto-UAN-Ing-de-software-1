@@ -13,8 +13,8 @@ Que verifica:
 from app import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
-from app.Models.usuario import Usuario
-from app.Models.enum import RolUsuario, NivelUsuario
+from app.models.usuario import Usuario
+from app.models.enum import RolUsuario, NivelUsuario
 
 
 def limpiar_usuario_de_prueba(email):

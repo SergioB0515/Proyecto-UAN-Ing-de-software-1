@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar usuario{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h2 class="mb-4">Registrar nuevo usuario</h2>
+        <form method="POST" action="{{ url_for('auth.registro') }}">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="nombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" name="contrasena" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Rol</label>
+                <select name="rol" id="rol" class="form-select" required>
+                    <option value="final">Usuario final</option>
+                    <option value="agente">Agente</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nivel</label>
+                <select name="nivel" class="form-select" required>
+                    <option value="normal">Normal</option>
+                    <option value="vip">VIP</option>
+                </select>
+            </div>
+            <div class="mb-3" id="area-container">
+                <label class="form-label">Área de soporte</label>
+                <select name="area_soporte" class="form-select">
+                    <option value="">-- No aplica --</option>
+                    <option value="infraestructura">Infraestructura</option>
+                    <option value="redes">Redes</option>
+                    <option value="permisos">Permisos</option>
+                    <option value="cuentas_contrasenas">Cuentas y contraseñas</option>
+                    <option value="seguridad">Seguridad</option>
+                    <option value="software">Software</option>
+                    <option value="otros">Otros</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

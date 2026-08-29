@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.Models.enum import AccionAuditoria
+from app.models.enum import AccionAuditoria
 from datetime import datetime
 class LogAuditoria(db.Model):
     __tablename__ = "log_auditoria"

@@ -1,9 +1,9 @@
 from sqlalchemy import select, func
 from datetime import datetime, timedelta
 from app.extensions import db
-from app.Models.ticket import Ticket
-from app.Models.usuario import Usuario
-from app.Models.enum import RolUsuario
+from app.models.ticket import Ticket
+from app.models.usuario import Usuario
+from app.models.enum import RolUsuario
 from app.services.gestor_sla import GestorSLA
 
 

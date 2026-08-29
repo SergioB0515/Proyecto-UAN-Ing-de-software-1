@@ -6,9 +6,9 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///proyecto.db"
     db.init_app(app)
 
-    from app.Models.usuario import Usuario
-    from app.Models.ticket import Ticket
-    from app.Models.comentario import Comentario
-    from app.Models.log_auditoria import LogAuditoria
+    from app.models.usuario import Usuario
+    from app.models.ticket import Ticket
+    from app.models.comentario import Comentario
+    from app.models.log_auditoria import LogAuditoria
 
     return app

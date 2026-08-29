@@ -1,7 +1,7 @@
-from app.Models.enum import NivelUsuario, AccionAuditoria
+from app.models.enum import NivelUsuario, AccionAuditoria
 from sqlalchemy import select
 from app.extensions import db
-from app.Models.usuario import Usuario
+from app.models.usuario import Usuario
 from datetime import datetime,timedelta
 from app.services.auditoria import ServicioAuditoria
 import bcrypt

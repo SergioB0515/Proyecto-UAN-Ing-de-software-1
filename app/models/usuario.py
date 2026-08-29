@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.Models.enum import RolUsuario, Categoria, NivelUsuario
+from app.models.enum import RolUsuario, Categoria, NivelUsuario
 class Usuario(db.Model):
     __tablename__ = "usuarios"
     id = db.Column(db.Integer, primary_key=True)

@@ -11,9 +11,9 @@ from app import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
 from app.services.gestor_sla import GestorSLA
-from app.Models.usuario import Usuario
-from app.Models.ticket import Ticket
-from app.Models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, EstadoTicket
+from app.models.usuario import Usuario
+from app.models.ticket import Ticket
+from app.models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, EstadoTicket
 
 
 EMAIL_NORMAL = "prueba_sla_normal@empresa.com"

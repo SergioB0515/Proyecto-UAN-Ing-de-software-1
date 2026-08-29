@@ -1,6 +1,6 @@
-from app.Models.enum import Categoria,Prioridad,EstadoTicket,AccionAuditoria
-from app.Models.ticket import Ticket
-from app.Models.comentario import Comentario
+from app.models.enum import Categoria,Prioridad,EstadoTicket,AccionAuditoria
+from app.models.ticket import Ticket
+from app.models.comentario import Comentario
 from app.services.clasificador import ClasificadorTickets
 from app.services.gestor_sla import GestorSLA
 from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError
@@ -47,7 +47,7 @@ class ServicioTickets:
             print(f"El ticket se ha resgistrado con exito")
             ServicioAuditoria.registrar(
                 usuario_id=creador.id,  
-                accion="crear_ticket",
+                accion=AccionAuditoria.CREAR_TICKET,
                 detalle=f"Ticket #{nuevo_ticket.id} creado: categoria={nuevo_ticket.categoria}, prioridad={nuevo_ticket.prioridad}",
             )
             return True,nuevo_ticket
@@ -60,7 +60,7 @@ class ServicioTickets:
         tickets_del_area = Ticket.query.filter_by(categoria=area).all()
         return sorted(tickets_del_area, key=lambda ticket: ORDEN_PRIORIDAD[ticket.prioridad])
     @staticmethod
-    def cambiar_estado(ticket_id, nuevo_estado, agente_id=None):
+    def cambiar_estado(ticket_id, nuevo_estado, actor_id, agente_id=None):
         
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar() 
        
@@ -72,9 +72,7 @@ class ServicioTickets:
        
         if nuevo_estado == EstadoTicket.EN_PROGRESO:
        
-            if agente_id is not None and ticket.agente_id is not None and agente_id != ticket.agente_id:
-                raise AgenteYaAsignadoError("Este ticket ya tiene un agente asignado")        
-       
+
             if agente_id is None and ticket.agente_id is None:
                 raise TransicionInvalidaError("Se requiere un agente_id para pasar a EN_PROGRESO")
        
@@ -88,7 +86,7 @@ class ServicioTickets:
             db.session.commit()
             print(f"El estado del Ticket a sido cambiado con exito")
             ServicioAuditoria.registrar(
-                usuario_id=agente_id if agente_id is not None else ticket.agente_id,
+                usuario_id=actor_id,
                 accion=AccionAuditoria.CAMBIAR_ESTADO,
                 detalle=f"Ticket #{ticket.id}: {estado_anterior} -> {nuevo_estado}",
             )

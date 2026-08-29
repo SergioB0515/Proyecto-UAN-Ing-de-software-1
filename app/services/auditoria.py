@@ -1,4 +1,4 @@
-from app.Models.log_auditoria import LogAuditoria
+from app.models.log_auditoria import LogAuditoria
 from app.extensions import db
 class ServicioAuditoria:
     

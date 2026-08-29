@@ -13,7 +13,7 @@ Que verifica:
 """
 
 from app.services.clasificador import ClasificadorTickets
-from app.Models.enum import Categoria
+from app.models.enum import Categoria
 
 
 CASOS_UNA_SOLA_CATEGORIA = [

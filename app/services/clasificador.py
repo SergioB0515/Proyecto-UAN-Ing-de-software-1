@@ -1,4 +1,4 @@
-from app.Models.enum import Categoria
+from app.models.enum import Categoria
 
 PALABRAS_CLAVE = {
     Categoria.SEGURIDAD: ["no fui yo", "alguien entró", "correo sospechoso", "movimiento raro", "phishing", "me robaron", "actividad extraña"],

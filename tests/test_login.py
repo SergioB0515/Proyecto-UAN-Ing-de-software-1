@@ -2,8 +2,8 @@
 from app import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion, ResultadoLogin
-from app.Models.usuario import Usuario
-from app.Models.enum import RolUsuario
+from app.models.usuario import Usuario
+from app.models.enum import RolUsuario
 
 
 EMAIL_PRUEBA = "prueba_login@empresa.com"
