@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Ticket #{{ ticket.id }}{% endblock %}
+{% block content %}
+<h2 class="mb-3">Ticket #{{ ticket.id }}</h2>
+<p><strong>Texto:</strong> {{ ticket.texto }}</p>
+<p>
+    <strong>Categoría:</strong> {{ ticket.categoria.value }} |
+    <strong>Prioridad:</strong> {{ ticket.prioridad.value }} |
+    <strong>Estado:</strong> {{ ticket.estado.value }}
+</p>
+<p><strong>Fecha límite:</strong> {{ ticket.fecha_limite }}</p>
+
+<hr>
+<h4>Comentarios</h4>
+{% for c in comentarios %}
+<div class="border rounded p-2 mb-2">
+    <small class="text-muted">{{ nombres_por_id.get(c.autor_id, "Usuario desconocido") }} — {{ c.fecha }}</small>
+    <p class="mb-0">{{ c.texto }}</p>
+</div>
+{% else %}
+<p class="text-muted">Sin comentarios todavía.</p>
+{% endfor %}
+
+<form method="POST" class="mt-3">
+    <div class="mb-2">
+        <textarea name="texto" class="form-control" rows="3" placeholder="Escribe un comentario..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Comentar</button>
+</form>
+{% endblock %}

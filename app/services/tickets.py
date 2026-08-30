@@ -5,8 +5,10 @@ from app.services.clasificador import ClasificadorTickets
 from app.services.gestor_sla import GestorSLA
 from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError
 from app.extensions import db
+from datetime import datetime
 from app.services.auditoria import ServicioAuditoria
 from sqlalchemy import select
+
 PRIORIDAD_BASE_POR_CATEGORIA={
     Categoria.SEGURIDAD : Prioridad.ALTA,
     Categoria.REDES : Prioridad.ALTA,
@@ -80,6 +82,8 @@ class ServicioTickets:
                 ticket.agente_id = agente_id
         estado_anterior=ticket.estado
         ticket.estado = nuevo_estado
+        if nuevo_estado == EstadoTicket.CERRADO:
+            ticket.fecha_cierre = datetime.now()
        
         try:
             db.session.add(ticket)
@@ -98,7 +102,7 @@ class ServicioTickets:
             print(f"No se ha podido realizar el guardado u registro error : {e}")  
             return False,None
     @staticmethod
-    def reasignar_agente(ticket_id, nuevo_agente_id):
+    def reasignar_agente(ticket_id, nuevo_agente_id, actor_id):
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar()
         if not ticket:
             raise TicketNoEncontradoError("El ticket no a sido encontrado")
@@ -114,10 +118,10 @@ class ServicioTickets:
             db.session.commit()
             print(f"El agente del ticket a sido reasignado correctamente")
             ServicioAuditoria.registrar(
-                usuario_id=nuevo_agente_id,
+                usuario_id=actor_id,
                 accion=AccionAuditoria.REASIGNAR_AGENTE,
                 detalle=f"Ticket #{ticket.id}: agente {agente_anterior} -> {nuevo_agente_id}",
-            )   
+            )
             return True,ticket.agente_id
        
         except Exception as e:

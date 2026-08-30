@@ -326,6 +326,7 @@ def test_reasignar_agente_valido():
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente_1 = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
     agente_2 = Usuario.query.filter_by(email=EMAIL_AGENTE_2).first()
+    admin_prueba = Usuario.query.filter_by(email=EMAIL_ADMIN_PRUEBA).first()
 
     _, ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
@@ -341,6 +342,7 @@ def test_reasignar_agente_valido():
     exito, agente_resultante = ServicioTickets.reasignar_agente(
         ticket_id=ticket.id,
         nuevo_agente_id=agente_2.id,
+        actor_id=admin_prueba.id,
     )
 
     if not exito or agente_resultante != agente_2.id:
@@ -356,6 +358,7 @@ def test_reasignar_agente_ticket_inexistente():
         ServicioTickets.reasignar_agente(
             ticket_id=999999,
             nuevo_agente_id=1,
+            actor_id=1,
         )
         print("FALLO: se esperaba TicketNoEncontradoError")
     except TicketNoEncontradoError:
@@ -366,6 +369,7 @@ def test_reasignar_agente_ticket_no_en_progreso():
     print("\n--- Prueba 12: reasignar_agente sobre ticket ABIERTO debe fallar ---")
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente_2 = Usuario.query.filter_by(email=EMAIL_AGENTE_2).first()
+    admin_prueba = Usuario.query.filter_by(email=EMAIL_ADMIN_PRUEBA).first()
 
     _, ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
@@ -377,6 +381,7 @@ def test_reasignar_agente_ticket_no_en_progreso():
         ServicioTickets.reasignar_agente(
             ticket_id=ticket.id,
             nuevo_agente_id=agente_2.id,
+            actor_id=admin_prueba.id,
         )
         print("FALLO: se esperaba TicketNoEnProgresoError")
     except TicketNoEnProgresoError:
@@ -387,6 +392,7 @@ def test_reasignar_agente_mismo_agente():
     print("\n--- Prueba 13: reasignar al mismo agente que ya tenia debe fallar ---")
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente_1 = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
+    admin_prueba = Usuario.query.filter_by(email=EMAIL_ADMIN_PRUEBA).first()
 
     _, ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
@@ -403,6 +409,7 @@ def test_reasignar_agente_mismo_agente():
         ServicioTickets.reasignar_agente(
             ticket_id=ticket.id,
             nuevo_agente_id=agente_1.id,
+            actor_id=admin_prueba.id,
         )
         print("FALLO: se esperaba AgenteYaAsignadoError")
     except AgenteYaAsignadoError:

@@ -1,6 +1,7 @@
 from datetime import datetime
 from app.extensions import db
 from app.models.enum import Categoria, Prioridad, EstadoTicket
+
 class Ticket(db.Model):
     __tablename__ = "tickets"
     id = db.Column(db.Integer, primary_key=True)
@@ -13,3 +14,4 @@ class Ticket(db.Model):
     agente_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=True)
     fecha_creacion = db.Column(db.DateTime, nullable=False, default=datetime.now)
     fecha_limite= db.Column(db.DateTime, nullable=False)
+    fecha_cierre = db.Column(db.DateTime, nullable=True)

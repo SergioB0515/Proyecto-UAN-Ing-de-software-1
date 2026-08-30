@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.services.autenticacion import ServicioAutenticacion, ResultadoLogin
 from app.routes.decoradores import requiere_login, requiere_admin
+from app.services.metricas import ServicioMetricas
 auth_bp = Blueprint("auth", __name__)
 from app.models.enum import RolUsuario,NivelUsuario,Categoria
+
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -37,7 +39,8 @@ def login():
 @auth_bp.route("/dashboard")
 @requiere_login
 def dashboard():
-    return f"Bienvenido, usuario ID {session['usuario_id']} (rol: {session.get('rol')})"
+    metricas = ServicioMetricas.obtener_metricas()
+    return render_template("dashboard.html", metricas=metricas)
 
 @auth_bp.route("/logout")
 def logout():
