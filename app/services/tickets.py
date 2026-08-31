@@ -61,6 +61,7 @@ class ServicioTickets:
     def listar_tickets_por_area(area):
         tickets_del_area = Ticket.query.filter_by(categoria=area).all()
         return sorted(tickets_del_area, key=lambda ticket: ORDEN_PRIORIDAD[ticket.prioridad])
+    
     @staticmethod
     def cambiar_estado(ticket_id, nuevo_estado, actor_id, agente_id=None):
         
@@ -80,8 +81,11 @@ class ServicioTickets:
        
             if agente_id is not None:
                 ticket.agente_id = agente_id
+        
         estado_anterior=ticket.estado
         ticket.estado = nuevo_estado
+        if estado_anterior ==   EstadoTicket.CERRADO and nuevo_estado == EstadoTicket.EN_PROGRESO:
+            ticket.fecha_cierre = None
         if nuevo_estado == EstadoTicket.CERRADO:
             ticket.fecha_cierre = datetime.now()
        
@@ -101,6 +105,7 @@ class ServicioTickets:
             db.session.refresh(ticket)
             print(f"No se ha podido realizar el guardado u registro error : {e}")  
             return False,None
+        
     @staticmethod
     def reasignar_agente(ticket_id, nuevo_agente_id, actor_id):
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar()
@@ -157,6 +162,9 @@ class ServicioTickets:
             db.session.rollback()
             print(f"No se ha podido agregar el comentario : {e}")  
             return False,None
-
+    @staticmethod
+    def listar_tickets_por_creador(usuario_id):
+        tickets_del_usuario = Ticket.query.filter_by(creador_id=usuario_id).all()
+        return sorted(tickets_del_usuario, key=lambda ticket: ticket.fecha_creacion, reverse=True)
         
     

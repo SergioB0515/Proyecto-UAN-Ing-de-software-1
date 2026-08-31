@@ -1,8 +1,9 @@
 from flask import Flask
 from app.extensions import db
 from app.config import Config
-from app.routes import auth_bp
+from app.routes.auth import auth_bp
 from app.routes.tickets import tickets_bp
+from app.routes.metricas import metricas_bp
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -15,4 +16,5 @@ def create_app():
     
     app.register_blueprint(auth_bp)
     app.register_blueprint(tickets_bp)
+    app.register_blueprint(metricas_bp)
     return app

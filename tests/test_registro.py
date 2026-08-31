@@ -17,6 +17,9 @@ from app.models.usuario import Usuario
 from app.models.enum import RolUsuario, NivelUsuario
 
 
+EMAIL_ADMIN_PRUEBA = "prueba_registro_admin@empresa.com"
+
+
 def limpiar_usuario_de_prueba(email):
     """Borra el usuario de prueba si ya existe, para poder correr el script varias veces sin chocar."""
     usuario_existente = Usuario.query.filter_by(email=email).first()
@@ -25,7 +28,24 @@ def limpiar_usuario_de_prueba(email):
         db.session.commit()
 
 
-def test_registro_exitoso():
+def preparar_admin_de_prueba():
+    """Crea un admin directo por SQLAlchemy (sin pasar por registrar()) para poder
+    llamar registrar() en las pruebas, que ahora requiere admin_id obligatorio."""
+    limpiar_usuario_de_prueba(EMAIL_ADMIN_PRUEBA)
+
+    admin_prueba = Usuario(
+        nombre="Admin Prueba Registro",
+        email=EMAIL_ADMIN_PRUEBA,
+        contrasena_hash=ServicioAutenticacion._generar_hash("ClaveSegura123"),
+        rol=RolUsuario.ADMIN,
+        nivel=NivelUsuario.NORMAL,
+    )
+    db.session.add(admin_prueba)
+    db.session.commit()
+    return admin_prueba
+
+
+def test_registro_exitoso(admin_id):
     print("\n--- Prueba 1: registro exitoso ---")
     email_prueba = "prueba_registro@empresa.com"
     limpiar_usuario_de_prueba(email_prueba)
@@ -36,6 +56,7 @@ def test_registro_exitoso():
         contrasena="ClaveSegura123",
         rol=RolUsuario.FINAL,
         nivel=NivelUsuario.NORMAL,
+        admin_id=admin_id,
     )
 
     if resultado is not True:
@@ -59,7 +80,7 @@ def test_registro_exitoso():
     print("OK: usuario registrado y contraseña almacenada como hash bcrypt")
 
 
-def test_email_duplicado():
+def test_email_duplicado(admin_id):
     print("\n--- Prueba 2: email duplicado debe rechazarse ---")
     email_prueba = "duplicado@empresa.com"
     limpiar_usuario_de_prueba(email_prueba)
@@ -69,12 +90,14 @@ def test_email_duplicado():
         email=email_prueba,
         contrasena="Clave123",
         rol=RolUsuario.FINAL,
+        admin_id=admin_id,
     )
     segundo_intento = ServicioAutenticacion.registrar(
         nombre="Segundo Usuario (mismo email)",
         email=email_prueba,
         contrasena="OtraClave456",
         rol=RolUsuario.FINAL,
+        admin_id=admin_id,
     )
 
     if primer_intento is not True:
@@ -91,5 +114,6 @@ def test_email_duplicado():
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
-        test_registro_exitoso()
-        test_email_duplicado()
+        admin_prueba = preparar_admin_de_prueba()
+        test_registro_exitoso(admin_id=admin_prueba.id)
+        test_email_duplicado(admin_id=admin_prueba.id)

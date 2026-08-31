@@ -64,7 +64,7 @@ def listar_por_area(area):
         select(Usuario).where(Usuario.area_soporte == categoria)
     ).scalars().all()
 
-    # RF-07: marcar vencidos/próximos a vencer
+  
     vencidos, proximos = GestorSLA.verificar_vencimientos()
     ids_vencidos = {t.id for t in vencidos}
     ids_proximos = {t.id for t in proximos}

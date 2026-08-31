@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.services.autenticacion import ServicioAutenticacion, ResultadoLogin
 from app.routes.decoradores import requiere_login, requiere_admin
-from app.services.metricas import ServicioMetricas
+from app.services.tickets import ServicioTickets
 auth_bp = Blueprint("auth", __name__)
 from app.models.enum import RolUsuario,NivelUsuario,Categoria
 
@@ -12,12 +12,17 @@ def login():
         contrasena = request.form["contrasena"]
 
         usuario, resultado = ServicioAutenticacion.iniciar_sesion(email, contrasena)
-
+        
         if resultado == ResultadoLogin.EXITOSO:
-            
             session['usuario_id'] = usuario.id
             session['rol'] = usuario.rol
-            return redirect(url_for('auth.dashboard'))
+            session['area_soporte'] = usuario.area_soporte.value if usuario.area_soporte is not None else None
+            if usuario.rol == RolUsuario.ADMIN:
+                return redirect(url_for("metricas.mostrar_metricas"))
+            elif usuario.rol == RolUsuario.AGENTE:
+                return redirect(url_for("tickets.listar_por_area", area=usuario.area_soporte.value))
+            else:
+                return redirect(url_for("auth.dashboard"))
 
 
         elif resultado in (ResultadoLogin.USUARIO_NO_EXISTE, ResultadoLogin.CREDENCIALES_INVALIDAS):
@@ -39,8 +44,10 @@ def login():
 @auth_bp.route("/dashboard")
 @requiere_login
 def dashboard():
-    metricas = ServicioMetricas.obtener_metricas()
-    return render_template("dashboard.html", metricas=metricas)
+    usuario_id = session['usuario_id']
+    tickets = ServicioTickets.listar_tickets_por_creador(usuario_id)
+
+    return render_template("dashboard.html", tickets=tickets)
 
 @auth_bp.route("/logout")
 def logout():
@@ -64,6 +71,11 @@ def registro():
             area_raw = None
         else:
             area_raw = Categoria(area_raw)
+            
+        if rol==RolUsuario.AGENTE and area_raw is None:
+            flash("UN agente debe tener un area especifica", "danger")
+            return redirect(url_for("auth.registro"))
+        
         admin_id = session["usuario_id"]
 
         exito = ServicioAutenticacion.registrar(
@@ -73,7 +85,7 @@ def registro():
 
         if exito:
             flash("Usuario registrado con éxito", "success")
-            return redirect(url_for("auth.dashboard"))
+            return redirect(url_for("metricas.mostrar_metricas"))
         else:
             flash("No se pudo registrar el usuario (email duplicado o error interno)", "danger")
             return redirect(url_for("auth.registro"))

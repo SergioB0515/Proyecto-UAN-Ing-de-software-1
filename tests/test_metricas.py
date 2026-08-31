@@ -1,8 +1,18 @@
 """
-Script de prueba manual para ServicioMetricas.obtener_metricas()
+Script de prueba manual para la logica de tickets_vencidos_ultimos_30_dias
+en ServicioMetricas.obtener_metricas()
+
+Cubre la semantica definida: union de
+  (a) cerrados fuera de plazo (fecha_cierre > fecha_limite)
+  (b) aun abiertos y con fecha_limite ya vencida
+ambos con fecha_limite dentro de los ultimos 30 dias.
+
+Usa medicion por delta (metrica antes vs. despues de insertar los tickets
+de prueba) para que la asercion sea exacta sin importar cuantos tickets
+de corridas anteriores ya existan en la base de datos.
 
 Como correrlo (desde la carpeta Proyecto, con el entorno virtual activado):
-    python -m tests.test_metricas
+    python -m tests.test_metricas_vencidos_30_dias
 """
 
 from datetime import datetime, timedelta
@@ -10,27 +20,37 @@ from datetime import datetime, timedelta
 from app import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
-from app.services.tickets import ServicioTickets
 from app.services.metricas import ServicioMetricas
 from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, EstadoTicket
 
 
-EMAIL_NORMAL = "prueba_metricas_normal@empresa.com"
-EMAIL_AGENTE = "prueba_metricas_agente@empresa.com"
-EMAIL_ADMIN_PRUEBA = "prueba_metricas_admin@empresa.com"
+EMAIL_ADMIN_PRUEBA = "prueba_v30d_admin@empresa.com"
+EMAIL_NORMAL = "prueba_v30d_normal@empresa.com"
+
+MARCADOR_TEXTO = "[TEST_V30D]"
 
 
-def preparar_datos_de_prueba():
-    for email in (EMAIL_NORMAL, EMAIL_AGENTE, EMAIL_ADMIN_PRUEBA):
+def limpiar_datos_de_prueba():
+    """Elimina tickets y usuarios de corridas anteriores de este test especifico."""
+    tickets_previos = Ticket.query.filter(Ticket.texto.like(f"{MARCADOR_TEXTO}%")).all()
+    for t in tickets_previos:
+        db.session.delete(t)
+    db.session.commit()
+
+    for email in (EMAIL_NORMAL, EMAIL_ADMIN_PRUEBA):
         usuario_existente = Usuario.query.filter_by(email=email).first()
         if usuario_existente:
             db.session.delete(usuario_existente)
     db.session.commit()
 
+
+def preparar_datos_de_prueba():
+    limpiar_datos_de_prueba()
+
     admin_prueba = Usuario(
-        nombre="Admin Prueba Metricas",
+        nombre="Admin Prueba V30D",
         email=EMAIL_ADMIN_PRUEBA,
         contrasena_hash=ServicioAutenticacion._generar_hash("ClaveSegura123"),
         rol=RolUsuario.ADMIN,
@@ -40,86 +60,98 @@ def preparar_datos_de_prueba():
     db.session.commit()
 
     ServicioAutenticacion.registrar(
-        nombre="Usuario Metricas Prueba",
+        nombre="Usuario V30D Prueba",
         email=EMAIL_NORMAL,
         contrasena="ClaveSegura123",
         rol=RolUsuario.FINAL,
         nivel=NivelUsuario.NORMAL,
         admin_id=admin_prueba.id,
     )
-    ServicioAutenticacion.registrar(
-        nombre="Agente Metricas Prueba",
-        email=EMAIL_AGENTE,
-        contrasena="ClaveSegura123",
-        rol=RolUsuario.AGENTE,
-        nivel=NivelUsuario.NORMAL,
-        admin_id=admin_prueba.id,
-    )
 
 
-def test_obtener_metricas():
-    print("\n--- Prueba: obtener_metricas devuelve conteos correctos ---")
+def test_union_cerrados_tarde_y_vencidos_sin_cerrar():
+    print("\n--- Prueba: tickets_vencidos_ultimos_30_dias (union cerrados tarde + abiertos vencidos) ---")
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
-
     ahora = datetime.now()
 
-    # Ticket vencido dentro de los ultimos 30 dias, aun abierto
-    ticket_vencido_reciente = Ticket(
-        texto="ticket vencido reciente de prueba",
-        categoria=Categoria.SOFTWARE,
-        prioridad=Prioridad.MEDIA,
-        estado=EstadoTicket.ABIERTO,
-        creador_id=usuario_normal.id,
+    # Medicion base ANTES de insertar los tickets de prueba
+    metricas_antes = ServicioMetricas.obtener_metricas()
+    valor_antes = metricas_antes["tickets_vencidos_ultimos_30_dias"]
+
+    casos = []
+
+    # (a) Cerrado A TIEMPO, dentro de los ultimos 30 dias -> NO debe contar
+    casos.append(Ticket(
+        texto=f"{MARCADOR_TEXTO} cerrado a tiempo",
+        categoria=Categoria.SOFTWARE, prioridad=Prioridad.MEDIA,
+        estado=EstadoTicket.CERRADO, creador_id=usuario_normal.id,
         fecha_creacion=ahora - timedelta(days=10),
         fecha_limite=ahora - timedelta(days=5),
-    )
+        fecha_cierre=ahora - timedelta(days=6),  # cerro ANTES del limite
+    ))
 
-    # Ticket vencido fuera del rango de 30 dias (no debe contar en esa metrica)
-    ticket_vencido_viejo = Ticket(
-        texto="ticket vencido viejo de prueba",
-        categoria=Categoria.SOFTWARE,
-        prioridad=Prioridad.BAJA,
-        estado=EstadoTicket.CERRADO,
-        creador_id=usuario_normal.id,
+    # (b) Cerrado TARDE, dentro de los ultimos 30 dias -> SI debe contar (condicion a)
+    casos.append(Ticket(
+        texto=f"{MARCADOR_TEXTO} cerrado tarde",
+        categoria=Categoria.SOFTWARE, prioridad=Prioridad.MEDIA,
+        estado=EstadoTicket.CERRADO, creador_id=usuario_normal.id,
+        fecha_creacion=ahora - timedelta(days=10),
+        fecha_limite=ahora - timedelta(days=5),
+        fecha_cierre=ahora - timedelta(days=2),  # cerro DESPUES del limite
+    ))
+
+    # (c) Vencido y AUN ABIERTO, dentro de los ultimos 30 dias -> SI debe contar (condicion b)
+    casos.append(Ticket(
+        texto=f"{MARCADOR_TEXTO} vencido sin cerrar",
+        categoria=Categoria.SOFTWARE, prioridad=Prioridad.MEDIA,
+        estado=EstadoTicket.EN_PROGRESO, creador_id=usuario_normal.id,
+        fecha_creacion=ahora - timedelta(days=10),
+        fecha_limite=ahora - timedelta(days=3),
+        fecha_cierre=None,
+    ))
+
+    # (d) Vigente, fecha_limite en el futuro -> NO debe contar
+    casos.append(Ticket(
+        texto=f"{MARCADOR_TEXTO} vigente no vencido",
+        categoria=Categoria.SOFTWARE, prioridad=Prioridad.MEDIA,
+        estado=EstadoTicket.ABIERTO, creador_id=usuario_normal.id,
+        fecha_creacion=ahora,
+        fecha_limite=ahora + timedelta(days=5),
+        fecha_cierre=None,
+    ))
+
+    # (e) Vencido pero FUERA del rango de 30 dias -> NO debe contar
+    casos.append(Ticket(
+        texto=f"{MARCADOR_TEXTO} vencido fuera de rango",
+        categoria=Categoria.SOFTWARE, prioridad=Prioridad.BAJA,
+        estado=EstadoTicket.ABIERTO, creador_id=usuario_normal.id,
         fecha_creacion=ahora - timedelta(days=60),
         fecha_limite=ahora - timedelta(days=45),
-    )
+        fecha_cierre=None,
+    ))
 
-    db.session.add_all([ticket_vencido_reciente, ticket_vencido_viejo])
+    db.session.add_all(casos)
     db.session.commit()
 
-    metricas = ServicioMetricas.obtener_metricas()
+    metricas_despues = ServicioMetricas.obtener_metricas()
+    valor_despues = metricas_despues["tickets_vencidos_ultimos_30_dias"]
 
-    campos_esperados = [
-        "tickets_por_estado", "tickets_por_categoria", "tickets_por_prioridad",
-        "tickets_vencidos_actualmente", "tickets_proximos_a_vencer_actualmente",
-        "tickets_vencidos_ultimos_30_dias", "cantidad_agentes",
-    ]
-    for campo in campos_esperados:
-        if campo not in metricas:
-            print(f"FALLO: falta el campo '{campo}' en el resultado")
-            return
+    delta = valor_despues - valor_antes
+    esperado = 2  # solo (b) y (c) deben contar
 
-    if metricas["tickets_vencidos_ultimos_30_dias"] < 1:
-        print(f"FALLO: se esperaba al menos 1 ticket vencido en los ultimos 30 dias, se obtuvo {metricas['tickets_vencidos_ultimos_30_dias']}")
+    if delta != esperado:
+        print(f"FALLO: se esperaba un delta de {esperado} tickets nuevos contados, "
+              f"se obtuvo {delta} (antes={valor_antes}, despues={valor_despues})")
         return
 
-    if metricas["cantidad_agentes"] < 1:
-        print(f"FALLO: se esperaba al menos 1 agente, se obtuvo {metricas['cantidad_agentes']}")
-        return
-
-    print(f"OK: metricas obtenidas correctamente")
-    print(f"  tickets_por_estado={metricas['tickets_por_estado']}")
-    print(f"  tickets_por_categoria={metricas['tickets_por_categoria']}")
-    print(f"  tickets_por_prioridad={metricas['tickets_por_prioridad']}")
-    print(f"  tickets_vencidos_actualmente={metricas['tickets_vencidos_actualmente']}")
-    print(f"  tickets_proximos_a_vencer_actualmente={metricas['tickets_proximos_a_vencer_actualmente']}")
-    print(f"  tickets_vencidos_ultimos_30_dias={metricas['tickets_vencidos_ultimos_30_dias']}")
-    print(f"  cantidad_agentes={metricas['cantidad_agentes']}")
+    print(f"OK: delta correcto = {delta} "
+          f"(cerrado a tiempo excluido, cerrado tarde incluido, "
+          f"vencido sin cerrar incluido, vigente excluido, fuera de rango excluido)")
 
 
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
         preparar_datos_de_prueba()
-        test_obtener_metricas()
+        test_union_cerrados_tarde_y_vencidos_sin_cerrar()
+        limpiar_datos_de_prueba()

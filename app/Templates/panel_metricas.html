@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Panel de Métricas{% endblock %}
+{% block content %}
+<h2 class="mb-4">Panel de Métricas</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Vencidos actualmente</h6>
+                <p class="fs-3">{{ metricas.tickets_vencidos_actualmente }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Próximos a vencer</h6>
+                <p class="fs-3">{{ metricas.tickets_proximos_a_vencer_actualmente }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Vencidos últimos 30 días</h6>
+                <p class="fs-3">{{ metricas.tickets_vencidos_ultimos_30_dias }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-title">Cantidad de agentes</h6>
+                <p class="fs-3">{{ metricas.cantidad_agentes }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h5>Por estado</h5>
+        <table class="table table-sm">
+            <tbody>
+                {% for estado, cantidad in metricas.tickets_por_estado.items() %}
+                <tr><td>{{ estado }}</td><td>{{ cantidad }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <h5>Por categoría</h5>
+        <table class="table table-sm">
+            <tbody>
+                {% for categoria, cantidad in metricas.tickets_por_categoria.items() %}
+                <tr><td>{{ categoria }}</td><td>{{ cantidad }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <h5>Por prioridad</h5>
+        <table class="table table-sm">
+            <tbody>
+                {% for prioridad, cantidad in metricas.tickets_por_prioridad.items() %}
+                <tr><td>{{ prioridad }}</td><td>{{ cantidad }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,4 +1,4 @@
-from sqlalchemy import select, func
+from sqlalchemy import select, func, or_, and_
 from datetime import datetime, timedelta
 from app.extensions import db
 from app.models.ticket import Ticket
@@ -42,10 +42,15 @@ class ServicioMetricas:
         tickets_proximos_a_vencer_actualmente = len(proximos_a_vencer)
 
         hace_30_dias = datetime.now() - timedelta(days=30)
+
         tickets_vencidos_ultimos_30_dias = db.session.execute(
             select(func.count()).select_from(Ticket).where(
-                Ticket.fecha_limite < datetime.now(),
                 Ticket.fecha_limite >= hace_30_dias,
+                Ticket.fecha_limite < datetime.now(),
+                or_(
+                    and_(Ticket.fecha_cierre.isnot(None), Ticket.fecha_cierre > Ticket.fecha_limite),
+                    Ticket.fecha_cierre.is_(None),
+                )
             )
         ).scalar()
 
