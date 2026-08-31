@@ -119,8 +119,7 @@ classDiagram
   ServicioMetricas ..> GestorSLA : usa
 ```
 
-*(Este bloque se renderiza automáticamente como diagrama al verlo en GitHub. Reemplaza al
-diagrama de clases en PDF, que quedó desactualizado — regenerarlo a partir de este bloque.)*
+
 
 ## Diagrama de flujo
 
@@ -148,11 +147,6 @@ flowchart TD
   R --> S([Fin])
 ```
 
-*(Reemplaza al diagrama de flujo en PDF v1.0. Los dos cambios respecto a esa versión: 1) el
-ticket **no** se enruta a un agente automáticamente al crearse, solo al área; 2) no existe un
-recordatorio activo para el creador — hoy es solo un resaltado visual en la tabla del agente.
-Regenerar el PDF a partir de este bloque una vez se implemente, si se decide, un recordatorio
-real.)*
 
 ## Estado actual de la implementación
 
