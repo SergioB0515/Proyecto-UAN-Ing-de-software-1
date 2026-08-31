@@ -2,7 +2,9 @@
 
 ## Metodología
 
-El proyecto se desarrolla bajo el marco de trabajo **Scrum**, con sprints de 2 semanas.
+El proyecto se desarrolla bajo el marco de trabajo **Scrum**, con sprints de 2 semanas,
+complementado con un **spike técnico** puntual para reducir incertidumbre antes de
+comprometer el diseño del módulo de clasificación (ver sección "Spike técnico" abajo).
 
 ## Roles
 
@@ -10,7 +12,7 @@ El proyecto se desarrolla bajo el marco de trabajo **Scrum**, con sprints de 2 s
 |---|---|---|
 | Product Owner | Definido junto al docente | Prioriza el backlog y valida los criterios de aceptación de cada historia. |
 | Scrum Master | Desarrollador principal | Facilita las ceremonias, elimina bloqueos y da seguimiento al avance del sprint. |
-| Dev Team | Los tres integrantes del equipo | Ejecuta las tareas del sprint backlog. |
+| Dev Team | Los tres(Actualmente cuatro) integrantes del equipo | Ejecuta las tareas del sprint backlog. |
 
 ## Artefactos
 
@@ -41,6 +43,28 @@ Una historia de usuario se considera terminada cuando:
 - Fue probada manualmente contra sus criterios de aceptación.
 - Cuenta con comentarios claros en el código.
 - La documentación relacionada fue actualizada si hubo cambios.
+
+## Spike técnico — evaluación de clasificación por IA
+
+Antes de comprometer el diseño del módulo de clasificación, se ejecutó un spike de tiempo
+acotado para evaluar la viabilidad de clasificar tickets con un modelo de lenguaje local
+(Ollama, `llama3`) en lugar de un algoritmo de reglas fijas.
+
+Se probaron 5 tickets de prueba con categoría y prioridad esperadas conocidas de antemano,
+midiendo: si la respuesta era JSON válido, si la categoría coincidía con la esperada, y el
+tiempo de respuesta.
+
+**Resultados:** 5 de 5 respuestas fueron JSON válido, con un tiempo promedio de ~3.6 segundos
+por ticket, pero solo 3 de 5 tickets acertaron la prioridad esperada (2 quedaron
+sobre-priorizados sin justificación clara), y el modelo generó etiquetas de categoría
+inconsistentes para casos equivalentes (por ejemplo, "Sistema" y "Sistemas" como categorías
+distintas).
+
+**Decisión:** se descartó el modelo de lenguaje para producción y se optó por el algoritmo de
+reglas por palabras clave que finalmente se implementó (`ClasificadorTickets`), por dos
+motivos: un conjunto cerrado de categorías es indispensable para poder agrupar y filtrar
+tickets de forma confiable, y un comportamiento determinístico es indispensable para poder
+auditar por qué un ticket recibió cierta prioridad.
 
 ## Plan de sprints
 
