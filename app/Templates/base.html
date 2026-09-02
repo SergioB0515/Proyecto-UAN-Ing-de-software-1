@@ -15,6 +15,7 @@
         {% if session.get('rol') == 'admin' %}
         <a href="{{ url_for('metricas.mostrar_metricas') }}" class="btn btn-outline-light btn-sm">Métricas</a>
         <a href="{{ url_for('auth.registro') }}" class="btn btn-outline-light btn-sm">Registrar usuario</a>
+        <a href="{{ url_for('auditoria.mostrar_auditoria') }}" class="btn btn-outline-light btn-sm">Mostrar logs</a>
         {% endif %}
 
         {% if session.get('rol') == 'agente' %}
