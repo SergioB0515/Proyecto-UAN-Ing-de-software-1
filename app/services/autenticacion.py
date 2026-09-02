@@ -4,6 +4,7 @@ from app.extensions import db
 from app.models.usuario import Usuario
 from datetime import datetime,timedelta
 from app.services.auditoria import ServicioAuditoria
+from app.services.exceptions import ErrorPersistencia
 import bcrypt
 class ResultadoLogin:
     EXITOSO = "exitoso"
@@ -11,16 +12,17 @@ class ResultadoLogin:
     BLOQUEADO_AHORA = "bloqueado_ahora"                       
     YA_BLOQUEADO = "ya_bloqueado"                             
     USUARIO_NO_EXISTE = "usuario_no_existe"
+    ERROR_INTERNO = "error_interno"
 class ServicioAutenticacion:
   
     @staticmethod
     def registrar(nombre, email, contrasena, rol, admin_id, area_soporte=None, nivel=NivelUsuario.NORMAL):
         existe =db.session.execute(select(Usuario.email).where(Usuario.email ==email)).scalar() is not None
         if existe:
-            return False
-        
+            return None
+
         hash_contrasena=ServicioAutenticacion._generar_hash(contrasena)
-    
+
         nuevo_usuario= Usuario(
             nombre=nombre,
             contrasena_hash=hash_contrasena,
@@ -29,21 +31,22 @@ class ServicioAutenticacion:
             area_soporte=area_soporte,
             nivel=nivel
         )
-        
+
         try:
             db.session.add(nuevo_usuario)
             db.session.commit()
-            print(f"El usuario {nombre} se ha resgistrado con exito")
-            ServicioAuditoria.registrar(
-                usuario_id=admin_id,
-                accion=AccionAuditoria.REGISTRO_EXITOSO,
-                detalle=f"Se registro al usuario {nuevo_usuario.email} (rol={rol}, nivel={nivel})",
-            )
-            return True
         except Exception as e:
             db.session.rollback()
-            print(f"No se ha podido realizar el guardado u registro error : {e}")  
-            return False
+            print(f"No se ha podido registrar al usuario, error : {e}")
+            raise ErrorPersistencia("No se pudo registrar al usuario") from e
+
+        print(f"El usuario {nombre} se ha resgistrado con exito")
+        ServicioAuditoria.registrar(
+            usuario_id=admin_id,
+            accion=AccionAuditoria.REGISTRO_EXITOSO,
+            detalle=f"Se registro al usuario {nuevo_usuario.email} (rol={rol}, nivel={nivel})",
+        )
+        return nuevo_usuario
         
     
     @staticmethod
@@ -72,7 +75,12 @@ class ServicioAutenticacion:
         if usuario.bloqueado_hasta is not None and usuario.bloqueado_hasta < datetime.now():
             usuario.bloqueado_hasta = None
             usuario.intentos_fallidos = 0
-            db.session.commit()
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(f"No se ha podido levantar el bloqueo del usuario, error: {e}")
+                return None, ResultadoLogin.ERROR_INTERNO
             ServicioAuditoria.registrar(
                 usuario_id=usuario.id,
                 accion=AccionAuditoria.DESBLOQUEO_USUARIO,
@@ -87,7 +95,12 @@ class ServicioAutenticacion:
             usuario.intentos_fallidos += 1
             if usuario.intentos_fallidos == 5:
                 usuario.bloqueado_hasta = datetime.now() + timedelta(hours=5)
-                db.session.commit()
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    print(f"No se ha podido bloquear al usuario, error: {e}")
+                    return None, ResultadoLogin.ERROR_INTERNO
                 ServicioAuditoria.registrar(
                     usuario_id=usuario.id,
                     accion=AccionAuditoria.CUENTA_BLOQUEADA,
@@ -95,7 +108,12 @@ class ServicioAutenticacion:
                 )
                 return None, ResultadoLogin.BLOQUEADO_AHORA
             else:
-                db.session.commit()
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    print(f"No se ha podido registrar el intento fallido, error: {e}")
+                    return None, ResultadoLogin.ERROR_INTERNO
                 ServicioAuditoria.registrar(
                     usuario_id=usuario.id,
                     accion=AccionAuditoria.LOGIN_FALLIDO,
@@ -104,7 +122,12 @@ class ServicioAutenticacion:
                 return None, ResultadoLogin.CREDENCIALES_INVALIDAS
 
         usuario.intentos_fallidos = 0
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"No se ha podido loguear al usuario error: {e}")
+            return None, ResultadoLogin.ERROR_INTERNO
         ServicioAuditoria.registrar(
             usuario_id=usuario.id,
             accion=AccionAuditoria.LOGIN_EXITOSO,

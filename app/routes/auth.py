@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.services.autenticacion import ServicioAutenticacion, ResultadoLogin
+from app.services.exceptions import ErrorPersistencia
 from app.routes.decoradores import requiere_login, requiere_admin
 from app.services.tickets import ServicioTickets
 auth_bp = Blueprint("auth", __name__)
@@ -29,7 +30,9 @@ def login():
             
             flash("usuario o contraseña incorrectos","danger")
             return redirect(url_for('auth.login'))
-
+        elif resultado == ResultadoLogin.ERROR_INTERNO:
+            flash("Ocurrio un error interno, intentelo mas tarde ","danger")
+            return redirect(url_for('auth.login'))
         else:
             if resultado == ResultadoLogin.YA_BLOQUEADO:
                 flash(f"Usuario usted se encuentra bloqueado")
@@ -78,16 +81,20 @@ def registro():
         
         admin_id = session["usuario_id"]
 
-        exito = ServicioAutenticacion.registrar(
-            nombre=nombre, email=email, contrasena=contrasena,
-            rol=rol, admin_id=admin_id, area_soporte=area_raw, nivel=nivel
-        )
-
-        if exito:
-            flash("Usuario registrado con éxito", "success")
-            return redirect(url_for("metricas.mostrar_metricas"))
-        else:
-            flash("No se pudo registrar el usuario (email duplicado o error interno)", "danger")
+        try:
+            usuario_creado = ServicioAutenticacion.registrar(
+                nombre=nombre, email=email, contrasena=contrasena,
+                rol=rol, admin_id=admin_id, area_soporte=area_raw, nivel=nivel
+            )
+        except ErrorPersistencia:
+            flash("No se pudo registrar el usuario por un error interno, intente más tarde", "danger")
             return redirect(url_for("auth.registro"))
+
+        if usuario_creado is None:
+            flash("Ya existe un usuario con ese email", "danger")
+            return redirect(url_for("auth.registro"))
+
+        flash("Usuario registrado con éxito", "success")
+        return redirect(url_for("metricas.mostrar_metricas"))
 
     return render_template("registro.html")

@@ -3,7 +3,7 @@ from app.models.ticket import Ticket
 from app.models.comentario import Comentario
 from app.services.clasificador import ClasificadorTickets
 from app.services.gestor_sla import GestorSLA
-from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError
+from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError,ErrorPersistencia
 from app.extensions import db
 from datetime import datetime
 from app.services.auditoria import ServicioAuditoria
@@ -46,17 +46,18 @@ class ServicioTickets:
         try:
             db.session.add(nuevo_ticket)
             db.session.commit()
-            print(f"El ticket se ha resgistrado con exito")
-            ServicioAuditoria.registrar(
-                usuario_id=creador.id,  
-                accion=AccionAuditoria.CREAR_TICKET,
-                detalle=f"Ticket #{nuevo_ticket.id} creado: categoria={nuevo_ticket.categoria}, prioridad={nuevo_ticket.prioridad}",
-            )
-            return True,nuevo_ticket
         except Exception as e:
             db.session.rollback()
-            print(f"No se ha podido realizar el guardado u registro error : {e}")  
-            return False,None
+            print(f"No se ha podido crear el ticket, error : {e}")
+            raise ErrorPersistencia("No se pudo crear el ticket") from e
+
+        print(f"El ticket se ha resgistrado con exito")
+        ServicioAuditoria.registrar(
+            usuario_id=creador.id,
+            accion=AccionAuditoria.CREAR_TICKET,
+            detalle=f"Ticket #{nuevo_ticket.id} creado: categoria={nuevo_ticket.categoria}, prioridad={nuevo_ticket.prioridad}",
+        )
+        return nuevo_ticket
     @staticmethod
     def listar_tickets_por_area(area):
         tickets_del_area = Ticket.query.filter_by(categoria=area).all()
@@ -92,20 +93,20 @@ class ServicioTickets:
         try:
             db.session.add(ticket)
             db.session.commit()
-            print(f"El estado del Ticket a sido cambiado con exito")
-            ServicioAuditoria.registrar(
-                usuario_id=actor_id,
-                accion=AccionAuditoria.CAMBIAR_ESTADO,
-                detalle=f"Ticket #{ticket.id}: {estado_anterior} -> {nuevo_estado}",
-            )
-            return True,ticket.estado
-       
         except Exception as e:
             db.session.rollback()
-            db.session.refresh(ticket)
-            print(f"No se ha podido realizar el guardado u registro error : {e}")  
-            return False,None
-        
+            print(f"No se ha podido cambiar el estado del ticket, error : {e}")
+            raise ErrorPersistencia("No se pudo cambiar el estado del ticket") from e
+
+        print(f"El estado del Ticket a sido cambiado con exito")
+        ServicioAuditoria.registrar(
+            usuario_id=actor_id,
+            accion=AccionAuditoria.CAMBIAR_ESTADO,
+            detalle=f"Ticket #{ticket.id}: {estado_anterior} -> {nuevo_estado}",
+        )
+        return ticket.estado
+
+
     @staticmethod
     def reasignar_agente(ticket_id, nuevo_agente_id, actor_id):
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar()
@@ -121,19 +122,18 @@ class ServicioTickets:
         try:
             db.session.add(ticket)
             db.session.commit()
-            print(f"El agente del ticket a sido reasignado correctamente")
-            ServicioAuditoria.registrar(
-                usuario_id=actor_id,
-                accion=AccionAuditoria.REASIGNAR_AGENTE,
-                detalle=f"Ticket #{ticket.id}: agente {agente_anterior} -> {nuevo_agente_id}",
-            )
-            return True,ticket.agente_id
-       
         except Exception as e:
             db.session.rollback()
-            db.session.refresh(ticket)
-            print(f"No se ha podido realizar la reasignacion error : {e}")  
-            return False,None
+            print(f"No se ha podido realizar la reasignacion, error : {e}")
+            raise ErrorPersistencia("No se pudo reasignar el agente") from e
+
+        print(f"El agente del ticket a sido reasignado correctamente")
+        ServicioAuditoria.registrar(
+            usuario_id=actor_id,
+            accion=AccionAuditoria.REASIGNAR_AGENTE,
+            detalle=f"Ticket #{ticket.id}: agente {agente_anterior} -> {nuevo_agente_id}",
+        )
+        return ticket.agente_id
     @staticmethod
     def agregar_comentario(ticket_id,autor_id,texto):
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar()
@@ -150,18 +150,18 @@ class ServicioTickets:
         try:
             db.session.add(nuevo_comentario)
             db.session.commit()
-            print(f"El comentario agregado correctamente")
-            ServicioAuditoria.registrar(
-                usuario_id=autor_id,
-                accion=AccionAuditoria.AGREGAR_COMENTARIO,
-                detalle=f"Se agrego un comentario al ticket #{ticket_id}",
-            )
-            return True,nuevo_comentario
-       
         except Exception as e:
             db.session.rollback()
-            print(f"No se ha podido agregar el comentario : {e}")  
-            return False,None
+            print(f"No se ha podido agregar el comentario, error : {e}")
+            raise ErrorPersistencia("No se pudo agregar el comentario") from e
+
+        print(f"El comentario agregado correctamente")
+        ServicioAuditoria.registrar(
+            usuario_id=autor_id,
+            accion=AccionAuditoria.AGREGAR_COMENTARIO,
+            detalle=f"Se agrego un comentario al ticket #{ticket_id}",
+        )
+        return nuevo_comentario
     @staticmethod
     def listar_tickets_por_creador(usuario_id):
         tickets_del_usuario = Ticket.query.filter_by(creador_id=usuario_id).all()

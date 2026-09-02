@@ -89,12 +89,12 @@ def test_ticket_normal_categoria_seguridad():
     print("\n--- Prueba 1: ticket de Seguridad, usuario normal ---")
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
 
-    exito, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="alguien entró a mi cuenta, no fui yo",
     )
 
-    if not exito or ticket is None:
+    if ticket is None:
         print("FALLO: se esperaba que el ticket se creara exitosamente")
         return
 
@@ -120,12 +120,12 @@ def test_ticket_vip_mismo_texto_sla_mas_corto():
     print("\n--- Prueba 2: mismo texto, usuario VIP -> SLA mas corto ---")
     usuario_vip = Usuario.query.filter_by(email=EMAIL_VIP).first()
 
-    exito, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_vip,
         texto="alguien entró a mi cuenta, no fui yo",
     )
 
-    if not exito or ticket is None:
+    if ticket is None:
         print("FALLO: se esperaba que el ticket se creara exitosamente")
         return
 
@@ -147,12 +147,12 @@ def test_ticket_vip_categoria_baja_se_eleva_a_alta():
     print("\n--- Prueba 3: usuario VIP con categoria de prioridad base BAJA -> se eleva a ALTA ---")
     usuario_vip = Usuario.query.filter_by(email=EMAIL_VIP).first()
 
-    exito, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_vip,
         texto="quisiera saber si puedo cambiar el color del tema",
     )
 
-    if not exito or ticket is None:
+    if ticket is None:
         print("FALLO: se esperaba que el ticket se creara exitosamente")
         return
 
@@ -210,20 +210,20 @@ def test_cambiar_estado_abierto_a_en_progreso():
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
-    _, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )
 
-    exito, estado = ServicioTickets.cambiar_estado(
+    estado = ServicioTickets.cambiar_estado(
         ticket_id=ticket.id,
         nuevo_estado=EstadoTicket.EN_PROGRESO,
         actor_id=agente.id,
         agente_id=agente.id,
     )
 
-    if not exito or estado != EstadoTicket.EN_PROGRESO:
-        print(f"FALLO: se esperaba EN_PROGRESO exitoso, se obtuvo exito={exito}, estado={estado}")
+    if estado != EstadoTicket.EN_PROGRESO:
+        print(f"FALLO: se esperaba EN_PROGRESO exitoso, se obtuvo estado={estado}")
         return
 
     print("OK: ABIERTO -> EN_PROGRESO con agente asignado correctamente")
@@ -234,7 +234,7 @@ def test_cambiar_estado_sin_agente_falla():
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
-    _, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )
@@ -256,7 +256,7 @@ def test_cambiar_estado_agente_en_conflicto():
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
-    _, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )
@@ -286,7 +286,7 @@ def test_cambiar_estado_transicion_invalida():
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
-    _, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )
@@ -328,7 +328,7 @@ def test_reasignar_agente_valido():
     agente_2 = Usuario.query.filter_by(email=EMAIL_AGENTE_2).first()
     admin_prueba = Usuario.query.filter_by(email=EMAIL_ADMIN_PRUEBA).first()
 
-    _, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )
@@ -339,14 +339,14 @@ def test_reasignar_agente_valido():
         agente_id=agente_1.id,
     )
 
-    exito, agente_resultante = ServicioTickets.reasignar_agente(
+    agente_resultante = ServicioTickets.reasignar_agente(
         ticket_id=ticket.id,
         nuevo_agente_id=agente_2.id,
         actor_id=admin_prueba.id,
     )
 
-    if not exito or agente_resultante != agente_2.id:
-        print(f"FALLO: se esperaba reasignacion exitosa a agente_2, se obtuvo exito={exito}, agente={agente_resultante}")
+    if agente_resultante != agente_2.id:
+        print(f"FALLO: se esperaba reasignacion exitosa a agente_2, se obtuvo agente={agente_resultante}")
         return
 
     print("OK: agente reasignado correctamente de agente_1 a agente_2")
@@ -371,7 +371,7 @@ def test_reasignar_agente_ticket_no_en_progreso():
     agente_2 = Usuario.query.filter_by(email=EMAIL_AGENTE_2).first()
     admin_prueba = Usuario.query.filter_by(email=EMAIL_ADMIN_PRUEBA).first()
 
-    _, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )
@@ -394,7 +394,7 @@ def test_reasignar_agente_mismo_agente():
     agente_1 = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
     admin_prueba = Usuario.query.filter_by(email=EMAIL_ADMIN_PRUEBA).first()
 
-    _, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )
@@ -419,18 +419,18 @@ def test_agregar_comentario_valido():
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente_1 = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
-    _, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )
 
-    exito, comentario = ServicioTickets.agregar_comentario(
+    comentario = ServicioTickets.agregar_comentario(
         ticket_id=ticket.id,
         autor_id=agente_1.id,
         texto="Estamos revisando tu caso, te contactaremos pronto.",
     )
 
-    if not exito or comentario is None:
+    if comentario is None:
         print("FALLO: se esperaba que el comentario se creara exitosamente")
         return
 
@@ -458,7 +458,7 @@ def test_agregar_comentario_texto_vacio():
     print("\n--- Prueba 16: agregar_comentario con texto vacio o solo espacios ---")
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
 
-    _, ticket = ServicioTickets.crear_ticket(
+    ticket = ServicioTickets.crear_ticket(
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )

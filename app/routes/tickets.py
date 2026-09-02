@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from sqlalchemy import select
 from app.extensions import db
 from app.services.tickets import ServicioTickets, TRANSICIONES_VALIDAS
-from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, ComentarioVacioError, TicketNoEncontradoError, TicketNoEnProgresoError
+from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, ComentarioVacioError, TicketNoEncontradoError, TicketNoEnProgresoError, ErrorPersistencia
 from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.comentario import Comentario 
@@ -22,11 +22,10 @@ def crear():
             select(Usuario).where(Usuario.id == session["usuario_id"])
         ).scalar()
 
-        exito, ticket = ServicioTickets.crear_ticket(creador=creador, texto=texto)
-
-        if exito:
+        try:
+            ticket = ServicioTickets.crear_ticket(creador=creador, texto=texto)
             flash(f"Ticket #{ticket.id} creado. Categoría: {ticket.categoria.value}, prioridad: {ticket.prioridad.value}", "success")
-        else:
+        except ErrorPersistencia:
             flash("No se pudo crear el ticket, intenta de nuevo", "danger")
 
         return redirect(url_for("tickets.crear"))
@@ -101,12 +100,12 @@ def cambiar_estado(ticket_id):
     agente_id = request.form.get("agente_id", type=int)
 
     try:
-        exito, estado = ServicioTickets.cambiar_estado(
+        estado = ServicioTickets.cambiar_estado(
             ticket_id=ticket_id, nuevo_estado=nuevo_estado,
             actor_id=actor_id, agente_id=agente_id
         )
         flash(f"Ticket #{ticket_id} actualizado a {estado.value}", "success")
-    except (TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError) as e:
+    except (TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
 
     return redirect(url_for("tickets.listar_por_area", area=ticket.categoria.value))
@@ -130,11 +129,11 @@ def reasignar(ticket_id):
     nuevo_agente_id = request.form.get("nuevo_agente_id", type=int)
 
     try:
-        exito, agente_resultante = ServicioTickets.reasignar_agente(
+        ServicioTickets.reasignar_agente(
             ticket_id=ticket_id, nuevo_agente_id=nuevo_agente_id, actor_id=actor_id
         )
         flash(f"Ticket #{ticket_id} reasignado correctamente", "success")
-    except (TicketNoEncontradoError, TicketNoEnProgresoError, AgenteYaAsignadoError) as e:
+    except (TicketNoEncontradoError, TicketNoEnProgresoError, AgenteYaAsignadoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
 
     return redirect(url_for("tickets.listar_por_area", area=ticket.categoria.value))
@@ -154,7 +153,7 @@ def detalle(ticket_id):
         try:
             ServicioTickets.agregar_comentario(ticket_id=ticket_id, autor_id=autor_id, texto=texto)
             flash("Comentario agregado", "success")
-        except ComentarioVacioError as e:
+        except (ComentarioVacioError, TicketNoEncontradoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
 
         return redirect(url_for("tickets.detalle", ticket_id=ticket_id))

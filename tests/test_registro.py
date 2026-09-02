@@ -59,8 +59,8 @@ def test_registro_exitoso(admin_id):
         admin_id=admin_id,
     )
 
-    if resultado is not True:
-        print(f"FALLO: se esperaba True, se obtuvo {resultado}")
+    if resultado is None:
+        print(f"FALLO: se esperaba el usuario creado, se obtuvo {resultado}")
         return
 
     usuario_guardado = Usuario.query.filter_by(email=email_prueba).first()
@@ -100,12 +100,12 @@ def test_email_duplicado(admin_id):
         admin_id=admin_id,
     )
 
-    if primer_intento is not True:
-        print(f"FALLO: el primer registro debía ser exitoso (True), fue {primer_intento}")
+    if primer_intento is None:
+        print(f"FALLO: el primer registro debía crear el usuario, fue {primer_intento}")
         return
 
-    if segundo_intento is not False:
-        print(f"FALLO: el segundo registro debía ser rechazado (False), fue {segundo_intento}")
+    if segundo_intento is not None:
+        print(f"FALLO: el segundo registro debía ser rechazado (None), fue {segundo_intento}")
         return
 
     print("OK: el segundo registro con email duplicado fue rechazado correctamente")
