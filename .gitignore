@@ -1,3 +1,6 @@
 venv/
 __pycache__/
 .vscode/
+
+# Base de datos local de desarrollo/pruebas (la definitiva se genera aparte)
+instance/*.db
