@@ -146,3 +146,29 @@ class ServicioAutenticacion:
             return True
         else:
             return False
+    @staticmethod
+    def cambiar_contrasena(usuario, contrasena_actual, contrasena_nueva):
+
+        correcto = ServicioAutenticacion._verificar_contrasena(contrasena_actual, usuario.contrasena_hash)
+        if not correcto:
+            raise ValueError("la contraseña actual es incorrecta")
+
+        if contrasena_nueva == contrasena_actual:
+            raise ValueError("La nueva contraseña debe ser distinta a la actual")
+
+        usuario.contrasena_hash = ServicioAutenticacion._generar_hash(contrasena_nueva)
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            db.session.refresh(usuario)
+            raise ErrorPersistencia("No se pudo guardar el cambio de contraseña") from e
+
+        ServicioAuditoria.registrar(
+            usuario_id=usuario.id,
+            accion=AccionAuditoria.CAMBIO_CONTRASENA,
+            detalle=f"Se realizó un cambio de contraseña para el usuario: {usuario.id}"
+        )
+
+        return True

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Mi perfil{% endblock %}
+{% block content %}
+<h2 class="mb-4">Mi perfil</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Cambiar contraseña</h5>
+
+                <form method="POST" action="{{ url_for('auth.cambiar_contrasena') }}">
+                    <div class="mb-3">
+                        <label for="contrasena_actual" class="form-label">Contraseña actual</label>
+                        <input type="password" class="form-control" id="contrasena_actual" name="contrasena_actual" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contrasena_nueva" class="form-label">Nueva contraseña</label>
+                        <input type="password" class="form-control" id="contrasena_nueva" name="contrasena_nueva" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

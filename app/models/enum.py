@@ -38,3 +38,4 @@ class AccionAuditoria(str, Enum):
     CUENTA_BLOQUEADA = "cuenta_bloqueada"
     DESBLOQUEO_USUARIO = "desbloqueo_usuario"
     REGISTRO_EXITOSO ="registro_exitoso"
+    CAMBIO_CONTRASENA ="cambio_constrasena"

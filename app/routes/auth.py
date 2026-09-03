@@ -2,8 +2,11 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from app.services.autenticacion import ServicioAutenticacion, ResultadoLogin
 from app.services.exceptions import ErrorPersistencia
 from app.routes.decoradores import requiere_login, requiere_admin
+from sqlalchemy import select
+from app.models.usuario import Usuario
 from app.services.tickets import ServicioTickets
 from app.services.gestor_sla import GestorSLA
+from app.extensions import db
 auth_bp = Blueprint("auth", __name__)
 from app.models.enum import RolUsuario,NivelUsuario,Categoria
 
@@ -67,7 +70,9 @@ def logout():
     session.clear()
     flash("Sesión cerrada correctamente", "info")
     return redirect(url_for('auth.login'))
+
 @auth_bp.route("/registro", methods=["GET", "POST"])
+
 @requiere_login
 @requiere_admin
 def registro():
@@ -108,3 +113,32 @@ def registro():
         return redirect(url_for("metricas.mostrar_metricas"))
 
     return render_template("registro.html")
+
+@auth_bp.route("/perfil", methods=["GET"])
+@requiere_login
+def perfil():
+
+    return render_template("perfil.html")
+
+
+@auth_bp.route("/perfil/cambiar-contrasena", methods=["POST"])
+@requiere_login
+def cambiar_contrasena():
+    usuario_id = session['usuario_id']
+
+    usuario = db.session.execute(select(Usuario).where(Usuario.id == usuario_id)).scalar_one_or_none()
+
+    contrasena_actual = request.form.get("contrasena_actual")
+    contrasena_nueva = request.form.get("contrasena_nueva")
+
+    try:
+        ServicioAutenticacion.cambiar_contrasena(usuario, contrasena_actual, contrasena_nueva)
+
+        flash("Contraseña cambiada con exito", "success")
+    except ValueError as e:
+       
+        flash(str(e), "danger")
+    except ErrorPersistencia as e:
+        flash(str(e), "danger")
+
+    return redirect(url_for("auth.perfil"))
