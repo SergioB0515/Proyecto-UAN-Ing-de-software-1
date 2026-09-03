@@ -3,6 +3,7 @@ from app.services.autenticacion import ServicioAutenticacion, ResultadoLogin
 from app.services.exceptions import ErrorPersistencia
 from app.routes.decoradores import requiere_login, requiere_admin
 from app.services.tickets import ServicioTickets
+from app.services.gestor_sla import GestorSLA
 auth_bp = Blueprint("auth", __name__)
 from app.models.enum import RolUsuario,NivelUsuario,Categoria
 
@@ -49,8 +50,17 @@ def login():
 def dashboard():
     usuario_id = session['usuario_id']
     tickets = ServicioTickets.listar_tickets_por_creador(usuario_id)
+    
+    vencidos, proximos = GestorSLA.verificar_vencimientos(creador_id=usuario_id)
+    ids_vencidos={t.id for t in vencidos}
+    ids_proximos={t.id for t in proximos}
 
-    return render_template("dashboard.html", tickets=tickets)
+    return render_template(
+        "dashboard.html",
+        tickets=tickets,
+        ids_vencidos=ids_vencidos,
+        ids_proximos=ids_proximos,
+        )
 
 @auth_bp.route("/logout")
 def logout():

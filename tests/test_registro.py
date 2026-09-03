@@ -10,7 +10,7 @@ Que verifica:
 3. Que intentar registrar el mismo email dos veces falla la segunda vez.
 """
 
-from app import create_app
+from tests import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
 from app.models.usuario import Usuario

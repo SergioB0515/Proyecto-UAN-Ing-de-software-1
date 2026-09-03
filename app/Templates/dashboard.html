@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Mis tickets{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header">
     <h2>Mis tickets</h2>
     {% if session.get('rol') == 'final' %}
     <a href="{{ url_for('tickets.crear') }}" class="btn btn-primary btn-sm">Crear ticket</a>
@@ -9,7 +9,8 @@
 </div>
 
 {% if tickets %}
-<table class="table align-middle">
+<div class="table-card">
+<table class="table table-hover align-middle">
     <thead>
         <tr>
             <th>ID</th><th>Texto</th><th>Categoría</th><th>Prioridad</th>
@@ -19,17 +20,20 @@
     <tbody>
         {% for t in tickets %}
         <tr>
-            <td><a href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">{{ t.id }}</a></td>
+            <td><a href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
-            <td>{{ t.categoria.value }}</td>
-            <td>{{ t.prioridad.value }}</td>
-            <td>{{ t.estado.value }}</td>
+            <td><span class="badge-pill categoria-tag">{{ t.categoria.value }}</span></td>
+            <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value }}</span></td>
+            <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value }}</span></td>
             <td>{{ t.fecha_creacion }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% else %}
-<p class="text-muted">No has creado ningún ticket todavía.</p>
+<div class="empty-state">
+    <p class="mb-0">No has creado ningún ticket todavía.</p>
+</div>
 {% endif %}
 {% endblock %}

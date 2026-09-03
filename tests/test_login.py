@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from app import create_app
+from tests import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion, ResultadoLogin
 from app.models.usuario import Usuario

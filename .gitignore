@@ -4,3 +4,4 @@ __pycache__/
 
 # Base de datos local de desarrollo/pruebas (la definitiva se genera aparte)
 instance/*.db
+test_proyecto/*.db

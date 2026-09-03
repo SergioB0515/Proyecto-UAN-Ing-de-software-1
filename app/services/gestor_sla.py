@@ -34,19 +34,25 @@ class GestorSLA:
         else:
             return prioridad_base           
     @staticmethod
-    def verificar_vencimientos():
-        tickets_vencidos=[]
-        tickets_proximos_a_vencer=[]
-        tickets=db.session.execute(select(Ticket).where(Ticket.estado !=EstadoTicket.CERRADO)).scalars().all()
+    def verificar_vencimientos(creador_id=None):
+        tickets_vencidos = []
+        tickets_proximos_a_vencer = []
+
+        query = select(Ticket).where(Ticket.estado != EstadoTicket.CERRADO)
+
+        if creador_id is not None:
+            query = query.where(Ticket.creador_id == creador_id)
+
+        tickets = db.session.execute(query).scalars().all()
 
         for ticket in tickets:
             tiempo_total = ticket.fecha_limite - ticket.fecha_creacion
             tiempo_restante = ticket.fecha_limite - datetime.now()
-            porcentaje_restante = tiempo_restante/tiempo_total
-            
+            porcentaje_restante = tiempo_restante / tiempo_total
+
             if tiempo_restante.total_seconds() <= 0:
                 tickets_vencidos.append(ticket)
-                
-            elif porcentaje_restante <= 0.20 :
+            elif porcentaje_restante <= 0.20:
                 tickets_proximos_a_vencer.append(ticket)
-        return tickets_vencidos,tickets_proximos_a_vencer
+
+        return tickets_vencidos, tickets_proximos_a_vencer

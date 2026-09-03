@@ -7,7 +7,7 @@ Como correrlo (desde la carpeta Proyecto, con el entorno virtual activado):
 
 from datetime import datetime, timedelta
 
-from app import create_app
+from tests import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
 from app.services.gestor_sla import GestorSLA

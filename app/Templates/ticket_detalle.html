@@ -1,24 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Ticket #{{ ticket.id }}{% endblock %}
 {% block content %}
-<h2 class="mb-3">Ticket #{{ ticket.id }}</h2>
-<p><strong>Texto:</strong> {{ ticket.texto }}</p>
-<p>
-    <strong>Categoría:</strong> {{ ticket.categoria.value }} |
-    <strong>Prioridad:</strong> {{ ticket.prioridad.value }} |
-    <strong>Estado:</strong> {{ ticket.estado.value }}
-</p>
-<p><strong>Fecha límite:</strong> {{ ticket.fecha_limite }}</p>
+<div class="page-header">
+    <h2>Ticket #{{ ticket.id }}</h2>
+</div>
 
-<hr>
-<h4>Comentarios</h4>
+<div class="ticket-meta">
+    <p class="mb-2"><span class="meta-label">Texto</span>{{ ticket.texto }}</p>
+    <p class="mb-2">
+        <span class="meta-label">Categoría</span><span class="badge-pill categoria-tag">{{ ticket.categoria.value }}</span>
+        &nbsp;
+        <span class="meta-label">Prioridad</span><span class="badge-pill prioridad-{{ ticket.prioridad.value }}">{{ ticket.prioridad.value }}</span>
+        &nbsp;
+        <span class="meta-label">Estado</span><span class="badge-pill estado-{{ ticket.estado.value }}">{{ ticket.estado.value }}</span>
+    </p>
+    <p class="mb-0"><span class="meta-label">Fecha límite</span>{{ ticket.fecha_limite }}</p>
+</div>
+
+<h4 class="mb-3">Comentarios</h4>
 {% for c in comentarios %}
-<div class="border rounded p-2 mb-2">
+<div class="comment-card mb-2">
     <small class="text-muted">{{ nombres_por_id.get(c.autor_id, "Usuario desconocido") }} — {{ c.fecha }}</small>
-    <p class="mb-0">{{ c.texto }}</p>
+    <p class="mb-0 mt-1">{{ c.texto }}</p>
 </div>
 {% else %}
-<p class="text-muted">Sin comentarios todavía.</p>
+<div class="empty-state py-3">
+    <p class="mb-0">Sin comentarios todavía.</p>
+</div>
 {% endfor %}
 
 <form method="POST" class="mt-3">

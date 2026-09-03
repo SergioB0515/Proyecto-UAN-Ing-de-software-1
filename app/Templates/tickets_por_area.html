@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Tickets - {{ area }}{% endblock %}
 {% block content %}
-<h2 class="mb-4">Tickets del área: {{ area }}</h2>
-<table class="table align-middle">
+<div class="page-header">
+    <h2>Tickets del área: {{ area }}</h2>
+</div>
+<div class="table-card">
+<table class="table table-hover align-middle">
     <thead>
         <tr>
             <th>ID</th><th>Texto</th><th>Prioridad</th><th>Estado</th>
@@ -12,10 +15,10 @@
     <tbody>
         {% for t in tickets %}
         <tr class="{% if t.id in ids_vencidos %}table-danger{% elif t.id in ids_proximos %}table-warning{% endif %}">
-            <td><a href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">{{ t.id }}</a></td>
+            <td><a href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
-            <td>{{ t.prioridad.value }}</td>
-            <td>{{ t.estado.value }}</td>
+            <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value }}</span></td>
+            <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value }}</span></td>
             <td>{{ t.fecha_limite }}</td>
 <td>
     {% set opciones = transiciones_por_ticket[t.id] %}
@@ -53,4 +56,5 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}

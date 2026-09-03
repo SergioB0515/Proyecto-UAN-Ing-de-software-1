@@ -3,52 +3,62 @@
 {% block title %}Registrar usuario{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <h2 class="mb-4">Registrar nuevo usuario</h2>
-        <form method="POST" action="{{ url_for('auth.registro') }}">
-            <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input type="text" name="nombre" class="form-control" required>
+<div class="auth-shell">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-7 col-lg-6">
+            <div class="auth-card">
+                <div class="auth-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg>
+                </div>
+                <h2>Registrar nuevo usuario</h2>
+                <p class="auth-subtitle">Crea una cuenta y asigna su rol dentro del sistema.</p>
+                <form method="POST" action="{{ url_for('auth.registro') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" name="nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" name="contrasena" class="form-control" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Rol</label>
+                            <select name="rol" id="rol" class="form-select" required>
+                                <option value="final">Usuario final</option>
+                                <option value="agente">Agente</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nivel</label>
+                            <select name="nivel" class="form-select" required>
+                                <option value="normal">Normal</option>
+                                <option value="vip">VIP</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="area-container">
+                        <label class="form-label">Área de soporte</label>
+                        <select name="area_soporte" class="form-select">
+                            <option value="">-- No aplica --</option>
+                            <option value="infraestructura">Infraestructura</option>
+                            <option value="redes">Redes</option>
+                            <option value="permisos">Permisos</option>
+                            <option value="cuentas_contrasenas">Cuentas y contraseñas</option>
+                            <option value="seguridad">Seguridad</option>
+                            <option value="software">Software</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mt-2">Registrar</button>
+                </form>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Contraseña</label>
-                <input type="password" name="contrasena" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Rol</label>
-                <select name="rol" id="rol" class="form-select" required>
-                    <option value="final">Usuario final</option>
-                    <option value="agente">Agente</option>
-                    <option value="admin">Admin</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Nivel</label>
-                <select name="nivel" class="form-select" required>
-                    <option value="normal">Normal</option>
-                    <option value="vip">VIP</option>
-                </select>
-            </div>
-            <div class="mb-3" id="area-container">
-                <label class="form-label">Área de soporte</label>
-                <select name="area_soporte" class="form-select">
-                    <option value="">-- No aplica --</option>
-                    <option value="infraestructura">Infraestructura</option>
-                    <option value="redes">Redes</option>
-                    <option value="permisos">Permisos</option>
-                    <option value="cuentas_contrasenas">Cuentas y contraseñas</option>
-                    <option value="seguridad">Seguridad</option>
-                    <option value="software">Software</option>
-                    <option value="otros">Otros</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Registrar</button>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,53 +1,60 @@
 {% extends "base.html" %}
 {% block title %}Log de auditoría{% endblock %}
 {% block content %}
-<h2 class="mb-4">Log de auditoría</h2>
- 
-<form method="GET" action="{{ url_for('auditoria.mostrar_auditoria') }}" class="row g-2 align-items-end mb-4">
-    <div class="col-md-3">
-        <label class="form-label">Usuario</label>
-        <select name="usuario_id" class="form-select form-select-sm">
-            <option value="">-- Todos --</option>
-            {% for u in usuarios %}
-            <option value="{{ u.id }}" {% if filtros_actuales.usuario_id == u.id %}selected{% endif %}>{{ u.nombre }} ({{ u.email }})</option>
-            {% endfor %}
-        </select>
+<div class="page-header">
+    <h2>Log de auditoría</h2>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('auditoria.mostrar_auditoria') }}" class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Usuario</label>
+                <select name="usuario_id" class="form-select form-select-sm">
+                    <option value="">-- Todos --</option>
+                    {% for u in usuarios %}
+                    <option value="{{ u.id }}" {% if filtros_actuales.usuario_id == u.id %}selected{% endif %}>{{ u.nombre }} ({{ u.email }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Acción</label>
+                <select name="accion" class="form-select form-select-sm">
+                    <option value="">-- Todas --</option>
+                    <option value="crear_ticket" {% if filtros_actuales.accion == "crear_ticket" %}selected{% endif %}>Crear ticket</option>
+                    <option value="cambiar_estado" {% if filtros_actuales.accion == "cambiar_estado" %}selected{% endif %}>Cambiar estado</option>
+                    <option value="reasignar_agente" {% if filtros_actuales.accion == "reasignar_agente" %}selected{% endif %}>Reasignar agente</option>
+                    <option value="agregar_comentario" {% if filtros_actuales.accion == "agregar_comentario" %}selected{% endif %}>Agregar comentario</option>
+                    <option value="login_exitoso" {% if filtros_actuales.accion == "login_exitoso" %}selected{% endif %}>Login exitoso</option>
+                    <option value="login_fallido" {% if filtros_actuales.accion == "login_fallido" %}selected{% endif %}>Login fallido</option>
+                    <option value="cuenta_bloqueada" {% if filtros_actuales.accion == "cuenta_bloqueada" %}selected{% endif %}>Cuenta bloqueada</option>
+                    <option value="desbloqueo_usuario" {% if filtros_actuales.accion == "desbloqueo_usuario" %}selected{% endif %}>Desbloqueo usuario</option>
+                    <option value="registro_exitoso" {% if filtros_actuales.accion == "registro_exitoso" %}selected{% endif %}>Registro exitoso</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Desde</label>
+                <input type="date" name="fecha_desde" class="form-control form-control-sm" value="{{ filtros_actuales.fecha_desde or '' }}">
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Hasta</label>
+                <input type="date" name="fecha_hasta" class="form-control form-control-sm" value="{{ filtros_actuales.fecha_hasta or '' }}">
+            </div>
+
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+                <a href="{{ url_for('auditoria.mostrar_auditoria') }}" class="btn btn-secondary btn-sm">Limpiar</a>
+            </div>
+        </form>
     </div>
- 
-    <div class="col-md-3">
-        <label class="form-label">Acción</label>
-        <select name="accion" class="form-select form-select-sm">
-            <option value="">-- Todas --</option>
-            <option value="crear_ticket" {% if filtros_actuales.accion == "crear_ticket" %}selected{% endif %}>Crear ticket</option>
-            <option value="cambiar_estado" {% if filtros_actuales.accion == "cambiar_estado" %}selected{% endif %}>Cambiar estado</option>
-            <option value="reasignar_agente" {% if filtros_actuales.accion == "reasignar_agente" %}selected{% endif %}>Reasignar agente</option>
-            <option value="agregar_comentario" {% if filtros_actuales.accion == "agregar_comentario" %}selected{% endif %}>Agregar comentario</option>
-            <option value="login_exitoso" {% if filtros_actuales.accion == "login_exitoso" %}selected{% endif %}>Login exitoso</option>
-            <option value="login_fallido" {% if filtros_actuales.accion == "login_fallido" %}selected{% endif %}>Login fallido</option>
-            <option value="cuenta_bloqueada" {% if filtros_actuales.accion == "cuenta_bloqueada" %}selected{% endif %}>Cuenta bloqueada</option>
-            <option value="desbloqueo_usuario" {% if filtros_actuales.accion == "desbloqueo_usuario" %}selected{% endif %}>Desbloqueo usuario</option>
-            <option value="registro_exitoso" {% if filtros_actuales.accion == "registro_exitoso" %}selected{% endif %}>Registro exitoso</option>
-        </select>
-    </div>
- 
-    <div class="col-md-2">
-        <label class="form-label">Desde</label>
-        <input type="date" name="fecha_desde" class="form-control form-control-sm" value="{{ filtros_actuales.fecha_desde or '' }}">
-    </div>
- 
-    <div class="col-md-2">
-        <label class="form-label">Hasta</label>
-        <input type="date" name="fecha_hasta" class="form-control form-control-sm" value="{{ filtros_actuales.fecha_hasta or '' }}">
-    </div>
- 
-    <div class="col-md-2 d-flex gap-2">
-        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
-        <a href="{{ url_for('auditoria.mostrar_auditoria') }}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
-    </div>
-</form>
- 
+</div>
+
 {% if logs.items %}
-<table class="table table-sm align-middle">
+<div class="table-card">
+<table class="table table-sm table-hover align-middle">
     <thead>
         <tr>
             <th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th>
@@ -58,32 +65,35 @@
         <tr>
             <td>{{ log.fecha }}</td>
             <td>{{ nombres_por_id.get(log.usuario_id, "Usuario #" ~ log.usuario_id) }}</td>
-            <td>{{ log.accion.value }}</td>
+            <td><span class="badge-pill categoria-tag">{{ log.accion.value }}</span></td>
             <td>{{ log.detalle }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
- 
-<nav aria-label="Paginación del log de auditoría">
+</div>
+
+<nav aria-label="Paginación del log de auditoría" class="mt-3">
     <ul class="pagination pagination-sm">
         {% set query_sin_pagina = request.args.to_dict() %}
         {% set _ = query_sin_pagina.pop('pagina', None) %}
- 
+
         <li class="page-item {% if not logs.has_prev %}disabled{% endif %}">
             <a class="page-link" href="{{ url_for('auditoria.mostrar_auditoria', pagina=logs.prev_num, **query_sin_pagina) if logs.has_prev else '#' }}">Anterior</a>
         </li>
- 
+
         <li class="page-item disabled">
             <span class="page-link">Página {{ logs.page }} de {{ logs.pages }}</span>
         </li>
- 
+
         <li class="page-item {% if not logs.has_next %}disabled{% endif %}">
             <a class="page-link" href="{{ url_for('auditoria.mostrar_auditoria', pagina=logs.next_num, **query_sin_pagina) if logs.has_next else '#' }}">Siguiente</a>
         </li>
     </ul>
 </nav>
 {% else %}
-<p class="text-muted">No hay registros de auditoría que coincidan con los filtros seleccionados.</p>
+<div class="empty-state">
+    <p class="mb-0">No hay registros de auditoría que coincidan con los filtros seleccionados.</p>
+</div>
 {% endif %}
 {% endblock %}
