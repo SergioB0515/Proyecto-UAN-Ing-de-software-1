@@ -14,18 +14,27 @@
     <thead>
         <tr>
             <th>ID</th><th>Texto</th><th>Categoría</th><th>Prioridad</th>
-            <th>Estado</th><th>Fecha creación</th>
+            <th>Estado</th><th>Fecha creación</th><th>SLA</th>
         </tr>
     </thead>
     <tbody>
         {% for t in tickets %}
-        <tr>
-            <td><a href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
+        <tr class="{% if t.id in ids_vencidos %}table-danger{% elif t.id in ids_proximos %}table-warning{% endif %}">
+            <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
             <td><span class="badge-pill categoria-tag">{{ t.categoria.value }}</span></td>
             <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value }}</span></td>
             <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value }}</span></td>
-            <td>{{ t.fecha_creacion }}</td>
+            <td class="mono text-soft-mono">{{ t.fecha_creacion }}</td>
+            <td>
+                {% if t.id in ids_vencidos %}
+                <span class="badge-pill sla-vencido">Vencido</span>
+                {% elif t.id in ids_proximos %}
+                <span class="badge-pill sla-proximo">Próximo a vencer</span>
+                {% else %}
+                <span class="sla-ok">En plazo</span>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>

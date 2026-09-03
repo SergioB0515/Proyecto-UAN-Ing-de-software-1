@@ -2,7 +2,7 @@
 {% block title %}Ticket #{{ ticket.id }}{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>Ticket #{{ ticket.id }}</h2>
+    <h2>Ticket <span class="mono ticket-id-tag">#{{ ticket.id }}</span></h2>
 </div>
 
 <div class="ticket-meta">
@@ -14,7 +14,7 @@
         &nbsp;
         <span class="meta-label">Estado</span><span class="badge-pill estado-{{ ticket.estado.value }}">{{ ticket.estado.value }}</span>
     </p>
-    <p class="mb-0"><span class="meta-label">Fecha límite</span>{{ ticket.fecha_limite }}</p>
+    <p class="mb-0"><span class="meta-label">Fecha límite</span><span class="mono">{{ ticket.fecha_limite }}</span></p>
 </div>
 
 <h4 class="mb-3">Comentarios</h4>

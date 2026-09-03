@@ -6,7 +6,17 @@ from app.routes.tickets import tickets_bp
 from app.routes.metricas import metricas_bp
 from app.routes.auditoria import auditoria_bp
 def create_app():
-    app = Flask(__name__)
+    # Las carpetas del proyecto se llaman "Templates" y "Static" (con mayúscula).
+    # Flask busca por defecto "templates"/"static" en minúscula: en un
+    # filesystem sensible a mayúsculas (Linux) eso hace que las plantillas y
+    # los estáticos no se encuentren. Se declaran explícitamente para que
+    # funcione igual en cualquier sistema operativo.
+    app = Flask(
+        __name__,
+        template_folder="Templates",
+        static_folder="Static",
+        static_url_path="/static",
+    )
     app.config.from_object(Config)
     db.init_app(app)
 

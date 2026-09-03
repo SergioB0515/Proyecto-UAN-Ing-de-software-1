@@ -15,11 +15,11 @@
     <tbody>
         {% for t in tickets %}
         <tr class="{% if t.id in ids_vencidos %}table-danger{% elif t.id in ids_proximos %}table-warning{% endif %}">
-            <td><a href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
+            <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
             <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value }}</span></td>
             <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value }}</span></td>
-            <td>{{ t.fecha_limite }}</td>
+            <td class="mono text-soft-mono">{{ t.fecha_limite }}</td>
 <td>
     {% set opciones = transiciones_por_ticket[t.id] %}
     {% if opciones %}

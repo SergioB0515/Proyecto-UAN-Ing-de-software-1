@@ -63,7 +63,7 @@
     <tbody>
         {% for log in logs.items %}
         <tr>
-            <td>{{ log.fecha }}</td>
+            <td class="mono text-soft-mono">{{ log.fecha }}</td>
             <td>{{ nombres_por_id.get(log.usuario_id, "Usuario #" ~ log.usuario_id) }}</td>
             <td><span class="badge-pill categoria-tag">{{ log.accion.value }}</span></td>
             <td>{{ log.detalle }}</td>
