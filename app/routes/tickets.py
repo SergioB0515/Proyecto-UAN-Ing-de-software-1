@@ -6,9 +6,10 @@ from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoErr
 from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.comentario import Comentario 
-from app.models.enum import Categoria, EstadoTicket, RolUsuario
+from app.models.enum import Categoria, EstadoTicket, RolUsuario, AccionAuditoria, Prioridad
 from app.routes.decoradores import requiere_login
 from app.services.gestor_sla import GestorSLA
+from datetime import datetime, timedelta
 tickets_bp = Blueprint("tickets", __name__)
 
 
@@ -53,7 +54,46 @@ def listar_por_area(area):
             flash("No tienes permiso para ver tickets de esa área", "warning")
             return redirect(url_for("tickets.crear"))
 
-    tickets = ServicioTickets.listar_tickets_por_area(categoria)
+
+    estado_raw = request.args.get("estado")
+    estado = None
+    if estado_raw:
+        try:
+            estado = EstadoTicket(estado_raw)
+        except ValueError:
+            estado = None
+
+    prioridad_raw = request.args.get("prioridad")
+    prioridad = None
+    if prioridad_raw:
+        try:
+            prioridad = Prioridad(prioridad_raw)
+        except ValueError:
+            prioridad = None
+
+    fecha_desde_raw = request.args.get("fecha_desde")
+    fecha_desde = None
+    if fecha_desde_raw:  
+        try:
+            fecha_desde = datetime.strptime(fecha_desde_raw, "%Y-%m-%d")
+        except ValueError:
+            fecha_desde = None
+
+    fecha_hasta_raw = request.args.get("fecha_hasta")
+    fecha_hasta = None
+    if fecha_hasta_raw:
+        try:
+            fecha_hasta = datetime.strptime(fecha_hasta_raw, "%Y-%m-%d") + timedelta(days=1)
+        except ValueError:
+            fecha_hasta = None
+
+    tickets = ServicioTickets.listar_tickets_por_area(
+        categoria,
+        estado=estado,
+        prioridad=prioridad,
+        fecha_desde=fecha_desde,
+        fecha_hasta=fecha_hasta,
+    )
 
     transiciones_por_ticket = {
         t.id: [e.value for e in TRANSICIONES_VALIDAS[t.estado]] for t in tickets
@@ -63,10 +103,17 @@ def listar_por_area(area):
         select(Usuario).where(Usuario.area_soporte == categoria)
     ).scalars().all()
 
-  
     vencidos, proximos = GestorSLA.verificar_vencimientos()
     ids_vencidos = {t.id for t in vencidos}
     ids_proximos = {t.id for t in proximos}
+
+
+    filtros_actuales = {
+    "prioridad": prioridad_raw,
+    "estado": estado_raw,
+    "fecha_desde": fecha_desde_raw,
+    "fecha_hasta": fecha_hasta_raw,
+}
 
     return render_template(
         "tickets_por_area.html",
@@ -76,6 +123,7 @@ def listar_por_area(area):
         agentes_del_area=agentes_del_area,
         ids_vencidos=ids_vencidos,
         ids_proximos=ids_proximos,
+        filtros_actuales=filtros_actuales,
     )
 
 

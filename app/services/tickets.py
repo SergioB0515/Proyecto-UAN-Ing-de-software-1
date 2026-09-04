@@ -58,11 +58,29 @@ class ServicioTickets:
             detalle=f"Ticket #{nuevo_ticket.id} creado: categoria={nuevo_ticket.categoria}, prioridad={nuevo_ticket.prioridad}",
         )
         return nuevo_ticket
-    @staticmethod
-    def listar_tickets_por_area(area):
-        tickets_del_area = Ticket.query.filter_by(categoria=area).all()
-        return sorted(tickets_del_area, key=lambda ticket: ORDEN_PRIORIDAD[ticket.prioridad])
     
+    @staticmethod
+    def listar_tickets_por_area(area, estado=None, prioridad=None, fecha_desde=None, fecha_hasta=None):
+        query = select(Ticket).where(Ticket.categoria == area)
+
+
+        if estado is not None:
+            query = query.where(Ticket.estado == estado)
+
+        if prioridad is not None:
+            query = query.where(Ticket.prioridad == prioridad)
+
+        if fecha_desde is not None:
+            query = query.where(Ticket.fecha_creacion >= fecha_desde)
+
+        if fecha_hasta is not None:
+            query = query.where(Ticket.fecha_creacion < fecha_hasta)
+
+        tickets_del_area = db.session.execute(query).scalars().all()
+
+
+        return sorted(tickets_del_area, key=lambda ticket: ORDEN_PRIORIDAD[ticket.prioridad])
+        
     @staticmethod
     def cambiar_estado(ticket_id, nuevo_estado, actor_id, agente_id=None):
         
