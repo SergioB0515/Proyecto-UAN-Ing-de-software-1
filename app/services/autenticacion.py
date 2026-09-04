@@ -93,7 +93,7 @@ class ServicioAutenticacion:
 
         if not password:
             usuario.intentos_fallidos += 1
-            if usuario.intentos_fallidos == 5:
+            if usuario.intentos_fallidos >= 3:
                 usuario.bloqueado_hasta = datetime.now() + timedelta(hours=5)
                 try:
                     db.session.commit()
@@ -104,7 +104,7 @@ class ServicioAutenticacion:
                 ServicioAuditoria.registrar(
                     usuario_id=usuario.id,
                     accion=AccionAuditoria.CUENTA_BLOQUEADA,
-                    detalle=f"Cuenta bloqueada por 5 intentos fallidos: {usuario.email}"
+                    detalle=f"Cuenta bloqueada por 3 intentos fallidos: {usuario.email}"
                 )
                 return None, ResultadoLogin.BLOQUEADO_AHORA
             else:

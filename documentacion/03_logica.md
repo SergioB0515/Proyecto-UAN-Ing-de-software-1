@@ -76,7 +76,7 @@ sin cerrarse.
 - Las contraseñas nunca se almacenan en texto plano: se guarda únicamente su hash (bcrypt),
   generado y verificado exclusivamente por `ServicioAutenticacion`.
 - El sistema lleva el conteo de intentos fallidos de inicio de sesión por usuario; al llegar a
-  **5 intentos fallidos**, la cuenta queda bloqueada durante **5 horas**. Al vencer ese
+  **3 intentos fallidos**, la cuenta queda bloqueada durante **5 horas**. Al vencer ese
   período, el primer intento de login siguiente desbloquea la cuenta y reinicia el contador.
 - Todo acceso y toda acción crítica quedan registrados en el log de auditoría, que no es
   editable ni eliminable desde la interfaz de la aplicación — aunque, como se indicó arriba,

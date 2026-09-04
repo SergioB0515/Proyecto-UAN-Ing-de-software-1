@@ -80,22 +80,22 @@ def test_credenciales_invalidas():
 
 
 def test_bloqueo_por_intentos_fallidos():
-    print("\n--- Prueba 3: 5 intentos fallidos seguidos deben bloquear la cuenta ---")
-    # Ya llevamos 1 intento fallido de la prueba anterior, faltan 4 para llegar a 5
-    for numero_intento in range(2, 6):
+    print("\n--- Prueba 3: 3 intentos fallidos seguidos deben bloquear la cuenta ---")
+    # Ya llevamos 1 intento fallido de la prueba anterior, faltan 2 para llegar a 3
+    for numero_intento in range(2, 4):
         _, estado = ServicioAutenticacion.iniciar_sesion(EMAIL_PRUEBA, CONTRASENA_INCORRECTA)
         print(f"  Intento {numero_intento}: {estado}")
 
     if estado != ResultadoLogin.BLOQUEADO_AHORA:
-        print(f"FALLO: el intento numero 5 debia devolver BLOQUEADO_AHORA, devolvio {estado}")
+        print(f"FALLO: el intento numero 3 debia devolver BLOQUEADO_AHORA, devolvio {estado}")
         return
 
     usuario_en_bd = Usuario.query.filter_by(email=EMAIL_PRUEBA).first()
     if usuario_en_bd.bloqueado_hasta is None:
-        print("FALLO: bloqueado_hasta sigue en None despues del quinto intento fallido")
+        print("FALLO: bloqueado_hasta sigue en None despues del tercer intento fallido")
         return
 
-    print("OK: la cuenta quedo bloqueada tras 5 intentos fallidos seguidos")
+    print("OK: la cuenta quedo bloqueada tras 3 intentos fallidos seguidos")
 
 
 def test_bloqueo_impide_login_aunque_contrasena_sea_correcta():
@@ -117,7 +117,7 @@ def test_bloqueo_expirado_no_deja_pasar_con_contrasena_incorrecta():
     usuario_en_bd = Usuario.query.filter_by(email=EMAIL_PRUEBA).first()
     # Simula un bloqueo que ya venció (hace una hora)
     usuario_en_bd.bloqueado_hasta = datetime.now() - timedelta(hours=1)
-    usuario_en_bd.intentos_fallidos = 5
+    usuario_en_bd.intentos_fallidos = 3
     db.session.commit()
 
     _, estado = ServicioAutenticacion.iniciar_sesion(EMAIL_PRUEBA, CONTRASENA_INCORRECTA)

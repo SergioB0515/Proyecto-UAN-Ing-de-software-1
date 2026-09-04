@@ -16,7 +16,7 @@ como "no aplica" corresponden a funcionalidades que todavía no existen en la in
 ### Autenticación
 - [ ] Captura de terminal mostrando la generación de un hash de contraseña y su verificación exitosa/fallida.
 - [ ] Captura del registro de un usuario nuevo mostrando el registro guardado en la base de datos con la contraseña ya hasheada, no en texto plano.
-- [ ] Captura de un intento de inicio de sesión fallido repetido (5 intentos), mostrando el bloqueo de la cuenta.
+- [ ] Captura de un intento de inicio de sesión fallido repetido (3 intentos), mostrando el bloqueo de la cuenta.
 
 ## Sprint 2
 

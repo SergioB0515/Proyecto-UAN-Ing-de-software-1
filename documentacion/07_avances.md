@@ -42,7 +42,7 @@ agentes (resaltado en la tabla del área), no para el creador del ticket, como p
 - `ServicioAuditoria`: registro de acciones críticas (login, registro, creación de ticket,
   cambio de estado, reasignación, comentarios, bloqueo/desbloqueo de cuenta), con reintento
   automático ante fallos de guardado.
-- Bloqueo de cuenta tras 5 intentos fallidos de login, por 5 horas.
+- Bloqueo de cuenta tras 3 intentos fallidos de login, por 5 horas.
 - `ServicioMetricas` y panel de métricas (`/dashboard`): tickets por estado/categoría/prioridad,
   vencidos actuales, próximos a vencer, vencidos en los últimos 30 días, cantidad de agentes.
 - Pruebas manuales de métricas (`test_metricas.py`).
