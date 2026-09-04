@@ -15,8 +15,9 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         contrasena = request.form["contrasena"]
+        ip = request.remote_addr
 
-        usuario, resultado = ServicioAutenticacion.iniciar_sesion(email, contrasena)
+        usuario, resultado = ServicioAutenticacion.iniciar_sesion(email, contrasena, ip)
         
         if resultado == ResultadoLogin.EXITOSO:
             session['usuario_id'] = usuario.id
@@ -36,6 +37,9 @@ def login():
             return redirect(url_for('auth.login'))
         elif resultado == ResultadoLogin.ERROR_INTERNO:
             flash("Ocurrio un error interno, intentelo mas tarde ","danger")
+            return redirect(url_for('auth.login'))
+        elif resultado == ResultadoLogin.IP_BLOQUEADA:
+            flash("Se ha detectado un error externo, contacte con soporte", "danger")
             return redirect(url_for('auth.login'))
         else:
             if resultado == ResultadoLogin.YA_BLOQUEADO:
@@ -101,6 +105,9 @@ def registro():
                 nombre=nombre, email=email, contrasena=contrasena,
                 rol=rol, admin_id=admin_id, area_soporte=area_raw, nivel=nivel
             )
+        except ValueError as e:                         
+            flash(str(e), "danger")
+            return redirect(url_for("auth.registro"))
         except ErrorPersistencia:
             flash("No se pudo registrar el usuario por un error interno, intente más tarde", "danger")
             return redirect(url_for("auth.registro"))

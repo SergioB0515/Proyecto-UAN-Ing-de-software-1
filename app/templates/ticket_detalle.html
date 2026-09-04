@@ -30,6 +30,7 @@
 {% endfor %}
 
 <form method="POST" class="mt-3">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="mb-2">
         <textarea name="texto" class="form-control" rows="3" placeholder="Escribe un comentario..." required></textarea>
     </div>

@@ -11,27 +11,24 @@
 <body>
 <nav class="navbar navbar-dark px-3 d-flex justify-content-between">
     <span class="navbar-brand mb-0">Sistema de Tickets IT</span>
-    {% if session.get('usuario_id') %}
-    <div class="d-flex gap-2 align-items-center">
-        <a href="{{ url_for('auth.dashboard') }}" class="btn btn-outline-light btn-sm">Mis tickets</a>
+      {% if session.get('usuario_id') %}
+      <div class="d-flex gap-2 align-items-center">
+          <a href="{{ url_for('auth.dashboard') }}" class="btn btn-outline-light btn-sm">Mis tickets</a>
+          <a href="{{ url_for('tickets.crear') }}" class="btn btn-outline-light btn-sm">Crear ticket</a>
 
-        {% if session.get('rol') == 'admin' %}
-        <a href="{{ url_for('metricas.mostrar_metricas') }}" class="btn btn-outline-light btn-sm">Métricas</a>
-        <a href="{{ url_for('auth.registro') }}" class="btn btn-outline-light btn-sm">Registrar usuario</a>
-        <a href="{{ url_for('auditoria.mostrar_auditoria') }}" class="btn btn-outline-light btn-sm">Mostrar logs</a>
-        {% endif %}
+          {% if session.get('rol') == 'admin' %}
+          <a href="{{ url_for('metricas.mostrar_metricas') }}" class="btn btn-outline-light btn-sm">Métricas</a>
+          <a href="{{ url_for('auth.registro') }}" class="btn btn-outline-light btn-sm">Registrar usuario</a>
+          <a href="{{ url_for('auditoria.mostrar_auditoria') }}" class="btn btn-outline-light btn-sm">Mostrar logs</a>
+          {% endif %}
 
-        {% if session.get('rol') == 'agente' %}
-        <a href="{{ url_for('tickets.listar_por_area', area=session.get('area_soporte')) }}" class="btn btn-outline-light btn-sm">Mi área</a>
-        {% endif %}
+          {% if session.get('rol') == 'agente' %}
+          <a href="{{ url_for('tickets.listar_por_area', area=session.get('area_soporte')) }}" class="btn btn-outline-light btn-sm">Mi área</a>
+          {% endif %}
 
-        {% if session.get('rol') == 'final' %}
-        <a href="{{ url_for('tickets.crear') }}" class="btn btn-outline-light btn-sm">Crear ticket</a>
-        {% endif %}
-
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
-    </div>
-    {% endif %}
+          <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+      </div>
+      {% endif %}
 </nav>
 
     <div class="container mt-4">

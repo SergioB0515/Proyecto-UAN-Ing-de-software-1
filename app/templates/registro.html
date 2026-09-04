@@ -13,6 +13,7 @@
                 <h2>Registrar nuevo usuario</h2>
                 <p class="auth-subtitle">Crea una cuenta y asigna su rol dentro del sistema.</p>
                 <form method="POST" action="{{ url_for('auth.registro') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label class="form-label">Nombre</label>
                         <input type="text" name="nombre" class="form-control" required>

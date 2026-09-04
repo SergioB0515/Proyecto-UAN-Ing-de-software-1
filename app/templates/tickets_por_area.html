@@ -62,6 +62,7 @@
     {% set opciones = transiciones_por_ticket[t.id] %}
     {% if opciones %}
     <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=t.id) }}" class="d-flex gap-1">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <select name="nuevo_estado" class="form-select form-select-sm">
             {% for opcion in opciones %}
             <option value="{{ opcion }}">{{ opcion }}</option>
@@ -81,6 +82,7 @@
 
     {% if t.estado.value == "en_progreso" %}
     <form method="POST" action="{{ url_for('tickets.reasignar', ticket_id=t.id) }}" class="d-flex gap-1 mt-1">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <select name="nuevo_agente_id" class="form-select form-select-sm" required>
             {% for ag in agentes_del_area %}
             <option value="{{ ag.id }}" {% if t.agente_id == ag.id %}selected{% endif %}>{{ ag.nombre }}</option>

@@ -10,6 +10,7 @@
                 <h5 class="card-title mb-3">Cambiar contraseña</h5>
 
                 <form method="POST" action="{{ url_for('auth.cambiar_contrasena') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label for="contrasena_actual" class="form-label">Contraseña actual</label>
                         <input type="password" class="form-control" id="contrasena_actual" name="contrasena_actual" required>

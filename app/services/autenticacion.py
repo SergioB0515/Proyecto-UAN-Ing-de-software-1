@@ -1,11 +1,14 @@
 from app.models.enum import NivelUsuario, AccionAuditoria
-from sqlalchemy import select
+from sqlalchemy import select, func
 from app.extensions import db
 from app.models.usuario import Usuario
 from datetime import datetime,timedelta
 from app.services.auditoria import ServicioAuditoria
 from app.services.exceptions import ErrorPersistencia
 import bcrypt
+import re
+from app.models.intento_login_fallido import IntentoLoginFallido
+from app.models.ip_bloqueada import IPBloqueada
 class ResultadoLogin:
     EXITOSO = "exitoso"
     CREDENCIALES_INVALIDAS = "credenciales_invalidas"      
@@ -13,6 +16,7 @@ class ResultadoLogin:
     YA_BLOQUEADO = "ya_bloqueado"                             
     USUARIO_NO_EXISTE = "usuario_no_existe"
     ERROR_INTERNO = "error_interno"
+    IP_BLOQUEADA = "ip_bloqueada"
 class ServicioAutenticacion:
   
     @staticmethod
@@ -21,6 +25,8 @@ class ServicioAutenticacion:
         if existe:
             return None
 
+        ServicioAutenticacion.validar_politica_contrasena(contrasena)
+        
         hash_contrasena=ServicioAutenticacion._generar_hash(contrasena)
 
         nuevo_usuario= Usuario(
@@ -67,9 +73,12 @@ class ServicioAutenticacion:
         
 
     @staticmethod
-    def iniciar_sesion(email, contrasena):
+    def iniciar_sesion(email, contrasena, ip):
+        if ServicioAutenticacion.ip_esta_bloqueada(ip):
+            return None, ResultadoLogin.IP_BLOQUEADA
         usuario = db.session.execute(select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
         if usuario is None:
+            ServicioAutenticacion.registrar_intento_fallido_ip(ip, email)
             return None, ResultadoLogin.USUARIO_NO_EXISTE
 
         if usuario.bloqueado_hasta is not None and usuario.bloqueado_hasta < datetime.now():
@@ -92,6 +101,7 @@ class ServicioAutenticacion:
         password = ServicioAutenticacion._verificar_contrasena(contrasena,usuario.contrasena_hash)
 
         if not password:
+            ServicioAutenticacion.registrar_intento_fallido_ip(ip, email)
             usuario.intentos_fallidos += 1
             if usuario.intentos_fallidos >= 3:
                 usuario.bloqueado_hasta = datetime.now() + timedelta(hours=5)
@@ -155,6 +165,7 @@ class ServicioAutenticacion:
 
         if contrasena_nueva == contrasena_actual:
             raise ValueError("La nueva contraseña debe ser distinta a la actual")
+        ServicioAutenticacion.validar_politica_contrasena(contrasena_nueva)
 
         usuario.contrasena_hash = ServicioAutenticacion._generar_hash(contrasena_nueva)
 
@@ -172,3 +183,67 @@ class ServicioAutenticacion:
         )
 
         return True
+    
+    @staticmethod
+    def validar_politica_contrasena(contrasena):
+
+        if len(contrasena) < 8:
+            raise ValueError("La contraseña debe tener al menos 8 caracteres")
+
+
+        if not re.search(r'[A-Z]', contrasena):
+            raise ValueError("La contraseña debe tener al menos una mayúscula")
+
+        if not re.search(r'[a-z]', contrasena):
+            raise ValueError("La contraseña debe tener al menos una minuscula")
+
+        if not re.search(r'[0-9]', contrasena):
+            raise ValueError("La contraseña debe tener al menos un numero")
+
+        if not re.search(r'[^A-Za-z0-9]', contrasena):
+            raise ValueError("La contraseña debe tener al menos un simbolo")
+    @staticmethod
+    def ip_esta_bloqueada(ip):
+        registro = db.session.execute(
+            select(IPBloqueada).where(IPBloqueada.ip == ip)
+        ).scalar_one_or_none()
+
+        if registro is None:
+            return False
+        if registro.bloqueada_hasta is None :
+            return False
+        elif registro.bloqueada_hasta > datetime.now():
+            return True
+        else:
+            return False
+    @staticmethod
+    def registrar_intento_fallido_ip(ip, email_intentado):
+        nuevo_intento = IntentoLoginFallido(ip=ip, email_intentado=email_intentado)
+
+        try:
+            db.session.add(nuevo_intento)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"No se pudo registrar el intento fallido por IP, error: {e}")
+            return None
+
+        query = (
+        select(func.count(func.distinct(IntentoLoginFallido.email_intentado)))
+        .where(IntentoLoginFallido.ip == ip)
+        .where(IntentoLoginFallido.fecha >= datetime.now() - timedelta(hours=1))
+        )
+        cantidad_emails_distintos = db.session.execute(query).scalar()
+        if cantidad_emails_distintos >= 5:
+
+            ip_existe = db.session.execute(select(IPBloqueada).where(IPBloqueada.ip == ip)).scalar_one_or_none()
+            if ip_existe:
+                ip_existe.bloqueada_hasta = datetime.now() + timedelta(hours=3)
+            else:
+                nuevo_bloqueo = IPBloqueada(ip=ip, bloqueada_hasta=datetime.now() + timedelta(hours=3))
+                db.session.add(nuevo_bloqueo)
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(f"No se pudo bloquear la IP, error: {e}")
