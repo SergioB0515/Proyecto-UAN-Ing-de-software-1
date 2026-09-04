@@ -9,6 +9,14 @@ import bcrypt
 import re
 from app.models.intento_login_fallido import IntentoLoginFallido
 from app.models.ip_bloqueada import IPBloqueada
+import os
+import glob
+from PIL import Image
+
+CARPETA_FOTOS = os.path.join("app", "static", "fotos_perfil")
+EXTENSIONES_PERMITIDAS = {"jpg", "jpeg", "png", "webp"}
+TAMANO_MAXIMO_BYTES = 2 * 1024 * 1024
+
 class ResultadoLogin:
     EXITOSO = "exitoso"
     CREDENCIALES_INVALIDAS = "credenciales_invalidas"      
@@ -247,3 +255,73 @@ class ServicioAutenticacion:
             except Exception as e:
                 db.session.rollback()
                 print(f"No se pudo bloquear la IP, error: {e}")
+                
+    @staticmethod
+    def cambiar_nombre(usuario, nombre_nuevo):
+        nombre_nuevo = nombre_nuevo.strip()
+
+        if not nombre_nuevo:
+            raise ValueError("El nombre no puede estar vacío")
+
+
+        if not re.match(r'^[A-Za-zÀ-ÿ\s]+$', nombre_nuevo):
+            raise ValueError("El nombre solo puede contener letras")
+
+        usuario.nombre = nombre_nuevo.capitalize()
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            db.session.refresh(usuario)
+            raise ErrorPersistencia("No se pudo guardar el cambio de nombre") from e
+
+        ServicioAuditoria.registrar(
+            usuario_id=usuario.id,
+            accion=AccionAuditoria.CAMBIO_NOMBRE,
+            detalle=f"Se realizó un cambio de nombre para el usuario: {usuario.id}"
+        )
+
+        return True
+    @staticmethod
+    def subir_foto_perfil(usuario, archivo):
+
+        if archivo is None or archivo.filename == "":
+            raise ValueError("No se seleccionó ningún archivo")
+
+
+        extension = archivo.filename.rsplit(".",1)[-1].lower()
+
+        if extension not in EXTENSIONES_PERMITIDAS:
+            raise ValueError("Formato no permitido. Usa JPG, PNG o WEBP")
+
+
+        archivo.seek(0, os.SEEK_END)
+        tamano = archivo.tell()
+        archivo.seek(0)
+
+        if tamano > TAMANO_MAXIMO_BYTES:
+            raise ValueError("La imagen no puede pesar más de 2MB")
+
+
+        try:
+            Image.open(archivo).verify()
+            archivo.seek(0)
+        except Exception:
+            raise ValueError("El archivo no es una imagen válida")
+
+        archivos_viejos = glob.glob(os.path.join(CARPETA_FOTOS,f"{usuario.id}.*"))
+        for path_viejo in archivos_viejos:
+            os.remove(path_viejo)
+
+        os.makedirs(CARPETA_FOTOS, exist_ok=True)
+        ruta_destino = os.path.join(CARPETA_FOTOS, f"{usuario.id}.{extension}")
+        archivo.save(ruta_destino)
+
+        return True
+    @staticmethod
+    def obtener_nombre_archivo_foto(usuario):
+        coincidencias = glob.glob(os.path.join(CARPETA_FOTOS, f"{usuario.id}.*"))
+        if not coincidencias:
+            return None
+        return os.path.basename(coincidencias[0])

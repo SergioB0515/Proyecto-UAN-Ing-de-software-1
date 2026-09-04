@@ -1,4 +1,4 @@
-from app.models.enum import Categoria,Prioridad,EstadoTicket,AccionAuditoria
+from app.models.enum import Categoria,Prioridad,EstadoTicket,AccionAuditoria,RolUsuario
 from app.models.ticket import Ticket
 from app.models.comentario import Comentario
 from app.services.clasificador import ClasificadorTickets
@@ -7,7 +7,7 @@ from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoErro
 from app.extensions import db
 from datetime import datetime
 from app.services.auditoria import ServicioAuditoria
-from sqlalchemy import select
+from sqlalchemy import select, func
 
 PRIORIDAD_BASE_POR_CATEGORIA={
     Categoria.SEGURIDAD : Prioridad.ALTA,
@@ -185,4 +185,19 @@ class ServicioTickets:
         tickets_del_usuario = Ticket.query.filter_by(creador_id=usuario_id).all()
         return sorted(tickets_del_usuario, key=lambda ticket: ticket.fecha_creacion, reverse=True)
         
-    
+    @staticmethod
+    def obtener_estadisticas_personales(usuario):
+
+        tickets_creados = db.session.execute(select(func.count()).select_from(Ticket).where(Ticket.creador_id ==usuario.id)).scalar()
+
+        estadisticas = {
+            "tickets_creados": tickets_creados,
+        }
+
+        if usuario.rol == RolUsuario.AGENTE:
+            tickets_tomados = db.session.execute(select(func.count()).select_from(Ticket).where(Ticket.agente_id==usuario.id)).scalar()
+            tickets_cerrados = db.session.execute(select(func.count()).select_from(Ticket).where(Ticket.agente_id==usuario.id, Ticket.estado ==EstadoTicket.CERRADO)).scalar()
+            estadisticas["tickets_tomados"] = tickets_tomados
+            estadisticas["tickets_cerrados"] = tickets_cerrados
+
+        return estadisticas

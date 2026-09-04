@@ -124,8 +124,12 @@ def registro():
 @auth_bp.route("/perfil", methods=["GET"])
 @requiere_login
 def perfil():
+    usuario_id = session['usuario_id']
+    usuario = db.session.execute(select(Usuario).where(Usuario.id == usuario_id)).scalar_one_or_none()
+    estadisticas = ServicioTickets.obtener_estadisticas_personales(usuario)
+    nombre_foto = ServicioAutenticacion.obtener_nombre_archivo_foto(usuario)
 
-    return render_template("perfil.html")
+    return render_template("perfil.html", usuario=usuario, estadisticas=estadisticas, nombre_foto=nombre_foto)
 
 
 @auth_bp.route("/perfil/cambiar-contrasena", methods=["POST"])
@@ -146,6 +150,40 @@ def cambiar_contrasena():
        
         flash(str(e), "danger")
     except ErrorPersistencia as e:
+        flash(str(e), "danger")
+
+    return redirect(url_for("auth.perfil"))
+
+@auth_bp.route("/perfil/cambiar-nombre", methods=["POST"])
+@requiere_login
+def cambiar_nombre():
+    usuario_id = session['usuario_id']
+    usuario = db.session.execute(select(Usuario).where(Usuario.id == usuario_id)).scalar_one_or_none()
+
+    nombre_nuevo = request.form.get("nombre_nuevo")
+
+    try:
+        ServicioAutenticacion.cambiar_nombre(usuario, nombre_nuevo)
+        flash("Nombre actualizado con éxito", "success")
+    except ValueError as e:
+        flash(str(e), "danger")
+    except ErrorPersistencia as e:
+        flash(str(e), "danger")
+
+    return redirect(url_for("auth.perfil"))
+
+@auth_bp.route("/perfil/foto", methods=["POST"])
+@requiere_login
+def subir_foto():
+    usuario_id = session['usuario_id']
+    usuario = db.session.execute(select(Usuario).where(Usuario.id == usuario_id)).scalar_one_or_none()
+
+    archivo = request.files.get("foto")
+
+    try:
+        ServicioAutenticacion.subir_foto_perfil(usuario, archivo)
+        flash("Foto de perfil actualizada", "success")
+    except ValueError as e:
         flash(str(e), "danger")
 
     return redirect(url_for("auth.perfil"))

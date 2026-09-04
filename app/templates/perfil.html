@@ -1,28 +1,106 @@
 {% extends "base.html" %}
 {% block title %}Mi perfil{% endblock %}
 {% block content %}
+<style>
+    .avatar-perfil {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+    }
+    .avatar-iniciales {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(135deg, #4a5fd6, #7a4ad6);
+    }
+</style>
 <h2 class="mb-4">Mi perfil</h2>
 
-<div class="row">
+<div class="row g-4">
     <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    {% if nombre_foto %}
+                    <img src="{{ url_for('static', filename='fotos_perfil/' ~ nombre_foto) }}" class="avatar-perfil" alt="Foto de perfil">
+                    {% else %}
+                    <div class="avatar-iniciales">{{ usuario.nombre[:2] | upper }}</div>
+                    {% endif %}
+                    <div>
+                        <h5 class="mb-0">{{ usuario.nombre }}</h5>
+                        <small class="text-muted">{{ usuario.rol.value }}</small>
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ url_for('auth.subir_foto') }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="file" name="foto" class="form-control form-control-sm" accept=".jpg,.jpeg,.png,.webp" required>
+                    <button type="submit" class="btn btn-sm btn-secondary">Subir foto</button>
+                </form>
+                <small class="text-muted">JPG, PNG o WEBP, máximo 2MB.</small>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Datos de la cuenta</h5>
+                <p class="mb-2"><span class="meta-label">Email: </span> {{ usuario.email }}</p>
+                <p class="mb-2"><span class="meta-label">Rol: </span> {{ usuario.rol.value }}</p>
+                {% if usuario.area_soporte %}
+                <p class="mb-0"><span class="meta-label">Área de soporte: </span> {{ usuario.area_soporte.value }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Cambiar nombre</h5>
+                <form method="POST" action="{{ url_for('auth.cambiar_nombre') }}" class="d-flex gap-2">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="text" name="nombre_nuevo" class="form-control" placeholder="{{ usuario.nombre }}" required>
+                    <button type="submit" class="btn btn-secondary">Guardar</button>
+                </form>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title mb-3">Cambiar contraseña</h5>
-
                 <form method="POST" action="{{ url_for('auth.cambiar_contrasena') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label for="contrasena_actual" class="form-label">Contraseña actual</label>
                         <input type="password" class="form-control" id="contrasena_actual" name="contrasena_actual" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="contrasena_nueva" class="form-label">Nueva contraseña</label>
                         <input type="password" class="form-control" id="contrasena_nueva" name="contrasena_nueva" required>
                     </div>
-
                     <button type="submit" class="btn btn-primary">Guardar cambios</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Mis estadísticas</h5>
+                <p class="mb-2"><span class="meta-label">Tickets creados</span> {{ estadisticas.tickets_creados }}</p>
+
+                {% if usuario.rol.value == "agente" %}
+                <hr>
+                <p class="mb-2"><span class="meta-label">Tickets tomados</span> {{ estadisticas.tickets_tomados }}</p>
+                <p class="mb-0"><span class="meta-label">Tickets cerrados</span> {{ estadisticas.tickets_cerrados }}</p>
+                {% endif %}
             </div>
         </div>
     </div>
