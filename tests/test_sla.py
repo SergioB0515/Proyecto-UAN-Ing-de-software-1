@@ -1,13 +1,15 @@
 """
-Script de prueba manual para GestorSLA.verificar_vencimientos()
+Pruebas de GestorSLA.verificar_vencimientos()
 
-Como correrlo (desde la carpeta Proyecto, con el entorno virtual activado):
-    python -m tests.test_sla
+Nota de migracion: la contraseña de prueba paso de "ClaveSegura123" a
+"ClaveSegura123!" porque validar_politica_contrasena ahora exige un simbolo
+(registrar() fallaba con ValueError antes de llegar a nada de lo que prueba
+este archivo).
 """
-
 from datetime import datetime, timedelta
 
-from tests import create_app
+import pytest
+
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
 from app.services.gestor_sla import GestorSLA
@@ -17,10 +19,11 @@ from app.models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, Esta
 
 
 EMAIL_NORMAL = "prueba_sla_normal@empresa.com"
-
 EMAIL_ADMIN_PRUEBA = "prueba_admin_sla@empresa.com"
 
-def preparar_usuario_de_prueba():
+
+@pytest.fixture(scope="module")
+def usuario_normal():
     for email in (EMAIL_NORMAL, EMAIL_ADMIN_PRUEBA):
         usuario_existente = Usuario.query.filter_by(email=email).first()
         if usuario_existente:
@@ -30,27 +33,24 @@ def preparar_usuario_de_prueba():
     admin_prueba = Usuario(
         nombre="Admin Prueba SLA",
         email=EMAIL_ADMIN_PRUEBA,
-        contrasena_hash=ServicioAutenticacion._generar_hash("ClaveSegura123"),
+        contrasena_hash=ServicioAutenticacion._generar_hash("ClaveSegura123!"),
         rol=RolUsuario.ADMIN,
         nivel=NivelUsuario.NORMAL,
     )
     db.session.add(admin_prueba)
     db.session.commit()
 
-    ServicioAutenticacion.registrar(
+    return ServicioAutenticacion.registrar(
         nombre="Usuario SLA Prueba",
         email=EMAIL_NORMAL,
-        contrasena="ClaveSegura123",
+        contrasena="ClaveSegura123!",
         rol=RolUsuario.FINAL,
         nivel=NivelUsuario.NORMAL,
         admin_id=admin_prueba.id,
     )
 
 
-def test_verificar_vencimientos():
-    print("\n--- Prueba: verificar_vencimientos clasifica vencidos, proximos y a salvo ---")
-    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
-
+def test_verificar_vencimientos(usuario_normal):
     ahora = datetime.now()
 
     ticket_vencido = Ticket(
@@ -91,27 +91,11 @@ def test_verificar_vencimientos():
     ids_vencidos = [t.id for t in vencidos]
     ids_proximos = [t.id for t in proximos_a_vencer]
 
-    if ticket_vencido.id not in ids_vencidos:
-        print("FALLO: el ticket vencido no aparecio en la lista de vencidos")
-        return
-
-    if ticket_proximo.id not in ids_proximos:
-        print("FALLO: el ticket proximo a vencer no aparecio en la lista de proximos")
-        return
-
-    if ticket_a_salvo.id in ids_vencidos or ticket_a_salvo.id in ids_proximos:
-        print("FALLO: el ticket a salvo no deberia aparecer en ninguna lista")
-        return
-
-    if ticket_vencido.id in ids_proximos:
-        print("FALLO: el ticket vencido no deberia aparecer tambien en proximos_a_vencer")
-        return
-
-    print("OK: verificar_vencimientos clasifico correctamente vencidos, proximos y a salvo")
-
-
-if __name__ == "__main__":
-    app = create_app()
-    with app.app_context():
-        preparar_usuario_de_prueba()
-        test_verificar_vencimientos()
+    assert ticket_vencido.id in ids_vencidos, "el ticket vencido no aparecio en la lista de vencidos"
+    assert ticket_proximo.id in ids_proximos, "el ticket proximo a vencer no aparecio en la lista de proximos"
+    assert ticket_a_salvo.id not in ids_vencidos and ticket_a_salvo.id not in ids_proximos, (
+        "el ticket a salvo no deberia aparecer en ninguna lista"
+    )
+    assert ticket_vencido.id not in ids_proximos, (
+        "el ticket vencido no deberia aparecer tambien en proximos_a_vencer"
+    )

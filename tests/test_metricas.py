@@ -1,6 +1,6 @@
 """
-Script de prueba manual para la logica de tickets_vencidos_ultimos_30_dias
-en ServicioMetricas.obtener_metricas()
+Pruebas de la logica de tickets_vencidos_ultimos_30_dias en
+ServicioMetricas.obtener_metricas()
 
 Cubre la semantica definida: union de
   (a) cerrados fuera de plazo (fecha_cierre > fecha_limite)
@@ -9,15 +9,19 @@ ambos con fecha_limite dentro de los ultimos 30 dias.
 
 Usa medicion por delta (metrica antes vs. despues de insertar los tickets
 de prueba) para que la asercion sea exacta sin importar cuantos tickets
-de corridas anteriores ya existan en la base de datos.
+de otras pruebas ya existan en la base de datos compartida de la suite.
 
-Como correrlo (desde la carpeta Proyecto, con el entorno virtual activado):
-    python -m tests.test_metricas_vencidos_30_dias
+Nota de migracion: la contraseña de prueba paso de "ClaveSegura123" a
+"ClaveSegura123!" porque validar_politica_contrasena ahora exige un simbolo
+(registrar() fallaba con ValueError antes de llegar a nada de lo que prueba
+este archivo). El nombre original de este archivo/script era
+test_metricas_vencidos_30_dias.py; en el repositorio actual su contenido ya
+vive en tests/test_metricas.py (el archivo separado no existe).
 """
-
 from datetime import datetime, timedelta
 
-from tests import create_app
+import pytest
+
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
 from app.services.metricas import ServicioMetricas
@@ -28,7 +32,6 @@ from app.models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, Esta
 
 EMAIL_ADMIN_PRUEBA = "prueba_v30d_admin@empresa.com"
 EMAIL_NORMAL = "prueba_v30d_normal@empresa.com"
-
 MARCADOR_TEXTO = "[TEST_V30D]"
 
 
@@ -46,32 +49,35 @@ def limpiar_datos_de_prueba():
     db.session.commit()
 
 
-def preparar_datos_de_prueba():
+@pytest.fixture(scope="module")
+def usuario_normal():
     limpiar_datos_de_prueba()
 
     admin_prueba = Usuario(
         nombre="Admin Prueba V30D",
         email=EMAIL_ADMIN_PRUEBA,
-        contrasena_hash=ServicioAutenticacion._generar_hash("ClaveSegura123"),
+        contrasena_hash=ServicioAutenticacion._generar_hash("ClaveSegura123!"),
         rol=RolUsuario.ADMIN,
         nivel=NivelUsuario.NORMAL,
     )
     db.session.add(admin_prueba)
     db.session.commit()
 
-    ServicioAutenticacion.registrar(
+    usuario = ServicioAutenticacion.registrar(
         nombre="Usuario V30D Prueba",
         email=EMAIL_NORMAL,
-        contrasena="ClaveSegura123",
+        contrasena="ClaveSegura123!",
         rol=RolUsuario.FINAL,
         nivel=NivelUsuario.NORMAL,
         admin_id=admin_prueba.id,
     )
 
+    yield usuario
 
-def test_union_cerrados_tarde_y_vencidos_sin_cerrar():
-    print("\n--- Prueba: tickets_vencidos_ultimos_30_dias (union cerrados tarde + abiertos vencidos) ---")
-    usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
+    limpiar_datos_de_prueba()
+
+
+def test_union_cerrados_tarde_y_vencidos_sin_cerrar(usuario_normal):
     ahora = datetime.now()
 
     # Medicion base ANTES de insertar los tickets de prueba
@@ -139,19 +145,7 @@ def test_union_cerrados_tarde_y_vencidos_sin_cerrar():
     delta = valor_despues - valor_antes
     esperado = 2  # solo (b) y (c) deben contar
 
-    if delta != esperado:
-        print(f"FALLO: se esperaba un delta de {esperado} tickets nuevos contados, "
-              f"se obtuvo {delta} (antes={valor_antes}, despues={valor_despues})")
-        return
-
-    print(f"OK: delta correcto = {delta} "
-          f"(cerrado a tiempo excluido, cerrado tarde incluido, "
-          f"vencido sin cerrar incluido, vigente excluido, fuera de rango excluido)")
-
-
-if __name__ == "__main__":
-    app = create_app()
-    with app.app_context():
-        preparar_datos_de_prueba()
-        test_union_cerrados_tarde_y_vencidos_sin_cerrar()
-        limpiar_datos_de_prueba()
+    assert delta == esperado, (
+        f"se esperaba un delta de {esperado} tickets nuevos contados, "
+        f"se obtuvo {delta} (antes={valor_antes}, despues={valor_despues})"
+    )
