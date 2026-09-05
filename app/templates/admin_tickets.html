@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Tickets (Admin){% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h2>Tickets del sistema</h2>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('tickets.exportar_tickets', formato='csv', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">Exportar CSV</a>
+        <a href="{{ url_for('tickets.exportar_tickets', formato='xlsx', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">Exportar Excel</a>
+    </div>
+</div>
+
+<form method="GET" action="{{ url_for('tickets.listar_admin') }}" class="row g-2 align-items-end mb-3">
+    <div class="col-md-2">
+        <label class="form-label">Estado</label>
+        <select name="estado" class="form-select form-select-sm">
+            <option value="">-- Todos --</option>
+            <option value="abierto" {% if filtros_actuales.estado == "abierto" %}selected{% endif %}>Abierto</option>
+            <option value="en_progreso" {% if filtros_actuales.estado == "en_progreso" %}selected{% endif %}>En progreso</option>
+            <option value="cerrado" {% if filtros_actuales.estado == "cerrado" %}selected{% endif %}>Cerrado</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Categoría</label>
+        <select name="categoria" class="form-select form-select-sm">
+            <option value="">-- Todas --</option>
+            <option value="infraestructura" {% if filtros_actuales.categoria == "infraestructura" %}selected{% endif %}>Infraestructura</option>
+            <option value="redes" {% if filtros_actuales.categoria == "redes" %}selected{% endif %}>Redes</option>
+            <option value="permisos" {% if filtros_actuales.categoria == "permisos" %}selected{% endif %}>Permisos</option>
+            <option value="cuentas_contrasenas" {% if filtros_actuales.categoria == "cuentas_contrasenas" %}selected{% endif %}>Cuentas y contraseñas</option>
+            <option value="seguridad" {% if filtros_actuales.categoria == "seguridad" %}selected{% endif %}>Seguridad</option>
+            <option value="software" {% if filtros_actuales.categoria == "software" %}selected{% endif %}>Software</option>
+            <option value="otros" {% if filtros_actuales.categoria == "otros" %}selected{% endif %}>Otros</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Prioridad</label>
+        <select name="prioridad" class="form-select form-select-sm">
+            <option value="">-- Todas --</option>
+            <option value="alta" {% if filtros_actuales.prioridad == "alta" %}selected{% endif %}>Alta</option>
+            <option value="media" {% if filtros_actuales.prioridad == "media" %}selected{% endif %}>Media</option>
+            <option value="baja" {% if filtros_actuales.prioridad == "baja" %}selected{% endif %}>Baja</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Vista especial</label>
+        <select name="vista" class="form-select form-select-sm">
+            <option value="">-- Ninguna --</option>
+            <option value="vencidos_actuales" {% if filtros_actuales.vista == "vencidos_actuales" %}selected{% endif %}>Vencidos actualmente</option>
+            <option value="proximos_actuales" {% if filtros_actuales.vista == "proximos_actuales" %}selected{% endif %}>Próximos a vencer</option>
+            <option value="vencidos_30_dias" {% if filtros_actuales.vista == "vencidos_30_dias" %}selected{% endif %}>Vencidos últimos 30 días</option>
+        </select>
+    </div>
+
+    <div class="col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+        <a href="{{ url_for('tickets.listar_admin') }}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+    </div>
+</form>
+
+{% if tickets %}
+<div class="table-card">
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>ID</th><th>Texto</th><th>Categoría</th><th>Prioridad</th><th>Estado</th><th>Fecha límite</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in tickets %}
+        <tr>
+            <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
+            <td>{{ t.texto }}</td>
+            <td><span class="badge-pill categoria-tag">{{ t.categoria.value }}</span></td>
+            <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value }}</span></td>
+            <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value }}</span></td>
+            <td class="mono text-soft-mono">{{ t.fecha_limite }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% if paginacion %}
+<nav aria-label="Paginación de tickets" class="mt-3">
+    <ul class="pagination pagination-sm">
+        {% set query_sin_pagina = request.args.to_dict() %}
+        {% set _ = query_sin_pagina.pop('pagina', None) %}
+
+        <li class="page-item {% if not paginacion.has_prev %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('tickets.listar_admin', pagina=paginacion.prev_num, **query_sin_pagina) if paginacion.has_prev else '#' }}">Anterior</a>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">Página {{ paginacion.page }} de {{ paginacion.pages }}</span>
+        </li>
+        <li class="page-item {% if not paginacion.has_next %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('tickets.listar_admin', pagina=paginacion.next_num, **query_sin_pagina) if paginacion.has_next else '#' }}">Siguiente</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+{% else %}
+<p class="text-muted">No hay tickets que coincidan con los filtros seleccionados.</p>
+{% endif %}
+{% endblock %}

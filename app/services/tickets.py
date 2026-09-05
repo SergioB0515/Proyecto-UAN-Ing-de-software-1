@@ -5,9 +5,9 @@ from app.services.clasificador import ClasificadorTickets
 from app.services.gestor_sla import GestorSLA
 from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError,ErrorPersistencia
 from app.extensions import db
-from datetime import datetime
+from datetime import datetime,timedelta
 from app.services.auditoria import ServicioAuditoria
-from sqlalchemy import select, func
+from sqlalchemy import select, func,or_,and_
 
 PRIORIDAD_BASE_POR_CATEGORIA={
     Categoria.SEGURIDAD : Prioridad.ALTA,
@@ -201,3 +201,42 @@ class ServicioTickets:
             estadisticas["tickets_cerrados"] = tickets_cerrados
 
         return estadisticas
+    
+    @staticmethod
+    def listar_admin(estado=None, categoria=None, prioridad=None, vista=None, pagina=1, por_pagina=35, sin_paginar=False):
+        if vista == "vencidos_actuales":
+            vencidos, _ = GestorSLA.verificar_vencimientos()
+            return vencidos, None
+
+        if vista == "proximos_actuales":
+            _, proximos = GestorSLA.verificar_vencimientos()
+            return proximos, None
+
+        if vista == "vencidos_30_dias":
+            hace_30_dias = datetime.now() - timedelta(days=30)
+            query = select(Ticket).where(
+                Ticket.fecha_limite >= hace_30_dias,
+                Ticket.fecha_limite < datetime.now(),
+                or_(
+                    and_(Ticket.fecha_cierre.isnot(None), Ticket.fecha_cierre > Ticket.fecha_limite),
+                    Ticket.fecha_cierre.is_(None),
+                )
+            )
+            if sin_paginar:
+                return db.session.execute(query).scalars().all(), None
+            paginado = db.paginate(query, page=pagina, per_page=por_pagina)
+            return paginado.items, paginado
+
+        query = select(Ticket)
+        if estado is not None:
+            query = query.where(Ticket.estado == estado)
+        if categoria is not None:
+            query = query.where(Ticket.categoria == categoria)
+        if prioridad is not None:
+            query = query.where(Ticket.prioridad == prioridad)
+
+        if sin_paginar:
+            return db.session.execute(query).scalars().all(), None
+        paginado = db.paginate(query, page=pagina, per_page=por_pagina)
+        return paginado.items, paginado
+        

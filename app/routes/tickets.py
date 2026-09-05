@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from sqlalchemy import select
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, Response
+from sqlalchemy import select,or_,and_
 from app.extensions import db
 from app.services.tickets import ServicioTickets, TRANSICIONES_VALIDAS
 from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, ComentarioVacioError, TicketNoEncontradoError, TicketNoEnProgresoError, ErrorPersistencia
@@ -7,9 +7,12 @@ from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.comentario import Comentario 
 from app.models.enum import Categoria, EstadoTicket, RolUsuario, AccionAuditoria, Prioridad
-from app.routes.decoradores import requiere_login
+from app.routes.decoradores import requiere_login,requiere_admin
 from app.services.gestor_sla import GestorSLA
 from datetime import datetime, timedelta
+import csv
+import io
+from openpyxl import Workbook
 tickets_bp = Blueprint("tickets", __name__)
 
 
@@ -220,3 +223,144 @@ def detalle(ticket_id):
         comentarios=comentarios,
         nombres_por_id=nombres_por_id,
     )
+    
+@tickets_bp.route("/admin/tickets")
+@requiere_admin
+def listar_admin():
+    estado_raw = request.args.get("estado")
+    estado = None
+    if estado_raw:
+        try:
+            estado = EstadoTicket(estado_raw)
+        except ValueError:
+            estado = None
+
+    categoria_raw = request.args.get("categoria")
+    categoria = None
+    if categoria_raw:
+        try:
+            categoria = Categoria(categoria_raw)
+        except ValueError:
+            categoria = None
+
+    prioridad_raw = request.args.get("prioridad")
+    prioridad = None
+    if prioridad_raw:
+        try:
+            prioridad = Prioridad(prioridad_raw)
+        except ValueError:
+            prioridad = None
+
+    vista = request.args.get("vista")
+    if vista not in ("vencidos_actuales", "proximos_actuales", "vencidos_30_dias"):
+        vista = None
+
+    pagina = request.args.get("pagina", 1, type=int)
+
+    tickets, paginacion = ServicioTickets.listar_admin(
+        estado=estado, categoria=categoria, prioridad=prioridad, vista=vista, pagina=pagina
+    )
+
+    filtros_actuales = {
+        "estado": estado_raw,
+        "categoria": categoria_raw,
+        "prioridad": prioridad_raw,
+        "vista": vista,
+    }
+
+    return render_template(
+        "admin_tickets.html",
+        tickets=tickets,
+        paginacion=paginacion,
+        filtros_actuales=filtros_actuales,
+    )
+
+@tickets_bp.route("/admin/tickets/exportar")
+@requiere_admin
+def exportar_tickets():
+    estado_raw = request.args.get("estado")
+    estado = None
+    if estado_raw:
+        try:
+            estado = EstadoTicket(estado_raw)
+        except ValueError:
+            estado = None
+
+    categoria_raw = request.args.get("categoria")
+    categoria = None
+    if categoria_raw:
+        try:
+            categoria = Categoria(categoria_raw)
+        except ValueError:
+            categoria = None
+
+    prioridad_raw = request.args.get("prioridad")
+    prioridad = None
+    if prioridad_raw:
+        try:
+            prioridad = Prioridad(prioridad_raw)
+        except ValueError:
+            prioridad = None
+
+    vista = request.args.get("vista")
+    if vista not in ("vencidos_actuales", "proximos_actuales", "vencidos_30_dias"):
+        vista = None
+
+    tickets, _ = ServicioTickets.listar_admin(
+        estado=estado, categoria=categoria, prioridad=prioridad, vista=vista, sin_paginar=True
+    )
+
+    ids_creadores = {ticket.creador_id for ticket in tickets}
+    usuarios_creadores = db.session.execute(select(Usuario).where(Usuario.id.in_(ids_creadores))).scalars().all()
+    nombres_por_id = {usuario.id: usuario.nombre for usuario in usuarios_creadores}
+
+    formato = request.args.get("formato", "csv")
+    encabezados = ["ID", "Texto", "Categoría", "Prioridad", "Estado", "Creador", "Fecha creación", "Fecha límite"]
+
+    if formato == "xlsx":
+        wb = Workbook()
+        ws = wb.active
+        ws.append(encabezados)
+        for t in tickets:
+
+            ws.append([
+                t.id,
+                t.texto,
+                t.categoria.value,
+                t.prioridad.value,
+                t.estado.value,
+                nombres_por_id.get(t.creador_id, "Desconocido"),
+                t.fecha_creacion,
+                t.fecha_limite
+            ])
+
+        buffer = io.BytesIO()
+        wb.save(buffer)
+        buffer.seek(0)
+        return Response(
+            buffer.getvalue(),
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": "attachment; filename=tickets.xlsx"}
+        )
+    else:
+        buffer = io.StringIO()
+        writer = csv.writer(buffer)
+        writer.writerow(encabezados)
+        for t in tickets:
+            writer.writerow([
+                t.id,
+                t.texto,
+                t.categoria.value,
+                t.prioridad.value,
+                t.estado.value,
+                nombres_por_id.get(t.creador_id, "Desconocido"),
+                t.fecha_creacion,
+                t.fecha_limite
+            ])
+
+        return Response(
+            buffer.getvalue(),
+            mimetype="text/csv",
+            headers={"Content-Disposition": "attachment; filename=tickets.csv"}
+        )
+

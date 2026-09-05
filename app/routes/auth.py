@@ -187,3 +187,4 @@ def subir_foto():
         flash(str(e), "danger")
 
     return redirect(url_for("auth.perfil"))
+
