@@ -4,9 +4,9 @@
 funcionalidad queda lista y probada. Guarda las imágenes en `documentacion/img/` y enlázalas
 aquí con `![descripción](img/nombre.png)`.*
 
-*(Actualizado: la mayoría de las funcionalidades de Sprint 1-3 ya están implementadas — ver
-`07_avances.md` — así que las capturas pendientes abajo ya se pueden tomar. Las dos marcadas
-como "no aplica" corresponden a funcionalidades que todavía no existen en la interfaz.)*
+*(Actualizado al cierre de la 1.6: todas las funcionalidades del proyecto ya están
+implementadas — ver `07_avances.md` — así que todas las capturas de este documento ya se
+pueden tomar. No quedan casos marcados como "no aplica".)*
 
 ## Sprint 1
 
@@ -27,10 +27,41 @@ como "no aplica" corresponden a funcionalidades que todavía no existen en la in
 
 ## Sprint 3
 
-- [ ] **No aplica todavía:** captura del log de auditoría mostrando accesos y acciones registradas — pendiente hasta que exista una pantalla para consultarlo (ver `04_arquitectura.md`, punto pendiente).
-- [ ] Captura del panel de métricas (`/dashboard`) para el administrador.
+- [ ] Captura del log de auditoría (`/auditoria`) mostrando accesos y acciones registradas, con al menos un filtro aplicado.
+- [ ] Captura del panel de métricas (`/metricas`) para el administrador.
 
 ## Sprint 4
 
-- [ ] **No aplica todavía:** captura de un recordatorio de SLA visible para el creador del ticket — pendiente de implementación (ver `03_logica.md`).
+- [ ] Captura del dashboard del usuario final mostrando un ticket propio resaltado como vencido o próximo a vencer.
 - [ ] Grabación corta (GIF o video) del flujo completo: creación de ticket → clasificación → atención por un agente → cierre.
+
+## Versión 1.1
+
+- [ ] Captura del log de auditoría filtrado por usuario y por acción, mostrando la paginación.
+- [ ] Captura del dashboard del creador mostrando el mismo highlighting de vencidos/próximos a vencer que ya existía para el agente.
+
+## Versión 1.2
+
+- [ ] Captura del formulario de cambio de contraseña, incluyendo un intento fallido (contraseña actual incorrecta) mostrando el mensaje de error.
+- [ ] Captura de `listar_por_area` con los 3 filtros (estado, prioridad, fecha) aplicados a la vez.
+
+## Versión 1.3
+
+- [ ] Captura de un intento de registro/cambio de contraseña rechazado por no cumplir la política (falta mayúscula, número o símbolo).
+- [ ] Captura de un login rechazado por bloqueo de IP, junto con el log de auditoría o la tabla `IPBloqueada` mostrando el registro correspondiente.
+- [ ] Captura de la terminal mostrando el mensaje de limpieza automática del `APScheduler`.
+
+## Versión 1.4
+
+- [ ] Captura del perfil de un agente mostrando sus estadísticas (tickets tomados/cerrados), la foto de perfil subida, y el nombre editado.
+- [ ] Captura del panel de métricas con un clic en un número llevando al listado de tickets filtrado (drill-down).
+- [ ] Captura de un archivo Excel exportado (tickets, métricas o auditoría) abierto, mostrando los datos correctos.
+
+## Versión 1.5
+
+- [ ] Captura de "antes/después" del rediseño visual (una pantalla representativa, ej. login o dashboard).
+
+## Versión 1.6
+
+- [ ] Captura de la terminal corriendo `pytest -v` con todos los tests en verde.
+- [ ] Captura de la pestaña Actions en GitHub mostrando una corrida exitosa (check verde) del workflow de CI.
