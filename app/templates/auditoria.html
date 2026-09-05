@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Log de auditoría{% endblock %}
 {% block content %}
-<div class="page-header">
+<div class="page-header d-flex justify-content-between align-items-center">
     <h2>Log de auditoría</h2>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('auditoria.exportar_auditoria', formato='csv', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">Exportar CSV</a>
+        <a href="{{ url_for('auditoria.exportar_auditoria', formato='xlsx', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">Exportar Excel</a>
+    </div>
 </div>
 
 <div class="card mb-4">

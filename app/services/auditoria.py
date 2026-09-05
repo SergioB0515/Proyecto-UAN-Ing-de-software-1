@@ -53,3 +53,24 @@ class ServicioAuditoria:
         resultado = db.paginate(query, page=pagina, per_page=por_pagina)
         return resultado
 
+    @staticmethod
+    def listar_logs(usuario_id=None, accion=None, fecha_desde=None, fecha_hasta=None, pagina=1, por_pagina=35, sin_paginar=False):
+        query = select(LogAuditoria)
+
+        if usuario_id is not None:
+            query = query.where(LogAuditoria.usuario_id == usuario_id)
+        if accion is not None:
+            query = query.where(LogAuditoria.accion == accion)
+        if fecha_desde is not None:
+            query = query.where(LogAuditoria.fecha >= fecha_desde)
+        if fecha_hasta is not None:
+            query = query.where(LogAuditoria.fecha < fecha_hasta)
+
+        query = query.order_by(LogAuditoria.fecha.desc())
+
+
+        if sin_paginar:
+            return db.session.execute(query).scalars().all()
+
+        resultado = db.paginate(query, page=pagina, per_page=por_pagina)
+        return resultado
