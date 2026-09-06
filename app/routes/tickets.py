@@ -96,6 +96,7 @@ def listar_por_area(area):
         prioridad=prioridad,
         fecha_desde=fecha_desde,
         fecha_hasta=fecha_hasta,
+        agente_id_propio=None if rol == RolUsuario.ADMIN else session["usuario_id"],
     )
 
     transiciones_por_ticket = {
@@ -148,7 +149,19 @@ def cambiar_estado(ticket_id):
             return redirect(url_for("tickets.crear"))
 
     nuevo_estado = EstadoTicket(request.form["nuevo_estado"])
-    agente_id = request.form.get("agente_id", type=int)
+
+    if rol == RolUsuario.ADMIN:
+        agente_id = request.form.get("agente_id", type=int)
+    else:
+        agente_id = actor_id
+
+
+    cierre_directo = ticket.estado == EstadoTicket.ABIERTO and nuevo_estado == EstadoTicket.CERRADO
+    causa = request.form.get("causa", "").strip()
+
+    if cierre_directo and not causa:
+        flash("Debes indicar el motivo para cerrar un ticket sin pasar por en progreso", "danger")
+        return redirect(url_for("tickets.listar_por_area", area=ticket.categoria.value))
 
     try:
         estado = ServicioTickets.cambiar_estado(
@@ -156,26 +169,27 @@ def cambiar_estado(ticket_id):
             actor_id=actor_id, agente_id=agente_id
         )
         flash(f"Ticket #{ticket_id} actualizado a {estado.value}", "success")
+
+        if cierre_directo:
+            try:
+                ServicioTickets.agregar_comentario(ticket_id=ticket_id, autor_id=actor_id, texto=causa)
+            except (ComentarioVacioError, ErrorPersistencia) as e:
+                flash(f"El ticket se cerró, pero no se pudo guardar el motivo: {e}", "warning")
+
     except (TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
 
     return redirect(url_for("tickets.listar_por_area", area=ticket.categoria.value))
+
 @tickets_bp.route("/tickets/<int:ticket_id>/reasignar", methods=["POST"])
-@requiere_login
+@requiere_admin
 def reasignar(ticket_id):
-    rol = session.get("rol")
     actor_id = session["usuario_id"]
 
     ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
     if ticket is None:
         flash("Ticket no encontrado", "danger")
         return redirect(url_for("tickets.crear"))
-
-    if rol != RolUsuario.ADMIN:
-        agente = db.session.execute(select(Usuario).where(Usuario.id == actor_id)).scalar()
-        if agente.area_soporte is None or agente.area_soporte != ticket.categoria:
-            flash("No tienes permiso sobre tickets de esa área", "warning")
-            return redirect(url_for("tickets.crear"))
 
     nuevo_agente_id = request.form.get("nuevo_agente_id", type=int)
 

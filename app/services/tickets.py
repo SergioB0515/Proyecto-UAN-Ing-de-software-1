@@ -60,9 +60,8 @@ class ServicioTickets:
         return nuevo_ticket
     
     @staticmethod
-    def listar_tickets_por_area(area, estado=None, prioridad=None, fecha_desde=None, fecha_hasta=None):
+    def listar_tickets_por_area(area, estado=None, prioridad=None, fecha_desde=None, fecha_hasta=None, agente_id_propio=None):
         query = select(Ticket).where(Ticket.categoria == area)
-
 
         if estado is not None:
             query = query.where(Ticket.estado == estado)
@@ -76,8 +75,10 @@ class ServicioTickets:
         if fecha_hasta is not None:
             query = query.where(Ticket.fecha_creacion < fecha_hasta)
 
-        tickets_del_area = db.session.execute(query).scalars().all()
+        if agente_id_propio is not None:
+            query = query.where(or_(Ticket.agente_id.is_(None), Ticket.agente_id == agente_id_propio))
 
+        tickets_del_area = db.session.execute(query).scalars().all()
 
         return sorted(tickets_del_area, key=lambda ticket: ORDEN_PRIORIDAD[ticket.prioridad])
         
