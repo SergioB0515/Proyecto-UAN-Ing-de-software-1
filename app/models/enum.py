@@ -28,6 +28,7 @@ class EstadoTicket(str, Enum):
     EN_PROGRESO = "en_progreso"
     CERRADO = "cerrado"
     
+    
 class AccionAuditoria(str, Enum):
     CREAR_TICKET = "crear_ticket"
     CAMBIAR_ESTADO = "cambiar_estado"
@@ -40,3 +41,13 @@ class AccionAuditoria(str, Enum):
     REGISTRO_EXITOSO ="registro_exitoso"
     CAMBIO_CONTRASENA ="cambio_contrasena"
     CAMBIO_NOMBRE = "cambio_nombre"
+    SOLICITAR_TRANSFERENCIA = "solicitar_transferencia"
+    ACEPTAR_TRANSFERENCIA = "aceptar_transferencia"
+    RECHAZAR_TRANSFERENCIA = "rechazar_transferencia"
+    CANCELAR_TRANSFERENCIA = "cancelar_transferencia"
+    
+class EstadoSolicitudTransferencia(str, Enum):
+    PENDIENTE = "pendiente"
+    ACEPTADA = "aceptada"
+    RECHAZADA = "rechazada"
+    CANCELADA = "cancelada"

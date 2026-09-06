@@ -12,5 +12,15 @@ class ComentarioVacioError(Exception):
 class NoHayTickets(Exception):
     pass
 class ErrorPersistencia(Exception):
-    """Se lanza cuando falla el guardado en la base de datos (commit) y ya se hizo rollback."""
+    pass
+class SolicitudDuplicadaError(Exception):
+    pass
+
+class SolicitudNoEncontradaError(Exception):
+    pass
+
+class SolicitudNoPendienteError(Exception):
+    pass
+
+class AgenteDestinoInvalidoError(Exception):
     pass

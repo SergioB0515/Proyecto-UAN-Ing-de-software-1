@@ -10,7 +10,23 @@
 </head>
 <body>
 <nav class="navbar navbar-dark px-3 d-flex justify-content-between">
-    <span class="navbar-brand mb-0">Sistema de Tickets IT</span>
+    <div class="d-flex align-items-center gap-2">
+        {% if session.get('usuario_id') %}
+            <a href="{{ url_for('auth.perfil') }}" class="navbar-icon-btn" aria-label="Mi perfil" title="Mi perfil"></a>
+
+            {% if session.get('rol') == 'admin' %}
+            <a href="{{ url_for('metricas.mostrar_metricas') }}" class="navbar-brand mb-0">Sistema de Tickets IT</a>
+            {% elif session.get('rol') == 'agente' %}
+            <a href="{{ url_for('tickets.listar_por_area', area=session.get('area_soporte')) }}" class="navbar-brand mb-0">Sistema de Tickets IT</a>
+            {% else %}
+            <a href="{{ url_for('auth.dashboard') }}" class="navbar-brand mb-0">Sistema de Tickets IT</a>
+            {% endif %}
+        {% else %}
+            <span class="navbar-icon-btn"></span>
+            <span class="navbar-brand mb-0">Sistema de Tickets IT</span>
+        {% endif %}
+    </div>
+
       {% if session.get('usuario_id') %}
       <div class="d-flex gap-2 align-items-center">
           <a href="{{ url_for('auth.dashboard') }}" class="btn btn-outline-light btn-sm">Mis tickets</a>
@@ -24,6 +40,7 @@
           {% endif %}
           {% if session.get('rol') == 'agente' %}
           <a href="{{ url_for('tickets.listar_por_area', area=session.get('area_soporte')) }}" class="btn btn-outline-light btn-sm">Mi área</a>
+          <a href="{{ url_for('solicitudes.pendientes') }}" class="btn btn-outline-light btn-sm">Solicitudes</a>
           {% endif %}
 
           <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
@@ -33,7 +50,7 @@
 
     <div class="container mt-4">
 
-        <!-- NUEVO: bloque de flash messages -->
+ 
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message in messages %}
@@ -44,7 +61,7 @@
             {% endfor %}
           {% endif %}
         {% endwith %}
-        <!-- FIN NUEVO -->
+   
 
         {% block content %}{% endblock %}
     </div>

@@ -36,4 +36,30 @@
     </div>
     <button type="submit" class="btn btn-primary">Comentar</button>
 </form>
+
+{% if (session.rol == "admin" or session.usuario_id == ticket.agente_id) and ticket.estado.value == "en_progreso" %}
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Solicitar transferencia</h5>
+        <form method="POST" action="{{ url_for('solicitudes.solicitar', ticket_id=ticket.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-2">
+                <label class="form-label">Agente destino</label>
+                <select name="agente_destino_id" class="form-select" required>
+                    {% for a in agentes_del_area %}
+                        {% if a.id != ticket.agente_id %}
+                        <option value="{{ a.id }}">{{ a.nombre }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Motivo (opcional)</label>
+                <textarea name="motivo" class="form-control" rows="2"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Enviar solicitud</button>
+        </form>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

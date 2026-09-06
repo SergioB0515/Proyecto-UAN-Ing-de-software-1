@@ -5,6 +5,7 @@ from app.routes.auth import auth_bp
 from app.routes.tickets import tickets_bp
 from app.routes.metricas import metricas_bp
 from app.routes.auditoria import auditoria_bp
+from app.routes.solicitudes import solicitudes_bp
 from flask_wtf import CSRFProtect
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
@@ -29,7 +30,7 @@ def create_app():
     app.register_blueprint(tickets_bp)
     app.register_blueprint(metricas_bp)
     app.register_blueprint(auditoria_bp)
-
+    app.register_blueprint(solicitudes_bp)
 
     def limpiar_intentos_login_viejos():
         with app.app_context():

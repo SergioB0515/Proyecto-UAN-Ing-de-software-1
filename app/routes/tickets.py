@@ -217,11 +217,19 @@ def detalle(ticket_id):
     autores = db.session.execute(select(Usuario).where(Usuario.id.in_(autores_ids))).scalars().all()
     nombres_por_id = {u.id: u.nombre for u in autores}
 
+    agentes_del_area = db.session.execute(
+        select(Usuario).where(
+            Usuario.area_soporte == ticket.categoria,
+            Usuario.rol == RolUsuario.AGENTE,
+        )
+    ).scalars().all()
+
     return render_template(
         "ticket_detalle.html",
         ticket=ticket,
         comentarios=comentarios,
         nombres_por_id=nombres_por_id,
+        agentes_del_area=agentes_del_area,
     )
     
 @tickets_bp.route("/admin/tickets")
