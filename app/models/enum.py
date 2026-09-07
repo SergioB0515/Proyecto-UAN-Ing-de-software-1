@@ -45,9 +45,13 @@ class AccionAuditoria(str, Enum):
     ACEPTAR_TRANSFERENCIA = "aceptar_transferencia"
     RECHAZAR_TRANSFERENCIA = "rechazar_transferencia"
     CANCELAR_TRANSFERENCIA = "cancelar_transferencia"
+    ESCALAR_AREA = "escalar_area"
+    APROBAR_ESCALAMIENTO = "aprobar_escalamiento"
+    RECHAZAR_ESCALAMIENTO = "rechazar_escalamiento"
     
 class EstadoSolicitudTransferencia(str, Enum):
     PENDIENTE = "pendiente"
     ACEPTADA = "aceptada"
     RECHAZADA = "rechazada"
     CANCELADA = "cancelada"
+

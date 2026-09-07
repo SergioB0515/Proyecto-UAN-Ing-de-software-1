@@ -62,4 +62,43 @@
     </div>
 </div>
 {% endif %}
+
+{% if (session.rol == "admin" or session.usuario_id == ticket.agente_id) and ticket.estado.value == "en_progreso" %}
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Escalar a otra área</h5>
+        <p class="text-muted small mb-2">
+            El ticket queda sin agente asignado, disponible para cualquier agente del área
+            destino. Requiere aprobación de un administrador.
+        </p>
+        <form method="POST" action="{{ url_for('solicitudes.escalar_area', ticket_id=ticket.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-2">
+                <label class="form-label">Área destino</label>
+                <select name="area_destino" class="form-select" required>
+                    {% set opciones_area = [
+                        ("infraestructura", "Infraestructura"),
+                        ("redes", "Redes"),
+                        ("permisos", "Permisos"),
+                        ("cuentas_contrasenas", "Cuentas y contraseñas"),
+                        ("seguridad", "Seguridad"),
+                        ("software", "Software"),
+                        ("otros", "Otros"),
+                    ] %}
+                    {% for valor, etiqueta in opciones_area %}
+                        {% if valor != ticket.categoria.value %}
+                        <option value="{{ valor }}">{{ etiqueta }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Motivo (obligatorio)</label>
+                <textarea name="motivo" class="form-control" rows="2" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Solicitar escalamiento</button>
+        </form>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

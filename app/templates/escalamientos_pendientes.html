@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Escalamientos pendientes{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Escalamientos de área pendientes</h2>
+</div>
+
+{% if not escalamientos %}
+<div class="empty-state">
+    <p class="mb-0">No hay escalamientos pendientes de aprobación.</p>
+</div>
+{% else %}
+    {% for s in escalamientos %}
+    <div class="comment-card mb-2 d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+            <h5 class="mb-1">
+                Ticket <span class="mono ticket-id-tag">#{{ s.ticket_id }}</span>
+                → <span class="badge-pill categoria-tag">{{ s.area_destino.value }}</span>
+            </h5>
+            <small class="text-muted d-block mb-2">Solicitado el {{ s.fecha_solicitud.strftime('%d/%m/%Y %H:%M') }}</small>
+            <p class="mb-0">{{ s.motivo }}</p>
+        </div>
+        <div class="d-flex gap-2 flex-shrink-0">
+            <a href="{{ url_for('tickets.detalle', ticket_id=s.ticket_id) }}" class="btn btn-outline-secondary btn-sm">Ver ticket</a>
+
+            <form method="POST" action="{{ url_for('solicitudes.aprobar_escalamiento', solicitud_id=s.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
+            </form>
+
+            <form method="POST" action="{{ url_for('solicitudes.rechazar_escalamiento', solicitud_id=s.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-outline-danger btn-sm">Rechazar</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

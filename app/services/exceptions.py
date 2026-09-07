@@ -1,4 +1,3 @@
-
 class TransicionInvalidaError(Exception):
     pass
 class AgenteYaAsignadoError(Exception):
@@ -15,12 +14,13 @@ class ErrorPersistencia(Exception):
     pass
 class SolicitudDuplicadaError(Exception):
     pass
-
 class SolicitudNoEncontradaError(Exception):
     pass
-
 class SolicitudNoPendienteError(Exception):
     pass
-
 class AgenteDestinoInvalidoError(Exception):
+    pass
+class AreaDestinoInvalidaError(Exception):
+    pass
+class MotivoRequeridoError(Exception):
     pass

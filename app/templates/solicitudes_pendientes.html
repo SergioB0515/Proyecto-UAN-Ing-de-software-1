@@ -4,18 +4,23 @@
 
 {% block content %}
 <div class="page-header">
-    <h2>Solicitudes de transferencia pendientes</h2>
+    <h2>{% if es_admin %}Todas las solicitudes de transferencia pendientes{% else %}Solicitudes de transferencia pendientes{% endif %}</h2>
 </div>
 
 {% if not solicitudes %}
 <div class="empty-state">
-    <p class="mb-0">No tienes solicitudes pendientes.</p>
+    <p class="mb-0">
+        {% if es_admin %}No hay solicitudes de transferencia pendientes en el sistema.{% else %}No tienes solicitudes pendientes.{% endif %}
+    </p>
 </div>
 {% else %}
     {% for s in solicitudes %}
     <div class="comment-card mb-2 d-flex justify-content-between align-items-start flex-wrap gap-3">
         <div>
             <h5 class="mb-1">Ticket <span class="mono ticket-id-tag">#{{ s.ticket_id }}</span></h5>
+            {% if es_admin %}
+            <small class="text-muted d-block">Destino: {{ nombres_por_id.get(s.agente_destino_id, "Agente #" ~ s.agente_destino_id) }}</small>
+            {% endif %}
             <small class="text-muted d-block mb-2">Solicitado el {{ s.fecha_solicitud.strftime('%d/%m/%Y %H:%M') }}</small>
             {% if s.motivo %}
             <p class="mb-0">{{ s.motivo }}</p>
@@ -24,6 +29,12 @@
         <div class="d-flex gap-2 flex-shrink-0">
             <a href="{{ url_for('tickets.detalle', ticket_id=s.ticket_id) }}" class="btn btn-outline-secondary btn-sm">Ver ticket</a>
 
+            {% if es_admin %}
+            <form method="POST" action="{{ url_for('solicitudes.cancelar', solicitud_id=s.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-outline-danger btn-sm">Cancelar</button>
+            </form>
+            {% else %}
             <form method="POST" action="{{ url_for('solicitudes.aceptar', solicitud_id=s.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
@@ -33,6 +44,7 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn btn-outline-danger btn-sm">Rechazar</button>
             </form>
+            {% endif %}
         </div>
     </div>
     {% endfor %}

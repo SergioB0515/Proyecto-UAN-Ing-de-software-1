@@ -1,16 +1,17 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from sqlalchemy import select
 from app.extensions import db
+from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.transferencia import SolicitudTransferencia
-from app.models.enum import RolUsuario
+from app.models.enum import RolUsuario, Categoria
 from app.services.solicitud_transferencia import ServicioSolicitudesTransferencia
 from app.services.exceptions import (
     TicketNoEncontradoError, TicketNoEnProgresoError, SolicitudDuplicadaError,
     SolicitudNoEncontradaError, SolicitudNoPendienteError, AgenteDestinoInvalidoError,
-    ErrorPersistencia,
+    ErrorPersistencia, MotivoRequeridoError, AreaDestinoInvalidaError
 )
-from app.routes.decoradores import requiere_login
+from app.routes.decoradores import requiere_login, requiere_admin
 
 solicitudes_bp = Blueprint("solicitudes", __name__)
 
@@ -49,10 +50,24 @@ def solicitar(ticket_id):
 @requiere_login
 def pendientes():
     actor_id = session["usuario_id"]
-    solicitudes = ServicioSolicitudesTransferencia.listar_pendientes_para_agente(actor_id)
-    return render_template("solicitudes_pendientes.html", solicitudes=solicitudes)
+    rol = session.get("rol")
+    es_admin = rol == RolUsuario.ADMIN
 
+    if es_admin:
+        solicitudes = ServicioSolicitudesTransferencia.listar_transferencias_pendientes()
+    else:
+        solicitudes = ServicioSolicitudesTransferencia.listar_pendientes_para_agente(actor_id)
 
+    destino_ids = {s.agente_destino_id for s in solicitudes}
+    destinos = db.session.execute(select(Usuario).where(Usuario.id.in_(destino_ids))).scalars().all()
+    nombres_por_id = {u.id: u.nombre for u in destinos}
+
+    return render_template(
+        "solicitudes_pendientes.html",
+        solicitudes=solicitudes,
+        nombres_por_id=nombres_por_id,
+        es_admin=es_admin,
+    )
 @solicitudes_bp.route("/solicitudes/<int:solicitud_id>/aceptar", methods=["POST"])
 @requiere_login
 def aceptar(solicitud_id):
@@ -128,4 +143,78 @@ def cancelar(solicitud_id):
             ErrorPersistencia) as e:
         flash(str(e), "danger")
 
-    return redirect(url_for("solicitudes.pendientes"))
+    return redirect(url_for("tickets.detalle", ticket_id=solicitud.ticket_id))
+
+@solicitudes_bp.route("/tickets/<int:ticket_id>/escalar-area", methods=["POST"])
+@requiere_login
+def escalar_area(ticket_id):
+
+
+
+    ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
+    if ticket is None:
+        flash("Ticket no encontrado", "danger")
+        return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
+
+    rol = session.get("rol")
+    actor_id = session["usuario_id"]
+    
+    if rol != RolUsuario.ADMIN and actor_id != ticket.agente_id:
+        flash("No tienes permiso para transferir este ticket", "danger")
+        return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
+    
+    area_destino_raw = request.form.get("area_destino")
+    try:
+        area_destino= Categoria(area_destino_raw)
+    except ValueError:
+        flash("Área destino no válida", "danger")
+        return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
+        
+    motivo = request.form.get("motivo", "")
+    
+    try:
+        ServicioSolicitudesTransferencia.escalar_a_area(
+            ticket_id=ticket_id, area_destino=area_destino,
+            solicitante_id=actor_id, motivo=motivo,
+        )
+        flash("Solicitud de escalamiento enviada", "success")
+    except (TicketNoEncontradoError, TicketNoEnProgresoError, SolicitudDuplicadaError,
+            AreaDestinoInvalidaError,MotivoRequeridoError, ErrorPersistencia) as e:
+        flash(str(e), "danger")
+
+    return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
+
+
+@solicitudes_bp.route("/escalamientos", methods=["GET"])
+@requiere_admin
+def escalamientos_pendientes():
+    escalamientos= ServicioSolicitudesTransferencia.listar_escalamientos_pendientes()
+    return render_template("escalamientos_pendientes.html", escalamientos=escalamientos)
+
+
+
+@solicitudes_bp.route("/escalamientos/<int:solicitud_id>/aprobar", methods=["POST"])
+@requiere_admin
+def aprobar_escalamiento(solicitud_id):
+    actor_id = session["usuario_id"]
+    try:
+        ServicioSolicitudesTransferencia.aprobar_escalamiento(solicitud_id,actor_id)
+        flash("Escalamiento aprobado", "success")
+    except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
+                TicketNoEnProgresoError, ErrorPersistencia) as e:
+            flash(str(e), "danger")
+    return redirect(url_for("solicitudes.escalamientos_pendientes"))
+        
+
+
+@solicitudes_bp.route("/escalamientos/<int:solicitud_id>/rechazar", methods=["POST"])
+@requiere_admin
+def rechazar_escalamiento(solicitud_id):
+    actor_id = session["usuario_id"]
+    try:
+        ServicioSolicitudesTransferencia.rechazar_escalamiento(solicitud_id,actor_id)
+        flash("Escalamiento rechazado", "success")
+    except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
+                TicketNoEnProgresoError, ErrorPersistencia) as e:
+            flash(str(e), "danger")
+    return redirect(url_for("solicitudes.escalamientos_pendientes"))

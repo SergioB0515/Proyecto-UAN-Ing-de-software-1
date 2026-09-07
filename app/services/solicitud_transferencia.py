@@ -10,6 +10,7 @@ from app.services.exceptions import (
     TicketNoEncontradoError, TicketNoEnProgresoError, ErrorPersistencia,
     SolicitudDuplicadaError, SolicitudNoEncontradaError,
     SolicitudNoPendienteError, AgenteDestinoInvalidoError,
+    AreaDestinoInvalidaError, MotivoRequeridoError
 )
 
 
@@ -69,6 +70,7 @@ class ServicioSolicitudesTransferencia:
 
     @staticmethod
     def aceptar_solicitud(solicitud_id, actor_id):
+        
         solicitud = db.session.execute(
             select(SolicitudTransferencia).where(SolicitudTransferencia.id == solicitud_id)
         ).scalar()
@@ -170,6 +172,142 @@ class ServicioSolicitudesTransferencia:
     def listar_pendientes_para_agente(agente_id):
         query = select(SolicitudTransferencia).where(
             SolicitudTransferencia.agente_destino_id == agente_id,
+            SolicitudTransferencia.estado == EstadoSolicitudTransferencia.PENDIENTE,
+        ).order_by(SolicitudTransferencia.fecha_solicitud)
+        return db.session.execute(query).scalars().all()
+    
+    @staticmethod
+    def escalar_a_area(ticket_id, area_destino, solicitante_id, motivo):
+        
+        ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
+        if not ticket:
+            raise TicketNoEncontradoError("El ticket no ha sido encontrado")
+
+        if ticket.estado != EstadoTicket.EN_PROGRESO:
+            raise TicketNoEnProgresoError("El ticket debe estar en progreso para solicitar transferencia")
+
+        solicitud_existente = db.session.execute(
+        select(SolicitudTransferencia).where(
+                SolicitudTransferencia.ticket_id == ticket.id,
+                SolicitudTransferencia.estado == EstadoSolicitudTransferencia.PENDIENTE,
+            )
+        ).scalar()
+        
+        if solicitud_existente:
+            raise SolicitudDuplicadaError("Ya hay una solicitud en curso con este ticket")
+        if area_destino == ticket.categoria:
+            raise AreaDestinoInvalidaError("El area no puede ser la misma")
+        if not motivo.strip():
+            raise MotivoRequeridoError("La solicitud requiere motivo")
+        
+        nueva_solicitud = SolicitudTransferencia(
+                ticket_id=ticket.id,
+                agente_origen_id=ticket.agente_id,
+                agente_destino_id=None,
+                area_destino=area_destino,
+                solicitante_id=solicitante_id,
+                motivo=motivo.strip(),
+           )
+        try:
+            db.session.add(nueva_solicitud)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"No se ha podido crear la solicitud de escalamiento, error : {e}")
+            raise ErrorPersistencia("No se pudo crear la solicitud de escalamiento") from e
+
+        ServicioAuditoria.registrar(
+            usuario_id=solicitante_id,
+            accion=AccionAuditoria.ESCALAR_AREA,
+            detalle=f"Ticket #{ticket.id}: escalamiento solicitado de {ticket.categoria.value} a {area_destino.value}",
+        )
+        return nueva_solicitud
+
+    @staticmethod
+    def aprobar_escalamiento(solicitud_id, actor_id):
+
+        solicitud = db.session.execute(
+            select(SolicitudTransferencia).where(SolicitudTransferencia.id == solicitud_id)
+        ).scalar()
+        if not solicitud:
+            raise SolicitudNoEncontradaError("La solicitud no ha sido encontrada")
+
+        if solicitud.estado != EstadoSolicitudTransferencia.PENDIENTE:
+            raise SolicitudNoPendienteError("La solicitud ya fue resuelta")
+
+        ticket = db.session.execute(select(Ticket).where(Ticket.id == solicitud.ticket_id)).scalar()
+
+        if ticket.estado != EstadoTicket.EN_PROGRESO:
+            raise TicketNoEnProgresoError("El ticket no tiene el estado permitido")
+        
+        if solicitud.area_destino is None:
+            raise SolicitudNoPendienteError("Esta solicitud no es un escalamiento de área")
+        
+        ticket.categoria = solicitud.area_destino
+        ticket.agente_id = None
+        ticket.estado = EstadoTicket.ABIERTO
+        
+        solicitud.estado = EstadoSolicitudTransferencia.ACEPTADA
+        solicitud.fecha_resolucion = datetime.now()
+        
+        try:
+            db.session.add(ticket)
+            db.session.add(solicitud)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"No se ha podido aceptar la solicitud de escalamiento, error : {e}")
+            raise ErrorPersistencia("No se pudo aceptar la solicitud de escalamiento") from e
+
+        ServicioAuditoria.registrar(
+            usuario_id=actor_id,
+            accion=AccionAuditoria.APROBAR_ESCALAMIENTO,
+            detalle=f"Ticket #{ticket.id}: escalamiento aprobado a {solicitud.area_destino.value} (solicitud #{solicitud.id})",
+        )
+        return solicitud
+        
+    @staticmethod
+    def rechazar_escalamiento(solicitud_id, actor_id):
+        
+        solicitud = db.session.execute(
+            select(SolicitudTransferencia).where(SolicitudTransferencia.id == solicitud_id)
+        ).scalar()
+        
+        if not solicitud:
+            raise SolicitudNoEncontradaError("La solicitud no ha sido encontrada")
+
+        if solicitud.estado != EstadoSolicitudTransferencia.PENDIENTE:
+            raise SolicitudNoPendienteError("La solicitud ya fue resuelta")
+        
+        solicitud.estado = EstadoSolicitudTransferencia.RECHAZADA
+        solicitud.fecha_resolucion = datetime.now()
+
+        try:
+            db.session.add(solicitud)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"No se ha podido rechazar la solicitud, error : {e}")
+            raise ErrorPersistencia("No se pudo rechazar la solicitud") from e
+
+        ServicioAuditoria.registrar(
+            usuario_id=actor_id,
+            accion=AccionAuditoria.RECHAZAR_ESCALAMIENTO,
+            detalle=f"Solicitud #{solicitud.id} rechazada (ticket #{solicitud.ticket_id})",
+        )
+        return solicitud
+
+    @staticmethod
+    def listar_escalamientos_pendientes():
+        query = select(SolicitudTransferencia).where(
+            SolicitudTransferencia.area_destino.is_not(None),
+            SolicitudTransferencia.estado == EstadoSolicitudTransferencia.PENDIENTE,
+        ).order_by(SolicitudTransferencia.fecha_solicitud)
+        return db.session.execute(query).scalars().all()
+    @staticmethod
+    def listar_transferencias_pendientes():
+        query = select(SolicitudTransferencia).where(
+            SolicitudTransferencia.agente_destino_id.is_not(None),
             SolicitudTransferencia.estado == EstadoSolicitudTransferencia.PENDIENTE,
         ).order_by(SolicitudTransferencia.fecha_solicitud)
         return db.session.execute(query).scalars().all()
