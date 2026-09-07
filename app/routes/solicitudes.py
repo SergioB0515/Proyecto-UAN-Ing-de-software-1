@@ -4,12 +4,12 @@ from app.extensions import db
 from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.transferencia import SolicitudTransferencia
-from app.models.enum import RolUsuario, Categoria
+from app.models.enum import RolUsuario, Categoria, Prioridad
 from app.services.solicitud_transferencia import ServicioSolicitudesTransferencia
 from app.services.exceptions import (
     TicketNoEncontradoError, TicketNoEnProgresoError, SolicitudDuplicadaError,
     SolicitudNoEncontradaError, SolicitudNoPendienteError, AgenteDestinoInvalidoError,
-    ErrorPersistencia, MotivoRequeridoError, AreaDestinoInvalidaError
+    ErrorPersistencia, MotivoRequeridoError, AreaDestinoInvalidaError,PrioridadDestinoInvalidaError
 )
 from app.routes.decoradores import requiere_login, requiere_admin
 
@@ -149,8 +149,6 @@ def cancelar(solicitud_id):
 @requiere_login
 def escalar_area(ticket_id):
 
-
-
     ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
     if ticket is None:
         flash("Ticket no encontrado", "danger")
@@ -218,3 +216,79 @@ def rechazar_escalamiento(solicitud_id):
                 TicketNoEnProgresoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
     return redirect(url_for("solicitudes.escalamientos_pendientes"))
+
+@solicitudes_bp.route("/tickets/<int:ticket_id>/cambiar-prioridad", methods=["POST"])
+@requiere_login
+def cambiar_prioridad(ticket_id):
+
+    ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
+    if ticket is None:
+        flash("Ticket no encontrado", "danger")
+        return redirect(url_for("tickets.crear"))
+    
+    rol = session.get("rol")
+    actor_id = session["usuario_id"]
+    
+    if rol != RolUsuario.ADMIN and actor_id != ticket.agente_id:
+        flash("No tienes permiso para cambiar este ticket", "danger")
+        return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
+    
+    prioridad_destino_raw = request.form.get("prioridad_destino")
+    try:
+        prioridad_destino= Prioridad(prioridad_destino_raw)
+    except ValueError:
+        flash("La prioridad no es válida", "danger")
+        return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
+        
+    motivo = request.form.get("motivo", "")
+    
+    try:
+        ServicioSolicitudesTransferencia.cambiar_prioridad(
+            ticket_id=ticket_id, prioridad_destino=prioridad_destino,
+            solicitante_id=actor_id, motivo=motivo,
+        )
+        flash("Solicitud de cambio de prioridad enviada", "success")
+    except (TicketNoEncontradoError, TicketNoEnProgresoError, SolicitudDuplicadaError,
+            PrioridadDestinoInvalidaError, MotivoRequeridoError, ErrorPersistencia) as e:
+        flash(str(e), "danger")
+
+    return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
+
+
+@solicitudes_bp.route("/cambios-prioridad", methods=["GET"])
+@requiere_admin
+def cambios_prioridad_pendientes():
+    
+    cambios= ServicioSolicitudesTransferencia.listar_cambios_prioridad_pendientes()
+    return render_template("cambios_prioridad_pendientes.html", cambios=cambios)
+
+
+
+@solicitudes_bp.route("/cambios-prioridad/<int:solicitud_id>/aprobar", methods=["POST"])
+@requiere_admin
+def aprobar_cambio_prioridad(solicitud_id):
+
+    actor_id = session["usuario_id"]
+    
+    try:
+        ServicioSolicitudesTransferencia.aprobar_cambio_prioridad(solicitud_id,actor_id)
+        flash("Cambio de prioridad aprobado", "success")
+    except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
+                TicketNoEnProgresoError, ErrorPersistencia) as e:
+            flash(str(e), "danger")
+    return redirect(url_for("solicitudes.cambios_prioridad_pendientes"))
+    
+
+
+@solicitudes_bp.route("/cambios-prioridad/<int:solicitud_id>/rechazar", methods=["POST"])
+@requiere_admin
+def rechazar_cambio_prioridad(solicitud_id):
+    actor_id = session["usuario_id"]
+    
+    try:
+        ServicioSolicitudesTransferencia.rechazar_cambio_prioridad(solicitud_id,actor_id)
+        flash("Cambio de prioridad rechazado", "success")
+    except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
+                TicketNoEnProgresoError, ErrorPersistencia) as e:
+            flash(str(e), "danger")
+    return redirect(url_for("solicitudes.cambios_prioridad_pendientes"))

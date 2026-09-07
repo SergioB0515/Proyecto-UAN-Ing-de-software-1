@@ -1,6 +1,6 @@
 from datetime import datetime
 from app.extensions import db
-from app.models.enum import EstadoSolicitudTransferencia, Categoria
+from app.models.enum import EstadoSolicitudTransferencia, Categoria, Prioridad, TipoSolicitud
 
 class SolicitudTransferencia(db.Model):
     __tablename__ = "solicitudes_transferencia"
@@ -8,11 +8,16 @@ class SolicitudTransferencia(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ticket_id = db.Column(db.Integer, db.ForeignKey("tickets.id"), nullable=False)
 
+    tipo = db.Column(db.Enum(TipoSolicitud), nullable=False)
+
     agente_origen_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
+
 
     agente_destino_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=True)
 
     area_destino = db.Column(db.Enum(Categoria), nullable=True)
+
+    prioridad_destino = db.Column(db.Enum(Prioridad), nullable=True)
 
     solicitante_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
 

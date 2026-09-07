@@ -101,4 +101,30 @@
     </div>
 </div>
 {% endif %}
+
+{% if (session.rol == "admin" or session.usuario_id == ticket.agente_id) and ticket.estado.value == "en_progreso" %}
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Cambiar prioridad</h5>
+        <form method="POST" action="{{ url_for('solicitudes.cambiar_prioridad', ticket_id=ticket.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-2">
+                <label class="form-label">Nueva prioridad</label>
+                <select name="prioridad_destino" class="form-select" required>
+                    {% for valor, etiqueta in [("alta", "Alta"), ("media", "Media"), ("baja", "Baja")] %}
+                        {% if valor != ticket.prioridad.value %}
+                        <option value="{{ valor }}">{{ etiqueta }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Motivo (obligatorio)</label>
+                <textarea name="motivo" class="form-control" rows="2" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Solicitar cambio de prioridad</button>
+        </form>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

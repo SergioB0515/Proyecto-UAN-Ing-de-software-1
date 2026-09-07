@@ -39,6 +39,7 @@
             <a href="{{ url_for('auditoria.mostrar_auditoria') }}" class="btn btn-outline-light btn-sm">Mostrar logs</a>
             <a href="{{ url_for('solicitudes.pendientes') }}" class="btn btn-outline-light btn-sm">Solicitudes</a>
             <a href="{{ url_for('solicitudes.escalamientos_pendientes') }}" class="btn btn-outline-light btn-sm">Escalamientos</a>
+            <a href="{{ url_for('solicitudes.cambios_prioridad_pendientes') }}" class="btn btn-outline-light btn-sm">Cambios de prioridad</a>
             {% endif %}
           {% if session.get('rol') == 'agente' %}
           <a href="{{ url_for('tickets.listar_por_area', area=session.get('area_soporte')) }}" class="btn btn-outline-light btn-sm">Mi área</a>

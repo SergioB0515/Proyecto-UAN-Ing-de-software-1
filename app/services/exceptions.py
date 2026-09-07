@@ -24,3 +24,5 @@ class AreaDestinoInvalidaError(Exception):
     pass
 class MotivoRequeridoError(Exception):
     pass
+class PrioridadDestinoInvalidaError(Exception):
+    pass

@@ -48,10 +48,18 @@ class AccionAuditoria(str, Enum):
     ESCALAR_AREA = "escalar_area"
     APROBAR_ESCALAMIENTO = "aprobar_escalamiento"
     RECHAZAR_ESCALAMIENTO = "rechazar_escalamiento"
+    CAMBIAR_PRIORIDAD = "cambiar_prioridad"
+    APROBAR_CAMBIO_PRIORIDAD = "aprobar_cambio_prioridad"
+    RECHAZAR_CAMBIO_PRIORIDAD = "rechazar_cambio_prioridad"
     
 class EstadoSolicitudTransferencia(str, Enum):
     PENDIENTE = "pendiente"
     ACEPTADA = "aceptada"
     RECHAZADA = "rechazada"
     CANCELADA = "cancelada"
+
+class TipoSolicitud(str, Enum):
+    REASIGNACION = "reasignacion"
+    ESCALAMIENTO = "escalamiento"
+    CAMBIO_PRIORIDAD = "cambio_prioridad"
 
