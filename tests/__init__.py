@@ -1,6 +1,9 @@
+import os
 from flask import Flask
 from flask_babel import Babel
 from app.extensions import db
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def create_app():
@@ -12,7 +15,12 @@ def create_app():
 
     # Los servicios usan flask_babel.gettext para sus mensajes; sin esta
     # inicializacion, llamarlos fuera de una request revienta con KeyError.
-    Babel(app, default_locale="es")
+    # default_translation_directories apunta a la carpeta real de traducciones
+    # (app/translations), no a la del paquete tests -- sin esto, cualquier
+    # prueba que fuerce un locale distinto a "es" nunca encuentra el
+    # catalogo compilado y siempre cae al texto original en español.
+    Babel(app, default_locale="es",
+          default_translation_directories=os.path.join(BASE_DIR, "app", "translations"))
 
     from app.traducciones import etiqueta, formato_fecha
     app.jinja_env.filters["etiqueta"] = etiqueta
@@ -22,9 +30,6 @@ def create_app():
     from app.notificaciones_i18n import render as _render_notif
     app.jinja_env.filters["notif_msg"] = lambda n: _render_notif(n.mensaje, n.ticket_id)
 
-    # Importar TODOS los modelos para que db.metadata este completo antes de
-    # create_all(); si falta alguno, su tabla/columnas no se crean y los tests
-    # fallan con "no such column" / "no such table".
     from app.models.usuario import Usuario
     from app.models.ticket import Ticket
     from app.models.comentario import Comentario
@@ -35,8 +40,6 @@ def create_app():
     from app.models.transferencia import SolicitudTransferencia
 
     with app.app_context():
-        # drop_all + create_all garantiza un esquema fresco en cada corrida,
-        # sin depender de borrar el archivo .db (que ademas vive en instance/).
         db.drop_all()
         db.create_all()
 

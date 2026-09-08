@@ -348,9 +348,8 @@ msgstr "An agent must have a specific area"
 
 #: app/routes/auth.py:112
 msgid "No se pudo registrar el usuario por un error interno, intente más tarde"
-msgstr ""
-"The user could not be registered due to an internal error, please try "
-"again later"
+msgstr "The user could not be registered due to an internal error, please try again later"
+
 
 #: app/routes/auth.py:116
 msgid "Ya existe un usuario con ese email"
@@ -521,9 +520,8 @@ msgstr "You do not have permission over tickets from that area"
 
 #: app/routes/tickets.py:167
 msgid "Debes indicar el motivo para cerrar un ticket sin pasar por en progreso"
-msgstr ""
-"You must provide a reason to close a ticket without moving it to in "
-"progress"
+msgstr "You must provide a reason to close a ticket without moving it to in progress"
+
 
 #: app/routes/tickets.py:175
 #, python-format
