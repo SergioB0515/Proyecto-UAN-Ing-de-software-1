@@ -19,13 +19,19 @@ from tests import create_app
 from app.extensions import db
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH = os.path.join(REPO_ROOT, "test_proyecto.db")
+# Flask-SQLAlchemy resuelve "sqlite:///test_proyecto.db" contra la carpeta
+# instance/ de la app, no contra la raiz del repo. Se contemplan ambas rutas.
+DB_PATHS = (
+    os.path.join(REPO_ROOT, "test_proyecto.db"),
+    os.path.join(REPO_ROOT, "instance", "test_proyecto.db"),
+)
 
 
 @pytest.fixture(scope="session")
 def app():
-    if os.path.exists(DB_PATH):
-        os.remove(DB_PATH)
+    for ruta in DB_PATHS:
+        if os.path.exists(ruta):
+            os.remove(ruta)
     return create_app()
 
 

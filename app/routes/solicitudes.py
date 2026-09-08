@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask_babel import gettext as _
 from sqlalchemy import select
 from app.extensions import db
 from app.models.usuario import Usuario
@@ -21,14 +22,14 @@ solicitudes_bp = Blueprint("solicitudes", __name__)
 def solicitar(ticket_id):
     ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
     if ticket is None:
-        flash("Ticket no encontrado", "danger")
+        flash(_("Ticket no encontrado"), "danger")
         return redirect(url_for("tickets.crear"))
 
     rol = session.get("rol")
     actor_id = session["usuario_id"]
     
     if rol != RolUsuario.ADMIN and actor_id != ticket.agente_id:
-        flash("No tienes permiso para transferir este ticket", "danger")
+        flash(_("No tienes permiso para transferir este ticket"), "danger")
         return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
     agente_destino_id = request.form.get("agente_destino_id", type=int)
     motivo = request.form.get("motivo") or None
@@ -38,7 +39,7 @@ def solicitar(ticket_id):
             ticket_id=ticket_id, agente_destino_id=agente_destino_id,
             solicitante_id=actor_id, motivo=motivo,
         )
-        flash("Solicitud de transferencia enviada", "success")
+        flash(_("Solicitud de transferencia enviada"), "success")
     except (TicketNoEncontradoError, TicketNoEnProgresoError, SolicitudDuplicadaError,
             AgenteDestinoInvalidoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
@@ -75,17 +76,17 @@ def aceptar(solicitud_id):
         select(SolicitudTransferencia).where(SolicitudTransferencia.id == solicitud_id)
     ).scalar()
     if solicitud is None:
-        flash("Solicitud no encontrada", "danger")
+        flash(_("Solicitud no encontrada"), "danger")
         return redirect(url_for("solicitudes.pendientes"))
 
     actor_id = session["usuario_id"]
 
     if actor_id != solicitud.agente_destino_id:
-        flash("Usted no puede aceptar este ticket", "warning")
+        flash(_("Usted no puede aceptar este ticket"), "warning")
         return redirect(url_for("solicitudes.pendientes"))
     try:
         ServicioSolicitudesTransferencia.aceptar_solicitud(solicitud_id, actor_id)
-        flash("Transferencia aceptada", "success")
+        flash(_("Transferencia aceptada"), "success")
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
             TicketNoEnProgresoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
@@ -101,17 +102,17 @@ def rechazar(solicitud_id):
         select(SolicitudTransferencia).where(SolicitudTransferencia.id == solicitud_id)
     ).scalar()
     if solicitud is None:
-        flash("Solicitud no encontrada", "danger")
+        flash(_("Solicitud no encontrada"), "danger")
         return redirect(url_for("solicitudes.pendientes"))
 
     actor_id = session["usuario_id"]
 
     if actor_id != solicitud.agente_destino_id:
-        flash("Usted no puede rechazar este ticket", "warning")
+        flash(_("Usted no puede rechazar este ticket"), "warning")
         return redirect(url_for("solicitudes.pendientes"))
     try:
         ServicioSolicitudesTransferencia.rechazar_solicitud(solicitud_id, actor_id)
-        flash("Transferencia rechazada", "success")
+        flash(_("Transferencia rechazada"), "success")
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
             ErrorPersistencia) as e:
         flash(str(e), "danger")
@@ -127,18 +128,18 @@ def cancelar(solicitud_id):
         select(SolicitudTransferencia).where(SolicitudTransferencia.id == solicitud_id)
     ).scalar()
     if solicitud is None:
-        flash("Solicitud no encontrada", "danger")
+        flash(_("Solicitud no encontrada"), "danger")
         return redirect(url_for("solicitudes.pendientes"))
 
     actor_id = session["usuario_id"]
     rol = session.get("rol")
     
     if rol != RolUsuario.ADMIN and actor_id != solicitud.solicitante_id:
-        flash("No tienes permiso para cancelar este ticket", "danger")
+        flash(_("No tienes permiso para cancelar este ticket"), "danger")
         return redirect(url_for("tickets.detalle", ticket_id=solicitud.ticket_id))
     try:
         ServicioSolicitudesTransferencia.cancelar_solicitud(solicitud_id, actor_id)
-        flash("Solicitud cancelada", "success")
+        flash(_("Solicitud cancelada"), "success")
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
             ErrorPersistencia) as e:
         flash(str(e), "danger")
@@ -151,21 +152,21 @@ def escalar_area(ticket_id):
 
     ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
     if ticket is None:
-        flash("Ticket no encontrado", "danger")
+        flash(_("Ticket no encontrado"), "danger")
         return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
 
     rol = session.get("rol")
     actor_id = session["usuario_id"]
     
     if rol != RolUsuario.ADMIN and actor_id != ticket.agente_id:
-        flash("No tienes permiso para transferir este ticket", "danger")
+        flash(_("No tienes permiso para transferir este ticket"), "danger")
         return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
     
     area_destino_raw = request.form.get("area_destino")
     try:
         area_destino= Categoria(area_destino_raw)
     except ValueError:
-        flash("Área destino no válida", "danger")
+        flash(_("Área destino no válida"), "danger")
         return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
         
     motivo = request.form.get("motivo", "")
@@ -175,7 +176,7 @@ def escalar_area(ticket_id):
             ticket_id=ticket_id, area_destino=area_destino,
             solicitante_id=actor_id, motivo=motivo,
         )
-        flash("Solicitud de escalamiento enviada", "success")
+        flash(_("Solicitud de escalamiento enviada"), "success")
     except (TicketNoEncontradoError, TicketNoEnProgresoError, SolicitudDuplicadaError,
             AreaDestinoInvalidaError,MotivoRequeridoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
@@ -197,7 +198,7 @@ def aprobar_escalamiento(solicitud_id):
     actor_id = session["usuario_id"]
     try:
         ServicioSolicitudesTransferencia.aprobar_escalamiento(solicitud_id,actor_id)
-        flash("Escalamiento aprobado", "success")
+        flash(_("Escalamiento aprobado"), "success")
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
                 TicketNoEnProgresoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
@@ -211,7 +212,7 @@ def rechazar_escalamiento(solicitud_id):
     actor_id = session["usuario_id"]
     try:
         ServicioSolicitudesTransferencia.rechazar_escalamiento(solicitud_id,actor_id)
-        flash("Escalamiento rechazado", "success")
+        flash(_("Escalamiento rechazado"), "success")
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
                 TicketNoEnProgresoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
@@ -223,21 +224,21 @@ def cambiar_prioridad(ticket_id):
 
     ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
     if ticket is None:
-        flash("Ticket no encontrado", "danger")
+        flash(_("Ticket no encontrado"), "danger")
         return redirect(url_for("tickets.crear"))
     
     rol = session.get("rol")
     actor_id = session["usuario_id"]
     
     if rol != RolUsuario.ADMIN and actor_id != ticket.agente_id:
-        flash("No tienes permiso para cambiar este ticket", "danger")
+        flash(_("No tienes permiso para cambiar este ticket"), "danger")
         return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
     
     prioridad_destino_raw = request.form.get("prioridad_destino")
     try:
         prioridad_destino= Prioridad(prioridad_destino_raw)
     except ValueError:
-        flash("La prioridad no es válida", "danger")
+        flash(_("La prioridad no es válida"), "danger")
         return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
         
     motivo = request.form.get("motivo", "")
@@ -247,7 +248,7 @@ def cambiar_prioridad(ticket_id):
             ticket_id=ticket_id, prioridad_destino=prioridad_destino,
             solicitante_id=actor_id, motivo=motivo,
         )
-        flash("Solicitud de cambio de prioridad enviada", "success")
+        flash(_("Solicitud de cambio de prioridad enviada"), "success")
     except (TicketNoEncontradoError, TicketNoEnProgresoError, SolicitudDuplicadaError,
             PrioridadDestinoInvalidaError, MotivoRequeridoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
@@ -272,7 +273,7 @@ def aprobar_cambio_prioridad(solicitud_id):
     
     try:
         ServicioSolicitudesTransferencia.aprobar_cambio_prioridad(solicitud_id,actor_id)
-        flash("Cambio de prioridad aprobado", "success")
+        flash(_("Cambio de prioridad aprobado"), "success")
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
                 TicketNoEnProgresoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
@@ -287,7 +288,7 @@ def rechazar_cambio_prioridad(solicitud_id):
     
     try:
         ServicioSolicitudesTransferencia.rechazar_cambio_prioridad(solicitud_id,actor_id)
-        flash("Cambio de prioridad rechazado", "success")
+        flash(_("Cambio de prioridad rechazado"), "success")
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
                 TicketNoEnProgresoError, ErrorPersistencia) as e:
             flash(str(e), "danger")

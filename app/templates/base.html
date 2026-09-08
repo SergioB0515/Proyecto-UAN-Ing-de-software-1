@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ session.get('idioma', 'es') }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,66 +9,424 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<nav class="navbar navbar-dark px-3 d-flex justify-content-between">
-    <div class="d-flex align-items-center gap-2">
-        {% if session.get('usuario_id') %}
-            <a href="{{ url_for('auth.perfil') }}" class="navbar-icon-btn" aria-label="Mi perfil" title="Mi perfil"></a>
 
-            {% if session.get('rol') == 'admin' %}
-            <a href="{{ url_for('metricas.mostrar_metricas') }}" class="navbar-brand mb-0">Sistema de Tickets IT</a>
-            {% elif session.get('rol') == 'agente' %}
-            <a href="{{ url_for('tickets.listar_por_area', area=session.get('area_soporte')) }}" class="navbar-brand mb-0">Sistema de Tickets IT</a>
-            {% else %}
-            <a href="{{ url_for('auth.dashboard') }}" class="navbar-brand mb-0">Sistema de Tickets IT</a>
-            {% endif %}
-        {% else %}
-            <span class="navbar-icon-btn"></span>
-            <span class="navbar-brand mb-0">Sistema de Tickets IT</span>
+{% set rol = session.get('rol') %}
+{% set ep = request.endpoint or '' %}
+{% set bp = request.blueprint or '' %}
+{% set home_url = url_for('metricas.mostrar_metricas') if rol == 'admin'
+        else (url_for('tickets.listar_por_area', area=session.get('area_soporte')) if rol == 'agente'
+        else url_for('auth.dashboard')) %}
+
+<nav class="navbar navbar-dark navbar-expand-lg app-navbar">
+  <div class="container-fluid app-navbar-inner">
+
+    <a class="navbar-brand" href="{{ home_url if session.get('usuario_id') else url_for('auth.login') }}">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Sistema de Tickets <span class="brand-accent">IT</span></span>
+    </a>
+
+    <div class="navbar-utils order-lg-last">
+        <div class="lang-switch" role="group" aria-label="{{ _('Idioma') }}">
+            <a href="{{ url_for('auth.cambiar_idioma', codigo='es') }}"
+               class="{% if session.get('idioma', 'es') == 'es' %}is-active{% endif %}">ES</a>
+            <a href="{{ url_for('auth.cambiar_idioma', codigo='en') }}"
+               class="{% if session.get('idioma') == 'en' %}is-active{% endif %}">EN</a>
+        </div>
+
+        {% if session.get('usuario_id') %}
+        <div class="dropdown notif-dropdown">
+            <button class="icon-btn position-relative" id="notifBtn" type="button"
+                    data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+                    aria-label="{{ _('Notificaciones') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="notif-bell" width="18" height="18" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                <span class="notif-badge" id="notifBadge" {% if not notificaciones_no_leidas %}hidden{% endif %}>{{ notificaciones_no_leidas if notificaciones_no_leidas and notificaciones_no_leidas <= 9 else '9+' }}</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end notif-menu">
+                <div class="notif-head">
+                    <span class="notif-title">{{ _('Notificaciones') }}</span>
+                    <form method="POST" action="{{ url_for('auth.marcar_todas_notificaciones_leidas') }}" id="notifMarkAllForm">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="notif-markall">{{ _('Marcar todas como leídas') }}</button>
+                    </form>
+                </div>
+                <ul class="notif-list" id="notifList">
+                    {% for n in notificaciones_recientes %}
+                    <li class="notif-item {% if not n.leida %}is-unread{% endif %}" data-id="{{ n.id }}"
+                        {% if n.ticket_id %}data-ticket="{{ n.ticket_id }}"{% endif %}>
+                        <form method="POST" action="{{ url_for('auth.marcar_notificacion_leida', notificacion_id=n.id) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="notif-link">
+                                <span class="notif-dot" aria-hidden="true"></span>
+                                <span class="notif-body">
+                                    <span class="notif-text">{{ n | notif_msg }}</span>
+                                    <time class="notif-time" data-ts="{{ n.fecha.isoformat() }}">{{ n.fecha.strftime('%d/%m %H:%M') }}</time>
+                                </span>
+                            </button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="notif-empty" id="notifEmpty" {% if notificaciones_recientes %}hidden{% endif %}>
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        <path d="M18.63 13A17.89 17.89 0 0 1 18 8"/>
+                        <path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/>
+                        <path d="M18 8a6 6 0 0 0-9.33-5"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                    <span>{{ _('Sin notificaciones') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="user-avatar">{{ usuario_iniciales | default('?', true) }}</span>
+                <span class="user-meta d-none d-sm-flex">
+                    <span class="user-name">{{ usuario_actual.nombre if usuario_actual else _('Cuenta') }}</span>
+                    <span class="user-role">{{ rol | etiqueta }}</span>
+                </span>
+                <svg class="caret" width="12" height="12" viewBox="0 0 16 16" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item {% if ep == 'auth.perfil' %}active{% endif %}" href="{{ url_for('auth.perfil') }}">{{ _('Mi perfil') }}</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item dropdown-item-danger" href="{{ url_for('auth.logout') }}">{{ _('Cerrar sesión') }}</a></li>
+            </ul>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false"
+                aria-label="{{ _('Abrir menú de navegación') }}">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         {% endif %}
     </div>
 
-      {% if session.get('usuario_id') %}
-      <div class="d-flex gap-2 align-items-center">
-          <a href="{{ url_for('auth.dashboard') }}" class="btn btn-outline-light btn-sm">Mis tickets</a>
-          <a href="{{ url_for('tickets.crear') }}" class="btn btn-outline-light btn-sm">Crear ticket</a>
+    {% if session.get('usuario_id') %}
+    <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav navbar-nav-main">
 
-           {% if session.get('rol') == 'admin' %}
-            <a href="{{ url_for('metricas.mostrar_metricas') }}" class="btn btn-outline-light btn-sm">Métricas</a>
-            <a href="{{ url_for('tickets.listar_admin') }}" class="btn btn-outline-light btn-sm">Todos los tickets</a>
-            <a href="{{ url_for('auth.registro') }}" class="btn btn-outline-light btn-sm">Registrar usuario</a>
-            <a href="{{ url_for('auditoria.mostrar_auditoria') }}" class="btn btn-outline-light btn-sm">Mostrar logs</a>
-            <a href="{{ url_for('solicitudes.pendientes') }}" class="btn btn-outline-light btn-sm">Solicitudes</a>
-            <a href="{{ url_for('solicitudes.escalamientos_pendientes') }}" class="btn btn-outline-light btn-sm">Escalamientos</a>
-            <a href="{{ url_for('solicitudes.cambios_prioridad_pendientes') }}" class="btn btn-outline-light btn-sm">Cambios de prioridad</a>
+            {% if rol == 'admin' %}
+            <li class="nav-item">
+                <a class="nav-link {% if ep == 'metricas.mostrar_metricas' %}active{% endif %}"
+                   href="{{ url_for('metricas.mostrar_metricas') }}">{{ _('Panel') }}</a>
+            </li>
+
+            {% set tickets_activo = ep in ['auth.dashboard', 'tickets.crear', 'tickets.listar_admin', 'tickets.detalle'] %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {% if tickets_activo %}active{% endif %}" href="#"
+                   role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ _('Tickets') }}</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item {% if ep == 'tickets.listar_admin' %}active{% endif %}" href="{{ url_for('tickets.listar_admin') }}">{{ _('Todos los tickets') }}</a></li>
+                    <li><a class="dropdown-item {% if ep == 'auth.dashboard' %}active{% endif %}" href="{{ url_for('auth.dashboard') }}">{{ _('Mis tickets') }}</a></li>
+                    <li><a class="dropdown-item {% if ep == 'tickets.crear' %}active{% endif %}" href="{{ url_for('tickets.crear') }}">{{ _('Crear ticket') }}</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {% if bp == 'solicitudes' %}active{% endif %}" href="#"
+                   role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ _('Solicitudes') }}</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item {% if ep == 'solicitudes.pendientes' %}active{% endif %}" href="{{ url_for('solicitudes.pendientes') }}">{{ _('Transferencias') }}</a></li>
+                    <li><a class="dropdown-item {% if ep == 'solicitudes.escalamientos_pendientes' %}active{% endif %}" href="{{ url_for('solicitudes.escalamientos_pendientes') }}">{{ _('Escalamientos') }}</a></li>
+                    <li><a class="dropdown-item {% if ep == 'solicitudes.cambios_prioridad_pendientes' %}active{% endif %}" href="{{ url_for('solicitudes.cambios_prioridad_pendientes') }}">{{ _('Cambios de prioridad') }}</a></li>
+                </ul>
+            </li>
+
+            {% set admin_activo = ep in ['auth.registro', 'auditoria.mostrar_auditoria'] %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {% if admin_activo %}active{% endif %}" href="#"
+                   role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ _('Administración') }}</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item {% if ep == 'auth.registro' %}active{% endif %}" href="{{ url_for('auth.registro') }}">{{ _('Registrar usuario') }}</a></li>
+                    <li><a class="dropdown-item {% if ep == 'auditoria.mostrar_auditoria' %}active{% endif %}" href="{{ url_for('auditoria.mostrar_auditoria') }}">{{ _('Log de auditoría') }}</a></li>
+                </ul>
+            </li>
+
+            {% elif rol == 'agente' %}
+            <li class="nav-item">
+                <a class="nav-link {% if ep == 'tickets.listar_por_area' %}active{% endif %}"
+                   href="{{ url_for('tickets.listar_por_area', area=session.get('area_soporte')) }}">{{ _('Mi área') }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if ep == 'auth.dashboard' %}active{% endif %}"
+                   href="{{ url_for('auth.dashboard') }}">{{ _('Mis tickets') }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if ep == 'tickets.crear' %}active{% endif %}"
+                   href="{{ url_for('tickets.crear') }}">{{ _('Crear ticket') }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if bp == 'solicitudes' %}active{% endif %}"
+                   href="{{ url_for('solicitudes.pendientes') }}">{{ _('Solicitudes') }}</a>
+            </li>
+
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link {% if ep == 'auth.dashboard' %}active{% endif %}"
+                   href="{{ url_for('auth.dashboard') }}">{{ _('Mis tickets') }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if ep == 'tickets.crear' %}active{% endif %}"
+                   href="{{ url_for('tickets.crear') }}">{{ _('Crear ticket') }}</a>
+            </li>
             {% endif %}
-          {% if session.get('rol') == 'agente' %}
-          <a href="{{ url_for('tickets.listar_por_area', area=session.get('area_soporte')) }}" class="btn btn-outline-light btn-sm">Mi área</a>
-          <a href="{{ url_for('solicitudes.pendientes') }}" class="btn btn-outline-light btn-sm">Solicitudes</a>
-          {% endif %}
-
-          <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
-      </div>
-      {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+  </div>
 </nav>
 
-    <div class="container mt-4">
+<main class="container app-main">
 
- 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-   
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ _('Cerrar') }}"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-        {% block content %}{% endblock %}
-    </div>
+    {% block content %}{% endblock %}
+</main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;" id="toastContainer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% if session.get('usuario_id') %}
+<script type="application/json" id="notificaciones-toast-data">{{ notificaciones_no_leidas_lista | tojson }}</script>
+<script type="application/json" id="notif-catalogo">{{ notif_catalogo | tojson }}</script>
+<script type="application/json" id="notif-i18n">{{ {
+    "toastTitulo": _('Notificación nueva'),
+    "ahora": _('ahora'),
+    "min": _('hace %(n)s min', n='%(n)s'),
+    "hora": _('hace %(n)s h', n='%(n)s'),
+    "dia": _('hace %(n)s d', n='%(n)s'),
+    "sinNotif": _('Sin notificaciones')
+} | tojson }}</script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+(function () {
+    const I18N = JSON.parse(document.getElementById('notif-i18n').textContent);
+    const CATALOGO = JSON.parse(document.getElementById('notif-catalogo').textContent);
+    const CSRF = "{{ csrf_token() }}";
+
+    // Traduce el mensaje de una notificación al idioma de esta página.
+    function textoNotif(n) {
+        const tpl = (n.plantilla && CATALOGO[n.plantilla]) || null;
+        const id = (n.ticket_id === null || n.ticket_id === undefined) ? '' : n.ticket_id;
+        if (tpl) return tpl.split('%(id)s').join(id);
+        return n.mensaje || '';
+    }
+    const MARCAR_LEIDA_URL = "{{ url_for('auth.marcar_notificacion_leida', notificacion_id=0) }}";
+    const TICKET_URL = "{{ url_for('tickets.detalle', ticket_id=0) }}";
+    const MAX_ITEMS = 15;
+
+    function urlMarcarLeida(id) { return MARCAR_LEIDA_URL.replace('/0/', '/' + id + '/'); }
+    function urlTicket(id) { return TICKET_URL.replace(/0$/, id); }
+
+    const container = document.getElementById('toastContainer');
+    const badge = document.getElementById('notifBadge');
+    const lista = document.getElementById('notifList');
+    const vacio = document.getElementById('notifEmpty');
+    const markAllForm = document.getElementById('notifMarkAllForm');
+
+    const idsEnLista = new Set(
+        Array.from(lista ? lista.querySelectorAll('.notif-item') : []).map(function (el) {
+            return Number(el.dataset.id);
+        })
+    );
+
+    const yaEnToast = JSON.parse(sessionStorage.getItem('notificacionesMostradas') || '[]');
+    function recordarToast(id) {
+        if (!yaEnToast.includes(id)) {
+            yaEnToast.push(id);
+            sessionStorage.setItem('notificacionesMostradas', JSON.stringify(yaEnToast.slice(-100)));
+        }
+    }
+
+    /* ---------- tiempo relativo ---------- */
+    function tiempoRelativo(iso) {
+        const t = new Date(iso);
+        if (isNaN(t)) return '';
+        const seg = Math.round((Date.now() - t.getTime()) / 1000);
+        if (seg < 60) return I18N.ahora;
+        const min = Math.round(seg / 60);
+        if (min < 60) return I18N.min.replace('%(n)s', min);
+        const hor = Math.round(min / 60);
+        if (hor < 24) return I18N.hora.replace('%(n)s', hor);
+        const dia = Math.round(hor / 24);
+        if (dia < 7) return I18N.dia.replace('%(n)s', dia);
+        return t.toLocaleDateString();
+    }
+
+    function refrescarTiempos() {
+        document.querySelectorAll('.notif-time[data-ts]').forEach(function (el) {
+            const rel = tiempoRelativo(el.dataset.ts);
+            if (rel) el.textContent = rel;
+            el.title = new Date(el.dataset.ts).toLocaleString();
+        });
+    }
+
+    /* ---------- badge ---------- */
+    function setBadge(n) {
+        if (!badge) return;
+        if (n > 0) {
+            badge.textContent = n > 9 ? '9+' : String(n);
+            badge.hidden = false;
+        } else {
+            badge.hidden = true;
+        }
+    }
+    function badgeActual() {
+        if (!badge || badge.hidden) return 0;
+        return badge.textContent === '9+' ? 10 : (parseInt(badge.textContent, 10) || 0);
+    }
+
+    /* ---------- lista del desplegable ---------- */
+    function construirItem(n) {
+        const li = document.createElement('li');
+        li.className = 'notif-item is-unread';
+        li.dataset.id = n.id;
+        if (n.ticket_id) li.dataset.ticket = n.ticket_id;
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = urlMarcarLeida(n.id);
+        form.innerHTML =
+            '<input type="hidden" name="csrf_token" value="' + CSRF + '">' +
+            '<button type="submit" class="notif-link">' +
+                '<span class="notif-dot" aria-hidden="true"></span>' +
+                '<span class="notif-body">' +
+                    '<span class="notif-text"></span>' +
+                    '<time class="notif-time" data-ts="' + (n.fecha || '') + '"></time>' +
+                '</span>' +
+            '</button>';
+        form.querySelector('.notif-text').textContent = textoNotif(n);
+        li.appendChild(form);
+        return li;
+    }
+
+    function anadirALista(n) {
+        if (!lista || idsEnLista.has(Number(n.id))) return;
+        idsEnLista.add(Number(n.id));
+        lista.prepend(construirItem(n));
+        while (lista.children.length > MAX_ITEMS) lista.lastElementChild.remove();
+        if (vacio) vacio.hidden = true;
+        refrescarTiempos();
+    }
+
+    // clic en un item: marcar leido (fetch) y navegar al ticket si aplica
+    if (lista) {
+        lista.addEventListener('submit', function (e) {
+            const form = e.target.closest('form');
+            if (!form) return;
+            e.preventDefault();
+            const li = form.closest('.notif-item');
+            const ticket = li && li.dataset.ticket;
+            fetch(form.action, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'fetch' },
+                body: new FormData(form)
+            }).catch(function () {}).finally(function () {
+                if (ticket) {
+                    window.location = urlTicket(ticket);
+                    return;
+                }
+                if (li && li.classList.contains('is-unread')) {
+                    li.classList.remove('is-unread');
+                    setBadge(Math.max(0, badgeActual() - 1));
+                }
+            });
+        });
+    }
+
+    // "marcar todas como leidas" sin recargar
+    if (markAllForm) {
+        markAllForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            fetch(markAllForm.action, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'fetch' },
+                body: new FormData(markAllForm)
+            }).catch(function () {}).finally(function () {
+                lista && lista.querySelectorAll('.notif-item.is-unread').forEach(function (el) {
+                    el.classList.remove('is-unread');
+                });
+                setBadge(0);
+            });
+        });
+    }
+
+    /* ---------- toast ---------- */
+    function mostrarToast(n) {
+        const el = document.createElement('div');
+        el.className = 'toast notif-toast';
+        el.setAttribute('role', 'alert');
+        if (n.ticket_id) el.dataset.ticket = n.ticket_id;
+        el.innerHTML =
+            '<div class="notif-toast-inner">' +
+                '<span class="notif-toast-icon" aria-hidden="true">' +
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>' +
+                '</span>' +
+                '<div class="notif-toast-content">' +
+                    '<div class="notif-toast-title"></div>' +
+                    '<div class="notif-toast-msg"></div>' +
+                '</div>' +
+                '<button type="button" class="notif-toast-close" data-bs-dismiss="toast" aria-label="close">&times;</button>' +
+            '</div>';
+        el.querySelector('.notif-toast-title').textContent = I18N.toastTitulo;
+        el.querySelector('.notif-toast-msg').textContent = textoNotif(n);
+        if (n.ticket_id) {
+            el.querySelector('.notif-toast-content').classList.add('is-clickable');
+            el.querySelector('.notif-toast-content').addEventListener('click', function () {
+                window.location = urlTicket(n.ticket_id);
+            });
+        }
+        container.appendChild(el);
+        const toast = new bootstrap.Toast(el, { delay: 7000 });
+        el.addEventListener('hidden.bs.toast', function () { el.remove(); });
+        toast.show();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        refrescarTiempos();
+        setInterval(refrescarTiempos, 60000);
+
+        const pendientes = JSON.parse(document.getElementById('notificaciones-toast-data').textContent);
+        pendientes.forEach(function (n) {
+            if (yaEnToast.includes(n.id)) return;
+            mostrarToast(n);
+            recordarToast(n.id);
+        });
+
+        const socket = io({ transports: ['polling'] });
+        socket.on('nueva_notificacion', function (n) {
+            anadirALista(n);
+            if (typeof n.no_leidas === 'number') {
+                setBadge(n.no_leidas);
+            } else {
+                setBadge(badgeActual() + 1);
+            }
+            if (!yaEnToast.includes(n.id)) {
+                mostrarToast(n);
+                recordarToast(n.id);
+            }
+        });
+    });
+})();
+</script>
+{% endif %}
 </body>
 </html>

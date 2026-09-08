@@ -1,53 +1,58 @@
 {% extends "base.html" %}
-{% block title %}Tickets - {{ area }}{% endblock %}
+{% block title %}{{ _('Tickets - %(area)s', area=area|etiqueta) }}{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>Tickets del área: {{ area }}</h2>
+    <h2>{{ _('Tickets del área: %(area)s', area=area|etiqueta) }}</h2>
 </div>
 
 <form method="GET" action="{{ url_for('tickets.listar_por_area', area=area) }}" class="row g-2 align-items-end mb-3">
     <div class="col-md-3">
-        <label class="form-label">Estado</label>
+        <label class="form-label">{{ _('Estado') }}</label>
         <select name="estado" class="form-select form-select-sm">
-            <option value="">-- Todos --</option>
-            <option value="abierto" {% if filtros_actuales.estado == "abierto" %}selected{% endif %}>Abierto</option>
-            <option value="en_progreso" {% if filtros_actuales.estado == "en_progreso" %}selected{% endif %}>En progreso</option>
-            <option value="cerrado" {% if filtros_actuales.estado == "cerrado" %}selected{% endif %}>Cerrado</option>
+            <option value="">{{ _('-- Todos --') }}</option>
+            <option value="abierto" {% if filtros_actuales.estado == "abierto" %}selected{% endif %}>{{ _('Abierto') }}</option>
+            <option value="en_progreso" {% if filtros_actuales.estado == "en_progreso" %}selected{% endif %}>{{ _('En progreso') }}</option>
+            <option value="cerrado" {% if filtros_actuales.estado == "cerrado" %}selected{% endif %}>{{ _('Cerrado') }}</option>
         </select>
     </div>
 
     <div class="col-md-3">
-        <label class="form-label">Prioridad</label>
+        <label class="form-label">{{ _('Prioridad') }}</label>
         <select name="prioridad" class="form-select form-select-sm">
-            <option value="">-- Todas --</option>
-            <option value="alta" {% if filtros_actuales.prioridad == "alta" %}selected{% endif %}>Alta</option>
-            <option value="media" {% if filtros_actuales.prioridad == "media" %}selected{% endif %}>Media</option>
-            <option value="baja" {% if filtros_actuales.prioridad == "baja" %}selected{% endif %}>Baja</option>
+            <option value="">{{ _('-- Todas --') }}</option>
+            <option value="alta" {% if filtros_actuales.prioridad == "alta" %}selected{% endif %}>{{ _('Alta') }}</option>
+            <option value="media" {% if filtros_actuales.prioridad == "media" %}selected{% endif %}>{{ _('Media') }}</option>
+            <option value="baja" {% if filtros_actuales.prioridad == "baja" %}selected{% endif %}>{{ _('Baja') }}</option>
         </select>
     </div>
 
     <div class="col-md-2">
-        <label class="form-label">Desde</label>
+        <label class="form-label">{{ _('Desde') }}</label>
         <input type="date" name="fecha_desde" class="form-control form-control-sm" value="{{ filtros_actuales.fecha_desde or '' }}">
     </div>
 
     <div class="col-md-2">
-        <label class="form-label">Hasta</label>
+        <label class="form-label">{{ _('Hasta') }}</label>
         <input type="date" name="fecha_hasta" class="form-control form-control-sm" value="{{ filtros_actuales.fecha_hasta or '' }}">
     </div>
 
     <div class="col-md-2 d-flex gap-2">
-        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
-        <a href="{{ url_for('tickets.listar_por_area', area=area) }}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+        <button type="submit" class="btn btn-primary btn-sm">{{ _('Filtrar') }}</button>
+        <a href="{{ url_for('tickets.listar_por_area', area=area) }}" class="btn btn-outline-secondary btn-sm">{{ _('Limpiar') }}</a>
     </div>
 </form>
 
+{% if not tickets %}
+<div class="empty-state">
+    <p class="mb-0">{{ _('No hay tickets que coincidan con los filtros seleccionados.') }}</p>
+</div>
+{% else %}
 <div class="table-card">
 <table class="table table-hover align-middle">
     <thead>
         <tr>
-            <th>ID</th><th>Texto</th><th>Prioridad</th><th>Estado</th>
-            <th>Fecha límite</th><th>Cambiar estado</th>
+            <th>{{ _('ID') }}</th><th>{{ _('Texto') }}</th><th>{{ _('Prioridad') }}</th><th>{{ _('Estado') }}</th>
+            <th>{{ _('Fecha límite') }}</th><th>{{ _('Cambiar estado') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -55,9 +60,9 @@
         <tr class="{% if t.id in ids_vencidos %}table-danger{% elif t.id in ids_proximos %}table-warning{% endif %}">
             <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
-            <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value }}</span></td>
-            <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value }}</span></td>
-            <td class="mono text-soft-mono">{{ t.fecha_limite }}</td>
+            <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value | etiqueta }}</span></td>
+            <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value | etiqueta }}</span></td>
+            <td class="mono text-soft-mono">{{ t.fecha_limite | fecha }}</td>
 <td>
     {% set opciones = transiciones_por_ticket[t.id] %}
     {% if opciones|length > 1 %}
@@ -67,7 +72,7 @@
             <input type="hidden" name="nuevo_estado" value="en_progreso">
             {% if session.get('rol') == 'admin' %}
             <select name="agente_id" class="form-select form-select-sm">
-                <option value="">-- agente --</option>
+                <option value="">{{ _('-- agente --') }}</option>
                 {% for ag in agentes_del_area %}
                 <option value="{{ ag.id }}">{{ ag.nombre }}</option>
                 {% endfor %}
@@ -75,14 +80,14 @@
             {% else %}
             <input type="hidden" name="agente_id" value="{{ session.get('usuario_id') }}">
             {% endif %}
-            <button type="submit" class="btn btn-sm btn-primary">Tomar</button>
+            <button type="submit" class="btn btn-sm btn-primary">{{ _('Tomar') }}</button>
         </form>
 
         <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=t.id) }}" class="d-flex gap-1">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="nuevo_estado" value="cerrado">
-            <input type="text" name="causa" class="form-control form-control-sm" placeholder="Motivo del cierre directo" required>
-            <button type="submit" class="btn btn-sm btn-outline-danger">Cerrar</button>
+            <input type="text" name="causa" class="form-control form-control-sm" placeholder="{{ _('Motivo del cierre directo') }}" required>
+            <button type="submit" class="btn btn-sm btn-outline-danger">{{ _('Cerrar') }}</button>
         </form>
     </div>
     {% elif opciones|length == 1 %}
@@ -92,7 +97,7 @@
         {% if opciones[0] == "en_progreso" %}
             {% if session.get('rol') == 'admin' %}
             <select name="agente_id" class="form-select form-select-sm">
-                <option value="">-- agente --</option>
+                <option value="">{{ _('-- agente --') }}</option>
                 {% for ag in agentes_del_area %}
                 <option value="{{ ag.id }}" {% if t.agente_id == ag.id %}selected{% endif %}>{{ ag.nombre }}</option>
                 {% endfor %}
@@ -102,11 +107,11 @@
             {% endif %}
         {% endif %}
         <button type="submit" class="btn btn-sm {% if opciones[0] == 'cerrado' %}btn-outline-danger{% else %}btn-primary{% endif %}">
-            {% if opciones[0] == "cerrado" %}Cerrar{% else %}Reabrir{% endif %}
+            {% if opciones[0] == "cerrado" %}{{ _('Cerrar') }}{% else %}{{ _('Reabrir') }}{% endif %}
         </button>
     </form>
     {% else %}
-    <span class="text-muted">Sin transiciones</span>
+    <span class="text-muted">{{ _('Sin transiciones') }}</span>
     {% endif %}
 
     {% if t.estado.value == "en_progreso" and session.get('rol') == 'admin' %}
@@ -117,7 +122,7 @@
             <option value="{{ ag.id }}" {% if t.agente_id == ag.id %}selected{% endif %}>{{ ag.nombre }}</option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn btn-sm btn-secondary">Reasignar</button>
+        <button type="submit" class="btn btn-sm btn-secondary">{{ _('Reasignar') }}</button>
     </form>
     {% endif %}
 </td>
@@ -126,4 +131,5 @@
     </tbody>
 </table>
 </div>
+{% endif %}
 {% endblock %}

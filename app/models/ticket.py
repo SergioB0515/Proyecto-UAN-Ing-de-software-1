@@ -14,3 +14,5 @@ class Ticket(db.Model):
     fecha_creacion = db.Column(db.DateTime, nullable=False, default=datetime.now)
     fecha_limite= db.Column(db.DateTime, nullable=False)
     fecha_cierre = db.Column(db.DateTime, nullable=True)
+    notificado_proximo_vencer = db.Column(db.Boolean, nullable=False, default=False)
+    notificado_vencido = db.Column(db.Boolean, nullable=False, default=False)

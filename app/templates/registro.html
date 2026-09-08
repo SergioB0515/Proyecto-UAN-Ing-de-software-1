@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Registrar usuario{% endblock %}
+{% block title %}{{ _('Registrar usuario') }}{% endblock %}
 
 {% block content %}
 <div class="auth-shell">
@@ -10,53 +10,53 @@
                 <div class="auth-badge">
                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg>
                 </div>
-                <h2>Registrar nuevo usuario</h2>
-                <p class="auth-subtitle">Crea una cuenta y asigna su rol dentro del sistema.</p>
+                <h2>{{ _('Registrar nuevo usuario') }}</h2>
+                <p class="auth-subtitle">{{ _('Crea una cuenta y asigna su rol dentro del sistema.') }}</p>
                 <form method="POST" action="{{ url_for('auth.registro') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
-                        <label class="form-label">Nombre</label>
+                        <label class="form-label">{{ _('Nombre') }}</label>
                         <input type="text" name="nombre" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Email</label>
+                        <label class="form-label">{{ _('Email') }}</label>
                         <input type="email" name="email" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Contraseña</label>
+                        <label class="form-label">{{ _('Contraseña') }}</label>
                         <input type="password" name="contrasena" class="form-control" required>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Rol</label>
+                            <label class="form-label">{{ _('Rol') }}</label>
                             <select name="rol" id="rol" class="form-select" required>
-                                <option value="final">Usuario final</option>
-                                <option value="agente">Agente</option>
-                                <option value="admin">Admin</option>
+                                <option value="final">{{ _('Usuario final') }}</option>
+                                <option value="agente">{{ _('Agente') }}</option>
+                                <option value="admin">{{ _('Admin') }}</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Nivel</label>
+                            <label class="form-label">{{ _('Nivel') }}</label>
                             <select name="nivel" class="form-select" required>
-                                <option value="normal">Normal</option>
+                                <option value="normal">{{ _('Normal') }}</option>
                                 <option value="vip">VIP</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-3" id="area-container">
-                        <label class="form-label">Área de soporte</label>
+                        <label class="form-label">{{ _('Área de soporte') }}</label>
                         <select name="area_soporte" class="form-select">
-                            <option value="">-- No aplica --</option>
-                            <option value="infraestructura">Infraestructura</option>
-                            <option value="redes">Redes</option>
-                            <option value="permisos">Permisos</option>
-                            <option value="cuentas_contrasenas">Cuentas y contraseñas</option>
-                            <option value="seguridad">Seguridad</option>
-                            <option value="software">Software</option>
-                            <option value="otros">Otros</option>
+                            <option value="">{{ _('-- No aplica --') }}</option>
+                            <option value="infraestructura">{{ _('Infraestructura') }}</option>
+                            <option value="redes">{{ _('Redes') }}</option>
+                            <option value="permisos">{{ _('Permisos') }}</option>
+                            <option value="cuentas_contrasenas">{{ _('Cuentas y contraseñas') }}</option>
+                            <option value="seguridad">{{ _('Seguridad') }}</option>
+                            <option value="software">{{ _('Software') }}</option>
+                            <option value="otros">{{ _('Otros') }}</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 mt-2">Registrar</button>
+                    <button type="submit" class="btn btn-primary w-100 mt-2">{{ _('Registrar') }}</button>
                 </form>
             </div>
         </div>

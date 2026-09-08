@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, Response, request 
+from flask import Blueprint, render_template, Response, request
+from flask_babel import gettext as _
+from app.traducciones import etiqueta
 from app.services.metricas import ServicioMetricas
 from app.routes.decoradores import requiere_admin
 import csv
@@ -23,23 +25,23 @@ def exportar_metricas():
     filas = []
 
     for estado, cantidad in metricas["tickets_por_estado"].items():
-        filas.append((f"Tickets por estado - {estado}", cantidad))
+        filas.append((_("Tickets por estado - %(valor)s", valor=etiqueta(estado)), cantidad))
 
     for categoria, cantidad in metricas["tickets_por_categoria"].items():
-        filas.append((f"Tickets por categoria - {categoria}", cantidad))
+        filas.append((_("Tickets por categoría - %(valor)s", valor=etiqueta(categoria)), cantidad))
 
     for prioridad, cantidad in metricas["tickets_por_prioridad"].items():
-        filas.append((f"Tickets por prioridad - {prioridad}", cantidad))
+        filas.append((_("Tickets por prioridad - %(valor)s", valor=etiqueta(prioridad)), cantidad))
 
-    filas.append(("Tickets vencidos actualmente", metricas["tickets_vencidos_actualmente"]))
-    filas.append(("Tickets próximos a vencer", metricas["tickets_proximos_a_vencer_actualmente"]))
-    filas.append(("Tickets vencidos últimos 30 días", metricas["tickets_vencidos_ultimos_30_dias"]))
-    filas.append(("Cantidad de agentes", metricas["cantidad_agentes"]))
+    filas.append((_("Tickets vencidos actualmente"), metricas["tickets_vencidos_actualmente"]))
+    filas.append((_("Tickets próximos a vencer"), metricas["tickets_proximos_a_vencer_actualmente"]))
+    filas.append((_("Tickets vencidos últimos 30 días"), metricas["tickets_vencidos_ultimos_30_dias"]))
+    filas.append((_("Cantidad de agentes"), metricas["cantidad_agentes"]))
 
     if formato == "xlsx":
         wb = Workbook()
         ws = wb.active
-        ws.append(["Métrica", "Valor"])
+        ws.append([_("Métrica"), _("Valor")])
         for nombre, valor in filas:
             ws.append([nombre, valor])
 
@@ -54,7 +56,7 @@ def exportar_metricas():
     else:
         buffer = io.StringIO()
         writer = csv.writer(buffer)
-        writer.writerow(["Métrica", "Valor"])
+        writer.writerow([_("Métrica"), _("Valor")])
         for nombre, valor in filas:
             writer.writerow([nombre, valor])
 

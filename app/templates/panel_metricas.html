@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Panel de Métricas{% endblock %}
+{% block title %}{{ _('Panel de Métricas') }}{% endblock %}
 {% block content %}
 <div class="page-header d-flex justify-content-between align-items-center">
-    <h2>Panel de Métricas</h2>
+    <h2>{{ _('Panel de Métricas') }}</h2>
     <div class="d-flex gap-2">
-        <a href="{{ url_for('metricas.exportar_metricas', formato='csv') }}" class="btn btn-outline-secondary btn-sm">Exportar CSV</a>
-        <a href="{{ url_for('metricas.exportar_metricas', formato='xlsx') }}" class="btn btn-outline-secondary btn-sm">Exportar Excel</a>
+        <a href="{{ url_for('metricas.exportar_metricas', formato='csv') }}" class="btn btn-outline-secondary btn-sm">{{ _('Exportar CSV') }}</a>
+        <a href="{{ url_for('metricas.exportar_metricas', formato='xlsx') }}" class="btn btn-outline-secondary btn-sm">{{ _('Exportar Excel') }}</a>
     </div>
 </div>
 
@@ -14,7 +14,7 @@
         <a href="{{ url_for('tickets.listar_admin', vista='vencidos_actuales') }}" class="text-decoration-none">
             <div class="card text-center h-100">
                 <div class="card-body">
-                    <h6 class="card-title">Vencidos actualmente</h6>
+                    <h6 class="card-title">{{ _('Vencidos actualmente') }}</h6>
                     <p class="fs-3 mb-0">{{ metricas.tickets_vencidos_actualmente }}</p>
                 </div>
             </div>
@@ -24,7 +24,7 @@
         <a href="{{ url_for('tickets.listar_admin', vista='proximos_actuales') }}" class="text-decoration-none">
             <div class="card text-center h-100">
                 <div class="card-body">
-                    <h6 class="card-title">Próximos a vencer</h6>
+                    <h6 class="card-title">{{ _('Próximos a vencer') }}</h6>
                     <p class="fs-3 mb-0">{{ metricas.tickets_proximos_a_vencer_actualmente }}</p>
                 </div>
             </div>
@@ -34,7 +34,7 @@
         <a href="{{ url_for('tickets.listar_admin', vista='vencidos_30_dias') }}" class="text-decoration-none">
             <div class="card text-center h-100">
                 <div class="card-body">
-                    <h6 class="card-title">Vencidos últimos 30 días</h6>
+                    <h6 class="card-title">{{ _('Vencidos últimos 30 días') }}</h6>
                     <p class="fs-3 mb-0">{{ metricas.tickets_vencidos_ultimos_30_dias }}</p>
                 </div>
             </div>
@@ -44,7 +44,7 @@
         <!-- Sin drill-down: no es una métrica sobre tickets -->
         <div class="card text-center h-100">
             <div class="card-body">
-                <h6 class="card-title">Cantidad de agentes</h6>
+                <h6 class="card-title">{{ _('Cantidad de agentes') }}</h6>
                 <p class="fs-3 mb-0">{{ metricas.cantidad_agentes }}</p>
             </div>
         </div>
@@ -55,13 +55,13 @@
     <div class="col-md-4">
         <div class="table-card h-100">
             <div class="px-3 pt-3">
-                <h5>Por estado</h5>
+                <h5>{{ _('Por estado') }}</h5>
             </div>
             <table class="table table-sm mb-0">
                 <tbody>
                     {% for estado, cantidad in metricas.tickets_por_estado.items() %}
                     <tr>
-                        <td><a href="{{ url_for('tickets.listar_admin', estado=estado.lower()) }}">{{ estado }}</a></td>
+                        <td><a href="{{ url_for('tickets.listar_admin', estado=estado.lower()) }}">{{ estado | etiqueta }}</a></td>
                         <td class="text-end fw-semibold">{{ cantidad }}</td>
                     </tr>
                     {% endfor %}
@@ -72,13 +72,13 @@
     <div class="col-md-4">
         <div class="table-card h-100">
             <div class="px-3 pt-3">
-                <h5>Por categoría</h5>
+                <h5>{{ _('Por categoría') }}</h5>
             </div>
             <table class="table table-sm mb-0">
                 <tbody>
                     {% for categoria, cantidad in metricas.tickets_por_categoria.items() %}
                     <tr>
-                        <td><a href="{{ url_for('tickets.listar_admin', categoria=categoria.lower()) }}">{{ categoria }}</a></td>
+                        <td><a href="{{ url_for('tickets.listar_admin', categoria=categoria.lower()) }}">{{ categoria | etiqueta }}</a></td>
                         <td class="text-end fw-semibold">{{ cantidad }}</td>
                     </tr>
                     {% endfor %}
@@ -89,13 +89,13 @@
     <div class="col-md-4">
         <div class="table-card h-100">
             <div class="px-3 pt-3">
-                <h5>Por prioridad</h5>
+                <h5>{{ _('Por prioridad') }}</h5>
             </div>
             <table class="table table-sm mb-0">
                 <tbody>
                     {% for prioridad, cantidad in metricas.tickets_por_prioridad.items() %}
                     <tr>
-                        <td><a href="{{ url_for('tickets.listar_admin', prioridad=prioridad.lower()) }}">{{ prioridad }}</a></td>
+                        <td><a href="{{ url_for('tickets.listar_admin', prioridad=prioridad.lower()) }}">{{ prioridad | etiqueta }}</a></td>
                         <td class="text-end fw-semibold">{{ cantidad }}</td>
                     </tr>
                     {% endfor %}

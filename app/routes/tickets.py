@@ -1,7 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, Response
+from flask_babel import gettext as _
+from app.traducciones import etiqueta
 from sqlalchemy import select,or_,and_
 from app.extensions import db
 from app.services.tickets import ServicioTickets, TRANSICIONES_VALIDAS
+from app.services.solicitud_transferencia import ServicioSolicitudesTransferencia
 from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, ComentarioVacioError, TicketNoEncontradoError, TicketNoEnProgresoError, ErrorPersistencia
 from app.models.usuario import Usuario
 from app.models.ticket import Ticket
@@ -28,9 +31,10 @@ def crear():
 
         try:
             ticket = ServicioTickets.crear_ticket(creador=creador, texto=texto)
-            flash(f"Ticket #{ticket.id} creado. Categoría: {ticket.categoria.value}, prioridad: {ticket.prioridad.value}", "success")
+            flash(_("Ticket #%(id)s creado. Categoría: %(categoria)s, prioridad: %(prioridad)s",
+                    id=ticket.id, categoria=ticket.categoria.value, prioridad=ticket.prioridad.value), "success")
         except ErrorPersistencia:
-            flash("No se pudo crear el ticket, intenta de nuevo", "danger")
+            flash(_("No se pudo crear el ticket, intenta de nuevo"), "danger")
 
         return redirect(url_for("tickets.crear"))
 
@@ -45,7 +49,7 @@ def listar_por_area(area):
     try:
         categoria = Categoria(area)
     except ValueError:
-        flash("Área no válida", "danger")
+        flash(_("Área no válida"), "danger")
         return redirect(url_for("tickets.crear"))
 
     if rol != RolUsuario.ADMIN:
@@ -54,7 +58,7 @@ def listar_por_area(area):
         ).scalar()
 
         if agente.area_soporte is None or agente.area_soporte != categoria:
-            flash("No tienes permiso para ver tickets de esa área", "warning")
+            flash(_("No tienes permiso para ver tickets de esa área"), "warning")
             return redirect(url_for("tickets.crear"))
 
 
@@ -139,13 +143,13 @@ def cambiar_estado(ticket_id):
 
     ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
     if ticket is None:
-        flash("Ticket no encontrado", "danger")
+        flash(_("Ticket no encontrado"), "danger")
         return redirect(url_for("tickets.crear"))
 
     if rol != RolUsuario.ADMIN:
         agente = db.session.execute(select(Usuario).where(Usuario.id == actor_id)).scalar()
         if agente.area_soporte is None or agente.area_soporte != ticket.categoria:
-            flash("No tienes permiso sobre tickets de esa área", "warning")
+            flash(_("No tienes permiso sobre tickets de esa área"), "warning")
             return redirect(url_for("tickets.crear"))
 
     nuevo_estado = EstadoTicket(request.form["nuevo_estado"])
@@ -160,7 +164,7 @@ def cambiar_estado(ticket_id):
     causa = request.form.get("causa", "").strip()
 
     if cierre_directo and not causa:
-        flash("Debes indicar el motivo para cerrar un ticket sin pasar por en progreso", "danger")
+        flash(_("Debes indicar el motivo para cerrar un ticket sin pasar por en progreso"), "danger")
         return redirect(url_for("tickets.listar_por_area", area=ticket.categoria.value))
 
     try:
@@ -168,13 +172,13 @@ def cambiar_estado(ticket_id):
             ticket_id=ticket_id, nuevo_estado=nuevo_estado,
             actor_id=actor_id, agente_id=agente_id
         )
-        flash(f"Ticket #{ticket_id} actualizado a {estado.value}", "success")
+        flash(_("Ticket #%(id)s actualizado a %(estado)s", id=ticket_id, estado=estado.value), "success")
 
         if cierre_directo:
             try:
                 ServicioTickets.agregar_comentario(ticket_id=ticket_id, autor_id=actor_id, texto=causa)
             except (ComentarioVacioError, ErrorPersistencia) as e:
-                flash(f"El ticket se cerró, pero no se pudo guardar el motivo: {e}", "warning")
+                flash(_("El ticket se cerró, pero no se pudo guardar el motivo: %(error)s", error=e), "warning")
 
     except (TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
@@ -188,7 +192,7 @@ def reasignar(ticket_id):
 
     ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
     if ticket is None:
-        flash("Ticket no encontrado", "danger")
+        flash(_("Ticket no encontrado"), "danger")
         return redirect(url_for("tickets.crear"))
 
     nuevo_agente_id = request.form.get("nuevo_agente_id", type=int)
@@ -197,7 +201,7 @@ def reasignar(ticket_id):
         ServicioTickets.reasignar_agente(
             ticket_id=ticket_id, nuevo_agente_id=nuevo_agente_id, actor_id=actor_id
         )
-        flash(f"Ticket #{ticket_id} reasignado correctamente", "success")
+        flash(_("Ticket #%(id)s reasignado correctamente", id=ticket_id), "success")
     except (TicketNoEncontradoError, TicketNoEnProgresoError, AgenteYaAsignadoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
 
@@ -208,7 +212,7 @@ def reasignar(ticket_id):
 def detalle(ticket_id):
     ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
     if ticket is None:
-        flash("Ticket no encontrado", "danger")
+        flash(_("Ticket no encontrado"), "danger")
         return redirect(url_for("tickets.crear"))
 
     if request.method == "POST":
@@ -217,7 +221,7 @@ def detalle(ticket_id):
 
         try:
             ServicioTickets.agregar_comentario(ticket_id=ticket_id, autor_id=autor_id, texto=texto)
-            flash("Comentario agregado", "success")
+            flash(_("Comentario agregado"), "success")
         except (ComentarioVacioError, TicketNoEncontradoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
 
@@ -227,9 +231,18 @@ def detalle(ticket_id):
         select(Comentario).where(Comentario.ticket_id == ticket_id).order_by(Comentario.fecha)
     ).scalars().all()
 
-    autores_ids = {c.autor_id for c in comentarios}
-    autores = db.session.execute(select(Usuario).where(Usuario.id.in_(autores_ids))).scalars().all()
-    nombres_por_id = {u.id: u.nombre for u in autores}
+    solicitudes = ServicioSolicitudesTransferencia.listar_por_ticket(ticket_id)
+
+    ids_personas = {c.autor_id for c in comentarios}
+    ids_personas.add(ticket.creador_id)
+    if ticket.agente_id:
+        ids_personas.add(ticket.agente_id)
+    for s in solicitudes:
+        ids_personas.update(
+            i for i in (s.solicitante_id, s.agente_origen_id, s.agente_destino_id) if i
+        )
+    personas = db.session.execute(select(Usuario).where(Usuario.id.in_(ids_personas))).scalars().all()
+    nombres_por_id = {u.id: u.nombre for u in personas}
 
     agentes_del_area = db.session.execute(
         select(Usuario).where(
@@ -238,12 +251,17 @@ def detalle(ticket_id):
         )
     ).scalars().all()
 
+    rol = session.get("rol")
+    puede_gestionar = rol == RolUsuario.ADMIN or session["usuario_id"] == ticket.agente_id
+
     return render_template(
         "ticket_detalle.html",
         ticket=ticket,
         comentarios=comentarios,
+        solicitudes=solicitudes,
         nombres_por_id=nombres_por_id,
         agentes_del_area=agentes_del_area,
+        puede_gestionar=puede_gestionar,
     )
     
 @tickets_bp.route("/admin/tickets")
@@ -328,7 +346,7 @@ def exportar_tickets():
     if vista not in ("vencidos_actuales", "proximos_actuales", "vencidos_30_dias"):
         vista = None
 
-    tickets, _ = ServicioTickets.listar_admin(
+    tickets, _paginacion = ServicioTickets.listar_admin(
         estado=estado, categoria=categoria, prioridad=prioridad, vista=vista, sin_paginar=True
     )
 
@@ -337,7 +355,8 @@ def exportar_tickets():
     nombres_por_id = {usuario.id: usuario.nombre for usuario in usuarios_creadores}
 
     formato = request.args.get("formato", "csv")
-    encabezados = ["ID", "Texto", "Categoría", "Prioridad", "Estado", "Creador", "Fecha creación", "Fecha límite"]
+    encabezados = [_("ID"), _("Texto"), _("Categoría"), _("Prioridad"), _("Estado"),
+                   _("Creador"), _("Fecha creación"), _("Fecha límite")]
 
     if formato == "xlsx":
         wb = Workbook()
@@ -348,10 +367,10 @@ def exportar_tickets():
             ws.append([
                 t.id,
                 t.texto,
-                t.categoria.value,
-                t.prioridad.value,
-                t.estado.value,
-                nombres_por_id.get(t.creador_id, "Desconocido"),
+                etiqueta(t.categoria),
+                etiqueta(t.prioridad),
+                etiqueta(t.estado),
+                nombres_por_id.get(t.creador_id, _("Desconocido")),
                 t.fecha_creacion,
                 t.fecha_limite
             ])
@@ -372,10 +391,10 @@ def exportar_tickets():
             writer.writerow([
                 t.id,
                 t.texto,
-                t.categoria.value,
-                t.prioridad.value,
-                t.estado.value,
-                nombres_por_id.get(t.creador_id, "Desconocido"),
+                etiqueta(t.categoria),
+                etiqueta(t.prioridad),
+                etiqueta(t.estado),
+                nombres_por_id.get(t.creador_id, _("Desconocido")),
                 t.fecha_creacion,
                 t.fecha_limite
             ])

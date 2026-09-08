@@ -1,129 +1,180 @@
 {% extends "base.html" %}
-{% block title %}Ticket #{{ ticket.id }}{% endblock %}
+{% block title %}{{ _('Ticket #%(id)s', id=ticket.id) }}{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>Ticket <span class="mono ticket-id-tag">#{{ ticket.id }}</span></h2>
+    <h2>{{ _('Ticket') }} <span class="mono ticket-id-tag">#{{ ticket.id }}</span></h2>
 </div>
 
 <div class="ticket-meta">
-    <p class="mb-2"><span class="meta-label">Texto</span>{{ ticket.texto }}</p>
+    <p class="mb-2"><span class="meta-label">{{ _('Texto') }}</span>{{ ticket.texto }}</p>
     <p class="mb-2">
-        <span class="meta-label">Categoría</span><span class="badge-pill categoria-tag">{{ ticket.categoria.value }}</span>
+        <span class="meta-label">{{ _('Categoría') }}</span><span class="badge-pill categoria-tag">{{ ticket.categoria.value | etiqueta }}</span>
         &nbsp;
-        <span class="meta-label">Prioridad</span><span class="badge-pill prioridad-{{ ticket.prioridad.value }}">{{ ticket.prioridad.value }}</span>
+        <span class="meta-label">{{ _('Prioridad') }}</span><span class="badge-pill prioridad-{{ ticket.prioridad.value }}">{{ ticket.prioridad.value | etiqueta }}</span>
         &nbsp;
-        <span class="meta-label">Estado</span><span class="badge-pill estado-{{ ticket.estado.value }}">{{ ticket.estado.value }}</span>
+        <span class="meta-label">{{ _('Estado') }}</span><span class="badge-pill estado-{{ ticket.estado.value }}">{{ ticket.estado.value | etiqueta }}</span>
     </p>
-    <p class="mb-0"><span class="meta-label">Fecha límite</span><span class="mono">{{ ticket.fecha_limite }}</span></p>
+    <p class="mb-2">
+        <span class="meta-label">{{ _('Creado por') }}</span>{{ nombres_por_id.get(ticket.creador_id, _('Usuario desconocido')) }}
+        &nbsp;
+        <span class="meta-label">{{ _('Agente') }}</span>{{ nombres_por_id.get(ticket.agente_id, '—') if ticket.agente_id else '—' }}
+    </p>
+    <p class="mb-0">
+        <span class="meta-label">{{ _('Fecha creación') }}</span><span class="mono">{{ ticket.fecha_creacion | fecha }}</span>
+        &nbsp;
+        <span class="meta-label">{{ _('Fecha límite') }}</span><span class="mono">{{ ticket.fecha_limite | fecha }}</span>
+    </p>
 </div>
 
-<h4 class="mb-3">Comentarios</h4>
+{% if puede_gestionar and solicitudes %}
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title mb-3">{{ _('Solicitudes del ticket') }}</h5>
+        <div class="solicitud-list">
+            {% for s in solicitudes %}
+            <div class="solicitud-row">
+                <div class="solicitud-main">
+                    <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                        {% if s.tipo.value == 'escalamiento' %}
+                            <span class="badge-pill categoria-tag">{{ _('Escalamiento') }}</span>
+                            <span class="solicitud-arrow">&rarr;</span>
+                            <span class="badge-pill categoria-tag">{{ s.area_destino.value | etiqueta }}</span>
+                        {% elif s.tipo.value == 'cambio_prioridad' %}
+                            <span class="badge-pill categoria-tag">{{ _('Cambio de prioridad') }}</span>
+                            <span class="solicitud-arrow">&rarr;</span>
+                            <span class="badge-pill prioridad-{{ s.prioridad_destino.value }}">{{ s.prioridad_destino.value | etiqueta }}</span>
+                        {% else %}
+                            <span class="badge-pill categoria-tag">{{ _('Transferencia') }}</span>
+                            <span class="solicitud-arrow">&rarr;</span>
+                            <span class="solicitud-dest">{{ nombres_por_id.get(s.agente_destino_id, _('Usuario desconocido')) }}</span>
+                        {% endif %}
+                        <span class="badge-pill sol-{{ s.estado.value }}">{{ s.estado.value | etiqueta }}</span>
+                    </div>
+                    <small class="text-muted d-block">
+                        {{ _('Solicitado por %(nombre)s', nombre=nombres_por_id.get(s.solicitante_id, _('Usuario desconocido'))) }}
+                        &middot; {{ s.fecha_solicitud | fecha }}
+                        {% if s.fecha_resolucion %}&middot; {{ _('resuelto') }} {{ s.fecha_resolucion | fecha }}{% endif %}
+                    </small>
+                    {% if s.motivo %}<p class="solicitud-motivo mb-0 mt-1">{{ s.motivo }}</p>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<h4 class="mt-4 mb-3">{{ _('Comentarios') }}</h4>
 {% for c in comentarios %}
 <div class="comment-card mb-2">
-    <small class="text-muted">{{ nombres_por_id.get(c.autor_id, "Usuario desconocido") }} — {{ c.fecha }}</small>
+    <small class="text-muted">{{ nombres_por_id.get(c.autor_id, _('Usuario desconocido')) }} &mdash; {{ c.fecha | fecha }}</small>
     <p class="mb-0 mt-1">{{ c.texto }}</p>
 </div>
 {% else %}
 <div class="empty-state py-3">
-    <p class="mb-0">Sin comentarios todavía.</p>
+    <p class="mb-0">{{ _('Sin comentarios todavía.') }}</p>
 </div>
 {% endfor %}
 
 <form method="POST" class="mt-3">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="mb-2">
-        <textarea name="texto" class="form-control" rows="3" placeholder="Escribe un comentario..." required></textarea>
+        <textarea name="texto" class="form-control" rows="3" placeholder="{{ _('Escribe un comentario...') }}" required></textarea>
     </div>
-    <button type="submit" class="btn btn-primary">Comentar</button>
+    <button type="submit" class="btn btn-primary">{{ _('Comentar') }}</button>
 </form>
 
-{% if (session.rol == "admin" or session.usuario_id == ticket.agente_id) and ticket.estado.value == "en_progreso" %}
-<div class="card mt-3">
+{% if puede_gestionar and ticket.estado.value == "en_progreso" %}
+<div class="card mt-4">
     <div class="card-body">
-        <h5 class="card-title">Solicitar transferencia</h5>
-        <form method="POST" action="{{ url_for('solicitudes.solicitar', ticket_id=ticket.id) }}">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="mb-2">
-                <label class="form-label">Agente destino</label>
-                <select name="agente_destino_id" class="form-select" required>
-                    {% for a in agentes_del_area %}
-                        {% if a.id != ticket.agente_id %}
-                        <option value="{{ a.id }}">{{ a.nombre }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-2">
-                <label class="form-label">Motivo (opcional)</label>
-                <textarea name="motivo" class="form-control" rows="2"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary btn-sm">Enviar solicitud</button>
-        </form>
-    </div>
-</div>
-{% endif %}
+        <h5 class="card-title mb-1">{{ _('Acciones sobre el ticket') }}</h5>
+        <p class="text-muted small mb-3">{{ _('Todas requieren aprobación antes de aplicarse.') }}</p>
 
-{% if (session.rol == "admin" or session.usuario_id == ticket.agente_id) and ticket.estado.value == "en_progreso" %}
-<div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title">Escalar a otra área</h5>
-        <p class="text-muted small mb-2">
-            El ticket queda sin agente asignado, disponible para cualquier agente del área
-            destino. Requiere aprobación de un administrador.
-        </p>
-        <form method="POST" action="{{ url_for('solicitudes.escalar_area', ticket_id=ticket.id) }}">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="mb-2">
-                <label class="form-label">Área destino</label>
-                <select name="area_destino" class="form-select" required>
-                    {% set opciones_area = [
-                        ("infraestructura", "Infraestructura"),
-                        ("redes", "Redes"),
-                        ("permisos", "Permisos"),
-                        ("cuentas_contrasenas", "Cuentas y contraseñas"),
-                        ("seguridad", "Seguridad"),
-                        ("software", "Software"),
-                        ("otros", "Otros"),
-                    ] %}
-                    {% for valor, etiqueta in opciones_area %}
-                        {% if valor != ticket.categoria.value %}
-                        <option value="{{ valor }}">{{ etiqueta }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-2">
-                <label class="form-label">Motivo (obligatorio)</label>
-                <textarea name="motivo" class="form-control" rows="2" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary btn-sm">Solicitar escalamiento</button>
-        </form>
-    </div>
-</div>
-{% endif %}
+        <section class="accion-block">
+            <h6 class="accion-title">{{ _('Solicitar transferencia') }}</h6>
+            <form method="POST" action="{{ url_for('solicitudes.solicitar', ticket_id=ticket.id) }}" class="row g-2 align-items-end">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="col-md-5">
+                    <label class="form-label">{{ _('Agente destino') }}</label>
+                    <select name="agente_destino_id" class="form-select" required>
+                        {% for a in agentes_del_area %}
+                            {% if a.id != ticket.agente_id %}
+                            <option value="{{ a.id }}">{{ a.nombre }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">{{ _('Motivo (opcional)') }}</label>
+                    <input type="text" name="motivo" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">{{ _('Enviar') }}</button>
+                </div>
+            </form>
+        </section>
 
-{% if (session.rol == "admin" or session.usuario_id == ticket.agente_id) and ticket.estado.value == "en_progreso" %}
-<div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title">Cambiar prioridad</h5>
-        <form method="POST" action="{{ url_for('solicitudes.cambiar_prioridad', ticket_id=ticket.id) }}">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="mb-2">
-                <label class="form-label">Nueva prioridad</label>
-                <select name="prioridad_destino" class="form-select" required>
-                    {% for valor, etiqueta in [("alta", "Alta"), ("media", "Media"), ("baja", "Baja")] %}
-                        {% if valor != ticket.prioridad.value %}
-                        <option value="{{ valor }}">{{ etiqueta }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-2">
-                <label class="form-label">Motivo (obligatorio)</label>
-                <textarea name="motivo" class="form-control" rows="2" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary btn-sm">Solicitar cambio de prioridad</button>
-        </form>
+        <hr class="accion-sep">
+
+        <section class="accion-block">
+            <h6 class="accion-title">{{ _('Escalar a otra área') }}</h6>
+            <p class="text-muted small mb-2">{{ _('El ticket queda sin agente asignado, disponible para cualquier agente del área destino.') }}</p>
+            <form method="POST" action="{{ url_for('solicitudes.escalar_area', ticket_id=ticket.id) }}" class="row g-2 align-items-end">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="col-md-5">
+                    <label class="form-label">{{ _('Área destino') }}</label>
+                    <select name="area_destino" class="form-select" required>
+                        {% set opciones_area = [
+                            ("infraestructura", _('Infraestructura')),
+                            ("redes", _('Redes')),
+                            ("permisos", _('Permisos')),
+                            ("cuentas_contrasenas", _('Cuentas y contraseñas')),
+                            ("seguridad", _('Seguridad')),
+                            ("software", _('Software')),
+                            ("otros", _('Otros')),
+                        ] %}
+                        {% for valor, etiqueta_area in opciones_area %}
+                            {% if valor != ticket.categoria.value %}
+                            <option value="{{ valor }}">{{ etiqueta_area }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">{{ _('Motivo (obligatorio)') }}</label>
+                    <input type="text" name="motivo" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">{{ _('Enviar') }}</button>
+                </div>
+            </form>
+        </section>
+
+        <hr class="accion-sep">
+
+        <section class="accion-block">
+            <h6 class="accion-title">{{ _('Cambiar prioridad') }}</h6>
+            <form method="POST" action="{{ url_for('solicitudes.cambiar_prioridad', ticket_id=ticket.id) }}" class="row g-2 align-items-end">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="col-md-5">
+                    <label class="form-label">{{ _('Nueva prioridad') }}</label>
+                    <select name="prioridad_destino" class="form-select" required>
+                        {% for valor, etiqueta_pri in [("alta", _('Alta')), ("media", _('Media')), ("baja", _('Baja'))] %}
+                            {% if valor != ticket.prioridad.value %}
+                            <option value="{{ valor }}">{{ etiqueta_pri }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">{{ _('Motivo (obligatorio)') }}</label>
+                    <input type="text" name="motivo" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">{{ _('Enviar') }}</button>
+                </div>
+            </form>
+        </section>
     </div>
 </div>
 {% endif %}

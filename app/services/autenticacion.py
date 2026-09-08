@@ -1,3 +1,5 @@
+from flask_babel import gettext as _
+from app.traducciones import etiqueta
 from app.models.enum import NivelUsuario, AccionAuditoria
 from sqlalchemy import select, func
 from app.extensions import db
@@ -52,13 +54,13 @@ class ServicioAutenticacion:
         except Exception as e:
             db.session.rollback()
             print(f"No se ha podido registrar al usuario, error : {e}")
-            raise ErrorPersistencia("No se pudo registrar al usuario") from e
+            raise ErrorPersistencia(_("No se pudo registrar al usuario")) from e
 
         print(f"El usuario {nombre} se ha resgistrado con exito")
         ServicioAuditoria.registrar(
             usuario_id=admin_id,
             accion=AccionAuditoria.REGISTRO_EXITOSO,
-            detalle=f"Se registro al usuario {nuevo_usuario.email} (rol={rol}, nivel={nivel})",
+            detalle=_("Se registro al usuario %(p1)s (rol=%(p2)s, nivel=%(p3)s)", p1=nuevo_usuario.email, p2=etiqueta(rol), p3=etiqueta(nivel)),
         )
         return nuevo_usuario
         
@@ -101,7 +103,7 @@ class ServicioAutenticacion:
             ServicioAuditoria.registrar(
                 usuario_id=usuario.id,
                 accion=AccionAuditoria.DESBLOQUEO_USUARIO,
-                detalle=f"Se levanto el bloqueo para {usuario.email}",
+                detalle=_("Se levanto el bloqueo para %(p1)s", p1=usuario.email),
             )
         elif ServicioAutenticacion.esta_bloqueado(usuario):
             return None, ResultadoLogin.YA_BLOQUEADO
@@ -122,7 +124,7 @@ class ServicioAutenticacion:
                 ServicioAuditoria.registrar(
                     usuario_id=usuario.id,
                     accion=AccionAuditoria.CUENTA_BLOQUEADA,
-                    detalle=f"Cuenta bloqueada por 3 intentos fallidos: {usuario.email}"
+                    detalle=_("Cuenta bloqueada por 3 intentos fallidos: %(p1)s", p1=usuario.email)
                 )
                 return None, ResultadoLogin.BLOQUEADO_AHORA
             else:
@@ -135,7 +137,7 @@ class ServicioAutenticacion:
                 ServicioAuditoria.registrar(
                     usuario_id=usuario.id,
                     accion=AccionAuditoria.LOGIN_FALLIDO,
-                    detalle=f"Intento fallido de login para {usuario.email} (intento {usuario.intentos_fallidos})"
+                    detalle=_("Intento fallido de login para %(p1)s (intento %(p2)s)", p1=usuario.email, p2=usuario.intentos_fallidos)
             )
                 return None, ResultadoLogin.CREDENCIALES_INVALIDAS
 
@@ -149,7 +151,7 @@ class ServicioAutenticacion:
         ServicioAuditoria.registrar(
             usuario_id=usuario.id,
             accion=AccionAuditoria.LOGIN_EXITOSO,
-            detalle=f"Login exitoso para {usuario.email}",
+            detalle=_("Login exitoso para %(p1)s", p1=usuario.email),
         )
         return usuario, ResultadoLogin.EXITOSO
 
@@ -169,10 +171,10 @@ class ServicioAutenticacion:
 
         correcto = ServicioAutenticacion._verificar_contrasena(contrasena_actual, usuario.contrasena_hash)
         if not correcto:
-            raise ValueError("la contraseña actual es incorrecta")
+            raise ValueError(_("la contraseña actual es incorrecta"))
 
         if contrasena_nueva == contrasena_actual:
-            raise ValueError("La nueva contraseña debe ser distinta a la actual")
+            raise ValueError(_("La nueva contraseña debe ser distinta a la actual"))
         ServicioAutenticacion.validar_politica_contrasena(contrasena_nueva)
 
         usuario.contrasena_hash = ServicioAutenticacion._generar_hash(contrasena_nueva)
@@ -182,12 +184,12 @@ class ServicioAutenticacion:
         except Exception as e:
             db.session.rollback()
             db.session.refresh(usuario)
-            raise ErrorPersistencia("No se pudo guardar el cambio de contraseña") from e
+            raise ErrorPersistencia(_("No se pudo guardar el cambio de contraseña")) from e
 
         ServicioAuditoria.registrar(
             usuario_id=usuario.id,
             accion=AccionAuditoria.CAMBIO_CONTRASENA,
-            detalle=f"Se realizó un cambio de contraseña para el usuario: {usuario.id}"
+            detalle=_("Se realizó un cambio de contraseña para el usuario: %(p1)s", p1=usuario.id)
         )
 
         return True
@@ -196,20 +198,20 @@ class ServicioAutenticacion:
     def validar_politica_contrasena(contrasena):
 
         if len(contrasena) < 8:
-            raise ValueError("La contraseña debe tener al menos 8 caracteres")
+            raise ValueError(_("La contraseña debe tener al menos 8 caracteres"))
 
 
         if not re.search(r'[A-Z]', contrasena):
-            raise ValueError("La contraseña debe tener al menos una mayúscula")
+            raise ValueError(_("La contraseña debe tener al menos una mayúscula"))
 
         if not re.search(r'[a-z]', contrasena):
-            raise ValueError("La contraseña debe tener al menos una minuscula")
+            raise ValueError(_("La contraseña debe tener al menos una minuscula"))
 
         if not re.search(r'[0-9]', contrasena):
-            raise ValueError("La contraseña debe tener al menos un numero")
+            raise ValueError(_("La contraseña debe tener al menos un numero"))
 
         if not re.search(r'[^A-Za-z0-9]', contrasena):
-            raise ValueError("La contraseña debe tener al menos un simbolo")
+            raise ValueError(_("La contraseña debe tener al menos un simbolo"))
     @staticmethod
     def ip_esta_bloqueada(ip):
         registro = db.session.execute(
@@ -261,11 +263,11 @@ class ServicioAutenticacion:
         nombre_nuevo = nombre_nuevo.strip()
 
         if not nombre_nuevo:
-            raise ValueError("El nombre no puede estar vacío")
+            raise ValueError(_("El nombre no puede estar vacío"))
 
 
         if not re.match(r'^[A-Za-zÀ-ÿ\s]+$', nombre_nuevo):
-            raise ValueError("El nombre solo puede contener letras")
+            raise ValueError(_("El nombre solo puede contener letras"))
 
         usuario.nombre = nombre_nuevo.capitalize()
 
@@ -274,12 +276,12 @@ class ServicioAutenticacion:
         except Exception as e:
             db.session.rollback()
             db.session.refresh(usuario)
-            raise ErrorPersistencia("No se pudo guardar el cambio de nombre") from e
+            raise ErrorPersistencia(_("No se pudo guardar el cambio de nombre")) from e
 
         ServicioAuditoria.registrar(
             usuario_id=usuario.id,
             accion=AccionAuditoria.CAMBIO_NOMBRE,
-            detalle=f"Se realizó un cambio de nombre para el usuario: {usuario.id}"
+            detalle=_("Se realizó un cambio de nombre para el usuario: %(p1)s", p1=usuario.id)
         )
 
         return True
@@ -287,13 +289,13 @@ class ServicioAutenticacion:
     def subir_foto_perfil(usuario, archivo):
 
         if archivo is None or archivo.filename == "":
-            raise ValueError("No se seleccionó ningún archivo")
+            raise ValueError(_("No se seleccionó ningún archivo"))
 
 
         extension = archivo.filename.rsplit(".",1)[-1].lower()
 
         if extension not in EXTENSIONES_PERMITIDAS:
-            raise ValueError("Formato no permitido. Usa JPG, PNG o WEBP")
+            raise ValueError(_("Formato no permitido. Usa JPG, PNG o WEBP"))
 
 
         archivo.seek(0, os.SEEK_END)
@@ -301,14 +303,14 @@ class ServicioAutenticacion:
         archivo.seek(0)
 
         if tamano > TAMANO_MAXIMO_BYTES:
-            raise ValueError("La imagen no puede pesar más de 2MB")
+            raise ValueError(_("La imagen no puede pesar más de 2MB"))
 
 
         try:
             Image.open(archivo).verify()
             archivo.seek(0)
         except Exception:
-            raise ValueError("El archivo no es una imagen válida")
+            raise ValueError(_("El archivo no es una imagen válida"))
 
         archivos_viejos = glob.glob(os.path.join(CARPETA_FOTOS,f"{usuario.id}.*"))
         for path_viejo in archivos_viejos:

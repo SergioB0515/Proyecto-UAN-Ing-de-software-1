@@ -1,5 +1,7 @@
 
 from flask import Blueprint, render_template, request, Response
+from flask_babel import gettext as _
+from app.traducciones import etiqueta
 from app.services.auditoria import ServicioAuditoria
 from app.models.log_auditoria import LogAuditoria
 from app.routes.decoradores import requiere_admin
@@ -116,7 +118,7 @@ def exportar_auditoria():
     nombres_por_id = {u.id : u.nombre  for u in usuarios_en_logs}
 
     formato = request.args.get("formato", "csv")
-    encabezados = ["Fecha", "Usuario", "Acción", "Detalle"]
+    encabezados = [_("Fecha"), _("Usuario"), _("Acción"), _("Detalle")]
 
     if formato == "xlsx":
         wb = Workbook()
@@ -126,8 +128,8 @@ def exportar_auditoria():
 
             ws.append([
                 log.fecha,
-                nombres_por_id.get(log.usuario_id, "Desconocido"),
-                log.accion.value,
+                nombres_por_id.get(log.usuario_id, _("Desconocido")),
+                etiqueta(log.accion),
                 log.detalle
             ])
 
@@ -147,8 +149,8 @@ def exportar_auditoria():
 
             writer.writerow([
                 log.fecha,
-                nombres_por_id.get(log.usuario_id, "Desconocido"),
-                log.accion.value,
+                nombres_por_id.get(log.usuario_id, _("Desconocido")),
+                etiqueta(log.accion),
                 log.detalle
             ])
 

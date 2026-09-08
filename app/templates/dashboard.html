@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Mis tickets{% endblock %}
+{% block title %}{{ _('Mis tickets') }}{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>Mis tickets</h2>
+    <h2>{{ _('Mis tickets') }}</h2>
     {% if session.get('rol') == 'final' %}
-    <a href="{{ url_for('tickets.crear') }}" class="btn btn-primary btn-sm">Crear ticket</a>
+    <a href="{{ url_for('tickets.crear') }}" class="btn btn-primary btn-sm">{{ _('Crear ticket') }}</a>
     {% endif %}
 </div>
 
@@ -13,8 +13,8 @@
 <table class="table table-hover align-middle">
     <thead>
         <tr>
-            <th>ID</th><th>Texto</th><th>Categoría</th><th>Prioridad</th>
-            <th>Estado</th><th>Fecha creación</th><th>SLA</th>
+            <th>{{ _('ID') }}</th><th>{{ _('Texto') }}</th><th>{{ _('Categoría') }}</th><th>{{ _('Prioridad') }}</th>
+            <th>{{ _('Estado') }}</th><th>{{ _('Fecha creación') }}</th><th>{{ _('SLA') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -22,17 +22,17 @@
         <tr class="{% if t.id in ids_vencidos %}table-danger{% elif t.id in ids_proximos %}table-warning{% endif %}">
             <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
-            <td><span class="badge-pill categoria-tag">{{ t.categoria.value }}</span></td>
-            <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value }}</span></td>
-            <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value }}</span></td>
-            <td class="mono text-soft-mono">{{ t.fecha_creacion }}</td>
+            <td><span class="badge-pill categoria-tag">{{ t.categoria.value | etiqueta }}</span></td>
+            <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value | etiqueta }}</span></td>
+            <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value | etiqueta }}</span></td>
+            <td class="mono text-soft-mono">{{ t.fecha_creacion | fecha }}</td>
             <td>
                 {% if t.id in ids_vencidos %}
-                <span class="badge-pill sla-vencido">Vencido</span>
+                <span class="badge-pill sla-vencido">{{ _('Vencido') }}</span>
                 {% elif t.id in ids_proximos %}
-                <span class="badge-pill sla-proximo">Próximo a vencer</span>
+                <span class="badge-pill sla-proximo">{{ _('Próximo a vencer') }}</span>
                 {% else %}
-                <span class="sla-ok">En plazo</span>
+                <span class="sla-ok">{{ _('En plazo') }}</span>
                 {% endif %}
             </td>
         </tr>
@@ -42,7 +42,7 @@
 </div>
 {% else %}
 <div class="empty-state">
-    <p class="mb-0">No has creado ningún ticket todavía.</p>
+    <p class="mb-0">{{ _('No has creado ningún ticket todavía.') }}</p>
 </div>
 {% endif %}
 {% endblock %}

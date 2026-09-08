@@ -1,3 +1,5 @@
+from flask_babel import gettext as _
+from app.traducciones import etiqueta
 from app.models.enum import Categoria,Prioridad,EstadoTicket,AccionAuditoria,RolUsuario
 from app.models.ticket import Ticket
 from app.models.comentario import Comentario
@@ -7,6 +9,8 @@ from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoErro
 from app.extensions import db
 from datetime import datetime,timedelta
 from app.services.auditoria import ServicioAuditoria
+from app.services.notificaciones import ServicioNotificaciones
+from app import notificaciones_i18n as notif
 from sqlalchemy import select, func,or_,and_
 
 PRIORIDAD_BASE_POR_CATEGORIA={
@@ -49,13 +53,13 @@ class ServicioTickets:
         except Exception as e:
             db.session.rollback()
             print(f"No se ha podido crear el ticket, error : {e}")
-            raise ErrorPersistencia("No se pudo crear el ticket") from e
+            raise ErrorPersistencia(_("No se pudo crear el ticket")) from e
 
         print(f"El ticket se ha resgistrado con exito")
         ServicioAuditoria.registrar(
             usuario_id=creador.id,
             accion=AccionAuditoria.CREAR_TICKET,
-            detalle=f"Ticket #{nuevo_ticket.id} creado: categoria={nuevo_ticket.categoria}, prioridad={nuevo_ticket.prioridad}",
+            detalle=_("Ticket #%(p1)s creado: categoria=%(p2)s, prioridad=%(p3)s", p1=nuevo_ticket.id, p2=etiqueta(nuevo_ticket.categoria), p3=etiqueta(nuevo_ticket.prioridad)),
         )
         return nuevo_ticket
     
@@ -88,16 +92,16 @@ class ServicioTickets:
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar() 
        
         if not ticket:
-            raise TicketNoEncontradoError("El ticket no a sido encontrado")
+            raise TicketNoEncontradoError(_("El ticket no a sido encontrado"))
         
         if nuevo_estado not in TRANSICIONES_VALIDAS[ticket.estado]:
-            raise TransicionInvalidaError("La transicion no es valida")
+            raise TransicionInvalidaError(_("La transicion no es valida"))
        
         if nuevo_estado == EstadoTicket.EN_PROGRESO:
        
 
             if agente_id is None and ticket.agente_id is None:
-                raise TransicionInvalidaError("Se requiere un agente_id para pasar a EN_PROGRESO")
+                raise TransicionInvalidaError(_("Se requiere un agente_id para pasar a EN_PROGRESO"))
        
             if agente_id is not None:
                 ticket.agente_id = agente_id
@@ -115,14 +119,22 @@ class ServicioTickets:
         except Exception as e:
             db.session.rollback()
             print(f"No se ha podido cambiar el estado del ticket, error : {e}")
-            raise ErrorPersistencia("No se pudo cambiar el estado del ticket") from e
+            raise ErrorPersistencia(_("No se pudo cambiar el estado del ticket")) from e
 
         print(f"El estado del Ticket a sido cambiado con exito")
         ServicioAuditoria.registrar(
             usuario_id=actor_id,
             accion=AccionAuditoria.CAMBIAR_ESTADO,
-            detalle=f"Ticket #{ticket.id}: {estado_anterior} -> {nuevo_estado}",
+            detalle=_("Ticket #%(p1)s: %(p2)s -> %(p3)s", p1=ticket.id, p2=etiqueta(estado_anterior), p3=etiqueta(nuevo_estado)),
         )
+        
+        if nuevo_estado == EstadoTicket.CERRADO:
+            if estado_anterior == EstadoTicket.ABIERTO:
+                plantilla = notif.CERRADO_SIN_ATENDER
+            else:
+                plantilla = notif.CERRADO
+            ServicioNotificaciones.crear(usuario_id=ticket.creador_id, mensaje=plantilla, ticket_id=ticket.id)
+        
         return ticket.estado
 
 
@@ -130,12 +142,12 @@ class ServicioTickets:
     def reasignar_agente(ticket_id, nuevo_agente_id, actor_id):
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar()
         if not ticket:
-            raise TicketNoEncontradoError("El ticket no a sido encontrado")
+            raise TicketNoEncontradoError(_("El ticket no a sido encontrado"))
         
         if ticket.estado != EstadoTicket.EN_PROGRESO:
-            raise TicketNoEnProgresoError("Este ticket no esta en un estado valido para su reasignacion")
+            raise TicketNoEnProgresoError(_("Este ticket no esta en un estado valido para su reasignacion"))
         if nuevo_agente_id == ticket.agente_id:
-            raise AgenteYaAsignadoError("Este ticket ya tiene asignado a este mismo agente")
+            raise AgenteYaAsignadoError(_("Este ticket ya tiene asignado a este mismo agente"))
         agente_anterior=ticket.agente_id
         ticket.agente_id = nuevo_agente_id
         try:
@@ -144,23 +156,23 @@ class ServicioTickets:
         except Exception as e:
             db.session.rollback()
             print(f"No se ha podido realizar la reasignacion, error : {e}")
-            raise ErrorPersistencia("No se pudo reasignar el agente") from e
+            raise ErrorPersistencia(_("No se pudo reasignar el agente")) from e
 
         print(f"El agente del ticket a sido reasignado correctamente")
         ServicioAuditoria.registrar(
             usuario_id=actor_id,
             accion=AccionAuditoria.REASIGNAR_AGENTE,
-            detalle=f"Ticket #{ticket.id}: agente {agente_anterior} -> {nuevo_agente_id}",
+            detalle=_("Ticket #%(p1)s: agente %(p2)s -> %(p3)s", p1=ticket.id, p2=agente_anterior, p3=nuevo_agente_id),
         )
         return ticket.agente_id
     @staticmethod
     def agregar_comentario(ticket_id,autor_id,texto):
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar()
         if not ticket:
-            raise TicketNoEncontradoError("El ticket no a sido encontrado")
+            raise TicketNoEncontradoError(_("El ticket no a sido encontrado"))
         
         if not texto.strip():
-            raise ComentarioVacioError("El comentario no puede estar vacio")
+            raise ComentarioVacioError(_("El comentario no puede estar vacio"))
         nuevo_comentario = Comentario(
             ticket_id = ticket_id,
             autor_id = autor_id,
@@ -172,13 +184,13 @@ class ServicioTickets:
         except Exception as e:
             db.session.rollback()
             print(f"No se ha podido agregar el comentario, error : {e}")
-            raise ErrorPersistencia("No se pudo agregar el comentario") from e
+            raise ErrorPersistencia(_("No se pudo agregar el comentario")) from e
 
         print(f"El comentario agregado correctamente")
         ServicioAuditoria.registrar(
             usuario_id=autor_id,
             accion=AccionAuditoria.AGREGAR_COMENTARIO,
-            detalle=f"Se agrego un comentario al ticket #{ticket_id}",
+            detalle=_("Se agrego un comentario al ticket #%(p1)s", p1=ticket_id),
         )
         return nuevo_comentario
     @staticmethod

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Iniciar sesión{% endblock %}
+{% block title %}{{ _('Iniciar sesión') }}{% endblock %}
 
 {% block content %}
 <div class="auth-shell">
@@ -10,19 +10,19 @@
                 <div class="auth-badge">
                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
                 </div>
-                <h2>Iniciar sesión</h2>
-                <p class="auth-subtitle">Accede con tus credenciales para gestionar tickets.</p>
+                <h2>{{ _('Iniciar sesión') }}</h2>
+                <p class="auth-subtitle">{{ _('Accede con tus credenciales para gestionar tickets.') }}</p>
                     <form method="POST" action="{{ url_for('auth.login') }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div class="mb-3">
-                            <label class="form-label">Email</label>
+                            <label class="form-label">{{ _('Email') }}</label>
                             <input type="email" name="email" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Contraseña</label>
+                            <label class="form-label">{{ _('Contraseña') }}</label>
                             <input type="password" name="contrasena" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 mt-2">Entrar</button>
+                        <button type="submit" class="btn btn-primary w-100 mt-2">{{ _('Entrar') }}</button>
                     </form>
             </div>
         </div>

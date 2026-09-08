@@ -1,10 +1,14 @@
+import os
+
 from app import create_app
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
 from app.models.usuario import Usuario
 from app.models.enum import RolUsuario, NivelUsuario
 
-EMAIL_ADMIN = "admin@empresa.com"
+EMAIL_ADMIN = os.environ.get("ADMIN_EMAIL", "admin@empresa.com")
+
+CLAVE_ADMIN = os.environ.get("ADMIN_PASSWORD", "CAMBIAR_ESTA_CLAVE")
 
 def crear_admin_inicial():
     admin_existente = Usuario.query.filter_by(email=EMAIL_ADMIN).first()
@@ -12,7 +16,11 @@ def crear_admin_inicial():
         print(f"Ya existe un admin con el email {EMAIL_ADMIN}, no se crea de nuevo.")
         return admin_existente
 
-    hash_contrasena = ServicioAutenticacion._generar_hash("CAMBIAR_ESTA_CLAVE")
+    if CLAVE_ADMIN == "CAMBIAR_ESTA_CLAVE":
+        print("ADVERTENCIA: usando la clave placeholder. Define ADMIN_PASSWORD "
+              "y vuelve a crear el admin, o cambia la clave tras el primer login.")
+
+    hash_contrasena = ServicioAutenticacion._generar_hash(CLAVE_ADMIN)
 
     admin = Usuario(
         nombre="Administrador",
