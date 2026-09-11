@@ -137,9 +137,10 @@
                     <li><a class="dropdown-item {% if ep == 'solicitudes.pendientes' %}active{% endif %}" href="{{ url_for('solicitudes.pendientes') }}">{{ _('Transferencias') }}</a></li>
                     <li><a class="dropdown-item {% if ep == 'solicitudes.escalamientos_pendientes' %}active{% endif %}" href="{{ url_for('solicitudes.escalamientos_pendientes') }}">{{ _('Escalamientos') }}</a></li>
                     <li><a class="dropdown-item {% if ep == 'solicitudes.cambios_prioridad_pendientes' %}active{% endif %}" href="{{ url_for('solicitudes.cambios_prioridad_pendientes') }}">{{ _('Cambios de prioridad') }}</a></li>
+                    <li><a class="dropdown-item {% if ep == 'tickets.revision_clasificacion' %}active{% endif %}" href="{{ url_for('tickets.revision_clasificacion') }}">{{ _('Revisión IA') }}</a></li>
                 </ul>
             </li>
-
+            
             {% set admin_activo = ep in ['auth.registro', 'auditoria.mostrar_auditoria'] %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle {% if admin_activo %}active{% endif %}" href="#"

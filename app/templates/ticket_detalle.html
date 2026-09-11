@@ -26,6 +26,29 @@
     </p>
 </div>
 
+{% if ticket.clasificacion_baja_confianza %}
+<div class="alert alert-warning mt-3 mb-0">
+    <p class="mb-2">{{ _('La categoría de este ticket fue asignada automáticamente con baja confianza y está pendiente de revisión.') }}</p>
+    {% if usuario_actual and usuario_actual.rol.value == 'admin' %}
+    <form method="POST" action="{{ url_for('tickets.confirmar_clasificacion', ticket_id=ticket.id) }}" class="d-flex gap-2 flex-wrap">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="origen" value="detalle">
+        <select name="categoria" class="form-select form-select-sm" style="max-width: 220px;" required>
+            <option value="">{{ _('-- elegir categoría --') }}</option>
+            <option value="infraestructura">{{ _('Infraestructura') }}</option>
+            <option value="redes">{{ _('Redes') }}</option>
+            <option value="permisos">{{ _('Permisos') }}</option>
+            <option value="cuentas_contrasenas">{{ _('Cuentas y contraseñas') }}</option>
+            <option value="seguridad">{{ _('Seguridad') }}</option>
+            <option value="software">{{ _('Software') }}</option>
+            <option value="otros">{{ _('Otros') }}</option>
+        </select>
+        <button type="submit" class="btn btn-warning btn-sm">{{ _('Confirmar categoría') }}</button>
+    </form>
+    {% endif %}
+</div>
+{% endif %}
+
 {% if puede_gestionar and solicitudes %}
 <div class="card mt-4">
     <div class="card-body">

@@ -57,6 +57,7 @@ def create_app():
     from app.models.intento_login_fallido import IntentoLoginFallido
     from app.models.ip_bloqueada import IPBloqueada
     from app.models.notificacion import Notificacion
+    from app.models.palabra_clave import PalabraClave
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(tickets_bp)
@@ -64,7 +65,11 @@ def create_app():
     app.register_blueprint(auditoria_bp)
     app.register_blueprint(solicitudes_bp)
     
-    
+    if app.config.get("CLASIFICADOR_ML_ACTIVO"):
+        with app.app_context():
+            from app.services import clasificacion_avanzada
+            clasificacion_avanzada.inicializar()
+            
     @app.context_processor
     def inject_notificaciones():
         if "usuario_id" not in session:

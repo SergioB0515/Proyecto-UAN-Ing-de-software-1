@@ -22,14 +22,11 @@ SLA_PROXIMO_CREADOR = "Tu ticket #%(id)s está próximo a vencer"
 SLA_PROXIMO_AGENTE = "El ticket #%(id)s que tienes asignado está próximo a vencer"
 SLA_VENCIDO_CREADOR = "Tu ticket #%(id)s está vencido"
 SLA_VENCIDO_AGENTE = "El ticket #%(id)s que tienes asignado está vencido"
+CLASIFICACION_PENDIENTE = "El ticket #%(id)s necesita revision de categoria"
 
 
 def _catalogo_traducido():
-    """{plantilla_cruda: plantilla_traducida_con_%(id)s} para el idioma activo.
-
-    Se pasa ``id="%(id)s"`` para que flask-babel no reviente al interpolar y el
-    marcador quede intacto en la traducción.
-    """
+    
     _ = gettext
     m = MARCADOR
     return {
@@ -50,15 +47,12 @@ def _catalogo_traducido():
         SLA_PROXIMO_AGENTE: _("El ticket #%(id)s que tienes asignado está próximo a vencer", id=m),
         SLA_VENCIDO_CREADOR: _("Tu ticket #%(id)s está vencido", id=m),
         SLA_VENCIDO_AGENTE: _("El ticket #%(id)s que tienes asignado está vencido", id=m),
+        CLASIFICACION_PENDIENTE:_( "El ticket #%(id)s necesita revision de categoria", id=m)
     }
 
 
 def render(plantilla, ticket_id, locale=None):
-    """Traduce e interpola una plantilla de notificación.
 
-    `plantilla` puede ser una constante de este módulo o texto legado ya
-    renderizado (que se devuelve casi tal cual).
-    """
     datos = {"id": "" if ticket_id is None else ticket_id}
 
     def _hacer():
@@ -76,5 +70,5 @@ def render(plantilla, ticket_id, locale=None):
 
 
 def catalogo_cliente():
-    """dict {plantilla_cruda: plantilla_traducida_con_%(id)s} para el JS."""
+    
     return _catalogo_traducido()

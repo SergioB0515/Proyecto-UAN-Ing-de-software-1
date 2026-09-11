@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Revisión de clasificación') }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>{{ _('Tickets pendientes de revisión de categoría') }}</h2>
+</div>
+
+{% if not pendientes %}
+<div class="empty-state">
+    <p class="mb-0">{{ _('No hay tickets pendientes de revisión.') }}</p>
+</div>
+{% else %}
+    {% for t in pendientes %}
+    <div class="comment-card mb-2">
+        <h5 class="mb-1">Ticket <span class="mono ticket-id-tag">#{{ t.id }}</span></h5>
+        <small class="text-muted d-block mb-2">{{ t.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</small>
+        <p class="mb-2">{{ t.texto }}</p>
+        <form method="POST" action="{{ url_for('tickets.confirmar_clasificacion', ticket_id=t.id) }}" class="d-flex gap-2">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <select name="categoria" class="form-select form-select-sm" required>
+                <option value="">{{ _('-- elegir categoría --') }}</option>
+                <option value="infraestructura">{{ _('Infraestructura') }}</option>
+                <option value="redes">{{ _('Redes') }}</option>
+                <option value="permisos">{{ _('Permisos') }}</option>
+                <option value="cuentas_contrasenas">{{ _('Cuentas y contraseñas') }}</option>
+                <option value="seguridad">{{ _('Seguridad') }}</option>
+                <option value="software">{{ _('Software') }}</option>
+                <option value="otros">{{ _('Otros') }}</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm">{{ _('Confirmar') }}</button>
+        </form>
+    </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

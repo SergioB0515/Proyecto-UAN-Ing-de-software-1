@@ -2,16 +2,18 @@ from flask_babel import gettext as _
 from app.traducciones import etiqueta
 from app.models.enum import Categoria,Prioridad,EstadoTicket,AccionAuditoria,RolUsuario
 from app.models.ticket import Ticket
+from app.models.usuario import Usuario
 from app.models.comentario import Comentario
 from app.services.clasificador import ClasificadorTickets
 from app.services.gestor_sla import GestorSLA
-from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError,ErrorPersistencia
+from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError,ErrorPersistencia,ClasificacionYaConfirmadaError
 from app.extensions import db
 from datetime import datetime,timedelta
 from app.services.auditoria import ServicioAuditoria
 from app.services.notificaciones import ServicioNotificaciones
 from app import notificaciones_i18n as notif
 from sqlalchemy import select, func,or_,and_
+from app.services.clasificacion_avanzada import clasificar_ticket
 
 PRIORIDAD_BASE_POR_CATEGORIA={
     Categoria.SEGURIDAD : Prioridad.ALTA,
@@ -35,7 +37,7 @@ TRANSICIONES_VALIDAS={
 class ServicioTickets:
     @staticmethod
     def crear_ticket(creador, texto):
-        categoria = ClasificadorTickets.clasificar(texto)
+        categoria, baja_confianza = clasificar_ticket(texto)
         prioridad_base = PRIORIDAD_BASE_POR_CATEGORIA[categoria]
         prioridad_final =GestorSLA.ajustar_prioridad_por_nivel(prioridad_base,creador.nivel)
         fecha_limite = GestorSLA.calcular_fecha_limite(prioridad_final,creador.nivel)
@@ -45,8 +47,10 @@ class ServicioTickets:
             prioridad=prioridad_final,
             creador_id = creador.id,
             estado=EstadoTicket.ABIERTO,
-            fecha_limite=fecha_limite
+            fecha_limite=fecha_limite,
+            clasificacion_baja_confianza=baja_confianza
         )
+
         try:
             db.session.add(nuevo_ticket)
             db.session.commit()
@@ -54,7 +58,16 @@ class ServicioTickets:
             db.session.rollback()
             print(f"No se ha podido crear el ticket, error : {e}")
             raise ErrorPersistencia(_("No se pudo crear el ticket")) from e
-
+        
+        if baja_confianza is True:
+            admins = db.session.execute(select(Usuario).where(Usuario.rol == RolUsuario.ADMIN)).scalars().all()
+            for admin in admins:
+                ServicioNotificaciones.crear(
+                    usuario_id=admin.id,
+                    mensaje=notif.CLASIFICACION_PENDIENTE,
+                    ticket_id=nuevo_ticket.id,
+                )
+                
         print(f"El ticket se ha resgistrado con exito")
         ServicioAuditoria.registrar(
             usuario_id=creador.id,
@@ -252,4 +265,44 @@ class ServicioTickets:
             return db.session.execute(query).scalars().all(), None
         paginado = db.paginate(query, page=pagina, per_page=por_pagina)
         return paginado.items, paginado
+    
+    @staticmethod
+    def confirmar_clasificacion(ticket_id, categoria_nueva, actor_id):
+
+        ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar()
+        if not ticket:
+            raise TicketNoEncontradoError(_("El ticket no ha sido encontrado"))
+
+        if not ticket.clasificacion_baja_confianza:
+            raise ClasificacionYaConfirmadaError(_("Este ticket ya tiene confirmada su categoría"))
         
+        ticket.categoria = categoria_nueva
+        ticket.clasificacion_baja_confianza = False
+        
+
+
+        try:
+            db.session.add(ticket)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"No se ha podido confirmar la clasificacion, error : {e}")
+            raise ErrorPersistencia(_("No se pudo confirmar la clasificación")) from e
+
+        print(f"Clasificacion del ticket #{ticket.id} confirmada correctamente")
+        ServicioAuditoria.registrar(
+                        usuario_id=actor_id,
+                        accion=AccionAuditoria.CONFIRMAR_CLASIFICACION,
+                        detalle=f"Ticket #{ticket.id}: categoria confirmada manualmente como {categoria_nueva.value}",
+                    )
+        return ticket
+
+
+    @staticmethod
+    def listar_pendientes_revision_clasificacion():
+
+        query = select(Ticket).where(Ticket.clasificacion_baja_confianza == True).order_by(Ticket.fecha_creacion)
+        return db.session.execute(query).scalars().all()
+
+
+    

@@ -51,6 +51,7 @@ class AccionAuditoria(str, Enum):
     CAMBIAR_PRIORIDAD = "cambiar_prioridad"
     APROBAR_CAMBIO_PRIORIDAD = "aprobar_cambio_prioridad"
     RECHAZAR_CAMBIO_PRIORIDAD = "rechazar_cambio_prioridad"
+    CONFIRMAR_CLASIFICACION = "confirmar_clasificacion"
     
 class EstadoSolicitudTransferencia(str, Enum):
     PENDIENTE = "pendiente"

@@ -26,3 +26,5 @@ class MotivoRequeridoError(Exception):
     pass
 class PrioridadDestinoInvalidaError(Exception):
     pass
+class ClasificacionYaConfirmadaError(Exception):
+    pass

@@ -1,0 +1,15 @@
+{
+  "modelo_embeddings": "paraphrase-multilingual-MiniLM-L12-v2",
+  "fecha_entrenamiento": "2026-09-10T16:19:20.726027",
+  "cantidad_tickets_entrenamiento": 971,
+  "categorias": [
+    "cuentas_contrasenas",
+    "infraestructura",
+    "otros",
+    "permisos",
+    "redes",
+    "seguridad",
+    "software"
+  ],
+  "exactitud_en_prueba": 0.8923076923076924
+}

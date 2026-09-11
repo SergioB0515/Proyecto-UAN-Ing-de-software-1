@@ -1,0 +1,972 @@
+texto,categoria
+Necesito que me presten la sala de juntas del segundo piso para la tarde.,otros
+"Que mas, tengo un chicharron: Parece que una auditoria me quito los derechos administrativos de mi propio equipo.",permisos
+"Cordial saludo, solicito revisión de lo siguiente: La barra inferior de Windows no responde al clic, parece colapsada.",software
+Urgente: El sistema me avisa de un login sospechoso desde un país extraño. Necesito trabajar.,seguridad
+"auxilio, oigan, el próximo viernes que es feriado se trabaja mediodía o qué.",otros
+"Cordial saludo, solicito revisión de lo siguiente: Retomando labores y no recuerdo mi clave de acceso para nada.",cuentas_contrasenas
+Urgente: Al insertar un pendrive me salieron mil ventanas rojas de troyano bloqueado. Necesito trabajar.,seguridad
+Intento descargar mi desprendible y dice usuario sin privilegios para sección confidencial.,permisos
+Me sale pantallazo azul en Windows cada vez que le conecto la pantalla por HDMI. ¿Me colaboran?,infraestructura
+"Estimados, la imagen tiembla y sale humo del borde inferior de la pantalla. Agradezco la gestión.",infraestructura
+Urgente: Entro al sistema y me cierra la sesión de inmediato sin dejarme hacer nada. Necesito trabajar.,cuentas_contrasenas
+La unidad de almacenamiento externa suena clic-clic y Windows no la monta. Llevo toda la mañana en esto y nada.,infraestructura
+"Oigan, El aplicativo de recursos humanos esta calculando mal los dias por el salto de año bisiesto.",software
+Urgente: El portal me deniega la contraseña nueva por políticas de seguridad que no entiendo. Necesito trabajar.,cuentas_contrasenas
+"Que mas, tengo un chicharron: El SMS de verificacion para entrar no me aterriza en el celular.",cuentas_contrasenas
+"qué más, tengo un chicharrón: el revit no encuentra sus librerías locales y aborta la inicialización.",software
+"Buen día. el portal cautivo del hotel no me carga, entonces no puedo navegar.",redes
+La máquina se calienta muchísimo y se apaga de repente sin avisar. Llevo toda la mañana en esto y nada.,infraestructura
+"Oigan, Adobe Acrobat no me deja editar PDFs diciendo que la licencia expiró en este equipo.",software
+El sistema contable se cierra abruptamente al momento de darle guardar factura. ¿Me colaboran?,software
+"Hola, el lente o sensor de la camara web transmite la imagen completamente distorsionada.",infraestructura
+"Tengo un problema, trato de aplicar el parche oficial y la ventana de elevación de privilegios se cierra sola.",software
+"Que mas, tengo un chicharron: No puedo prender el computador xq el pulsador de poder esta atascado.",infraestructura
+"Al imprimir, el papel sale atascado a la mitad o con el tóner regado. Llevo toda la mañana en esto y nada.",infraestructura
+"Buen día. reporto posible robo de información visual, hay alguien anotando lo que veo en mi pc.",seguridad
+"Oigan, Un aplicativo viejo de 32 bits dejo de correr desde que me subieron a Windows 11.",software
+¿Alguien me explica por qué tengo un bucle de actualizaciones del sistema operativo que no me deja usar el equipo?,software
+"oigan, el equipo se apaga de golpe a los 15 minutos de estarlo usando intensamente.",infraestructura
+¿Alguien me explica por qué el túnel seguro se desconecta intermitentemente durante todo el día?,redes
+Buen día. por favor agéndenme el auditorio principal para una reunión de 3 horas.,otros
+Mi silla del escritorio está rechinando muchísimo y tiene una llanta rota.,otros
+"Cordial saludo, solicito revisión de lo siguiente: Deseo consultar cuántos días compensatorios tengo acumulados.",otros
+¿Alguien me explica por qué olvidé el gafete y el guardia no me deja pasar a las oficinas?,otros
+Aún no veo reflejado en mi cuenta el pago de la quincena.,otros
+Urgente: Tengo un bucle de actualizaciones del sistema operativo que no me deja usar el equipo. Necesito trabajar.,software
+Los archivos de la carpeta compartida se están borrando masivamente frente a mis ojos. ¿Me colaboran?,seguridad
+"Cambié de teléfono y perdí el generador de códigos de Microsoft, no puedo loguearme.",cuentas_contrasenas
+Buen día. solicito la emisión de mi certificado de trabajo con fecha de ingreso para un banco.,otros
+"Auxilio, la red privada me rechaza la entrada, el firewall dice acceso denegado. qué estrés.",cuentas_contrasenas
+"Urgente: Se trabó el cajoncito de red, los bombillos quedaron encendidos fijos sin titilar. Necesito trabajar.",redes
+"Buen día. sharepoint me dice 'acceso denegado, solicite permisos al propietario'.",permisos
+La batería del equipo se infló tanto que no puedo hacer clic en el trackpad. Llevo toda la mañana en esto y nada.,infraestructura
+"oigan, descargué una supuesta factura en pdf pero era un programa y lo ejecuté por error.",seguridad
+"Me estoy muriendo de calor, el aire de este piso parece que no funciona. Llevo toda la mañana en esto y nada.",otros
+"¿Alguien me explica por qué caída masiva de conectividad en la sucursal norte, estamos incomunicados?",redes
+Buen día. el agente de seguridad local traba el computador porque consume toda la memoria.,software
+Cambiaron la clave del wifi ayer y ahora el PC se queda pegado en verificando para siempre.,redes
+Buen día. se me interrumpe la conexión al cliente de cisco cada cierto tiempo sin falta.,redes
+"El sistema de requisiciones no me deja aprobar, el botón sale en gris.",permisos
+¿Alguien me explica por qué mi disco duro de respaldo hace ruidos extraños y no me lee la información?,infraestructura
+"Urgente: Mi hardware de cámara muestra todo en blanco y negro, está dañado. Necesito trabajar.",infraestructura
+"Oigan, La app de sincronización en la nube me duplicó todas las carpetas marcando conflicto.",software
+Buen día. entra en un bucle infinito en la bios y nunca arranca el disco.,infraestructura
+cordial saludo. el aparato de red que está bajo el escritorio hace ruidos y parpadea rojo.,redes
+Urgente: Solicito reserva física de espacio de reuniones para comité de gerencia. Necesito trabajar.,otros
+Buen día. la red perimetral bloquea mi salida a internet por comportamiento sospechoso.,seguridad
+Metí una USB que me encontré y el Windows Defender empezó a bloquear todo. Llevo toda la mañana en esto y nada.,seguridad
+"oigan, me quede esperando el mensaje de texto con el codigo de doble factor y nunca llega. ayuda porfa.",cuentas_contrasenas
+"Oigan, Se me bloqueó el perfil porque intenté entrar varias veces con las mayúsculas puestas.",cuentas_contrasenas
+Tengo una duda con el cálculo de mi prima de servicios en este corte. paila.,otros
+"Señores, el cursor del mouse se está moviendo solo en mi pantalla sin que yo toque nada.",seguridad
+"Oigan, Conectado a la VPN trato de entrar al servidor de pruebas y la IP me bloquea.",permisos
+"El internet carga, pero las llamadas por Teams se escuchan entrecortadas y robóticas.",redes
+Adjunto la factura del proveedor de papelería para su respectivo trámite de pago.,otros
+"Qué más, tengo un chicharrón: El portal financiero está clonado, la página pide datos que normalmente no pide.",seguridad
+urgente: le di clic a un archivo zip de una demanda falsa y el antivirus se volvió loco. agradezco la gestión.,seguridad
+el puerto de red en la pared está completamente flojo y no hace contacto. ¿me colaboran?,redes
+"El cable de parcheo lo pisaron y se partió, no tengo señal. Llevo toda la mañana en esto y nada.",redes
+Les escribo porque el sistema me avisa de un login sospechoso desde un país extraño. Agradezco la gestión.,seguridad
+Conecté una memoria externa y el antivirus estalló en notificaciones de amenaza. ¿Me colaboran?,seguridad
+"Urgente: Mi módulo de aprobaciones está bloqueado, no puedo autorizar nada. Necesito trabajar.",permisos
+Quiero confirmar si el lunes festivo hay operación normal o descansamos. Llevo toda la mañana en esto y nada.,otros
+"Oigan, El Chrome se me bloqueó con una pantalla roja y una voz que pide llamar a un número.",seguridad
+"hola, el replicador de puertos se dañó, conecto la laptop y no pasa nada. qué estrés.",infraestructura
+"Oigan, me acaban de robar el portátil en el bus, necesito que bloqueen los datos remotamente. auxilio.",seguridad
+¿Alguien me explica por qué la herramienta contable antigua no es soportada por el sistema operativo reciente?,software
+Estoy creando una clave nueva y el sistema la rechaza pero no dice qué símbolos faltan.,cuentas_contrasenas
+¿Alguien me explica por qué perdí la vista de las carpetas de mi área actual tras el traslado de puesto?,permisos
+"Dice que el usuario no existe, creo que estoy poniendo mi gmail personal por error.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: Queja directa porque el sistema de ventilación nos está enfermando.",otros
+Intente entrar desde el hotel en otra ciudad y la cuenta se inhabilito por seguridad. que estres.,cuentas_contrasenas
+les escribo xq todos mis correos se están auto-reenviando a un hotmail externo q no conozco. estoy frenado.,seguridad
+Qué más. la política de red me bloquea el puerto pa subir archivos al servidor del cliente. xfa.,redes
+"Cordial saludo, solicito revisión de lo siguiente: La roseta de mi cubículo está dañada físicamente y no hay ethernet.",redes
+pregunta sobre cómo puedo aplicar al convenio con el gimnasio de la ciudad. ¿me colaboran?,otros
+"Cordial saludo, solicito revisión de lo siguiente: El ejecutable bota un volcado de memoria antes de mostrarme las opciones de instalación.",software
+"Cordial saludo, solicito revisión de lo siguiente: Se trabó el cajoncito de red, los bombillos quedaron encendidos fijos sin titilar.",redes
+"Buenas, dice que no pertenezco al grupo autorizado cuando trato de ver mis vacaciones. Saludos.",permisos
+"Qué más, tengo un chicharrón: Me autentico correctamente y a los dos segundos la sesión expira sola.",cuentas_contrasenas
+Navegando en la intranet interna me sale el error 403 Forbidden en el módulo de salud.,permisos
+"Cordial saludo, solicito revisión de lo siguiente: Reclamando que el pago de nómina me llegó incompleto.",otros
+"Buen día. el cliente de outlook no puede despachar mensajes, se encolan infinitamente.",software
+"¿Alguien me explica por qué recién firmé contrato, intento ver el portal y me rechaza por falta de roles?",permisos
+"La red privada me rechaza la entrada, el firewall dice acceso denegado. Llevo toda la mañana en esto y nada.",cuentas_contrasenas
+¿Alguien me explica por qué el programa instalado me exige que lo active o me bloquea las funciones?,software
+"Cordial saludo, solicito revisión de lo siguiente: Dice que mi perfil está inactivo por fin de labores, y yo sigo trabajando.",cuentas_contrasenas
+"El botón de inicio y la barra de búsqueda de Windows están congelados, no reaccionan. ¿Me colaboran?",software
+el software de diseño bota un error de archivo.dll faltante al intentar arrancar. ¿me colaboran?,software
+"Oigan, Necesito urgentemente una carta laboral con sueldo para arrendar un apartamento.",otros
+El disco externo q conecto por USB hace clics mecánicos y no es detectado. ¿Me colaboran?,infraestructura
+Sugiero cambiar el menú del almuerzo porque la comida de los viernes está terrible.,otros
+Descargué una supuesta factura en PDF pero era un programa y lo ejecuté por error. ¿Me colaboran?,seguridad
+"El reporte no me deja exportar a Excel, me sale aviso de restricción. Llevo toda la mañana en esto y nada.",permisos
+"oigan, la carcasa de la laptop se deformó abajo y levantó el mousepad.",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: La red inalámbrica está invisible solo para mi máquina, los demás sí están conectados.",redes
+Por favor agéndenme el auditorio principal para una reunión de 3 horas. Llevo toda la mañana en esto y nada.,otros
+Trato de navegar y el cortafuegos me saca un aviso de tráfico anómalo o botnet.,seguridad
+"Oigan, El aire acondicionado de mi area esta a una temperatura congelante, xfa subanle.",otros
+Buen día. la política de red del móvil impide usar los datos como hotspot para la laptop.,redes
+"La política me obligó a cambiar el password, pero no me acepta el nuevo, entra en bucle.",cuentas_contrasenas
+reportando incidente: meto mi número de cédula en el portal de proveedores y me sale perfil inexistente. urgente.,cuentas_contrasenas
+El software legacy lanza error de incompatibilidad de arquitectura en el nuevo OS. Llevo toda la mañana en esto y nada.,software
+"¿Alguien me explica por qué expiró mi clave, intento renovarla y me arroja error tras error?",cuentas_contrasenas
+Ingresé hoy y el sistema ERP me bota al intentar loguearme.,permisos
+"Qué más, tengo un chicharrón: Intento entrar y mi usuario aparece dado de baja, me desactivaron por error.",cuentas_contrasenas
+ingresé hoy y el sistema erp me bota al intentar loguearme. ¿me colaboran?,permisos
+"Hola equipo, pongo mi pin y windows dice que la relación de confianza con el dominio falló.",cuentas_contrasenas
+"Reporto posible robo de información visual, hay alguien anotando lo que veo en mi PC. Llevo toda la mañana en esto y nada.",seguridad
+"Buenas, solicito el cambio de talla de mis botas de seguridad q me quedaron grandes.",otros
+"Qué más, tengo un chicharrón: El portal de recursos humanos me bloquea la consulta de mi propio pago.",permisos
+"Urgente: Tengo mucha lentitud en la SSID corporativa, pero la abierta está rápida. Necesito trabajar.",redes
+Urgente: Perdí la vista de las carpetas de mi área actual tras el traslado de puesto. Necesito trabajar.,permisos
+"Buen día. tengo latencia altísima, mi voz llega con retraso en la telefonía ip.",redes
+"Oigan, Se me regó el tinto en el teclado, las teclas están súper pegajosas.",infraestructura
+Les escribo xq la política de red del móvil impide usar los datos como hotspot pa la laptop. Quedo atento.,redes
+La VPN de Fortinet se me cae y se reconecta exactamente cada 5 minutos. ¿Me colaboran?,redes
+"No pasa de la pantalla de autenticando en la red inalámbrica, ciclo infinito. Llevo toda la mañana en esto y nada.",redes
+"Qué más, tengo un chicharrón: Les envío el recibo de compra de suministros pa q procesen el giro.",otros
+"Buen día. la plataforma rechaza mi documento de identidad, dice que no hay cuenta asociada.",cuentas_contrasenas
+¿Alguien me explica por qué trato de túnel a la oficina y me deniegan la autorización por credenciales?,cuentas_contrasenas
+"oigan, pongo la clave bien, carga la página e inmediatamente me patea afuera.",cuentas_contrasenas
+Ayer podía instalar cosas y hoy el AD me sacó del grupo de administradores locales. ¿Me colaboran?,permisos
+Urgente: Otro computador agarró la misma dirección IP que yo y nos estamos tumbando. Necesito trabajar.,redes
+"Cordial saludo, solicito revisión de lo siguiente: Al insertar un pendrive me salieron mil ventanas rojas de troyano bloqueado.",seguridad
+Urgente: El programa interno arrastra un bug de calendario que daña las fechas de pago. Necesito trabajar.,software
+"Hola grupo, estamos recogiendo la cooperacha para el pastel del jefe hoy.",otros
+A quien corresponda: se acabo el jabon en el lavado del piso principal. Saludos.,otros
+Buen día. me autentico correctamente y a los dos segundos la sesión expira sola.,cuentas_contrasenas
+Intento meterme a la unidad Z y el servidor local me saca por acceso denegado.,permisos
+"Qué más, tengo un chicharrón: Entra en un bucle infinito en la BIOS y nunca arranca el disco.",infraestructura
+¿Alguien me explica por qué el sistema me avisa de un login sospechoso desde un país extraño?,seguridad
+Buen día. les envío el recibo de compra de suministros para que procesen el giro.,otros
+Estoy en el aeropuerto y no me salta la pantalla para aceptar términos de la red.,redes
+"Cordial saludo, solicito revisión de lo siguiente: El cooler del procesador suena como un tractor al prender la máquina.",infraestructura
+Urgente: Quisiera información sobre los descuentos corporativos en universidades. Necesito trabajar.,otros
+"Cordial saludo, solicito revisión de lo siguiente: El computador está abombado por debajo, parece que la batería va a explotar.",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: La herramienta contable antigua no es soportada por el sistema operativo reciente.",software
+¿Alguien me explica por qué el ejecutable bota un volcado de memoria antes de mostrarme las opciones de instalación?,software
+"oigan, tratando de conectarme a un ftp externo y el cortafuegos me rechaza la conexión.",redes
+"¿Alguien me explica por qué el wifi intenta conectar, dice comprobando requisitos y vuelve a empezar?",redes
+"¿Alguien me explica por qué estoy atascado en la pantalla del token, el código no me llega al móvil?",cuentas_contrasenas
+Buen día. el software legacy lanza error de incompatibilidad de arquitectura en el nuevo os.,software
+El cliente de OneDrive está loco creando 'copias del equipo' para todos mis excels. Llevo toda la mañana en esto y nada.,software
+Urgente: El enlace del documento me manda a una pantalla pidiendo autorización. Necesito trabajar.,permisos
+"Les escribo porque el sistema intenta aplicar parches, dice error, revierte y reinicia de nuevo. no sé qué hacer.",software
+Siento que me metieron un virus minero porque la red y la ram están colapsadas solas. Llevo toda la mañana en esto y nada.,seguridad
+"oigan, la vpn de fortinet se me cae y se reconecta exactamente cada 5 minutos.",redes
+"Corro el instalador del update, y antes de pedirme la credencial crashea durísimo. ¿Me colaboran?",software
+¿Alguien me explica por qué el switch frontal para encender la máquina se quedó presionado y trabado?,infraestructura
+"Oigan, La impresora láser grande mancha todas las hojas con rayas negras.",infraestructura
+urgente: la impresora láser grande mancha todas las hojas con rayas negras. agradezco la gestión.,infraestructura
+"Urgente: El asiento ergonómico perdió un apoyabrazos, requiero reemplazo físico. Necesito trabajar.",otros
+¿Alguien me explica por qué intento entrar a las noticias de la empresa y la web me dice que no tengo derechos?,permisos
+"¿Alguien me explica por qué ya no soy admin de mi máquina, me retiraron de los grupos de seguridad?",permisos
+"Oigan, el portal cautivo del hotel no me carga, entonces no puedo navegar. Les agradezco mucho.",redes
+"La shell del sistema operativo dejó de funcionar, no puedo abrir el menú. Llevo toda la mañana en esto y nada.",software
+Buen día. el portal de recursos humanos me bloquea la consulta de mi propio pago.,permisos
+¿Alguien me explica por qué entro al sistema y me cierra la sesión de inmediato sin dejarme hacer nada?,cuentas_contrasenas
+Urgente: El servicio antimalware tiene la máquina inutilizable por uso extremo de CPU. Necesito trabajar.,software
+"Cordial saludo, solicito revisión de lo siguiente: Olvidé el gafete y el guardia no me deja pasar a las oficinas.",otros
+"Soporte: el logueo centralizado esta en bucle, meto la clave y me vuelve a sacar la misma ventana. Estoy frenado.",cuentas_contrasenas
+"Qué más, tengo un chicharrón: Quiero pedir la dotación de chalecos para el equipo nuevo de planta.",otros
+"Oigan, Todos los archivos de mi escritorio ahora tienen extensión.crypt y hay una nota de rescate.",seguridad
+"Que mas, tengo un chicharron: La maquina se calienta muchisimo y se apaga de repente sin avisar.",infraestructura
+"qué más, tengo un chicharrón: el computador no encuentra la ssid corporativa en la lista de redes.",redes
+¿Alguien me explica por qué el programa interno arrastra un bug de calendario que daña las fechas de pago?,software
+"Qué más, tengo un chicharrón: El portal corporativo me rebota la carga de la página diciendo acceso prohibido.",permisos
+Urgente: Duda general: ¿el horario de semana santa cómo quedó definido al fin? Necesito trabajar.,otros
+"¿Alguien me explica por qué las teclas marcan varias cosas al tiempo, creo que hizo corto por un líquido?",infraestructura
+"¿Alguien me explica por qué no puedo compartir escritorio interactivo, me dice que no tengo la autorización?",permisos
+Urgente: El explorador de Windows me tira un letrero de que no tengo permisos para esa ruta. Necesito trabajar.,permisos
+"Buen día. me estoy muriendo de calor, el aire de este piso parece que no funciona.",otros
+¿Alguien me explica por qué reclamando que el pago de nómina me llegó incompleto?,otros
+Regresé de mis semanas de descanso y mi mente borró por completo el PIN.,cuentas_contrasenas
+Buen día. recibí un mensaje muy raro de gerencia solicitando un giro internacional inmediato.,seguridad
+"No puedo actualizar el password, me dice que no cumple requisitos pero le pongo de todo. Llevo toda la mañana en esto y nada.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: Perdí la vista de las carpetas de mi área actual tras el traslado de puesto.",permisos
+Me cambiaron a finanzas pero sigo viendo solo los reportes de mi cargo anterior.,permisos
+"Mi celular si detecta la red wifi de la oficina, pero el portatil ni siquiera la ve. ¿Me colaboran?",redes
+"Qué más, tengo un chicharrón: No puedo actualizar el password, me dice q no cumple requisitos pero le pongo de todo.",cuentas_contrasenas
+¿Alguien me explica por qué se me rompió el arco de los auriculares corporativos y no retienen el micro?,infraestructura
+Buen día. la diadema del call center tiene el micrófono totalmente suelto.,infraestructura
+"Qué más, tengo un chicharrón: Alguien está controlando mi computador remotamente, veo cómo abren ventanas.",seguridad
+Ayuda: siento q me metieron un virus minero xq la red y la ram están colapsadas solas. Les agradezco mucho.,seguridad
+"oigan, mis compañeros dicen que estoy enviándoles correos con links extraños y yo no he hecho nada.",seguridad
+Urgente: Queja directa porque el sistema de ventilación nos está enfermando. Necesito trabajar.,otros
+"Oigan, Todo el punto de venta se quedó sin comunicación con la sede principal.",redes
+"Oigan, Puedo abrir la intranet interna por IP, pero Google y sitios externos están caídos.",redes
+"qué más, tengo un chicharrón: amanecí con los excels encriptados y un bloc de notas pidiendo plata.",seguridad
+Urgente: El aplicativo me salta un aviso de que mi suscripción no permite estas acciones. Necesito trabajar.,permisos
+Trato de abrir el excel en la nube y exige que pida autorización al dueño.,permisos
+Quiero pedir la dotación de chalecos para el equipo nuevo de planta. Llevo toda la mañana en esto y nada.,otros
+"¿Alguien me explica por qué la barra inferior de windows no responde al clic, parece colapsada?",software
+"¿Alguien me explica por qué tengo problemas de sobrecalentamiento térmico, el pc se apaga por protección?",infraestructura
+¿Alguien me explica por qué tengo permisos de vista pero el sistema me impide bajar el archivo?,permisos
+"Hay un ventilador interno sonando durísimo, parece que raspa con un cable.",infraestructura
+"Qué más, tengo un chicharrón: La red privada me rechaza la entrada, el firewall dice acceso denegado.",cuentas_contrasenas
+Urgente: Pongo mis datos en la ruta compartida y me lanza error de revocación de usuario. Necesito trabajar.,permisos
+"qué más, tengo un chicharrón: la shell del sistema operativo dejó de funcionar, no puedo abrir el menú.",software
+"Cordial saludo, solicito revisión de lo siguiente: El switch frontal para encender la máquina se quedó presionado y trabado.",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: Mi cuenta está mandando correos masivos de supuestas promociones a todo el mundo.",seguridad
+"Qué más, tengo un chicharrón: Al imprimir, el papel sale atascado a la mitad o con el tóner regado.",infraestructura
+"Tengo accesos de ventas todavía, el aplicativo me bloquea lo de mi nueva gerencia. Llevo toda la mañana en esto y nada.",permisos
+"Cordial saludo, solicito revisión de lo siguiente: El aplicativo me salta un aviso de que mi suscripción no permite estas acciones.",permisos
+"Qué más, tengo un chicharrón: El agente de seguridad local traba el computador porque consume toda la memoria.",software
+trato de hacer una consulta en producción y el motor me bloquea por privilegios. ¿me colaboran?,permisos
+Buen día. el sms de verificación para entrar no me aterriza en el celular.,cuentas_contrasenas
+"Qué más, tengo un chicharrón: Tengo latencia altísima, mi voz llega con retraso en la telefonía IP.",redes
+"¿Alguien me explica por qué el equipo se prende, muestra el texto negro inicial y se apaga, cíclicamente?",infraestructura
+Se acabó el jabón en el lavado del piso principal. Llevo toda la mañana en esto y nada.,otros
+"oigan, me llegó un correo del presidente pidiéndome comprar unas tarjetas de regalo urgente.",seguridad
+"Cordial saludo, solicito revisión de lo siguiente: El ping está por las nubes y las reuniones por video se me congelan cada nada.",redes
+La máquina dispensadora de snacks del pasillo se tragó mis monedas. Llevo toda la mañana en esto y nada.,otros
+"oigan, el chat de teams se quedó congelado mostrando conversaciones de ayer, no sincroniza.",software
+"Qué más, tengo un chicharrón: Trato de darle check a la orden de compra y la interfaz me inhabilita la opción.",permisos
+"Oigan, El puerto de red en la pared esta completamente flojo y no hace contacto.",redes
+"Oigan, Los audífonos de la oficina tienen el cable pelado y solo funcionan del lado izquierdo.",infraestructura
+El portal de recursos humanos me bloquea la consulta de mi propio pago. Llevo toda la mañana en esto y nada.,permisos
+Buen día. el cliente de onedrive está loco creando 'copias del equipo' para todos mis excels.,software
+"Urgente: Las teclas marcan varias cosas al tiempo, creo que hizo corto por un líquido. Necesito trabajar.",infraestructura
+Intento entrar al directorio y dice que mi autenticación no es válida para ese objeto. Llevo toda la mañana en esto y nada.,permisos
+"Cordial saludo, solicito revisión de lo siguiente: El replicador de puertos se dañó, conecto la laptop y no pasa nada.",infraestructura
+"Oigan, Me acaba de saltar una alerta de inicio de sesión exitoso desde Rusia en mi correo.",seguridad
+"Oigan, Me sale Access Denied en la VPN, parece que me bloquearon el paso.",cuentas_contrasenas
+Windows Update falla al 99% y deshace los cambios eternamente en cada reinicio. ¿Me colaboran?,software
+"Oigan, Reporto q los baños de mujeres del tercer piso no tienen papel higiénico.",otros
+"qué más, tengo un chicharrón: la torre hace un ruido mecánico insoportable de aspas golpeando algo.",infraestructura
+¿Alguien me explica por qué mensaje para recolectar fondos para la despedida del compañero de contabilidad?,otros
+"Cordial saludo, solicito revisión de lo siguiente: Falla grave al abrir el aplicativo técnico por librerías corruptas del sistema.",software
+"Buen día. intento acceder y el login me rebota, ¿será porque me pide el correo corporativo y puse el mío?",cuentas_contrasenas
+El Excel se me queda en 'No Responde' cada vez q corro un archivo pesado. ¿Me colaboran?,software
+¿Alguien me explica por qué el cooler del procesador suena como un tractor al prender la máquina?,infraestructura
+"Me caducaron las credenciales, pongo una nueva y el sistema vuelve a pedírmela infinitamente. Llevo toda la mañana en esto y nada.",cuentas_contrasenas
+"oigan, la webcam externa se ve con los colores invertidos y líneas verdes.",infraestructura
+"Las páginas de internet no resuelven nombre, parece falla de DNS. Llevo toda la mañana en esto y nada.",redes
+"Qué más, tengo un chicharrón: Están saliendo mensajes de spam desde mi buzón hacia otras áreas sin mi permiso.",seguridad
+"Qué más, tengo un chicharrón: Siento que me metieron un virus minero porque la red y la ram están colapsadas solas.",seguridad
+"Oigan, Google Chrome me lanza la pantalla de 'Oh no, Aw Snap' en todas las pestañas.",software
+Todos mis correos se están auto-reenviando a un Hotmail externo que no conozco. Llevo toda la mañana en esto y nada.,seguridad
+"Cordial saludo, solicito revisión de lo siguiente: Mi equipo tiene vida propia, el ratón se desplaza y hace clics por sí solo.",seguridad
+Me autentico correctamente y a los dos segundos la sesión expira sola. Llevo toda la mañana en esto y nada.,cuentas_contrasenas
+"oigan, el pc de escritorio emite 3 pitidos largos al encender y la pantalla se queda negra.",infraestructura
+¿Alguien me explica por qué el enlace del documento me manda a una pantalla pidiendo autorización?,permisos
+"Sharepoint me dice 'Acceso denegado, solicite permisos al propietario'. Llevo toda la mañana en esto y nada.",permisos
+"Cordial saludo, solicito revisión de lo siguiente: Alguien o algo está eliminando en ráfaga toda la información del disco compartido.",seguridad
+"La base de datos me deniega la conexión, dice que requiero rol de solo lectura. Llevo toda la mañana en esto y nada.",permisos
+"Oigan, En las reuniones no me deja tomar el control de la pantalla por politicas de la org.",permisos
+"Qué más, tengo un chicharrón: La batería de respaldo está dañada, medio bajón de luz y se muere todo.",infraestructura
+"Intento acceder y el login me rebota, ¿será porque me pide el correo corporativo y puse el mío? Llevo toda la mañana en esto y nada.",cuentas_contrasenas
+"El wifi de la empresa no carga nada, en cambio la red pública funciona perfecto.",redes
+Soporte: el portal corporativo me rebota la carga de la página diciendo acceso prohibido.,permisos
+La política de red del móvil impide usar los datos como hotspot para la laptop. Llevo toda la mañana en esto y nada.,redes
+Urgente: Me confirmaron el reseteo de credenciales pero sigo esperando el pin de ingreso. Necesito trabajar.,cuentas_contrasenas
+Urgente: Dejo mi retroalimentación sobre el servicio del casino de alimentación. Necesito trabajar.,otros
+"qué más, tengo un chicharrón: mi licencia es básica y la plataforma exige nivel premium pa hacer este cambio.",permisos
+El lente o sensor de la cámara web transmite la imagen completamente distorsionada. Llevo toda la mañana en esto y nada.,infraestructura
+"¿Alguien me explica por qué el logueo centralizado está en bucle, meto la clave y me vuelve a sacar la misma ventana?",cuentas_contrasenas
+"Que mas, tengo un chicharron: Intento acceder y el login me rebota, ¿sera xq me pide el correo corporativo y puse el mio?",cuentas_contrasenas
+Urgente: Me conecto a la red pública pero la ventanita de login inicial no aparece. Necesito trabajar.,redes
+Buen día. se acabó el jabón en el lavado del piso principal.,otros
+¿Alguien me explica por qué el aplicativo se colapsa y desaparece de la pantalla justo cuando termino el registro?,software
+Mi licencia es básica y la plataforma exige nivel premium para hacer este cambio. Llevo toda la mañana en esto y nada.,permisos
+Urgente: Tengo permisos de vista pero el sistema me impide bajar el archivo. Necesito trabajar.,permisos
+"Buen día. fui víctima de hurto de mi equipo corporativo, por favor apliquen borrado de disco.",seguridad
+¿Alguien me explica por qué duda general: ¿el horario de semana santa cómo quedó definido al fin?,otros
+"¿Alguien me explica por qué el replicador de puertos se dañó, conecto la laptop y no pasa nada?",infraestructura
+"Buen día. la batería de respaldo está dañada, medio bajón de luz y se muere todo.",infraestructura
+Urgente: La aplicación no logra capturar la señal de micrófono aunque el PC sí lo reconoce. Necesito trabajar.,software
+"Urgente: Me robaron la maleta con el PC de la empresa, bloqueen todo ya mismo. Necesito trabajar.",seguridad
+La pantalla de Single Sign On se queda parpadeando y me pide el login en un ciclo infinito. ¿Me colaboran?,cuentas_contrasenas
+"Chicos, el ethernet está puesto pero no me da salida a la web, sale un triangulito. Es para ya.",redes
+"¿Alguien me explica por qué dice que mi perfil está inactivo por fin de labores, y yo sigo trabajando?",cuentas_contrasenas
+"oigan, el sistema dice cuenta suspendida administrativamente, creo q rrhh se equivocó con mi contrato.",cuentas_contrasenas
+Buen día. el cliente de conferencias no engancha el hardware de video por fallo interno.,software
+Urgente: El equipo pita al arrancar y no me da bios ni windows. Necesito trabajar.,infraestructura
+"Hola, fui redirigido a una página falsa del banco al intentar hacer la transferencia.",seguridad
+La aplicación de mensajería no me actualiza los mensajes nuevos de hoy. Llevo toda la mañana en esto y nada.,software
+"Chicos, el reporte no me deja exportar a excel, me sale aviso de restricción.",permisos
+Urgente: Se me rompió el arco de los auriculares corporativos y no retienen el micro. Necesito trabajar.,infraestructura
+"imagínense que mi app de autenticación se borró al cambiar de móvil, necesito resetear el mfa.",cuentas_contrasenas
+"Qué más, tengo un chicharrón: La máquina dispensadora de snacks del pasillo se tragó mis monedas.",otros
+Solicito revisión de mi puesto de trabajo porque la silla no sube ni baja. Llevo toda la mañana en esto y nada.,otros
+Buen día. la máquina dispensadora de snacks del pasillo se tragó mis monedas.,otros
+¿Alguien me explica por qué quiero usar el tethering del teléfono y la configuración no me deja activarlo?,redes
+"Cordial saludo, solicito revisión de lo siguiente: El equipo pita al arrancar y no me da bios ni windows.",infraestructura
+"Qué más, tengo un chicharrón: Por favor confírmenme mi saldo de vacaciones a la fecha.",otros
+El aparato de red que está bajo el escritorio hace ruidos y parpadea rojo. ¿Me colaboran?,redes
+Urgente: El programa instalado me exige que lo active o me bloquea las funciones. Necesito trabajar.,software
+"Cordial saludo, solicito revisión de lo siguiente: El asiento ergonómico perdió un apoyabrazos, requiero reemplazo físico.",otros
+Buen día. mi usuario existe pero sap indica que no tengo perfiles de acceso.,permisos
+Me sale credencial revocada para este recurso cuando quiero abrir la carpeta de gerencia.,permisos
+¿Alguien me explica por qué no tengo cómo poner el código temporal porque mi celular viejo se dañó?,cuentas_contrasenas
+"Buen día. tengo accesos de ventas todavía, el aplicativo me bloquea lo de mi nueva gerencia.",permisos
+Buen día. todos mis correos se están auto-reenviando a un hotmail externo que no conozco.,seguridad
+soporte: la lógica del sistema liquidador falló con las fechas de febrero. ayuda porfa.,software
+soporte me reseteo la cuenta esta mañana pero jamas me enviaron la clave temporal. ¿me colaboran?,cuentas_contrasenas
+Urgente: El cooler del procesador suena como un tractor al prender la máquina. Necesito trabajar.,infraestructura
+"qué más, tengo un chicharrón: quien quiera aportar para el regalo de cumpleaños de maría me avisa por interno.",otros
+"Cordial saludo, solicito revisión de lo siguiente: Tengo un pop-up gigante diciendo que mi PC tiene virus y debo pagar.",seguridad
+"Cordial saludo, solicito revisión de lo siguiente: Quisiera información sobre los descuentos corporativos en universidades.",otros
+"Cordial saludo, solicito revisión de lo siguiente: Fui redirigido a una página falsa del banco al intentar hacer la transferencia.",seguridad
+¿Alguien me explica por qué deseo consultar cuántos días compensatorios tengo acumulados?,otros
+¿Alguien me explica por qué el gestor de archivos lanza error de conflictos y no sube mis versiones locales?,software
+"Qué más, tengo un chicharrón: El Creative Cloud de mi máquina bota aviso de falta de pago, pero es suscripción corporativa.",software
+"Cordial saludo, solicito revisión de lo siguiente: El enlace del documento me manda a una pantalla pidiendo autorización.",permisos
+"Cordial saludo, solicito revisión de lo siguiente: Tengo navegación interna pero las URL de afuera me dicen página no encontrada.",redes
+"Buen día. no puedo actualizar el password, me dice que no cumple requisitos pero le pongo de todo.",cuentas_contrasenas
+"El Creative Cloud de mi máquina bota aviso de falta de pago, pero es suscripción corporativa. Llevo toda la mañana en esto y nada.",software
+"Buen día. el creative cloud de mi máquina bota aviso de falta de pago, pero es suscripción corporativa.",software
+Deseo inscribir a mi cónyuge en la medicina prepagada de la compañía. Llevo toda la mañana en esto y nada.,otros
+Urgente: Anexo cuenta de cobro del evento corporativo para que desembolsen. Necesito trabajar.,otros
+¿Alguien me explica por qué por favor me generan la constancia laboral dirigida a la embajada?,otros
+"Necesito un favor, el explorador de windows me tira un letrero de que no tengo permisos para esa ruta. paila.",permisos
+"Oigan, Tengo el cable conectado pero sale el mundito amarillo de red no identificada.",redes
+Quien quiera aportar para el regalo de cumpleaños de María me avisa por interno. Llevo toda la mañana en esto y nada.,otros
+"Cordial saludo, solicito revisión de lo siguiente: Por favor soliciten a los de aseo que limpien la cocina que está muy sucia.",otros
+Pongo mis credenciales corporativas y la redirección del SSO me devuelve al principio. Llevo toda la mañana en esto y nada.,cuentas_contrasenas
+¿Alguien me explica por qué el firewall no me deja salir y dice alerta de intrusión desde mi ip?,seguridad
+El router no me asigna la IP automática y no veo a nadie en la red. Llevo toda la mañana en esto y nada.,redes
+¿Alguien me explica por qué anexo cuenta de cobro del evento corporativo para que desembolsen?,otros
+"Qué más, tengo un chicharrón: El cliente de conferencias no engancha el hardware de video por fallo interno.",software
+Urgente: El aplicativo se colapsa y desaparece de la pantalla justo cuando termino el registro. Necesito trabajar.,software
+"Cordial saludo, solicito revisión de lo siguiente: El cliente de colaboración local no descarga el historial reciente.",software
+"Urgente: Estoy atascado en la pantalla del token, el código no me llega al móvil. Necesito trabajar.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: La multifuncional está dañando los documentos físicos con manchas oscuras a lo largo.",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: El firewall perimetral me impide salir por el puerto 21 para transferir datos.",redes
+Me colaboran con esto: trato de navegar y el cortafuegos me saca un aviso de tráfico anómalo o botnet. Agradezco la gestión.,seguridad
+"Cordial saludo, solicito revisión de lo siguiente: La imagen tiembla y sale humo del borde inferior de la pantalla.",infraestructura
+¿Alguien me explica por qué el firewall perimetral me impide salir por el puerto 21 para transferir datos?,redes
+Un tercero externo en la oficina lleva rato espiando la pantalla del director. ¿Me colaboran?,seguridad
+"Qué más, tengo un chicharrón: El programa de hojas de cálculo se congela totalmente al usar macros.",software
+Fui a pagar la nómina y la URL del banco se ve con una letra cambiada.,seguridad
+"No tengo el carnet de acceso, requiero q me habiliten la entrada por favor. me colaboran?",otros
+"Oigan, La red interna está lentísima, pero me paso a la de invitados y vuela.",redes
+"Cordial saludo, solicito revisión de lo siguiente: Por favor me generan la constancia laboral dirigida a la embajada.",otros
+El cliente de conferencias no engancha el hardware de video por fallo interno. Llevo toda la mañana en esto y nada.,software
+¿Alguien me explica por qué quisiera información sobre los descuentos corporativos en universidades?,otros
+"Cordial saludo, solicito revisión de lo siguiente: Me conecto a la red pública pero la ventanita de login inicial no aparece.",redes
+"Buen día. intento entrar y mi usuario aparece dado de baja, me desactivaron por error.",cuentas_contrasenas
+"Urgente: La barra inferior de Windows no responde al clic, parece colapsada. Necesito trabajar.",software
+"Cordial saludo, solicito revisión de lo siguiente: Tengo problemas de sobrecalentamiento térmico, el PC se apaga por protección.",infraestructura
+¿Alguien me explica por qué queja directa porque el sistema de ventilación nos está enfermando?,otros
+No puedo prender el computador porque el pulsador de poder está atascado. Llevo toda la mañana en esto y nada.,infraestructura
+"Buen día. al imprimir, el papel sale atascado a la mitad o con el tóner regado.",infraestructura
+¿Alguien me explica por qué el servicio antimalware tiene la máquina inutilizable por uso extremo de cpu?,software
+"Alguien está controlando mi computador remotamente, veo cómo abren ventanas. Llevo toda la mañana en esto y nada.",seguridad
+"Cordial saludo, solicito revisión de lo siguiente: Estoy atascado en la pantalla del token, el código no me llega al móvil.",cuentas_contrasenas
+"la red interna esta lentisima, pero me paso a la de invitados y vuela. ¿me colaboran?",redes
+"Cordial saludo, solicito revisión de lo siguiente: El ethernet está puesto pero no me da salida a la web, sale un triangulito.",redes
+"Qué más, tengo un chicharrón: No pasa de la pantalla de autenticando en la red inalámbrica, ciclo infinito.",redes
+me colaboran con esto: retomando labores y no recuerdo mi clave de acceso pa nada. agradezco la gestión.,cuentas_contrasenas
+"El portal financiero está clonado, la página pide datos que normalmente no pide. Llevo toda la mañana en esto y nada.",seguridad
+"Qué más, tengo un chicharrón: Intenté entrar desde el hotel en otra ciudad y la cuenta se inhabilitó por seguridad.",cuentas_contrasenas
+Buen día. cientos de documentos de la unidad de red están desapareciendo de la nada.,seguridad
+Buen día. me interesa saber si tenemos beneficios activos con cajas de compensación.,otros
+Les envío el recibo de compra de suministros para que procesen el giro. Llevo toda la mañana en esto y nada.,otros
+"Qué más, tengo un chicharrón: El piso entero está totalmente caído, nadie tiene acceso a los aplicativos centrales.",redes
+¿Alguien me explica por qué la aplicación no logra capturar la señal de micrófono aunque el pc sí lo reconoce?,software
+Les escribo porque adobe acrobat no me deja editar pdfs diciendo que la licencia expiró en este equipo. auxilio.,software
+¿Alguien me explica por qué consultando sobre los planes complementarios de salud vigentes?,otros
+"Buen día. no pasa de la pantalla de autenticando en la red inalámbrica, ciclo infinito.",redes
+Amanecí con los excels encriptados y un bloc de notas pidiendo plata. Llevo toda la mañana en esto y nada.,seguridad
+"¿Alguien me explica por qué el computador está extremadamente lento e inmanejable, parece secuestrado por procesos raros?",seguridad
+Quiero saber los requisitos exactos para afiliar a mi hijo recién nacido a la EPS.,otros
+"Oigan, Meto mi número de cédula en el portal de proveedores y me sale perfil inexistente.",cuentas_contrasenas
+"Oigan, La app de Zoom dice camara no detectada, pero en Teams funciona perfecto.",software
+"Cordial saludo, solicito revisión de lo siguiente: Pongo mi id en la ventanita y arroja que carezco de cuenta en el sistema.",cuentas_contrasenas
+Llevaba 20 días fuera y ahora no tengo idea de cuál era mi contraseña. Llevo toda la mañana en esto y nada.,cuentas_contrasenas
+Urgente: Falla grave al abrir el aplicativo técnico por librerías corruptas del sistema. Necesito trabajar.,software
+"Cordial saludo, solicito revisión de lo siguiente: Entro al sistema y me cierra la sesión de inmediato sin dejarme hacer nada.",cuentas_contrasenas
+Tengo una duda con el cálculo de mi prima de servicios en este corte. Llevo toda la mañana en esto y nada.,otros
+"oigan, me sale pantallazo azul en windows cada vez q le conecto la pantalla por hdmi.",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: El equipo se prende, muestra el texto negro inicial y se apaga, cíclicamente.",infraestructura
+"oigan, quisiera saber cuántos días hábiles de descanso me quedan disponibles.",otros
+El Revit no encuentra sus librerías locales y aborta la inicialización. Llevo toda la mañana en esto y nada.,software
+El PC me saca un error rarísimo de trust relationship al digitar mi clave. Llevo toda la mañana en esto y nada.,cuentas_contrasenas
+La red privada me niega el paso hacia el ambiente de desarrollo. Llevo toda la mañana en esto y nada.,permisos
+"Cordial saludo, solicito revisión de lo siguiente: Mi módulo de aprobaciones está bloqueado, no puedo autorizar nada.",permisos
+¿Alguien me explica por qué le di clic a un archivo zip de una demanda falsa y el antivirus se volvió loco?,seguridad
+"Imagínense que el botón de inicio y la barra de búsqueda de windows están congelados, no reaccionan. Urgente.",software
+Trato de darle check a la orden de compra y la interfaz me inhabilita la opción. Llevo toda la mañana en esto y nada.,permisos
+"Qué más, tengo un chicharrón: Me caducaron las credenciales, pongo una nueva y el sistema vuelve a pedírmela infinitamente.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: El portal no reconoce mi cuenta, la estoy metiendo igual que en mi casa.",cuentas_contrasenas
+"El piso entero está totalmente caído, nadie tiene acceso a los aplicativos centrales. Llevo toda la mañana en esto y nada.",redes
+"Qué más, tengo un chicharrón: Mi app de autenticación se borró al cambiar de móvil, necesito resetear el MFA.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: Mensaje para recolectar fondos para la despedida del compañero de contabilidad.",otros
+"Cordial saludo, solicito revisión de lo siguiente: El firewall no me deja salir y dice alerta de intrusión desde mi IP.",seguridad
+"¿Alguien me explica por qué mi equipo tiene vida propia, el ratón se desplaza y hace clics por sí solo?",seguridad
+Por favor confírmenme mi saldo de vacaciones a la fecha. Llevo toda la mañana en esto y nada.,otros
+El botón de encendido de la torre se hundió físicamente y no retorna.,infraestructura
+"El sistema intenta aplicar parches, dice error, revierte y reinicia de nuevo. Llevo toda la mañana en esto y nada.",software
+"cordial saludo. la red inalámbrica está invisible solo pa mi máquina, los demás sí están conectados. es pa ya.",redes
+"oigan, el proceso del antivirus está consumiendo el 100% del procesador y no me deja hacer nada.",software
+"Cordial saludo, solicito revisión de lo siguiente: El servicio antimalware tiene la máquina inutilizable por uso extremo de CPU.",software
+"Qué más, tengo un chicharrón: Mi usuario existe pero SAP indica q no tengo perfiles de acceso.",permisos
+"Chicos, la diadema del call center tiene el micrófono totalmente suelto. Mil gracias.",infraestructura
+"Qué más, tengo un chicharrón: Metí una USB q me encontré y el Windows Defender empezó a bloquear todo.",seguridad
+Buen día. la torre hace un ruido mecánico insoportable de aspas golpeando algo.,infraestructura
+Buen día. amanecí con los excels encriptados y un bloc de notas pidiendo plata.,seguridad
+Solicité un blanqueo de password y no he recibido el correo con la nueva. Llevo toda la mañana en esto y nada.,cuentas_contrasenas
+Urgente: Olvidé el gafete y el guardia no me deja pasar a las oficinas. Necesito trabajar.,otros
+"Que mas, tengo un chicharron: No me deja explorar la subcarpeta de proyectos compartida en la red.",permisos
+Están saliendo mensajes de spam desde mi buzón hacia otras áreas sin mi permiso. Llevo toda la mañana en esto y nada.,seguridad
+"Cordial saludo, solicito revisión de lo siguiente: Tengo ping al server pero me restringen la entrada por políticas de VPN.",permisos
+"Auxilio, solicité un blanqueo de password y no he recibido el correo con la nueva. no sé qué hacer.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: Me restringieron las credenciales automáticamente al detectar IP del extranjero.",cuentas_contrasenas
+Urgente: El firewall no me deja salir y dice alerta de intrusión desde mi IP. Necesito trabajar.,seguridad
+Por favor me generan la constancia laboral dirigida a la embajada. no se que hacer.,otros
+"El equipo no toma dirección IP, se queda pegado en 169.254 y quedo aislado.",redes
+Urgente: Deseo consultar cuántos días compensatorios tengo acumulados. Necesito trabajar.,otros
+Urgente: Mi disco duro de respaldo hace ruidos extraños y no me lee la información. Necesito trabajar.,infraestructura
+"Tengo latencia altísima, mi voz llega con retraso en la telefonía IP. Llevo toda la mañana en esto y nada.",redes
+¿Alguien me explica por qué la roseta de mi cubículo está dañada físicamente y no hay ethernet?,redes
+¿Alguien me explica por qué me confirmaron el reseteo de credenciales pero sigo esperando el pin de ingreso?,cuentas_contrasenas
+"Urgente: Pongo mi clave perfecta, pero la app interna rechaza mi identidad. Necesito trabajar.",permisos
+"Buen día. bloqueé mi cuenta por escribir mal el login, no me di cuenta del teclado.",cuentas_contrasenas
+"Oigan, el programa de hojas de cálculo se congela totalmente al usar macros. Gracias.",software
+No me deja explorar la subcarpeta de proyectos compartida en la red. Llevo toda la mañana en esto y nada.,permisos
+"Cordial saludo, solicito revisión de lo siguiente: El CEO me está mandando un mail pidiendo que consiga unas gift cards ya mismo.",seguridad
+"Cordial saludo, solicito revisión de lo siguiente: No puedo usar el Chrome, todas las pestañas revientan por un fallo interno de la app.",software
+El navegador web crashea cualquier página que intento abrir con un error de memoria. Llevo toda la mañana en esto y nada.,software
+Mi usuario existe pero SAP indica que no tengo perfiles de acceso. Llevo toda la mañana en esto y nada.,permisos
+"La torre hace un ruido constante, como alarmas, y no manda señal de video. Llevo toda la mañana en esto y nada.",infraestructura
+¿Alguien me explica por qué dejo mi retroalimentación sobre el servicio del casino de alimentación?,otros
+"Cordial saludo, solicito revisión de lo siguiente: Pongo mi clave perfecta, pero la app interna rechaza mi identidad.",permisos
+Se me interrumpe la conexión al cliente de Cisco cada cierto tiempo sin falta. Llevo toda la mañana en esto y nada.,redes
+"El PC está al 100% de CPU y los ventiladores a tope todo el tiempo, está saturado. ¿Me colaboran?",seguridad
+"¿Alguien me explica por qué la red inalámbrica está invisible solo para mi máquina, los demás sí están conectados?",redes
+"Que mas, tengo un chicharron: Las paginas de internet no resuelven nombre, parece falla de DNS.",redes
+"Qué más, tengo un chicharrón: La base de datos me deniega la conexión, dice que requiero rol de solo lectura.",permisos
+"Qué más, tengo un chicharrón: Todos mis correos se están auto-reenviando a un Hotmail externo que no conozco.",seguridad
+"Hola, bloqueé mi cuenta por escribir mal el login, no me di cuenta del teclado. no sé qué hacer.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: El cliente SQL me arroja error de derechos insuficientes al lanzar la vista.",permisos
+"Qué más, tengo un chicharrón: Solicité un blanqueo de password y no he recibido el correo con la nueva.",cuentas_contrasenas
+Buen día. la red privada me niega el paso hacia el ambiente de desarrollo.,permisos
+Veo el tablero perfectamente pero la opción de descargar datos está bloqueada.,permisos
+"Por favor ayuda, se va la luz un segundo y mi equipo se apaga porque la ups no retiene la carga. Gracias.",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: Tengo falla de DHCP, mi máquina no coge parámetros de red válidos.",redes
+"Qué más, tengo un chicharrón: El router no me asigna la IP automática y no veo a nadie en la red.",redes
+"Urgente: Recién firmé contrato, intento ver el portal y me rechaza por falta de roles. Necesito trabajar.",permisos
+"Urgente: Caída masiva de conectividad en la sucursal norte, estamos incomunicados. Necesito trabajar.",redes
+"Cordial saludo, solicito revisión de lo siguiente: Mis documentos cambiaron de formato solos y me sale un aviso de secuestro de datos.",seguridad
+"Oigan, Descubrí q alguien configuró reglas en mi Outlook pa reenviar todo a un correo raro.",seguridad
+¿Alguien me explica por qué dice que no pertenezco al grupo autorizado cuando trato de ver mis vacaciones?,permisos
+"Cordial saludo, solicito revisión de lo siguiente: Me confirmaron el reseteo de credenciales pero sigo esperando el pin de ingreso.",cuentas_contrasenas
+Buen día. solicité un blanqueo de password y no he recibido el correo con la nueva.,cuentas_contrasenas
+Me interesa saber si tenemos beneficios activos con cajas de compensación. Llevo toda la mañana en esto y nada.,otros
+"Qué más. la torre hace un ruido constante, como alarmas, y no manda señal de video. me colaboran?",infraestructura
+"Urgente: No me acepta el password local, dice que perdió conexión con el directorio activo. Necesito trabajar.",cuentas_contrasenas
+Buen día. mi licencia es básica y la plataforma exige nivel premium para hacer este cambio.,permisos
+"Qué más, tengo un chicharrón: La lógica del sistema liquidador falló con las fechas de febrero.",software
+"Cordial saludo, solicito revisión de lo siguiente: El logueo centralizado está en bucle, meto la clave y me vuelve a sacar la misma ventana.",cuentas_contrasenas
+"qué más, tengo un chicharrón: pongo mis credenciales corporativas y la redirección del sso me devuelve al principio.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: Solicito reserva física de espacio de reuniones para comité de gerencia.",otros
+"Qué más, tengo un chicharrón: El software legacy lanza error de incompatibilidad de arquitectura en el nuevo OS.",software
+¿Alguien me explica por qué el portal me deniega la contraseña nueva por políticas de seguridad que no entiendo?,cuentas_contrasenas
+"¿Alguien me explica por qué el ethernet está puesto pero no me da salida a la web, sale un triangulito?",redes
+¿Alguien me explica por qué por favor soliciten a los de aseo que limpien la cocina que está muy sucia?,otros
+"Qué más, tengo un chicharrón: El navegador web crashea cualquier página que intento abrir con un error de memoria.",software
+¿Alguien me explica por qué me conecto a la red pública pero la ventanita de login inicial no aparece?,redes
+"oigan, la estación de acoplamiento dejó de mandar video a los monitores tras un bajón de luz.",infraestructura
+"Soporte: el inicio de sesión pasa, pero el aplicativo me dice usuario no matriculado en el flujo. Agradezco la gestión.",permisos
+"Fui víctima de hurto de mi equipo corporativo, por favor apliquen borrado de disco. Llevo toda la mañana en esto y nada.",seguridad
+"Cordial saludo, solicito revisión de lo siguiente: Tengo sospechas de shoulder surfing por parte de un visitante en mi área.",seguridad
+"La plataforma rechaza mi documento de identidad, dice que no hay cuenta asociada. Llevo toda la mañana en esto y nada.",cuentas_contrasenas
+El portátil escribe letras equivocadas porque se mojó el teclado ayer. Llevo toda la mañana en esto y nada.,infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: La aplicación de correo local tiene el proceso de envío totalmente trabado.",software
+"Cordial saludo, solicito revisión de lo siguiente: Las teclas marcan varias cosas al tiempo, creo que hizo corto por un líquido.",infraestructura
+Buen día. la unidad de almacenamiento externa suena clic-clic y windows no la monta.,infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: El aplicativo se colapsa y desaparece de la pantalla justo cuando termino el registro.",software
+Buen día. el revit no encuentra sus librerías locales y aborta la inicialización.,software
+Urgente: El CEO me está mandando un mail pidiendo que consiga unas gift cards ya mismo. Necesito trabajar.,seguridad
+Urgente: El cliente de colaboración local no descarga el historial reciente. Necesito trabajar.,software
+"No tengo el carnet de acceso, requiero que me habiliten la entrada por favor. Llevo toda la mañana en esto y nada.",otros
+¿Alguien me explica por qué me restringieron las credenciales automáticamente al detectar ip del extranjero?,cuentas_contrasenas
+"Oigan, Se va la luz un segundo y mi equipo se apaga xq la UPS no retiene la carga.",infraestructura
+¿Alguien me explica por qué al insertar un pendrive me salieron mil ventanas rojas de troyano bloqueado?,seguridad
+"Qué más, tengo un chicharrón: Bloqueé mi cuenta por escribir mal el login, no me di cuenta del teclado.",cuentas_contrasenas
+¿Alguien me explica por qué el equipo pita al arrancar y no me da bios ni windows?,infraestructura
+Urgente: Tengo sospechas de shoulder surfing por parte de un visitante en mi área. Necesito trabajar.,seguridad
+"Buenas, el router no me asigna la ip automática y no veo a nadie en la red. qué estrés.",redes
+¿Alguien me explica por qué mis documentos cambiaron de formato solos y me sale un aviso de secuestro de datos?,seguridad
+La política de red me bloquea el puerto para subir archivos al servidor del cliente. Llevo toda la mañana en esto y nada.,redes
+"¿Alguien me explica por qué el portal no reconoce mi cuenta, la estoy metiendo igual que en mi casa?",cuentas_contrasenas
+"Buen día. me logueo bien al portal, sin embargo la vista de tareas dice perfil no autorizado.",permisos
+"¿Alguien me explica por qué tengo falla de dhcp, mi máquina no coge parámetros de red válidos?",redes
+"oigan, windows me bota una burbuja avisando q otro equipo tiene mi misma dirección ip.",redes
+Urgente: La herramienta contable antigua no es soportada por el sistema operativo reciente. Necesito trabajar.,software
+"Cordial saludo, solicito revisión de lo siguiente: Se me traba la aplicación de Office al intentar procesar mucha data.",software
+¿Alguien me explica por qué encontré una regla oculta que copia mis correos confidenciales hacia afuera?,seguridad
+Urgente: Retomando labores y no recuerdo mi clave de acceso para nada. Necesito trabajar.,cuentas_contrasenas
+Quisiera saber cuantos dias habiles de descanso me quedan disponibles. ¿Me colaboran?,otros
+"Deje mi tarjeta magnetica en la casa, alguien puede bajar a abrirme el torniquete. ¿Me colaboran?",otros
+Buen día. estoy por conexión alámbrica y me dice sin acceso a internet.,redes
+"Urgente: Dice que mi perfil está inactivo por fin de labores, y yo sigo trabajando. Necesito trabajar.",cuentas_contrasenas
+Urgente: La multifuncional está dañando los documentos físicos con manchas oscuras a lo largo. Necesito trabajar.,infraestructura
+¿Alguien me explica por qué el cliente sql me arroja error de derechos insuficientes al lanzar la vista?,permisos
+"Cordial saludo, solicito revisión de lo siguiente: No me acepta el password local, dice que perdió conexión con el directorio activo.",cuentas_contrasenas
+Buen día. llevaba 20 días fuera y ahora no tengo idea de cuál era mi contraseña.,cuentas_contrasenas
+"Bloqueé mi cuenta por escribir mal el login, no me di cuenta del teclado. Llevo toda la mañana en esto y nada.",cuentas_contrasenas
+Buen día. el computador no encuentra la ssid corporativa en la lista de redes.,redes
+"Qué más, tengo un chicharrón: Se acabó el jabón en el lavado del piso principal.",otros
+"Oigan, Soporte me reseteó la cuenta esta mañana pero jamás me enviaron la clave temporal.",cuentas_contrasenas
+"Qué más, tengo un chicharrón: El cliente de OneDrive está loco creando 'copias del equipo' para todos mis excels.",software
+"¿Alguien me explica por qué se trabó el cajoncito de red, los bombillos quedaron encendidos fijos sin titilar?",redes
+La lógica del sistema liquidador falló con las fechas de febrero. Llevo toda la mañana en esto y nada.,software
+"la app de zoom dice cámara no detectada, pero en teams funciona perfecto. ¿me colaboran?",software
+"Qué más, tengo un chicharrón: Sharepoint me dice 'Acceso denegado, solicite permisos al propietario'.",permisos
+"Cordial saludo, solicito revisión de lo siguiente: Se me rompió el arco de los auriculares corporativos y no retienen el micro.",infraestructura
+"buenas, el botón de encendido de la torre se hundió físicamente y no retorna. agradezco la gestión.",infraestructura
+¿Alguien me explica por qué el cliente de colaboración local no descarga el historial reciente?,software
+¿Alguien me explica por qué el aplicativo me salta un aviso de que mi suscripción no permite estas acciones?,permisos
+Buen día. quiero pedir la dotación de chalecos para el equipo nuevo de planta.,otros
+Tratando de conectarme a un FTP externo y el cortafuegos me rechaza la conexión. ¿Me colaboran?,redes
+"Buen día. las páginas de internet no resuelven nombre, parece falla de dns.",redes
+Urgente: El ping está por las nubes y las reuniones por video se me congelan cada nada. Necesito trabajar.,redes
+Buen día. la máquina se calienta muchísimo y se apaga de repente sin avisar.,infraestructura
+"Necesito un favor, otro computador agarró la misma dirección ip que yo y nos estamos tumbando. Agradezco la gestión.",redes
+Abrí un adjunto rarísimo que me mandó un proveedor y el equipo empezó a parpadear. Llevo toda la mañana en esto y nada.,seguridad
+"Que mas, tengo un chicharron: La torre hace un ruido constante, como alarmas, y no manda señal de video.",infraestructura
+La diadema del call center tiene el micrófono totalmente suelto. Llevo toda la mañana en esto y nada.,infraestructura
+"qué más, tengo un chicharrón: la batería del equipo se infló tanto que no puedo hacer clic en el trackpad.",infraestructura
+"Oigan, El inicio de sesión pasa, pero el aplicativo me dice usuario no matriculado en el flujo.",permisos
+¿Alguien me explica por qué retomando labores y no recuerdo mi clave de acceso para nada?,cuentas_contrasenas
+"Qué más, tengo un chicharrón: El wifi de la empresa no carga nada, en cambio la red pública funciona perfecto.",redes
+"Urgente: Tengo falla de DHCP, mi máquina no coge parámetros de red válidos. Necesito trabajar.",redes
+Buen día. abrí un adjunto rarísimo que me mandó un proveedor y el equipo empezó a parpadear.,seguridad
+"Por favor ayuda, trato de hacer una consulta en produccion y el motor me bloquea por privilegios. Ayuda porfa.",permisos
+"Por favor ayuda, mi disco duro de respaldo hace ruidos extraños y no me lee la información. Saludos.",infraestructura
+Buen día. trato de darle check a la orden de compra y la interfaz me inhabilita la opción.,permisos
+¿Alguien me explica por qué otro computador agarró la misma dirección ip que yo y nos estamos tumbando?,redes
+Buen día. están saliendo mensajes de spam desde mi buzón hacia otras áreas sin mi permiso.,seguridad
+"Buen día. el cable de parcheo lo pisaron y se partió, no tengo señal.",redes
+Buen día. deseo inscribir a mi cónyuge en la medicina prepagada de la compañía.,otros
+Urgente: Se me traba la aplicación de Office al intentar procesar mucha data. Necesito trabajar.,software
+Urgente: Mensaje para recolectar fondos para la despedida del compañero de contabilidad. Necesito trabajar.,otros
+"Recibo correos bien, pero los que yo envío se quedan atorados en la bandeja de salida.",software
+Buen día. trato de manejar el mouse del compañero en zoom y el sistema de seguridad lo bloquea.,permisos
+"Urgente: El computador está abombado por debajo, parece que la batería va a explotar. Necesito trabajar.",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: Colapso total del sistema operativo por falla de video al conectar periféricos.",infraestructura
+Urgente: El ejecutable bota un volcado de memoria antes de mostrarme las opciones de instalación. Necesito trabajar.,software
+Windows me bota una burbuja avisando q otro equipo tiene mi misma direccion IP. ¿Me colaboran?,redes
+Urgente: Fui redirigido a una página falsa del banco al intentar hacer la transferencia. Necesito trabajar.,seguridad
+Urgente: Pongo mi id en la ventanita y arroja que carezco de cuenta en el sistema. Necesito trabajar.,cuentas_contrasenas
+Buen día. me saltó un anuncio de falso soporte técnico que no me deja cerrar el navegador.,seguridad
+"buenas, dice que mi perfil está inactivo por fin de labores, y yo sigo trabajando. no sé qué hacer.",cuentas_contrasenas
+"Urgente: El equipo se prende, muestra el texto negro inicial y se apaga, cíclicamente. Necesito trabajar.",infraestructura
+"Oigan, Trato de compartir internet desde el celular corporativo y me bloquea el anclaje.",redes
+¿Alguien me explica por qué el explorador de windows me tira un letrero de que no tengo permisos para esa ruta?,permisos
+La aplicación de mensajería no me actualiza los mensajes nuevos de hoy. no sé qué hacer.,software
+"¿Alguien me explica por qué la ups del escritorio no sirve, pita en falso y no sostiene la energía?",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: Duda general: ¿el horario de semana santa cómo quedó definido al fin?",otros
+Me saltó un anuncio de falso soporte técnico que no me deja cerrar el navegador. Llevo toda la mañana en esto y nada.,seguridad
+"qué más, tengo un chicharrón: intento entrar al directorio y dice q mi autenticación no es válida pa ese objeto.",permisos
+Buen día. siento que me metieron un virus minero porque la red y la ram están colapsadas solas.,seguridad
+"Cordial saludo, solicito revisión de lo siguiente: Recién firmé contrato, intento ver el portal y me rechaza por falta de roles.",permisos
+"Cordial saludo, solicito revisión de lo siguiente: Mi disco duro de respaldo hace ruidos extraños y no me lee la información.",infraestructura
+Buen día. el portátil escribe letras equivocadas porque se mojó el teclado ayer.,infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: Trato de túnel a la oficina y me deniegan la autorización por credenciales.",cuentas_contrasenas
+"Qué más, tengo un chicharrón: El switch de comunicaciones local está sonando como un grillo y no da línea.",redes
+Pongo mi PIN y Windows dice q la relación de confianza con el dominio falló. ¿Me colaboran?,cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: Tengo mucha lentitud en la SSID corporativa, pero la abierta está rápida.",redes
+"Qué más, tengo un chicharrón: Me sale un mensaje de conflicto de IP en la red local y me desconecta.",redes
+"¿Alguien me explica por qué me robaron la maleta con el pc de la empresa, bloqueen todo ya mismo?",seguridad
+¿Alguien me explica por qué tengo ping al server pero me restringen la entrada por políticas de vpn?,permisos
+"Cordial saludo, solicito revisión de lo siguiente: El programa instalado me exige que lo active o me bloquea las funciones.",software
+"Urgente: Mi equipo tiene vida propia, el ratón se desplaza y hace clics por sí solo. Necesito trabajar.",seguridad
+"¿Alguien me explica por qué mi hardware de cámara muestra todo en blanco y negro, está dañado?",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: El gestor de archivos lanza error de conflictos y no sube mis versiones locales.",software
+"El PC no pasa del logo de la marca, se reinicia antes de cargar el sistema operativo. ¿Me colaboran?",infraestructura
+"Intento entrar y mi usuario aparece dado de baja, me desactivaron por error. Llevo toda la mañana en esto y nada.",cuentas_contrasenas
+El programa de hojas de cálculo se congela totalmente al usar macros. Llevo toda la mañana en esto y nada.,software
+Buen día. el switch de comunicaciones local está sonando como un grillo y no da línea.,redes
+Buen día. quiero confirmar si el lunes festivo hay operación normal o descansamos.,otros
+"¿Alguien me explica por qué el asiento ergonómico perdió un apoyabrazos, requiero reemplazo físico?",otros
+"Cordial saludo, solicito revisión de lo siguiente: Encontré una regla oculta que copia mis correos confidenciales hacia afuera.",seguridad
+Buen día. no me deja explorar la subcarpeta de proyectos compartida en la red.,permisos
+Cordial saludo. tengo ping al server pero me restringen la entrada por politicas de vpn.,permisos
+"Me logueo bien al portal, sin embargo la vista de tareas dice perfil no autorizado. Llevo toda la mañana en esto y nada.",permisos
+"oigan, estoy de viaje y el sistema me bloqueó el inicio de sesión por ubicación inusual.",cuentas_contrasenas
+Urgente: La aplicación de correo local tiene el proceso de envío totalmente trabado. Necesito trabajar.,software
+¿Alguien me explica por qué solicito reserva física de espacio de reuniones para comité de gerencia?,otros
+"El cliente de Outlook no puede despachar mensajes, se encolan infinitamente. Llevo toda la mañana en esto y nada.",software
+"Qué más, tengo un chicharrón: El PC me saca un error rarísimo de trust relationship al digitar mi clave.",cuentas_contrasenas
+¿Alguien me explica por qué se me traba la aplicación de office al intentar procesar mucha data?,software
+"Cordial saludo, solicito revisión de lo siguiente: Dice que no pertenezco al grupo autorizado cuando trato de ver mis vacaciones.",permisos
+Urgente: Reclamando que el pago de nómina me llegó incompleto. Necesito trabajar.,otros
+"Qué más, tengo un chicharrón: El cable de parcheo lo pisaron y se partió, no tengo señal.",redes
+"Oigan, el próximo viernes que es feriado se trabaja mediodía o qué. ¿Me colaboran?",otros
+"Urgente: El replicador de puertos se dañó, conecto la laptop y no pasa nada. Necesito trabajar.",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: Le di clic a un archivo ZIP de una demanda falsa y el antivirus se volvió loco.",seguridad
+"Cordial saludo, solicito revisión de lo siguiente: No tengo cómo poner el código temporal porque mi celular viejo se dañó.",cuentas_contrasenas
+Urgente: El túnel seguro se desconecta intermitentemente durante todo el día. Necesito trabajar.,redes
+"Urgente: La red inalámbrica está invisible solo para mi máquina, los demás sí están conectados. Necesito trabajar.",redes
+Urgente: Encontré una regla oculta que copia mis correos confidenciales hacia afuera. Necesito trabajar.,seguridad
+"Cordial saludo, solicito revisión de lo siguiente: Requiero cambio de uniforme institucional por desgaste.",otros
+Urgente: El switch frontal para encender la máquina se quedó presionado y trabado. Necesito trabajar.,infraestructura
+"Hola equipo, solicito revisión de mi puesto de trabajo xq la silla no sube ni baja. Quedo a la espera.",otros
+"El wifi de la empresa no carga nada, en cambio la red pública funciona perfecto. Llevo toda la mañana en esto y nada.",redes
+Recibí un mensaje muy raro de gerencia solicitando un giro internacional inmediato. Llevo toda la mañana en esto y nada.,seguridad
+Urgente: Por favor soliciten a los de aseo que limpien la cocina que está muy sucia. Necesito trabajar.,otros
+Buen día. no puedo prender el computador porque el pulsador de poder está atascado.,infraestructura
+El computador no encuentra la SSID corporativa en la lista de redes. Llevo toda la mañana en esto y nada.,redes
+"Qué más, tengo un chicharrón: El cliente de Outlook no puede despachar mensajes, se encolan infinitamente.",software
+"Cordial saludo, solicito revisión de lo siguiente: Anexo cuenta de cobro del evento corporativo para que desembolsen.",otros
+¿Alguien me explica por qué la multifuncional está dañando los documentos físicos con manchas oscuras a lo largo?,infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: Dejo mi retroalimentación sobre el servicio del casino de alimentación.",otros
+¿Alguien me explica por qué requiero cambio de uniforme institucional por desgaste?,otros
+¿Alguien me explica por qué colapso total del sistema operativo por falla de video al conectar periféricos?,infraestructura
+"Qué más, tengo un chicharrón: Solicito revisión de mi puesto de trabajo xq la silla no sube ni baja.",otros
+"Urgente: El portal no reconoce mi cuenta, la estoy metiendo igual que en mi casa. Necesito trabajar.",cuentas_contrasenas
+El agente de seguridad local traba el computador porque consume toda la memoria. Llevo toda la mañana en esto y nada.,software
+"Chicos, el enlace del documento me manda a una pantalla pidiendo autorizacion. Me avisan.",permisos
+"¿Alguien me explica por qué mi módulo de aprobaciones está bloqueado, no puedo autorizar nada?",permisos
+Urgente: Le di clic a un archivo ZIP de una demanda falsa y el antivirus se volvió loco. Necesito trabajar.,seguridad
+"Qué más, tengo un chicharrón: El docking station ya no me reconoce los periféricos ni carga el portátil.",infraestructura
+La torre hace un ruido mecánico insoportable de aspas golpeando algo. Llevo toda la mañana en esto y nada.,infraestructura
+Urgente: Excedí los intentos fallidos y ahora estoy bloqueado del todo. Necesito trabajar.,cuentas_contrasenas
+Ayuda: queja directa xq el sistema de ventilación nos está enfermando.,otros
+El switch de comunicaciones local está sonando como un grillo y no da línea. Llevo toda la mañana en esto y nada.,redes
+¿Alguien me explica por qué excedí los intentos fallidos y ahora estoy bloqueado del todo?,cuentas_contrasenas
+La pantalla principal parpadea muy rapido y empezo a oler a plastico quemado. ¿Me colaboran?,infraestructura
+Buen día. la lógica del sistema liquidador falló con las fechas de febrero.,software
+Urgente: Tengo ping al server pero me restringen la entrada por políticas de VPN. Necesito trabajar.,permisos
+Urgente: Requiero cambio de uniforme institucional por desgaste. Necesito trabajar.,otros
+"Cordial saludo, solicito revisión de lo siguiente: El programa interno arrastra un bug de calendario que daña las fechas de pago.",software
+"señores, consultando sobre los planes complementarios de salud vigentes.",otros
+Cientos de documentos de la unidad de red están desapareciendo de la nada. Llevo toda la mañana en esto y nada.,seguridad
+"Cordial saludo, solicito revisión de lo siguiente: La aplicación no logra capturar la señal de micrófono aunque el PC sí lo reconoce.",software
+"Urgente: Expiró mi clave, intento renovarla y me arroja error tras error. Necesito trabajar.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: Expiró mi clave, intento renovarla y me arroja error tras error.",cuentas_contrasenas
+"Buen día. alguien está controlando mi computador remotamente, veo cómo abren ventanas.",seguridad
+"qué más, tengo un chicharrón: tengo una duda con el cálculo de mi prima de servicios en este corte.",otros
+Me sale un mensaje de conflicto de IP en la red local y me desconecta. Llevo toda la mañana en esto y nada.,redes
+"oigan, el pc está al 100% de cpu y los ventiladores a tope todo el tiempo, está saturado.",seguridad
+Buen día. por favor confírmenme mi saldo de vacaciones a la fecha.,otros
+Me quedé esperando el mensaje de texto con el código de doble factor y nunca llega. ¿Me colaboran?,cuentas_contrasenas
+Urgente: La imagen tiembla y sale humo del borde inferior de la pantalla. Necesito trabajar.,infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: Tengo un bucle de actualizaciones del sistema operativo que no me deja usar el equipo.",software
+Buen día. intento entrar al directorio y dice que mi autenticación no es válida para ese objeto.,permisos
+¿Alguien me explica por qué alguien o algo está eliminando en ráfaga toda la información del disco compartido?,seguridad
+Se va la luz un segundo y mi equipo se apaga porque la UPS no retiene la carga. ¿Me colaboran?,infraestructura
+"que mas, tengo un chicharron: se me interrumpe la conexion al cliente de cisco cada cierto tiempo sin falta.",redes
+"Qué más, tengo un chicharrón: Me estoy muriendo de calor, el aire de este piso parece q no funciona.",otros
+"Cordial saludo, solicito revisión de lo siguiente: No puedo compartir escritorio interactivo, me dice que no tengo la autorización.",permisos
+Imagínense que deseo consultar cuántos días compensatorios tengo acumulados.,otros
+"Cordial saludo, solicito revisión de lo siguiente: Quiero usar el tethering del teléfono y la configuración no me deja activarlo.",redes
+A quien corresponda: mi cuenta está mandando correos masivos de supuestas promociones a todo el mundo. Agradezco la gestión.,seguridad
+"qué más, tengo un chicharrón: la aplicación de mensajería no me actualiza los mensajes nuevos de hoy.",software
+"Cordial saludo, solicito revisión de lo siguiente: Caída masiva de conectividad en la sucursal norte, estamos incomunicados.",redes
+"Qué más, tengo un chicharrón: No tengo el carnet de acceso, requiero que me habiliten la entrada por favor.",otros
+El cursor del mouse se está moviendo solo en mi pantalla sin q yo toque nada. ¿Me colaboran?,seguridad
+"qué más, tengo un chicharrón: el reporte no me deja exportar a excel, me sale aviso de restricción.",permisos
+"Cordial saludo, solicito revisión de lo siguiente: Ya no soy admin de mi máquina, me retiraron de los grupos de seguridad.",permisos
+"Qué más, tengo un chicharrón: Por favor agéndenme el auditorio principal para una reunión de 3 horas.",otros
+¿Alguien me explica por qué pongo mis datos en la ruta compartida y me lanza error de revocación de usuario?,permisos
+"El portal cautivo del hotel no me carga, entonces no puedo navegar. Llevo toda la mañana en esto y nada.",redes
+¿Alguien me explica por qué falla grave al abrir el aplicativo técnico por librerías corruptas del sistema?,software
+"Cordial saludo, solicito revisión de lo siguiente: El túnel seguro se desconecta intermitentemente durante todo el día.",redes
+"Que mas, tengo un chicharron: Me salto un anuncio de falso soporte tecnico que no me deja cerrar el navegador.",seguridad
+"Qué más, tengo un chicharrón: El portal cautivo del hotel no me carga, entonces no puedo navegar.",redes
+Metí una USB q me encontré y el Windows Defender empezó a bloquear todo.,seguridad
+"Buen día. no tengo el carnet de acceso, requiero que me habiliten la entrada por favor.",otros
+Urgente: Tengo navegación interna pero las URL de afuera me dicen página no encontrada. Necesito trabajar.,redes
+Ayuda: el servicio antimalware tiene la máquina inutilizable por uso extremo de cpu.,software
+"¿Alguien me explica por qué no me acepta el password local, dice que perdió conexión con el directorio activo?",cuentas_contrasenas
+"¿Alguien me explica por qué pongo mi clave perfecta, pero la app interna rechaza mi identidad?",permisos
+Buen día. el navegador web crashea cualquier página que intento abrir con un error de memoria.,software
+Urgente: No tengo cómo poner el código temporal porque mi celular viejo se dañó. Necesito trabajar.,cuentas_contrasenas
+Trato de manejar el mouse del compañero en zoom y el sistema de seguridad lo bloquea. Llevo toda la mañana en esto y nada.,permisos
+Solicito la emisión de mi certificado de trabajo con fecha de ingreso para un banco. Llevo toda la mañana en esto y nada.,otros
+"¿Alguien me explica por qué no puedo usar el chrome, todas las pestañas revientan por un fallo interno de la app?",software
+"Cordial saludo, solicito revisión de lo siguiente: Excedí los intentos fallidos y ahora estoy bloqueado del todo.",cuentas_contrasenas
+"Qué más, tengo un chicharrón: La diadema del call center tiene el micrófono totalmente suelto.",infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: Mi hardware de cámara muestra todo en blanco y negro, está dañado.",infraestructura
+"Buen día. me caducaron las credenciales, pongo una nueva y el sistema vuelve a pedírmela infinitamente.",cuentas_contrasenas
+"Buen día. la shell del sistema operativo dejó de funcionar, no puedo abrir el menú.",software
+"Urgente: El wifi intenta conectar, dice comprobando requisitos y vuelve a empezar. Necesito trabajar.",redes
+La webcam externa se ve con los colores invertidos y líneas verdes. ¿Me colaboran?,infraestructura
+Urgente: Alguien o algo está eliminando en ráfaga toda la información del disco compartido. Necesito trabajar.,seguridad
+Urgente: El gestor de archivos lanza error de conflictos y no sube mis versiones locales. Necesito trabajar.,software
+"Cordial saludo, solicito revisión de lo siguiente: La ups del escritorio no sirve, pita en falso y no sostiene la energía.",infraestructura
+"Qué más, tengo un chicharrón: Quiero confirmar si el lunes festivo hay operación normal o descansamos.",otros
+"Urgente: El ethernet está puesto pero no me da salida a la web, sale un triangulito. Necesito trabajar.",redes
+Se me bloqueo el perfil xq intente entrar varias veces con las mayusculas puestas. ¿Me colaboran?,cuentas_contrasenas
+"¿Alguien me explica por qué tengo mucha lentitud en la ssid corporativa, pero la abierta está rápida?",redes
+Urgente: Intento entrar a las noticias de la empresa y la web me dice que no tengo derechos. Necesito trabajar.,permisos
+"Cordial saludo, solicito revisión de lo siguiente: Pongo mis datos en la ruta compartida y me lanza error de revocación de usuario.",permisos
+"Urgente: No puedo compartir escritorio interactivo, me dice que no tengo la autorización. Necesito trabajar.",permisos
+"Mi app de autenticación se borró al cambiar de móvil, necesito resetear el MFA. Llevo toda la mañana en esto y nada.",cuentas_contrasenas
+¿Alguien me explica por qué tengo navegación interna pero las url de afuera me dicen página no encontrada?,redes
+¿Alguien me explica por qué pongo mi id en la ventanita y arroja que carezco de cuenta en el sistema?,cuentas_contrasenas
+La carcasa de la laptop se deformó abajo y levantó el mousepad. ¿Me colaboran?,infraestructura
+"Imagínense que el portal no reconoce mi cuenta, la estoy metiendo igual que en mi casa.",cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: El portal me deniega la contraseña nueva por políticas de seguridad que no entiendo.",cuentas_contrasenas
+Urgente: El firewall perimetral me impide salir por el puerto 21 para transferir datos. Necesito trabajar.,redes
+Buen día. me sale un mensaje de conflicto de ip en la red local y me desconecta.,redes
+Buen día. solicito revisión de mi puesto de trabajo porque la silla no sube ni baja.,otros
+Trato de usar la función avanzada del programa y me pide escalar derechos. ¿Me colaboran?,permisos
+Urgente: Me restringieron las credenciales automáticamente al detectar IP del extranjero. Necesito trabajar.,cuentas_contrasenas
+Urgente: Trato de túnel a la oficina y me deniegan la autorización por credenciales. Necesito trabajar.,cuentas_contrasenas
+"Urgente: Tengo problemas de sobrecalentamiento térmico, el PC se apaga por protección. Necesito trabajar.",infraestructura
+Urgente: Por favor me generan la constancia laboral dirigida a la embajada. Necesito trabajar.,otros
+¿Alguien me explica por qué el ping está por las nubes y las reuniones por video se me congelan cada nada?,redes
+"Qué más, tengo un chicharrón: La política de red del móvil impide usar los datos como hotspot para la laptop.",redes
+"Cordial saludo, solicito revisión de lo siguiente: Intento entrar a las noticias de la empresa y la web me dice que no tengo derechos.",permisos
+Buen día. la aplicación de mensajería no me actualiza los mensajes nuevos de hoy.,software
+"hola equipo, me salto un anuncio de falso soporte tecnico que no me deja cerrar el navegador. auxilio.",seguridad
+"Qué más, tengo un chicharrón: Llevaba 20 días fuera y ahora no tengo idea de cuál era mi contraseña.",cuentas_contrasenas
+"Por favor ayuda, las teclas marcan varias cosas al tiempo, creo que hizo corto por un líquido. Es para ya.",infraestructura
+¿Alguien me explica por qué fui redirigido a una página falsa del banco al intentar hacer la transferencia?,seguridad
+Urgente: Tengo un pop-up gigante diciendo que mi PC tiene virus y debo pagar. Necesito trabajar.,seguridad
+"Que mas, tengo un chicharron: El sistema intenta aplicar parches, dice error, revierte y reinicia de nuevo.",software
+Buen día. el pc me saca un error rarísimo de trust relationship al digitar mi clave.,cuentas_contrasenas
+"Cordial saludo, solicito revisión de lo siguiente: Tengo permisos de vista pero el sistema me impide bajar el archivo.",permisos
+"Por favor ayuda, en las reuniones no me deja tomar el control de la pantalla por políticas de la org. Mil gracias.",permisos
+Urgente: El cliente SQL me arroja error de derechos insuficientes al lanzar la vista. Necesito trabajar.,permisos
+"Cordial saludo, solicito revisión de lo siguiente: El computador está extremadamente lento e inmanejable, parece secuestrado por procesos raros.",seguridad
+"¿Alguien me explica por qué el computador está abombado por debajo, parece que la batería va a explotar?",infraestructura
+"Buen día. la base de datos me deniega la conexión, dice que requiero rol de solo lectura.",permisos
+"Urgente: La ups del escritorio no sirve, pita en falso y no sostiene la energía. Necesito trabajar.",infraestructura
+"qué más, tengo un chicharrón: deseo inscribir a mi cónyuge en la medicina prepagada de la compañía.",otros
+Urgente: La roseta de mi cubículo está dañada físicamente y no hay ethernet. Necesito trabajar.,redes
+¿Alguien me explica por qué tengo un pop-up gigante diciendo que mi pc tiene virus y debo pagar?,seguridad
+Urgente: Mi cuenta está mandando correos masivos de supuestas promociones a todo el mundo. Necesito trabajar.,seguridad
+¿Alguien me explica por qué la imagen tiembla y sale humo del borde inferior de la pantalla?,infraestructura
+"Cordial saludo, solicito revisión de lo siguiente: El explorador de Windows me tira un letrero de que no tengo permisos para esa ruta.",permisos
+"Buen día. la red privada me rechaza la entrada, el firewall dice acceso denegado.",cuentas_contrasenas
+"Urgente: El computador está extremadamente lento e inmanejable, parece secuestrado por procesos raros. Necesito trabajar.",seguridad
+soporte: la batería del equipo se infló tanto que no puedo hacer clic en el trackpad.,infraestructura
+Urgente: Consultando sobre los planes complementarios de salud vigentes. Necesito trabajar.,otros
+"Qué más, tengo un chicharrón: Estoy por conexión alámbrica y me dice sin acceso a internet.",redes
+Urgente: los archivos de la carpeta compartida se están borrando masivamente frente a mis ojos. Estoy frenado.,seguridad
+Estoy por conexión alámbrica y me dice sin acceso a internet. Llevo toda la mañana en esto y nada.,redes
+El docking station ya no me reconoce los periféricos ni carga el portátil. Llevo toda la mañana en esto y nada.,infraestructura
+"Que mas, tengo un chicharron: El portatil escribe letras equivocadas xq se mojo el teclado ayer.",infraestructura
+¿Alguien me explica por qué el ceo me está mandando un mail pidiendo que consiga unas gift cards ya mismo?,seguridad
+Urgente: Mis documentos cambiaron de formato solos y me sale un aviso de secuestro de datos. Necesito trabajar.,seguridad
+Buen día. parece que una auditoría me quitó los derechos administrativos de mi propio equipo.,permisos
+Urgente: Dice que no pertenezco al grupo autorizado cuando trato de ver mis vacaciones. Necesito trabajar.,permisos
+"Cordial saludo, solicito revisión de lo siguiente: El sistema me avisa de un login sospechoso desde un país extraño.",seguridad
+"Cordial saludo, solicito revisión de lo siguiente: El wifi intenta conectar, dice comprobando requisitos y vuelve a empezar.",redes
+El SMS de verificación para entrar no me aterriza en el celular. Llevo toda la mañana en esto y nada.,cuentas_contrasenas
+¿Alguien me explica por qué la aplicación de correo local tiene el proceso de envío totalmente trabado?,software
+La red perimetral bloquea mi salida a internet por comportamiento sospechoso. Llevo toda la mañana en esto y nada.,seguridad
+Entra en un bucle infinito en la BIOS y nunca arranca el disco. Llevo toda la mañana en esto y nada.,infraestructura
+Parece que una auditoría me quitó los derechos administrativos de mi propio equipo. Llevo toda la mañana en esto y nada.,permisos
+"Buen día. el piso entero está totalmente caído, nadie tiene acceso a los aplicativos centrales.",redes
+"El aire acondicionado de mi área está a una temperatura congelante, por favor subanle. ¿Me colaboran?",otros
+"Cordial saludo, solicito revisión de lo siguiente: Consultando sobre los planes complementarios de salud vigentes.",otros
+¿Alguien me explica por qué tengo sospechas de shoulder surfing por parte de un visitante en mi área?,seguridad
+"La batería de respaldo está dañada, medio bajón de luz y se muere todo. Llevo toda la mañana en esto y nada.",infraestructura
+"Buen día. el sistema intenta aplicar parches, dice error, revierte y reinicia de nuevo.",software
+"Buen día. google chrome me lanza la pantalla de 'oh no, aw snap' en todas las pestañas. Les agradezco mucho.",software
+Trato de aplicar el parche oficial y la ventana de elevación de privilegios se cierra sola. Llevo toda la mañana en esto y nada.,software
+Intenté entrar desde el hotel en otra ciudad y la cuenta se inhabilitó por seguridad. Llevo toda la mañana en esto y nada.,cuentas_contrasenas
+"Oigan, el cooler del procesador suena como un tractor al prender la máquina. Ayuda porfa.",infraestructura
+"que mas, tengo un chicharron: la red privada me niega el paso hacia el ambiente de desarrollo.",permisos
+Buen día. el docking station ya no me reconoce los periféricos ni carga el portátil.,infraestructura
+Urgente: Quiero usar el tethering del teléfono y la configuración no me deja activarlo. Necesito trabajar.,redes
+"Buen día. el portal financiero está clonado, la página pide datos que normalmente no pide.",seguridad
+El portal corporativo me rebota la carga de la página diciendo acceso prohibido. Llevo toda la mañana en esto y nada.,permisos
+"Cordial saludo, solicito revisión de lo siguiente: Otro computador agarró la misma dirección IP que yo y nos estamos tumbando.",redes
+"Urgente: No puedo usar el Chrome, todas las pestañas revientan por un fallo interno de la app. Necesito trabajar.",software
+Urgente: Colapso total del sistema operativo por falla de video al conectar periféricos. Necesito trabajar.,infraestructura
+"Urgente: Ya no soy admin de mi máquina, me retiraron de los grupos de seguridad. Necesito trabajar.",permisos
+"Cordial saludo, solicito revisión de lo siguiente: Me robaron la maleta con el PC de la empresa, bloqueen todo ya mismo.",seguridad
+"Necesito un favor, ayer podía instalar cosas y hoy el ad me sacó del grupo de administradores locales. Urgente.",permisos
+¿Alguien me explica por qué mi cuenta está mandando correos masivos de supuestas promociones a todo el mundo?,seguridad
+ups pitando,infraestructura
+carpeta gris,permisos
+Mi cuenta corporativa expira cada vez que intento autenticarme desde una ubicación externa.,cuentas_contrasenas
+El túnel IPSec hacia la sucursal de Medellín levanta pero no enruta tráfico de la subred local.,redes
+cable trozado,infraestructura
+El sistema de prevención de intrusos cortó mi conexión alegando exfiltración masiva de datos.,seguridad
+"La impresora del piso comercial está derramando polvo negro de tóner sobre todos los documentos importantes. Intenté abrir la bandeja, limpié los rodillos con cuidado y reemplacé el cartucho por uno nuevo, pero las hojas siguen saliendo manchadas en todo el centro. Esto está arruinando facturas oficiales.",infraestructura
+Regresé de licencia médica y el sistema indica que mi cuenta fue dada de baja por inactividad.,cuentas_contrasenas
+El microondas de la cafetería del segundo piso está sacando chispas cuando intentamos calentar el almuerzo. Ya le dijimos a la señora del aseo pero nos indicó que debíamos reportarlo por este medio para que mantenimiento venga a revisarlo urgente. Es un peligro usarlo en este estado.,otros
+clonaron app,seguridad
+Recibí un SMS del banco corporativo con un enlace rarísimo pidiendo validar token urgente.,seguridad
+La macro de Excel que procesa estadísticas de jugadores bota error 1004 en tiempo de ejecución.,software
+La bisagra de mi laptop corporativa cedió y la pantalla no se sostiene por sí sola.,infraestructura
+Estoy en un proyecto confidencial y el módulo me deniega la subida de los archivos NDA.,permisos
+Hay un visitante sin gafete tomando fotos a los tableros de planeación estratégica en el pasillo.,seguridad
+Aparece una ventana flotante invisible que captura todos mis clics en la aplicación contable.,seguridad
+"El adaptador USB wifi de 4 antenas no está logrando balancear la carga entre los modems ubicados en el piso inferior y mi oficina. Ya reinstalé los drivers del fabricante, probé cambiando la orientación física de las antenas y reseteé la configuración de red, pero experimento cortes de 10 segundos continuos. Imposible trabajar así.",redes
+La conexión inalámbrica bota error de certificado expirado al autenticar con el servidor RADIUS.,redes
+"Desde la mañana de hoy mi torre HP EliteDesk 800 G4 SFF está emitiendo un pitido largo seguido de tres cortos. Intenté desconectar todos los periféricos USB 3.0 y el adaptador de 4 antenas, pero el problema persiste. Me urge revisión física ya que mi disco de 126 GB tiene datos sin respaldo y temo que sea fallo de placa base.",infraestructura
+Se rompió el puerto RJ45 de mi dock station y el cable de red queda totalmente suelto.,infraestructura
+Solicité blanqueo de credenciales hace horas y el enlace de recuperación jamás llegó a mi buzón.,cuentas_contrasenas
+El switch de red debajo de mi escritorio hace un chillido agudo y todos sus leds están fijos.,infraestructura
+La batería del portátil indica 0% conectado y si lo desconecto muere en el acto.,infraestructura
+El escáner de códigos de barras hace un pitido infinito al conectarlo a la caja registradora.,infraestructura
+"Tenemos caída total de la conexión telefónica IP en toda el área de servicio al cliente. Revisé los cables físicos que van a la pared, reinicié los aparatos desconectándolos de la corriente por varios minutos y verifiqué la roseta, pero las pantallas siguen diciendo conectando servidor. Los clientes no pueden comunicarse.",redes
+La política de seguridad rechaza mi nueva clave secreta indicando falta de caracteres especiales.,cuentas_contrasenas
+"Ninguno de los equipos portátiles del área de diseño logra autenticarse en la red inalámbrica corporativa. Intentamos olvidar la red en Windows, poner las credenciales nuevamente a mano e incluso renovar los certificados locales, pero el error de autenticación de Radius persiste. Solo la red pública de invitados funciona ahora mismo.",redes
+"No logro acceder a los recursos compartidos, el error indica ruta de red no encontrada.",redes
+El proxy corporativo me bloquea la subida de archivos al repositorio Git de la empresa.,redes
+token fallo,cuentas_contrasenas
+Alguien modificó los registros de la base de datos relacional y borró las auditorías de ayer.,seguridad
+ruta cerrada,permisos
+error de java,software
+"Quiero configurar las nuevas firmas de correo corporativas para Andrés, Camila, Santiago y Valentina.",otros
+pago nulo,otros
+Se desprendió una de las antenas del adaptador wifi USB y ahora Windows marca error de dispositivo.,infraestructura
+falla macros,software
+"Alguien está intentando ingresar a los sistemas financieros usando mi usuario. Recibí seis notificaciones seguidas de Microsoft Authenticator pidiendo aprobar un inicio de sesión que yo jamás inicié. Rechacé todas las alertas e hice cambio de mi clave secreta, pero los intentos desde una IP foránea siguen ocurriendo constantemente.",seguridad
+El proxy bloquea mi ingreso al portal de proveedores argumentando categoría de sitio prohibida.,permisos
+"El túnel de la red virtual privada de Fortinet levanta la conexión exitosamente, pero al hacer pings hacia los servidores de la intranet se pierde el 100% de los paquetes. Purgué la tabla de rutas locales de mi máquina y cambié de punto de acceso wifi para descartar mi red casera, pero sigo sin poder alcanzar ninguna herramienta interna.",redes
+El servicio de cola de impresión de Windows se detiene automáticamente tras cada reinicio.,software
+La página del portal interno de nómina me redirigió a un sitio en otro idioma que pide mis datos.,seguridad
+"El portal del sistema de tickets me permite iniciar sesión correctamente, pero el botón para escalar incidentes a nivel dos está en color gris y no hace nada. Intenté borrar la caché del navegador, ingresé en modo incógnito y le pedí a un compañero que me compartiera su perfil, pero el bloqueo persiste solo en mi cuenta. Necesito autorización.",permisos
+Estoy atascado en el factor de doble autenticación porque cambié mi número telefónico.,cuentas_contrasenas
+Alguien podría confirmarme cuántos días de vacaciones tengo acumulados al corte de hoy.,otros
+Aún no recibo el pago correspondiente al retroactivo de la quincena pasada.,otros
+El módulo de nómina en SAP bota un error de desbordamiento de memoria al intentar cargar los desprendibles.,software
+archivo raro,seguridad
+El firewall perimetral me está sacando alertas de botnet hacia un servidor en Rusia.,seguridad
+La máquina de snacks se tragó mi billete y no entregó el producto seleccionado.,otros
+"La latencia hacia el servicio de nube supera los milisegundos y las sesiones ssh se congelan cada dos por tres. Hice pruebas de tracert y veo que el cuello de botella está en el nodo de salida principal de la compañía. Contacté al proveedor de internet local y afirman que el daño es en nuestra puerta de enlace, requiero revisión del cortafuegos.",redes
+Deseo inscribir a mi cónyuge como beneficiaria en el plan de medicina prepagada.,otros
+"Al poner una memoria en el puerto frontal, el PC hace un reinicio forzado inmediato.",infraestructura
+Windows me exige derechos de administrador para ejecutar el actualizador del antivirus.,permisos
+router mudo,redes
+La bandeja de la impresora se atascó con una hoja gruesa y hace un ruido de engranaje triturado.,infraestructura
+Todos los correos de mi bandeja de salida se están enviando ocultos a una cuenta de Gmail externa.,seguridad
+usuario null,cuentas_contrasenas
+"Requiero que me habiliten privilegios de escritura en la base de datos de producción orientada a objetos urgentemente. Aprobé el curso de certificación ayer e intenté correr el script de migración, pero el motor de datos me escupió un error de denegación de política IAM. El proyecto tiene fecha límite de entrega para esta tarde.",permisos
+El CRM corporativo se congela completamente cuando intento aplicar el parche de actualización a la vista de clientes.,software
+El cliente de correo local dejó de sincronizar carpetas compartidas desde el martes.,software
+Mi teclado mecánico registra doble pulsación en la barra espaciadora casi siempre que escribo.,infraestructura
+admin local,permisos
+Mi perfil de VPN indica que estoy conectado doblemente desde dos continentes distintos.,seguridad
+El botón para autorizar vacaciones en el portal de RRHH aparece completamente inhabilitado.,permisos
+Llevo notando comportamientos extraños en mi equipo asignado: el antivirus está deshabilitado por políticas que yo no puse y la memoria está al tope. Ejecuté el escaneo manual pero la ventana se cierra sola. Temo que nos hayan inyectado un malware o ransomware. Por favor asilar esta máquina de la red.,seguridad
+La consola de AWS rechaza mi intento de reiniciar el servidor EC2 por falta de permisos IAM.,permisos
+"Mi ratón óptico dejó de detectar movimiento horizontal, solo va de arriba hacia abajo.",infraestructura
+teclado roto,infraestructura
+"Tengo un inconveniente gravísimo con Excel al abrir el archivo consolidado mensual. En cuanto habilito las macros, la aplicación se traba por completo y tira error de Visual Basic. Probé reparando el paquete de Office y guardando el archivo con otro formato, pero sigue inservible. Es un archivo de más de 300 megas y me urge procesarlo.",software
+El chasis del HP EliteDesk 800 G4 SFF está vibrando excesivamente cuando lee discos.,infraestructura
+"Adobe Premiere crashea brutalmente al llegar al 95% del renderizado de video institucional. Ya actualicé los controladores gráficos, asigné máxima prioridad al proceso en el administrador de tareas y vacié los archivos temporales de Windows. El error persiste y la campaña sale mañana, estoy al borde del colapso con este software.",software
+"Durante la revisión de los logs del aplicativo de ventas, detecté una alteración directa en las tablas de la base de datos relacional. Varios registros de auditoría fueron eliminados en horas de la madrugada y hay un desfase en los inventarios. Escalo esto como un incidente crítico de manipulación de datos por usuarios internos.",seguridad
+La base de datos bloquea mi consulta SELECT con un mensaje de insuficiencia de privilegios.,permisos
+Adobe Reader muestra todos los documentos PDF como páginas en blanco sin contenido.,software
+monitor negro,infraestructura
+Notificación de inicio de sesión exitoso en mi cuenta desde una dirección IP de Tailandia.,seguridad
+El sistema de facturación electrónica duplicó todos los folios emitidos durante la mañana.,software
+"Fui notificado de un blanqueo de mis credenciales por parte de auditoría interna, pero jamás recibí el correo con el enlace temporal para generar mi clave nueva. He revisado mi bandeja de spam, carpetas de otros y le pedí a un colega que buscara en su buzón por si hubo error en el destinatario, y no hay nada. Necesito que me dicten un pin provisional.",cuentas_contrasenas
+Descargué un supuesto reporte de ventas de un cliente y el antivirus alertó troyano heurístico.,seguridad
+Mis archivos de mis documentos de repente tienen una extensión .lock y un texto de rescate.,seguridad
+"El cliente de correo local se quedó sincronizando carpetas y no avanza del 2%. Ya reconstruí el índice de búsqueda, eliminé mi perfil de Outlook y lo volví a configurar desde cero bajando todo el buzón de nuevo. A pesar de todo esto, los correos de hoy siguen atascados en la bandeja de salida y no entra nada nuevo.",software
+"Al intentar cambiar mi palabra de paso, el portal arroja error de validación de identidad.",cuentas_contrasenas
+El directorio activo perdió relación de confianza con mi máquina y rechaza mis datos locales.,cuentas_contrasenas
+Chrome bota error 'Aw Snap' exclusivamente cuando abro la intranet de recursos humanos.,software
+"El inicio de sesión único SSO entra en un bucle infinito que no me deja pasar. Pongo mi dirección de correo, luego el pin de ingreso y la pantalla parpadea en blanco para devolverme al inicio a pedir todo otra vez. Limpié historiales, cambié de equipo portátil temporalmente y el comportamiento es el mismo. Imposible entrar a trabajar hoy.",cuentas_contrasenas
+"Solicito información detallada de cuántos días compensatorios tengo acumulados a la fecha, recursos humanos me dijo que preguntara por acá.",otros
+sap frito,software
+"Por favor necesito asesoría sobre cómo puedo programar una respuesta automática en el correo de servicio al cliente. Quiero que mis respuestas incluyan las firmas de los asesores de turno: Carlos, Andrea, Diego y Sofía. Revisé los menús de configuración general y de reglas de Outlook pero el sistema me rebota los logos.",otros
+acceso negado,permisos
+El editor de video arroja error de renderizado en el fotograma 300 y aborta el proceso.,software
+cable suelto,redes
+"Tengo credencial válida, pero la carpeta compartida de finanzas bota 'acceso denegado por políticas'.",permisos
+El token de Microsoft Authenticator marca códigos inválidos al tratar de iniciar sesión.,cuentas_contrasenas
+Reporto un pendrive abandonado en la cafetería que alguien conectó a una máquina de producción.,seguridad
+"Un proveedor me envió un documento adjunto que parecía una factura en formato PDF, pero al darle doble clic abrió una ventana negra de comandos y el equipo se paralizó. Forcé el apagado manual del PC y desconecté el cable de red por precaución. No he vuelto a encender la máquina hasta que ustedes me indiquen qué debo hacer.",seguridad
+"El módulo de liquidación de nómina está calculando erróneamente los recargos nocturnos de esta quincena. Hice una prueba en el ambiente de calidad modificando las variables, borré las cookies de mi navegador e intenté desde otro PC, y el cálculo sigue arrojando valores negativos. El estado es crítico porque hoy debemos pagar.",software
+"No me dejan entrar al repositorio principal de código fuente de la empresa. Pongo mi llave privada correcta en Git, pero el servidor me devuelve un error fatal indicando que carezco de permisos de escritura para la rama maestra. Reinicié mis credenciales locales y verifiqué mis tokens, todo bien de mi lado, debe ser un tema de roles.",permisos
+SharePoint exige autorización del propietario al intentar visualizar el reporte anual.,permisos
+"No he visto reflejado el pago del retroactivo salarial en mi cuenta bancaria durante la quincena. Ingresé al portal para descargar los volantes de pago, los revisé detalladamente haciendo la suma manual y efectivamente el rubro adicional no aparece liquidado en mis comprobantes. Requiero que me pongan en contacto con la persona de nómina.",otros
+duda festivo,otros
+"Mi pantalla principal empezó a parpadear incontrolablemente y tiene un tinte amarillo asqueroso. Ajusté las conexiones del cable DisplayPort, reinicié el equipo e instalé los drivers de video otra vez, pero nada ha funcionado. Me duele la cabeza de trabajar así y necesito que me traigan un monitor de reemplazo ya mismo.",infraestructura
+Puedo hacer ping al DNS de Google pero ninguna página carga en los navegadores.,redes
+"Al conectar la diadema USB, el equipo arroja un mensaje de sobretensión en el puerto 3.0.",infraestructura
+erp caido,software
+El monitor secundario muestra un tinte verde permanente en la mitad izquierda del panel.,infraestructura
+"Creo que mi perfil fue inhabilitado administrativamente por error desde recursos humanos. Trato de entrar al ERP y el aviso dice usuario suspendido permanentemente. Consulté con mi jefe directo, él revisó mi estado de contrato y todo está en orden, intentamos un reseteo de clave por si era bloqueo por intentos pero el perfil sigue desactivado.",cuentas_contrasenas
+Hay altísima latencia y pérdida de paquetes al conectar con el servidor de bases de datos jerárquicas.,redes
+La consulta en la base de datos orientada a objetos genera un timeout de 60 segundos.,software
+Pongo mi número de empleado en el portal de beneficios y dice que mi usuario no existe.,cuentas_contrasenas
+El sistema de inicio de sesión único SSO entra en bucle infinito tras poner mi usuario.,cuentas_contrasenas
+El complemento de firmas corporativas de nuestra herramienta de Outlook está arrojando una excepción de tiempo de espera.,software
+La plataforma de contabilidad local indica falta de archivo .dll en el módulo de facturación electrónica.,software
+El proyector de la sala de juntas proyecta la imagen invertida y el control remoto no responde.,infraestructura
+El motor de planillas se traba calculando los descuentos del salto de año bisiesto.,software
+PowerBI me permite ver el dashboard pero la funcionalidad de exportar a CSV está bloqueada.,permisos
+lag inmenso,redes
+hackearon web,seguridad
+Dejé mi carnet magnético en casa y el guardia requiere confirmación para dejarme pasar.,otros
+La plataforma de aprobaciones rechaza mis credenciales a pesar de que el ERP sí me deja entrar.,cuentas_contrasenas
+mfa no llega,cuentas_contrasenas
+clave vencida,cuentas_contrasenas
+Por favor emitir constancia laboral dirigida a la embajada para mi trámite de visa.,otros
+Siento estática y un leve choque eléctrico al tocar la carcasa de la torre metálica.,infraestructura
+pase de puerta,otros
+"Descubrí que todos los correos entrantes de mi bandeja principal están siendo reenviados en secreto a un dominio externo de Hotmail mediante una regla oculta. Intenté borrar la regla desde el cliente de Outlook, pero vuelve a aparecer a los pocos minutos. Solicito intervención forense para ver qué información se filtró.",seguridad
+El ventilador de la tarjeta gráfica suena como una turbina de avión desde que arranca el equipo.,infraestructura
+El cable de red fue mordido por un roedor y genera intermitencias extremas en la conexión.,redes
+"Estimados, fui trasladado de la gerencia comercial a finanzas desde el primero de mes. Sin embargo, mi usuario sigue viendo únicamente las carpetas del área antigua y el sistema me bloquea los reportes contables nuevos indicando falta de rol. Ya abrí tres tickets previos pidiendo la homologación de derechos y sigo estancado.",permisos
+El lector de huellas dactilares está hirviendo al tacto y el sistema no lo reconoce.,infraestructura
+La aplicación de control de versiones me rechaza los push a la rama principal del repositorio.,permisos
+"El acceso a la intranet para ver mis desprendibles de pago me arroja un error 403 Forbidden. He revisado mi conectividad, intenté usar Microsoft Edge en lugar de Chrome e incluso me conecté por cable directo para descartar problemas de proxy. Parece que mi perfil perdió las membresías del grupo de recursos humanos por algún motivo.",permisos
+cero derechos,permisos
+"Mi aplicación de autenticación en dos pasos se desconfiguró al cambiar de celular ayer en la noche. Hoy intento ingresar al portal de la compañía, pongo mi pin correctamente, pero no tengo forma de obtener el número dinámico de seis dígitos porque el código QR viejo ya no sirve. Requiero que me reseteen el método de MFA para volver a enlazarlo.",cuentas_contrasenas
+Mi rol actual en el sistema de tickets no me permite asignar tareas a otros agentes.,permisos
+El portal cautivo de la red de invitados hace un bucle de redirección infinito.,redes
+phishing grave,seguridad
+El teléfono IP de mi escritorio no da tono de marcado y la pantalla dice 'Registering...'.,redes
+"El aire acondicionado central ubicado exactamente sobre el escritorio 45 está goteando agua directamente sobre mi equipo de cómputo y regletas eléctricas. Tuvimos que mover todos los muebles de emergencia, apagué la torre y cubrimos los monitores con plásticos. Necesitamos mantenimiento preventivo de infraestructura física lo antes posible.",otros
+La velocidad de descarga está limitada a 10 Kbps en todo el edificio principal.,redes
+El adaptador de 4 antenas no logra estabilidad entre los modems del piso 1 y piso 2.,redes
+Requiero la reserva del auditorio principal para la capacitación de inducción de mañana.,otros
+Noté que la cámara web tiene el led verde encendido permanente aunque no estoy en reunión.,seguridad
+Mi PC reporta conflicto de dirección IP con una impresora recién instalada en el pasillo.,redes
+falta papel,otros
+ping alto,redes
+Mi aplicativo de reportería en Tableau da resultados negativos ilógicos al cruzar las fechas de los trimestres.,software
+calor fatal,otros
+Unidad M.2 de 126 GB se llenó al 100% y el sistema operativo colapsó por completo.,infraestructura
+Todos los equipos del área comercial quedaron con IP APIPA 169.254 tras un bajón eléctrico.,redes
+pin invalido,cuentas_contrasenas
+red caida,redes
+"El sistema me obligó a cambiar mi clave por caducidad tras 90 días, ingresé una nueva cumpliendo longitud y símbolos, y la aceptó. Pero al intentar loguearme inmediatamente después, me dice que las credenciales son inválidas. Traté de restaurarla nuevamente pero ahora dice que debo esperar 24 horas. Estoy completamente frenado, ayuda.",cuentas_contrasenas
+"El disco duro mecánico que usamos para respaldos está haciendo un ruido tremendo como de piezas chocando, un clac-clac continuo. He reiniciado la máquina dos veces y corrí el diagnóstico de Windows, pero aborta al minuto. El estado actual es que la unidad D: desapareció por completo del explorador de archivos.",infraestructura
+puerto dañado,infraestructura
+app colgada,software
+El aire acondicionado del tercer piso está en 16 grados y nos estamos congelando.,otros
+Excedí los intentos fallidos al digitar mal el pin y el sistema me deshabilitó el perfil.,cuentas_contrasenas
+"Estamos implementando un modelo de datos nuevo y el aplicativo de prueba genera un desbordamiento de memoria cuando combina las consultas de PowerBI con la base de Oracle. Intenté limpiar la caché local y reinstalar los conectores ODBC, pero el error de ejecución se repite siempre en el mismo punto. Requiero apoyo de infraestructura.",software
+"Estoy solicitando el favor de que me emitan una constancia laboral detallada dirigida a la embajada para tramitar mi visa de turismo. Intenté generarla desde la plataforma de autogestión de empleados, pero el PDF que descarga solo tiene información básica sin los montos salariales ni el logotipo actualizado. Agradezco me envíen el documento oficial.",otros
+Apareció un proceso llamado update_sys.exe consumiendo 99% de la CPU y RAM del servidor en segundo plano.,seguridad
+Intento visualizar la nómina de mi equipo directo y el sistema dice 'fuera de jerarquía'.,permisos
+spam masivo,seguridad
+Hay un píxel muerto gigante de color rojo brillante justo en el centro de mi pantalla principal.,infraestructura
+Hay una fuga de agua en el baño de hombres del segundo piso cerca a los servidores.,otros
+"Ayer hubo un corte de energía en el edificio y ahora la estación de acoplamiento no da señales de vida. He probado conectando el equipo directamente a la corriente, probé otro enchufe de pared y cambié el cable HDMI, pero los monitores no reciben señal. Necesito un reemplazo urgente para continuar mi trabajo.",infraestructura
+"Al intentar exportar la sábana de clientes desde Dynamics 365, el archivo se genera corrupto y sin formato de columnas.",software
+La herramienta de mesa de ayuda Jira Service Desk bota error de servidor 500 cuando trato de adjuntar capturas de pantalla.,software
+"q pereza, Trello no está refrescando los tableros Kanban de mi equipo; sigo viendo las tarjetas que se movieron ayer.",software
+Mi cliente de Slack de escritorio consume demasiada memoria RAM y ralentiza todo el sistema operativo hasta dejarlo inmanejable.,software
+"Cuando trato de firmar un documento digitalmente en DocuSign, la ventanita se queda cargando de manera indefinida.",software
+El ping hacia la pasarela de pagos está superando los 400ms y las transacciones de los usuarios rebotan por timeout.,redes
+Mi pc corporativo no logra obtener una dirección IP del servidor DHCP cuando me conecto en la sala de juntas del tercer piso.,redes
+"La red pública del edificio bloquea la descarga de mis diseños desde WeTransfer, marcándolos como tráfico peligroso.",redes
+"Desde que actualizaron el firmware del router central, mi túnel VPN a la nube de AWS se corta cada quince minutos exactos.",redes
+"El puerto Ethernet de la pared parece muerto, el LED del switch no hace contacto al meterle el cable.",redes
+El sistema de inventarios SAP MM me arroja un mensaje de restricción de lectura al consultar los materiales de la bodega norte.,permisos
+"Al tratar de modificar políticas en Active Directory, la consola me indica que mi perfil carece de privilegios de delegación.",permisos
+"Necesito subir la nueva versión a producción urgente, pero el pipeline de Jenkins me deniega la ejecución del script principal.",permisos
+El portal bota aviso de carpeta restringida por el propietario cuando intento descargar el reporte trimestral de gastos.,permisos
+"La pantalla táctil de la sala de reuniones de gerencia está totalmente descalibrada, los toques se registran centímetros más abajo.",infraestructura
+El ventilador del proyector de techo hace un ruido tremendo como una matraca y el equipo plástico se recalienta muchísimo.,infraestructura
+Uno de los discos del arreglo RAID del servidor de archivos local muestra un led rojo fijo indicando falla de hardware grave.,infraestructura
+La batería original de mi portátil corporativo se descarga del 100% al cero en menos de media hora de uso.,infraestructura
+"La plataforma de capacitaciones me exige cambiar la credencial inicial, pero el campo de confirmación siempre marca error de reglas.",cuentas_contrasenas
+"Mi usuario del sistema hospitalario fue desactivado automáticamente tras mis vacaciones, requiero reactivación inmediata para atender pacientes.",cuentas_contrasenas
+El portal de autoservicio de identidades de Microsoft no envía el código numérico de recuperación a mi celular registrado.,cuentas_contrasenas
+El sistema de detección de intrusos reporta múltiples intentos de conexión SSH fallidos desde una IP externa hacia mi máquina.,seguridad
+"Un correo masivo llegó a toda el área ofreciendo un bono falso de supermercado, y varios compañeros hicieron clic en el enlace.",seguridad
+"El antivirus corporativo movió a la cuarentena un ejecutable legítimo de desarrollo interno, deteniendo nuestra compilación diaria.",seguridad
+Necesitamos coordinar con el proveedor un mantenimiento preventivo de las cámaras de seguridad del pasillo principal para este fin de semana.,otros
+Por favor generar un reporte consolidado de horas extra trabajadas durante el mes pasado para el equipo de analistas nivel 1.,otros

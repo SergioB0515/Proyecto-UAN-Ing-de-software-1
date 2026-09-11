@@ -5,7 +5,7 @@ from sqlalchemy import select,or_,and_
 from app.extensions import db
 from app.services.tickets import ServicioTickets, TRANSICIONES_VALIDAS
 from app.services.solicitud_transferencia import ServicioSolicitudesTransferencia
-from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, ComentarioVacioError, TicketNoEncontradoError, TicketNoEnProgresoError, ErrorPersistencia
+from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, ComentarioVacioError, TicketNoEncontradoError, TicketNoEnProgresoError, ErrorPersistencia, ClasificacionYaConfirmadaError
 from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.comentario import Comentario 
@@ -404,4 +404,36 @@ def exportar_tickets():
             mimetype="text/csv",
             headers={"Content-Disposition": "attachment; filename=tickets.csv"}
         )
+        
 
+@tickets_bp.route("/tickets/revision-clasificacion", methods=["GET"])
+@requiere_admin
+def revision_clasificacion():
+    pendientes = ServicioTickets.listar_pendientes_revision_clasificacion()
+    return render_template("revision_clasificacion.html", pendientes=pendientes)
+
+
+@tickets_bp.route("/tickets/<int:ticket_id>/confirmar-clasificacion", methods=["POST"])
+@requiere_admin
+def confirmar_clasificacion(ticket_id):
+    actor_id = session["usuario_id"]
+
+    if request.form.get("origen") == "detalle":
+        destino = url_for("tickets.detalle", ticket_id=ticket_id)
+    else:
+        destino = url_for("tickets.revision_clasificacion")
+
+    categoria_raw = request.form.get("categoria")
+    try:
+        categoria_nueva = Categoria(categoria_raw)
+    except ValueError:
+        flash(_("Categoría inválida"), "danger")
+        return redirect(destino)
+
+    try:
+        ServicioTickets.confirmar_clasificacion(ticket_id, categoria_nueva, actor_id)
+        flash(_("Categoría del ticket confirmada"), "success")
+    except (TicketNoEncontradoError, ClasificacionYaConfirmadaError, ErrorPersistencia) as e:
+        flash(str(e), "danger")
+
+    return redirect(destino)
