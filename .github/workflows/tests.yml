@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: test-secret-key-for-ci-only
 
     steps:
       - name: Descargar el código del repositorio
