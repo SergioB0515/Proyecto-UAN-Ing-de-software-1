@@ -30,7 +30,7 @@ from app.services.autenticacion import ServicioAutenticacion
 from app.services.tickets import ServicioTickets, ORDEN_PRIORIDAD
 from app.services.exceptions import (
     TransicionInvalidaError, AgenteYaAsignadoError,
-    TicketNoEncontradoError, TicketNoEnProgresoError, ComentarioVacioError,
+    TicketNoEncontradoError, TicketNoEnProgresoError, ComentarioVacioError,ClasificacionYaConfirmadaError
 )
 from app.models.usuario import Usuario
 from app.models.enum import RolUsuario, NivelUsuario, Categoria, Prioridad, EstadoTicket
@@ -411,3 +411,147 @@ def test_agregar_comentario_texto_vacio():
             autor_id=usuario_normal.id,
             texto="   ",
         )
+"""
+Pruebas de ServicioTickets.confirmar_clasificacion y
+listar_pendientes_revision_clasificacion (agregar al final de test_tickets.py)
+
+Que verifica:
+1. confirmar_clasificacion: caso valido -- cambia la categoria y apaga
+   clasificacion_baja_confianza.
+2. confirmar_clasificacion: ticket inexistente -> TicketNoEncontradoError.
+3. confirmar_clasificacion: ticket que NO esta en baja confianza (ya
+   confirmado o nunca lo estuvo) -> ClasificacionYaConfirmadaError.
+4. listar_pendientes_revision_clasificacion: solo trae los que tienen
+   clasificacion_baja_confianza=True, ordenados por fecha_creacion
+   (mas viejo primero).
+5. listar_pendientes_revision_clasificacion: vacio si no hay ninguno
+   pendiente.
+
+Nota: crear_ticket() en el entorno de tests usa el clasificador simple
+(CLASIFICADOR_ML_ACTIVO=False por defecto), que nunca marca
+clasificacion_baja_confianza=True -- por eso estas pruebas fuerzan el
+campo directo por SQLAlchemy despues de crear el ticket, mismo patron ya
+usado en las pruebas de SLA (forzar fecha_limite) y de condiciones de
+carrera (forzar estado directo).
+"""
+
+
+
+EMAIL_CLASIF_ADMIN = "prueba_clasif_admin@empresa.com"
+EMAIL_CLASIF_NORMAL = "prueba_clasif_normal@empresa.com"
+
+
+@pytest.fixture(scope="module", autouse=True)
+def usuarios_confirmar_clasificacion():
+    for email in (EMAIL_CLASIF_ADMIN, EMAIL_CLASIF_NORMAL):
+        u = Usuario.query.filter_by(email=email).first()
+        if u:
+            db.session.delete(u)
+    db.session.commit()
+
+    admin = Usuario(
+        nombre="Admin Prueba Clasificacion",
+        email=EMAIL_CLASIF_ADMIN,
+        contrasena_hash=ServicioAutenticacion._generar_hash("ClaveSegura123!"),
+        rol=RolUsuario.ADMIN,
+        nivel=NivelUsuario.NORMAL,
+    )
+    db.session.add(admin)
+    db.session.commit()
+
+    ServicioAutenticacion.registrar(
+        nombre="Usuario Normal Clasificacion", email=EMAIL_CLASIF_NORMAL,
+        contrasena="ClaveSegura123!", rol=RolUsuario.FINAL,
+        nivel=NivelUsuario.NORMAL, admin_id=admin.id,
+    )
+
+
+def _crear_ticket_baja_confianza(creador):
+    """Helper local: crea un ticket normal y fuerza clasificacion_baja_confianza=True
+    directo por SQLAlchemy -- el clasificador simple de los tests nunca
+    produce ese estado por si solo."""
+    ticket = ServicioTickets.crear_ticket(creador=creador, texto="texto cualquiera para la prueba")
+    ticket.clasificacion_baja_confianza = True
+    db.session.add(ticket)
+    db.session.commit()
+    return ticket
+
+
+# ---------------------------------------------------------------------------
+# confirmar_clasificacion
+# ---------------------------------------------------------------------------
+
+def test_confirmar_clasificacion_valido():
+    normal = Usuario.query.filter_by(email=EMAIL_CLASIF_NORMAL).first()
+    admin = Usuario.query.filter_by(email=EMAIL_CLASIF_ADMIN).first()
+
+    ticket = _crear_ticket_baja_confianza(normal)
+
+    resultado = ServicioTickets.confirmar_clasificacion(ticket.id, Categoria.REDES, admin.id)
+
+    assert resultado.categoria == Categoria.REDES, (
+        f"se esperaba categoria REDES tras confirmar, se obtuvo {resultado.categoria}"
+    )
+    assert resultado.clasificacion_baja_confianza is False, (
+        "tras confirmar, clasificacion_baja_confianza debe quedar en False"
+    )
+
+
+def test_confirmar_clasificacion_ticket_inexistente():
+    admin = Usuario.query.filter_by(email=EMAIL_CLASIF_ADMIN).first()
+
+    with pytest.raises(TicketNoEncontradoError):
+        ServicioTickets.confirmar_clasificacion(999999, Categoria.REDES, admin.id)
+
+
+def test_confirmar_clasificacion_ya_confirmada():
+    normal = Usuario.query.filter_by(email=EMAIL_CLASIF_NORMAL).first()
+    admin = Usuario.query.filter_by(email=EMAIL_CLASIF_ADMIN).first()
+
+    # Ticket normal, creado sin forzar baja_confianza -- nunca estuvo pendiente
+    ticket = ServicioTickets.crear_ticket(creador=normal, texto="ticket normal sin baja confianza")
+
+    with pytest.raises(ClasificacionYaConfirmadaError):
+        ServicioTickets.confirmar_clasificacion(ticket.id, Categoria.REDES, admin.id)
+
+
+# ---------------------------------------------------------------------------
+# listar_pendientes_revision_clasificacion
+# ---------------------------------------------------------------------------
+
+def test_listar_pendientes_revision_clasificacion():
+    normal = Usuario.query.filter_by(email=EMAIL_CLASIF_NORMAL).first()
+
+    ticket_pendiente_1 = _crear_ticket_baja_confianza(normal)
+    ticket_pendiente_2 = _crear_ticket_baja_confianza(normal)
+    ticket_normal = ServicioTickets.crear_ticket(creador=normal, texto="este no deberia aparecer")
+
+    pendientes = ServicioTickets.listar_pendientes_revision_clasificacion()
+    ids_pendientes = [t.id for t in pendientes]
+
+    assert ticket_pendiente_1.id in ids_pendientes, "el primer ticket pendiente deberia aparecer en la lista"
+    assert ticket_pendiente_2.id in ids_pendientes, "el segundo ticket pendiente deberia aparecer en la lista"
+    assert ticket_normal.id not in ids_pendientes, (
+        "un ticket sin clasificacion_baja_confianza no deberia aparecer en la lista"
+    )
+
+    # Orden: el mas viejo primero
+    posicion_1 = ids_pendientes.index(ticket_pendiente_1.id)
+    posicion_2 = ids_pendientes.index(ticket_pendiente_2.id)
+    assert posicion_1 < posicion_2, (
+        "se esperaba que el ticket creado primero apareciera antes en la lista"
+    )
+
+
+def test_listar_pendientes_revision_clasificacion_vacio():
+    normal = Usuario.query.filter_by(email=EMAIL_CLASIF_NORMAL).first()
+
+    # Confirmar cualquier pendiente que haya quedado de tests anteriores en este archivo
+    pendientes_previos = ServicioTickets.listar_pendientes_revision_clasificacion()
+    for t in pendientes_previos:
+        t.clasificacion_baja_confianza = False
+        db.session.add(t)
+    db.session.commit()
+
+    pendientes = ServicioTickets.listar_pendientes_revision_clasificacion()
+    assert pendientes == [], f"se esperaba lista vacia, se obtuvo {len(pendientes)} pendientes"
