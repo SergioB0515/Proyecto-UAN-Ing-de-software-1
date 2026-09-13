@@ -84,6 +84,7 @@ class ServicioApelaciones:
         
         ticket.estado= EstadoTicket.ABIERTO
         ticket.agente_id = None
+        ticket.fecha_asignacion = None
         ticket.fecha_cierre = None
         ticket.notificado_proximo_vencer = False
         ticket.notificado_vencido = False

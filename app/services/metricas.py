@@ -1,11 +1,13 @@
 from sqlalchemy import select, func, or_, and_
 from datetime import datetime, timedelta
+from flask_babel import gettext as _
 from app.extensions import db
 from app.models.ticket import Ticket
 from app.models.usuario import Usuario
-from app.models.enum import RolUsuario
+from app.models.enum import RolUsuario,EstadoTicket
 from app.services.gestor_sla import GestorSLA
-
+from app.models.correccion_clasificacion import CorreccionClasificacion
+import os, json
 
 class ServicioMetricas:
 
@@ -69,4 +71,175 @@ class ServicioMetricas:
             "tickets_proximos_a_vencer_actualmente": tickets_proximos_a_vencer_actualmente,
             "tickets_vencidos_ultimos_30_dias": tickets_vencidos_ultimos_30_dias,
             "cantidad_agentes": cantidad_agentes,
+        }
+        
+    @staticmethod
+    def metricas_por_agente(area=None, agente_id=None, dias=30):
+
+        hace_n_dias = datetime.now() - timedelta(days=dias)
+
+
+        if agente_id is not None:
+            agentes = db.session.execute(
+                select(Usuario).where(Usuario.id == agente_id)
+            ).scalars().all()
+
+        elif area is not None:
+            agentes = db.session.execute(
+                select(Usuario).where(
+                    Usuario.area_soporte == area,
+                    Usuario.rol == RolUsuario.AGENTE
+                )
+            ).scalars().all()
+
+        else:
+            raise ValueError("Debe especificarse agente_id o area")
+
+        resultado = []
+
+        for agente in agentes:
+
+            tickets_del_agente = db.session.execute(
+                select(Ticket).where(
+                    Ticket.agente_id == agente.id,
+                    Ticket.estado == EstadoTicket.CERRADO,
+                    Ticket.fecha_cierre >= hace_n_dias,
+                )
+            ).scalars().all()
+
+            tickets_cerrados = len(tickets_del_agente)
+
+ 
+            duraciones = [
+                t.fecha_cierre - t.fecha_asignacion
+                for t in tickets_del_agente
+                if t.fecha_asignacion is not None
+            ]
+
+            tiempo_promedio_resolucion_horas = (
+                (sum(duraciones, timedelta()) / len(duraciones)).total_seconds() / 3600
+                if duraciones
+                else None
+            )
+
+
+            cumplimiento_sla = (
+                sum(
+                    1
+                    for t in tickets_del_agente
+                    if t.fecha_cierre <= t.fecha_limite
+                ) / tickets_cerrados
+                if tickets_cerrados > 0
+                else None
+            )
+
+            resultado.append({
+                "agente_id": agente.id,
+                "nombre": agente.nombre,
+                "tickets_cerrados": tickets_cerrados,
+                "tiempo_promedio_resolucion_horas": tiempo_promedio_resolucion_horas,
+                "cumplimiento_sla": cumplimiento_sla,
+            })
+
+        return resultado
+
+    @staticmethod
+    def comparativa_area(agente_id, area, dias=30):
+        """Compara al agente con sus pares del área: promedio de SLA, puesto en el
+        ranking del área y una insignia de nivel según su cumplimiento de SLA."""
+
+        metricas_area = ServicioMetricas.metricas_por_agente(area=area, dias=dias)
+
+        con_sla = [m for m in metricas_area if m["cumplimiento_sla"] is not None]
+        promedio_sla = (
+            sum(m["cumplimiento_sla"] for m in con_sla) / len(con_sla)
+            if con_sla else None
+        )
+
+        ranking = sorted(con_sla, key=lambda m: m["cumplimiento_sla"], reverse=True)
+        posicion = next(
+            (i for i, m in enumerate(ranking, start=1) if m["agente_id"] == agente_id),
+            None,
+        )
+
+        metricas_agente = next((m for m in metricas_area if m["agente_id"] == agente_id), None)
+        sla_agente = metricas_agente["cumplimiento_sla"] if metricas_agente else None
+
+        nivel_clave = None
+        if sla_agente is not None:
+            if sla_agente >= 0.9:
+                nivel_clave = "oro"
+            elif sla_agente >= 0.75:
+                nivel_clave = "plata"
+            elif sla_agente >= 0.5:
+                nivel_clave = "bronce"
+            else:
+                nivel_clave = "bajo"
+
+        niveles = {
+            "oro": _("Excelente"),
+            "plata": _("Muy bueno"),
+            "bronce": _("Aceptable"),
+            "bajo": _("Necesita mejorar"),
+        }
+
+        return {
+            "promedio_sla": promedio_sla,
+            "posicion": posicion,
+            "total_agentes": len(ranking),
+            "nivel_clave": nivel_clave,
+            "nivel_texto": niveles.get(nivel_clave),
+        }
+
+    @staticmethod
+    def obtener_metricas_confianza_clasificador(dias=30):
+
+
+        RUTA_METADATA = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "..", "ml_artifacts", "metadata.json"
+        )
+
+        hace_n_dias = datetime.now() - timedelta(days=dias)
+
+        tickets_en_revision = db.session.execute(select(func.count()).select_from(Ticket).where(
+            Ticket.clasificacion_baja_confianza == True
+        )).scalar()
+
+
+        correcciones_ventana = db.session.execute(select(func.count()).select_from(CorreccionClasificacion).where(
+            CorreccionClasificacion.fecha >= hace_n_dias
+        )).scalar()
+
+
+        tickets_creados_ventana = db.session.execute(select(func.count()).select_from(Ticket).where(
+            Ticket.fecha_creacion >= hace_n_dias
+        )).scalar()
+
+      
+        tasa_correccion_30d = ( correcciones_ventana / tickets_creados_ventana
+            if tickets_creados_ventana > 0 
+            else None
+        )
+
+
+        exactitud_produccion_30d = (1 - tasa_correccion_30d
+            if tasa_correccion_30d is not None
+            else None
+            )
+
+       
+        exactitud_laboratorio = None
+        fecha_entrenamiento_modelo = None
+        if os.path.exists(RUTA_METADATA):
+            with open(RUTA_METADATA, "r", encoding="utf-8" ) as f:
+                metadata = json.load(f)
+            exactitud_laboratorio = metadata.get("exactitud_en_prueba")
+            fecha_entrenamiento_modelo = metadata.get("fecha_entrenamiento")
+
+        return {
+            "tickets_en_revision": tickets_en_revision,
+            "tasa_correccion_30d": tasa_correccion_30d,
+            "exactitud_produccion_30d": exactitud_produccion_30d,
+            "exactitud_laboratorio": exactitud_laboratorio,
+            "fecha_entrenamiento_modelo": fecha_entrenamiento_modelo,
         }

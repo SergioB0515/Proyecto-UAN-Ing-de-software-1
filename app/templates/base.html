@@ -86,7 +86,11 @@
 
         <div class="dropdown">
             <button class="user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% if usuario_nombre_foto %}
+                <img class="user-avatar user-avatar-img" src="{{ url_for('static', filename='fotos_perfil/' ~ usuario_nombre_foto) }}" alt="{{ _('Foto de perfil') }}">
+                {% else %}
                 <span class="user-avatar">{{ usuario_iniciales | default('?', true) }}</span>
+                {% endif %}
                 <span class="user-meta d-none d-sm-flex">
                     <span class="user-name">{{ usuario_actual.nombre if usuario_actual else _('Cuenta') }}</span>
                     <span class="user-role">{{ rol | etiqueta }}</span>
@@ -216,7 +220,8 @@
     "min": _('hace %(n)s min', n='%(n)s'),
     "hora": _('hace %(n)s h', n='%(n)s'),
     "dia": _('hace %(n)s d', n='%(n)s'),
-    "sinNotif": _('Sin notificaciones')
+    "sinNotif": _('Sin notificaciones'),
+    "cerrar": _('Cerrar')
 } | tojson }}</script>
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
@@ -387,7 +392,7 @@
                     '<div class="notif-toast-title"></div>' +
                     '<div class="notif-toast-msg"></div>' +
                 '</div>' +
-                '<button type="button" class="notif-toast-close" data-bs-dismiss="toast" aria-label="close">&times;</button>' +
+                '<button type="button" class="notif-toast-close" data-bs-dismiss="toast" aria-label="' + I18N.cerrar + '">&times;</button>' +
             '</div>';
         el.querySelector('.notif-toast-title').textContent = I18N.toastTitulo;
         el.querySelector('.notif-toast-msg').textContent = textoNotif(n);

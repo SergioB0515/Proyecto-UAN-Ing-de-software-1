@@ -10,8 +10,28 @@
 </div>
 
 {% if palabras_clave %}
+<div class="row g-2 align-items-end mb-3">
+    <div class="col-auto">
+        <label for="filtroTextoPalabraClave" class="form-label mb-1">{{ _('Buscar') }}</label>
+        <input type="text" id="filtroTextoPalabraClave" class="form-control form-control-sm"
+               placeholder="{{ _('Buscar por texto...') }}">
+    </div>
+    <div class="col-auto">
+        <label for="filtroCategoriaPalabraClave" class="form-label mb-1">{{ _('Categoría') }}</label>
+        <select id="filtroCategoriaPalabraClave" class="form-select form-select-sm">
+            <option value="">{{ _('Todas') }}</option>
+            <option value="infraestructura">{{ _('Infraestructura') }}</option>
+            <option value="redes">{{ _('Redes') }}</option>
+            <option value="permisos">{{ _('Permisos') }}</option>
+            <option value="cuentas_contrasenas">{{ _('Cuentas y contraseñas') }}</option>
+            <option value="seguridad">{{ _('Seguridad') }}</option>
+            <option value="software">{{ _('Software') }}</option>
+            <option value="otros">{{ _('Otros') }}</option>
+        </select>
+    </div>
+</div>
 <div class="table-card">
-<table class="table table-hover align-middle">
+<table class="table table-hover align-middle" id="tablaPalabrasClave">
     <thead>
         <tr>
             <th>{{ _('Texto') }}</th><th>{{ _('Categoría') }}</th><th>{{ _('Peso') }}</th><th>{{ _('Estado') }}</th><th>{{ _('Acciones') }}</th>
@@ -19,7 +39,7 @@
     </thead>
     <tbody>
         {% for pc in palabras_clave %}
-        <tr>
+        <tr data-texto="{{ pc.texto | lower }}" data-categoria="{{ pc.categoria.value }}">
             <td>{{ pc.texto }}</td>
             <td><span class="badge-pill categoria-tag">{{ pc.categoria.value | etiqueta }}</span></td>
             <td class="mono">{{ pc.peso }}</td>
@@ -113,4 +133,26 @@
         <button type="submit" class="btn btn-primary">{{ _('Agregar') }}</button>
     </div>
 </form>
+
+<script>
+(function () {
+    const filtroTexto = document.getElementById("filtroTextoPalabraClave");
+    const filtroCategoria = document.getElementById("filtroCategoriaPalabraClave");
+    const tabla = document.getElementById("tablaPalabrasClave");
+    if (!filtroTexto || !tabla) return;
+
+    function aplicarFiltro() {
+        const texto = filtroTexto.value.trim().toLowerCase();
+        const categoria = filtroCategoria.value;
+        tabla.querySelectorAll("tbody > tr[data-texto]").forEach(function (fila) {
+            const coincideTexto = !texto || fila.dataset.texto.includes(texto);
+            const coincideCategoria = !categoria || fila.dataset.categoria === categoria;
+            fila.hidden = !(coincideTexto && coincideCategoria);
+        });
+    }
+
+    filtroTexto.addEventListener("input", aplicarFiltro);
+    filtroCategoria.addEventListener("change", aplicarFiltro);
+})();
+</script>
 {% endblock %}

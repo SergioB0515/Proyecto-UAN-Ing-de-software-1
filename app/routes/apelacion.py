@@ -51,27 +51,35 @@ def pendientes():
     return render_template("apelaciones_pendientes.html", apelaciones=apelaciones)
 
 
+def _destino_tras_decision(ticket_id):
+    if request.form.get("origen") == "detalle" and ticket_id:
+        return url_for("tickets.detalle", ticket_id=ticket_id)
+    return url_for("apelaciones.pendientes")
+
+
 @apelaciones_bp.route("/apelaciones/<int:apelacion_id>/aceptar", methods=["POST"])
 @requiere_admin
 def aceptar(apelacion_id):
     actor_id = session["usuario_id"]
+    ticket_id = request.form.get("ticket_id")
     try:
         ServicioApelaciones.aceptar_apelacion(apelacion_id=apelacion_id, actor_id=actor_id)
         flash(_("Apelacion aceptada"), "success")
     except (ApelacionNoEncontradaError, ApelacionNoPendienteError, ErrorPersistencia) as e:
         flash(str(e), "danger")
 
-    return redirect(url_for("apelaciones.pendientes"))
+    return redirect(_destino_tras_decision(ticket_id))
 
 
 @apelaciones_bp.route("/apelaciones/<int:apelacion_id>/rechazar", methods=["POST"])
 @requiere_admin
 def rechazar(apelacion_id):
     actor_id = session["usuario_id"]
+    ticket_id = request.form.get("ticket_id")
     try:
         ServicioApelaciones.rechazar_apelacion(apelacion_id=apelacion_id, actor_id=actor_id)
         flash(_("Apelacion rechazada"), "success")
     except (ApelacionNoEncontradaError, ApelacionNoPendienteError, ErrorPersistencia) as e:
         flash(str(e), "danger")
 
-    return redirect(url_for("apelaciones.pendientes"))
+    return redirect(_destino_tras_decision(ticket_id))

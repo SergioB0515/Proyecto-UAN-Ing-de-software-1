@@ -14,7 +14,7 @@
 {% else %}
     {% for t in pendientes %}
     <div class="comment-card mb-2">
-        <h5 class="mb-1">Ticket <span class="mono ticket-id-tag">#{{ t.id }}</span></h5>
+        <h5 class="mb-1">{{ _('Ticket') }} <span class="mono ticket-id-tag">#{{ t.id }}</span></h5>
         <small class="text-muted d-block mb-2">{{ t.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</small>
         <p class="mb-2">{{ t.texto }}</p>
         <form method="POST" action="{{ url_for('tickets.confirmar_clasificacion', ticket_id=t.id) }}" class="d-flex gap-2">

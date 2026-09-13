@@ -11,6 +11,7 @@ class Ticket(db.Model):
     estado = db.Column(db.Enum(EstadoTicket), nullable=False)
     creador_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
     agente_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=True)
+    fecha_asignacion = db.Column(db.DateTime, nullable=True)
     fecha_creacion = db.Column(db.DateTime, nullable=False, default=datetime.now)
     fecha_limite= db.Column(db.DateTime, nullable=False)
     fecha_cierre = db.Column(db.DateTime, nullable=True)

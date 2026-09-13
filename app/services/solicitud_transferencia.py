@@ -99,6 +99,7 @@ class ServicioSolicitudesTransferencia:
         
         
         ticket.agente_id = solicitud.agente_destino_id
+        ticket.fecha_asignacion = datetime.now()
         solicitud.estado = EstadoSolicitudTransferencia.ACEPTADA
         solicitud.fecha_resolucion = datetime.now()
 
@@ -277,6 +278,7 @@ class ServicioSolicitudesTransferencia:
         
         ticket.categoria = solicitud.area_destino
         ticket.agente_id = None
+        ticket.fecha_asignacion = None
         ticket.estado = EstadoTicket.ABIERTO
         
         solicitud.estado = EstadoSolicitudTransferencia.ACEPTADA

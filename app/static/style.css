@@ -349,6 +349,11 @@ a { color: var(--accent-400); }
     flex: none;
 }
 
+.user-avatar-img {
+    object-fit: cover;
+    background: none;
+}
+
 .user-meta {
     flex-direction: column;
     align-items: flex-start;
@@ -894,6 +899,16 @@ a:focus-visible,
 .badge-pill.sol-aceptada  { background: rgba(18, 136, 95, 0.2);   color: #5be0ac; }
 .badge-pill.sol-rechazada { background: rgba(234, 76, 59, 0.2);   color: #ff9f92; }
 .badge-pill.sol-cancelada { background: rgba(154, 148, 224, 0.14); color: var(--text-soft); }
+
+.badge-pill[class*="nivel-"]::before { display: none; }
+.badge-pill.nivel-oro {
+    background: linear-gradient(135deg, var(--gold-600), var(--gold-500)) !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 1px rgba(224, 180, 89, 0.35), 0 2px 10px rgba(201, 154, 61, 0.3);
+}
+.badge-pill.nivel-plata { background: linear-gradient(135deg, var(--accent-500), var(--cyan-500)) !important; color: #fff !important; }
+.badge-pill.nivel-bronce { background: rgba(18, 136, 95, 0.2); color: #5be0ac; }
+.badge-pill.nivel-bajo { background: rgba(234, 76, 59, 0.2); color: #ff9f92; }
 
 /* ---------- Acciones sobre el ticket ---------- */
 .accion-block { padding: .2rem 0; }

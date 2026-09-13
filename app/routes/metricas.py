@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, Response, request
 from flask_babel import gettext as _
 from app.traducciones import etiqueta
 from app.services.metricas import ServicioMetricas
+from app.models.enum import Categoria
 from app.routes.decoradores import requiere_admin
 import csv
 import io
@@ -10,11 +11,48 @@ metricas_bp = Blueprint("metricas", __name__)
 
 
 @metricas_bp.route("/metricas")
-@requiere_admin  
-def mostrar_metricas():  
-    metricas = ServicioMetricas.obtener_metricas()  
+@requiere_admin
+def mostrar_metricas():
+    metricas = ServicioMetricas.obtener_metricas()
 
-    return render_template("panel_metricas.html",metricas=metricas)  
+    metricas_confianza = ServicioMetricas.obtener_metricas_confianza_clasificador()
+
+    metricas_por_area = {
+        area : ServicioMetricas.metricas_por_agente(area=area)
+        for area in Categoria
+    }
+
+    resumen_por_area = {}
+    grafico_por_area = {}
+    etiquetas_todas, valores_todas = [], []
+    for area, agentes in metricas_por_area.items():
+        cerrados = sum(a["tickets_cerrados"] for a in agentes)
+        slas = [a["cumplimiento_sla"] for a in agentes if a["cumplimiento_sla"] is not None]
+        resumen_por_area[area] = {
+            "cantidad_agentes": len(agentes),
+            "tickets_cerrados": cerrados,
+            "cumplimiento_sla_promedio": (sum(slas) / len(slas)) if slas else None,
+        }
+
+        etiquetas, valores = [], []
+        for a in agentes:
+            if a["cumplimiento_sla"] is not None:
+                etiquetas.append(a["nombre"])
+                valores.append(round(a["cumplimiento_sla"] * 100, 1))
+                etiquetas_todas.append(f"{a['nombre']} ({etiqueta(area.value)})")
+                valores_todas.append(round(a["cumplimiento_sla"] * 100, 1))
+        grafico_por_area[area.value] = {"etiquetas": etiquetas, "valores": valores}
+
+    grafico_por_area["todas"] = {"etiquetas": etiquetas_todas, "valores": valores_todas}
+
+    return render_template(
+        "panel_metricas.html",
+        metricas=metricas,
+        metricas_confianza=metricas_confianza,
+        metricas_por_area=metricas_por_area,
+        resumen_por_area=resumen_por_area,
+        grafico_por_area=grafico_por_area,
+    )
 
 @metricas_bp.route("/metricas/exportar")
 @requiere_admin
@@ -65,3 +103,4 @@ def exportar_metricas():
             mimetype="text/csv",
             headers={"Content-Disposition": "attachment; filename=metricas.csv"}
         )
+        

@@ -103,7 +103,13 @@ def create_app():
             return {}
         partes = [p for p in usuario.nombre.split() if p]
         iniciales = "".join(p[0] for p in partes[:2]).upper() or "?"
-        return {"usuario_actual": usuario, "usuario_iniciales": iniciales}
+        from app.services.autenticacion import ServicioAutenticacion
+        nombre_foto = ServicioAutenticacion.obtener_nombre_archivo_foto(usuario)
+        return {
+            "usuario_actual": usuario,
+            "usuario_iniciales": iniciales,
+            "usuario_nombre_foto": nombre_foto,
+        }
 
     def limpiar_intentos_login_viejos():
         with app.app_context():

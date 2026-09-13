@@ -68,7 +68,41 @@
 </div>
 {% endif %}
 
-{% if puede_gestionar and solicitudes %}
+{% if ticket.estado.value == "cerrado" and apelacion_pendiente and usuario_actual and usuario_actual.rol.value == 'admin' %}
+<div class="card mt-3">
+    <div class="card-body">
+        <h6 class="card-title mb-1">{{ _('Apelación pendiente de este ticket') }}</h6>
+        <small class="text-muted d-block mb-2">
+            {{ _('Solicitado por %(nombre)s', nombre=nombres_por_id.get(apelacion_pendiente.solicitante_id, _('Usuario desconocido'))) }}
+            &middot; {{ apelacion_pendiente.fecha_solicitud | fecha }}
+        </small>
+        <p class="mb-3">{{ apelacion_pendiente.motivo }}</p>
+        <div class="d-flex gap-2">
+            <form method="POST" action="{{ url_for('apelaciones.aceptar', apelacion_id=apelacion_pendiente.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="origen" value="detalle">
+                <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                <button class="btn btn-sm btn-outline-success">{{ _('Aceptar') }}</button>
+            </form>
+            <form method="POST" action="{{ url_for('apelaciones.rechazar', apelacion_id=apelacion_pendiente.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="origen" value="detalle">
+                <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% set ns_solicitudes = namespace(es_destino_pendiente=false) %}
+{% for s in solicitudes %}
+    {% if s.tipo.value == 'reasignacion' and s.estado.value == 'pendiente' and usuario_actual and s.agente_destino_id == usuario_actual.id %}
+        {% set ns_solicitudes.es_destino_pendiente = true %}
+    {% endif %}
+{% endfor %}
+
+{% if (puede_gestionar or ns_solicitudes.es_destino_pendiente) and solicitudes %}
 <div class="card mt-4">
     <div class="card-body">
         <h5 class="card-title mb-3">{{ _('Solicitudes del ticket') }}</h5>
@@ -99,6 +133,50 @@
                     </small>
                     {% if s.motivo %}<p class="solicitud-motivo mb-0 mt-1">{{ s.motivo }}</p>{% endif %}
                 </div>
+                {% if s.estado.value == 'pendiente' %}
+                <div class="d-flex gap-2 flex-shrink-0 mt-2">
+                    {% if s.tipo.value == 'reasignacion' and usuario_actual and usuario_actual.id == s.agente_destino_id %}
+                    <form method="POST" action="{{ url_for('solicitudes.aceptar', solicitud_id=s.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="origen" value="detalle">
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                        <button class="btn btn-sm btn-success">{{ _('Aceptar') }}</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('solicitudes.rechazar', solicitud_id=s.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="origen" value="detalle">
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                        <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
+                    </form>
+                    {% elif s.tipo.value == 'escalamiento' and usuario_actual and usuario_actual.rol.value == 'admin' %}
+                    <form method="POST" action="{{ url_for('solicitudes.aprobar_escalamiento', solicitud_id=s.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="origen" value="detalle">
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                        <button class="btn btn-sm btn-success">{{ _('Aprobar') }}</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('solicitudes.rechazar_escalamiento', solicitud_id=s.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="origen" value="detalle">
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                        <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
+                    </form>
+                    {% elif s.tipo.value == 'cambio_prioridad' and usuario_actual and usuario_actual.rol.value == 'admin' %}
+                    <form method="POST" action="{{ url_for('solicitudes.aprobar_cambio_prioridad', solicitud_id=s.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="origen" value="detalle">
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                        <button class="btn btn-sm btn-success">{{ _('Aprobar') }}</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('solicitudes.rechazar_cambio_prioridad', solicitud_id=s.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="origen" value="detalle">
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                        <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

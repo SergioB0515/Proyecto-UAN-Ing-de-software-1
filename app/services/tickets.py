@@ -119,6 +119,7 @@ class ServicioTickets:
        
             if agente_id is not None:
                 ticket.agente_id = agente_id
+                ticket.fecha_asignacion = datetime.now()
         
         estado_anterior=ticket.estado
         ticket.estado = nuevo_estado
@@ -162,8 +163,10 @@ class ServicioTickets:
             raise TicketNoEnProgresoError(_("Este ticket no esta en un estado valido para su reasignacion"))
         if nuevo_agente_id == ticket.agente_id:
             raise AgenteYaAsignadoError(_("Este ticket ya tiene asignado a este mismo agente"))
+        
         agente_anterior=ticket.agente_id
         ticket.agente_id = nuevo_agente_id
+        ticket.fecha_asignacion = datetime.now()
         try:
             db.session.add(ticket)
             db.session.commit()

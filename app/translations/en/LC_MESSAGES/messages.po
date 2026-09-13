@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-11 15:43-0500\n"
+"POT-Creation-Date: 2026-09-13 18:10-0500\n"
 "PO-Revision-Date: 2026-09-07 01:33-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: app/notificaciones_i18n.py:34
+#: app/notificaciones_i18n.py:37
 #, python-format
 msgid ""
 "Tu ticket #%(id)s fue cerrado directamente sin haber sido atendido — "
@@ -27,126 +27,133 @@ msgstr ""
 "Your ticket #%(id)s was closed directly without being handled — check the"
 " comments for the reason"
 
-#: app/notificaciones_i18n.py:36
+#: app/notificaciones_i18n.py:39
 #, python-format
 msgid "Tu ticket #%(id)s fue cerrado"
 msgstr "Your ticket #%(id)s was closed"
 
-#: app/notificaciones_i18n.py:37
+#: app/notificaciones_i18n.py:40
 #, python-format
 msgid "Nueva solicitud de transferencia para el ticket #%(id)s"
 msgstr "New transfer request for ticket #%(id)s"
 
-#: app/notificaciones_i18n.py:38
+#: app/notificaciones_i18n.py:41
 #, python-format
 msgid "Tu solicitud de transferencia del ticket #%(id)s fue aceptada"
 msgstr "Your transfer request for ticket #%(id)s was accepted"
 
-#: app/notificaciones_i18n.py:39
+#: app/notificaciones_i18n.py:42
 #, python-format
 msgid "Tu solicitud de transferencia del ticket #%(id)s fue rechazada"
 msgstr "Your transfer request for ticket #%(id)s was rejected"
 
-#: app/notificaciones_i18n.py:40
+#: app/notificaciones_i18n.py:43
 #, python-format
 msgid "Nuevo escalamiento pendiente de aprobar: ticket #%(id)s"
 msgstr "New escalation pending approval: ticket #%(id)s"
 
-#: app/notificaciones_i18n.py:41
+#: app/notificaciones_i18n.py:44
 #, python-format
 msgid "Tu escalamiento del ticket #%(id)s fue aprobado"
 msgstr "Your escalation for ticket #%(id)s was approved"
 
-#: app/notificaciones_i18n.py:42
+#: app/notificaciones_i18n.py:45
 #, python-format
 msgid "Tu escalamiento del ticket #%(id)s fue rechazado"
 msgstr "Your escalation for ticket #%(id)s was rejected"
 
-#: app/notificaciones_i18n.py:43
+#: app/notificaciones_i18n.py:46
 #, python-format
 msgid "Nuevo cambio de prioridad pendiente de aprobar: ticket #%(id)s"
 msgstr "New priority change pending approval: ticket #%(id)s"
 
-#: app/notificaciones_i18n.py:44
+#: app/notificaciones_i18n.py:47
 #, python-format
 msgid "Tu cambio de prioridad del ticket #%(id)s fue aprobado"
 msgstr "Your priority change for ticket #%(id)s was approved"
 
-#: app/notificaciones_i18n.py:45
+#: app/notificaciones_i18n.py:48
 #, python-format
 msgid "Tu cambio de prioridad del ticket #%(id)s fue rechazado"
 msgstr "Your priority change for ticket #%(id)s was rejected"
 
-#: app/notificaciones_i18n.py:46
+#: app/notificaciones_i18n.py:49
 #, python-format
 msgid "Tu ticket #%(id)s está próximo a vencer"
 msgstr "Your ticket #%(id)s is about to breach its SLA"
 
-#: app/notificaciones_i18n.py:47
+#: app/notificaciones_i18n.py:50
 #, python-format
 msgid "El ticket #%(id)s que tienes asignado está próximo a vencer"
 msgstr "Ticket #%(id)s assigned to you is about to breach its SLA"
 
-#: app/notificaciones_i18n.py:48
+#: app/notificaciones_i18n.py:51
 #, python-format
 msgid "Tu ticket #%(id)s está vencido"
 msgstr "Your ticket #%(id)s has breached its SLA"
 
-#: app/notificaciones_i18n.py:49
+#: app/notificaciones_i18n.py:52
 #, python-format
 msgid "El ticket #%(id)s que tienes asignado está vencido"
 msgstr "Ticket #%(id)s assigned to you has breached its SLA"
 
-#: app/notificaciones_i18n.py:50
+#: app/notificaciones_i18n.py:53
 #, python-format
 msgid "El ticket #%(id)s necesita revision de categoria"
 msgstr "Ticket #%(id)s needs its category reviewed"
 
-#: app/templates/admin_tickets.html:27 app/templates/registro.html:50
-#: app/templates/revision_clasificacion.html:24
-#: app/templates/ticket_detalle.html:38 app/templates/ticket_detalle.html:151
+#: app/templates/admin_tickets.html:27 app/templates/palabras_clave.html:23
+#: app/templates/palabras_clave.html:82 app/templates/palabras_clave.html:120
+#: app/templates/registro.html:50 app/templates/revision_clasificacion.html:24
+#: app/templates/ticket_detalle.html:38 app/templates/ticket_detalle.html:248
 #: app/traducciones.py:8
 msgid "Infraestructura"
 msgstr "Infrastructure"
 
-#: app/templates/admin_tickets.html:28 app/templates/registro.html:51
-#: app/templates/revision_clasificacion.html:25
-#: app/templates/ticket_detalle.html:39 app/templates/ticket_detalle.html:152
+#: app/templates/admin_tickets.html:28 app/templates/palabras_clave.html:24
+#: app/templates/palabras_clave.html:83 app/templates/palabras_clave.html:121
+#: app/templates/registro.html:51 app/templates/revision_clasificacion.html:25
+#: app/templates/ticket_detalle.html:39 app/templates/ticket_detalle.html:249
 #: app/traducciones.py:9
 msgid "Redes"
 msgstr "Networks"
 
-#: app/templates/admin_tickets.html:29 app/templates/registro.html:52
-#: app/templates/revision_clasificacion.html:26
-#: app/templates/ticket_detalle.html:40 app/templates/ticket_detalle.html:153
+#: app/templates/admin_tickets.html:29 app/templates/palabras_clave.html:25
+#: app/templates/palabras_clave.html:84 app/templates/palabras_clave.html:122
+#: app/templates/registro.html:52 app/templates/revision_clasificacion.html:26
+#: app/templates/ticket_detalle.html:40 app/templates/ticket_detalle.html:250
 #: app/traducciones.py:10
 msgid "Permisos"
 msgstr "Permissions"
 
-#: app/templates/admin_tickets.html:30 app/templates/registro.html:53
-#: app/templates/revision_clasificacion.html:27
-#: app/templates/ticket_detalle.html:41 app/templates/ticket_detalle.html:154
+#: app/templates/admin_tickets.html:30 app/templates/palabras_clave.html:26
+#: app/templates/palabras_clave.html:85 app/templates/palabras_clave.html:123
+#: app/templates/registro.html:53 app/templates/revision_clasificacion.html:27
+#: app/templates/ticket_detalle.html:41 app/templates/ticket_detalle.html:251
 #: app/traducciones.py:11
 msgid "Cuentas y contraseñas"
 msgstr "Accounts and passwords"
 
-#: app/templates/admin_tickets.html:31 app/templates/registro.html:54
-#: app/templates/revision_clasificacion.html:28
-#: app/templates/ticket_detalle.html:42 app/templates/ticket_detalle.html:155
+#: app/templates/admin_tickets.html:31 app/templates/palabras_clave.html:27
+#: app/templates/palabras_clave.html:86 app/templates/palabras_clave.html:124
+#: app/templates/registro.html:54 app/templates/revision_clasificacion.html:28
+#: app/templates/ticket_detalle.html:42 app/templates/ticket_detalle.html:252
 #: app/traducciones.py:12
 msgid "Seguridad"
 msgstr "Security"
 
-#: app/templates/admin_tickets.html:32 app/templates/registro.html:55
-#: app/templates/revision_clasificacion.html:29
-#: app/templates/ticket_detalle.html:43 app/templates/ticket_detalle.html:156
+#: app/templates/admin_tickets.html:32 app/templates/palabras_clave.html:28
+#: app/templates/palabras_clave.html:87 app/templates/palabras_clave.html:125
+#: app/templates/registro.html:55 app/templates/revision_clasificacion.html:29
+#: app/templates/ticket_detalle.html:43 app/templates/ticket_detalle.html:253
 #: app/traducciones.py:13
 msgid "Software"
 msgstr "Software"
 
-#: app/templates/admin_tickets.html:33 app/templates/registro.html:56
-#: app/templates/revision_clasificacion.html:30
-#: app/templates/ticket_detalle.html:44 app/templates/ticket_detalle.html:157
+#: app/templates/admin_tickets.html:33 app/templates/palabras_clave.html:29
+#: app/templates/palabras_clave.html:88 app/templates/palabras_clave.html:126
+#: app/templates/registro.html:56 app/templates/revision_clasificacion.html:30
+#: app/templates/ticket_detalle.html:44 app/templates/ticket_detalle.html:254
 #: app/traducciones.py:14
 msgid "Otros"
 msgstr "Other"
@@ -155,8 +162,8 @@ msgstr "Other"
 msgid "Usuario final"
 msgstr "End user"
 
-#: app/templates/registro.html:34 app/templates/ticket_detalle.html:20
-#: app/traducciones.py:16
+#: app/templates/panel_metricas.html:214 app/templates/registro.html:34
+#: app/templates/ticket_detalle.html:20 app/traducciones.py:16
 msgid "Agente"
 msgstr "Agent"
 
@@ -168,17 +175,17 @@ msgstr "Admin"
 msgid "Normal"
 msgstr "Normal"
 
-#: app/templates/admin_tickets.html:41 app/templates/ticket_detalle.html:185
+#: app/templates/admin_tickets.html:41 app/templates/ticket_detalle.html:282
 #: app/templates/tickets_por_area.html:23 app/traducciones.py:20
 msgid "Alta"
 msgstr "High"
 
-#: app/templates/admin_tickets.html:42 app/templates/ticket_detalle.html:185
+#: app/templates/admin_tickets.html:42 app/templates/ticket_detalle.html:282
 #: app/templates/tickets_por_area.html:24 app/traducciones.py:21
 msgid "Media"
 msgstr "Medium"
 
-#: app/templates/admin_tickets.html:43 app/templates/ticket_detalle.html:185
+#: app/templates/admin_tickets.html:43 app/templates/ticket_detalle.html:282
 #: app/templates/tickets_por_area.html:25 app/traducciones.py:22
 msgid "Baja"
 msgstr "Low"
@@ -218,16 +225,16 @@ msgstr "Cancelled"
 msgid "Reasignación"
 msgstr "Reassignment"
 
-#: app/templates/ticket_detalle.html:62 app/traducciones.py:31
+#: app/templates/ticket_detalle.html:115 app/traducciones.py:31
 msgid "Escalamiento"
 msgstr "Escalation"
 
-#: app/templates/ticket_detalle.html:66 app/traducciones.py:32
+#: app/templates/ticket_detalle.html:119 app/traducciones.py:32
 msgid "Cambio de prioridad"
 msgstr "Priority change"
 
-#: app/templates/auditoria.html:29 app/templates/base.html:129
-#: app/templates/base.html:165 app/templates/base.html:179
+#: app/templates/auditoria.html:29 app/templates/base.html:133
+#: app/templates/base.html:171 app/templates/base.html:185
 #: app/templates/crear_ticket.html:3 app/templates/dashboard.html:7
 #: app/traducciones.py:33
 msgid "Crear ticket"
@@ -274,7 +281,7 @@ msgstr "Password change"
 msgid "Cambio de nombre"
 msgstr "Name change"
 
-#: app/templates/ticket_detalle.html:117 app/traducciones.py:44
+#: app/templates/ticket_detalle.html:214 app/traducciones.py:44
 msgid "Solicitar transferencia"
 msgstr "Request transfer"
 
@@ -302,7 +309,7 @@ msgstr "Approve escalation"
 msgid "Rechazar escalamiento"
 msgstr "Reject escalation"
 
-#: app/templates/ticket_detalle.html:179 app/traducciones.py:51
+#: app/templates/ticket_detalle.html:276 app/traducciones.py:51
 msgid "Cambiar prioridad"
 msgstr "Change priority"
 
@@ -314,7 +321,31 @@ msgstr "Approve priority change"
 msgid "Rechazar cambio de prioridad"
 msgstr "Reject priority change"
 
-#: app/routes/auditoria.py:121 app/templates/auditoria.html:64
+#: app/routes/apelacion.py:22 app/routes/solicitudes.py:32
+#: app/routes/solicitudes.py:162 app/routes/solicitudes.py:234
+#: app/routes/tickets.py:147 app/routes/tickets.py:196
+#: app/routes/tickets.py:216
+msgid "Ticket no encontrado"
+msgstr "Ticket not found"
+
+#: app/routes/apelacion.py:28
+msgid "No tienes permiso para apelar este ticket"
+msgstr "You do not have permission to appeal this ticket"
+
+#: app/routes/apelacion.py:38
+msgid "Solicitud de apelacion enviada"
+msgstr "Appeal request sent"
+
+#: app/routes/apelacion.py:67
+msgid "Apelacion aceptada"
+msgstr "Appeal accepted"
+
+#: app/routes/apelacion.py:81
+msgid "Apelacion rechazada"
+msgstr "Appeal rejected"
+
+#: app/routes/auditoria.py:121 app/templates/apelaciones_pendientes.html:15
+#: app/templates/auditoria.html:64
 msgid "Fecha"
 msgstr "Date"
 
@@ -333,61 +364,61 @@ msgid "Detalle"
 msgstr "Detail"
 
 #: app/routes/auditoria.py:131 app/routes/auditoria.py:152
-#: app/routes/tickets.py:373 app/routes/tickets.py:397
+#: app/routes/tickets.py:385 app/routes/tickets.py:409
 msgid "Desconocido"
 msgstr "Unknown"
 
-#: app/routes/auth.py:36
+#: app/routes/auth.py:37
 msgid "usuario o contraseña incorrectos"
 msgstr "Incorrect username or password"
 
-#: app/routes/auth.py:39
+#: app/routes/auth.py:40
 msgid "Ocurrio un error interno, intentelo mas tarde "
 msgstr "An internal error occurred, please try again later "
 
-#: app/routes/auth.py:42
+#: app/routes/auth.py:43
 msgid "Se ha detectado un error externo, contacte con soporte"
 msgstr "An external error was detected, please contact support"
 
-#: app/routes/auth.py:46
+#: app/routes/auth.py:47
 msgid "Usuario usted se encuentra bloqueado"
 msgstr "Your account is blocked"
 
-#: app/routes/auth.py:49
+#: app/routes/auth.py:50
 msgid "Usuario usted ha sido bloqueado"
 msgstr "Your account has been blocked"
 
-#: app/routes/auth.py:74
+#: app/routes/auth.py:75
 msgid "Sesión cerrada correctamente"
 msgstr "Signed out successfully"
 
-#: app/routes/auth.py:96
+#: app/routes/auth.py:97
 msgid "UN agente debe tener un area especifica"
 msgstr "An agent must have a specific area"
 
-#: app/routes/auth.py:112
+#: app/routes/auth.py:113
 msgid "No se pudo registrar el usuario por un error interno, intente más tarde"
 msgstr ""
 "The user could not be registered due to an internal error, please try "
 "again later"
 
-#: app/routes/auth.py:116
+#: app/routes/auth.py:117
 msgid "Ya existe un usuario con ese email"
 msgstr "A user with that email already exists"
 
-#: app/routes/auth.py:119
+#: app/routes/auth.py:120
 msgid "Usuario registrado con éxito"
 msgstr "User registered successfully"
 
-#: app/routes/auth.py:145
+#: app/routes/auth.py:171
 msgid "Contraseña cambiada con exito"
 msgstr "Password changed successfully"
 
-#: app/routes/auth.py:163
+#: app/routes/auth.py:189
 msgid "Nombre actualizado con éxito"
 msgstr "Name updated successfully"
 
-#: app/routes/auth.py:181
+#: app/routes/auth.py:207
 msgid "Foto de perfil actualizada"
 msgstr "Profile photo updated"
 
@@ -399,222 +430,283 @@ msgstr "You must sign in"
 msgid "No tienes permiso para entrar en esta funcion"
 msgstr "You do not have permission to access this feature"
 
-#: app/routes/metricas.py:28
+#: app/routes/metricas.py:66
 #, python-format
 msgid "Tickets por estado - %(valor)s"
 msgstr "Tickets by status - %(valor)s"
 
-#: app/routes/metricas.py:31
+#: app/routes/metricas.py:69
 #, python-format
 msgid "Tickets por categoría - %(valor)s"
 msgstr "Tickets by category - %(valor)s"
 
-#: app/routes/metricas.py:34
+#: app/routes/metricas.py:72
 #, python-format
 msgid "Tickets por prioridad - %(valor)s"
 msgstr "Tickets by priority - %(valor)s"
 
-#: app/routes/metricas.py:36
+#: app/routes/metricas.py:74
 msgid "Tickets vencidos actualmente"
 msgstr "Currently overdue tickets"
 
-#: app/routes/metricas.py:37
+#: app/routes/metricas.py:75
 msgid "Tickets próximos a vencer"
 msgstr "Tickets due soon"
 
-#: app/routes/metricas.py:38
+#: app/routes/metricas.py:76
 msgid "Tickets vencidos últimos 30 días"
 msgstr "Tickets overdue in the last 30 days"
 
-#: app/routes/metricas.py:39 app/templates/panel_metricas.html:47
+#: app/routes/metricas.py:77 app/templates/panel_metricas.html:47
 msgid "Cantidad de agentes"
 msgstr "Number of agents"
 
-#: app/routes/metricas.py:44 app/routes/metricas.py:59
+#: app/routes/metricas.py:82 app/routes/metricas.py:97
 msgid "Métrica"
 msgstr "Metric"
 
-#: app/routes/metricas.py:44 app/routes/metricas.py:59
+#: app/routes/metricas.py:82 app/routes/metricas.py:97
 msgid "Valor"
 msgstr "Value"
 
-#: app/routes/solicitudes.py:25 app/routes/solicitudes.py:155
-#: app/routes/solicitudes.py:227 app/routes/tickets.py:146
-#: app/routes/tickets.py:195 app/routes/tickets.py:215
-msgid "Ticket no encontrado"
-msgstr "Ticket not found"
+#: app/routes/palabra_clave.py:30 app/routes/palabra_clave.py:61
+#: app/routes/tickets.py:442
+msgid "Categoría inválida"
+msgstr "Invalid category"
 
-#: app/routes/solicitudes.py:32 app/routes/solicitudes.py:162
+#: app/routes/palabra_clave.py:38 app/routes/palabra_clave.py:69
+msgid "El peso debe ser un número mayor que cero"
+msgstr "Weight must be a number greater than zero"
+
+#: app/routes/palabra_clave.py:43
+msgid "Palabra clave creada"
+msgstr "Keyword created"
+
+#: app/routes/palabra_clave.py:74
+msgid "Palabra clave editada"
+msgstr "Keyword edited"
+
+#: app/routes/palabra_clave.py:87
+msgid "Palabra clave desactivada"
+msgstr "Keyword deactivated"
+
+#: app/routes/palabra_clave.py:99
+msgid "Palabra clave reactivada"
+msgstr "Keyword reactivated"
+
+#: app/routes/solicitudes.py:39 app/routes/solicitudes.py:169
 msgid "No tienes permiso para transferir este ticket"
 msgstr "You do not have permission to transfer this ticket"
 
-#: app/routes/solicitudes.py:42
+#: app/routes/solicitudes.py:49
 msgid "Solicitud de transferencia enviada"
 msgstr "Transfer request sent"
 
-#: app/routes/solicitudes.py:79 app/routes/solicitudes.py:105
-#: app/routes/solicitudes.py:131
+#: app/routes/solicitudes.py:86 app/routes/solicitudes.py:112
+#: app/routes/solicitudes.py:138
 msgid "Solicitud no encontrada"
 msgstr "Request not found"
 
-#: app/routes/solicitudes.py:85
+#: app/routes/solicitudes.py:92
 msgid "Usted no puede aceptar este ticket"
 msgstr "You cannot accept this ticket"
 
-#: app/routes/solicitudes.py:89
+#: app/routes/solicitudes.py:96
 msgid "Transferencia aceptada"
 msgstr "Transfer accepted"
 
-#: app/routes/solicitudes.py:111
+#: app/routes/solicitudes.py:118
 msgid "Usted no puede rechazar este ticket"
 msgstr "You cannot reject this ticket"
 
-#: app/routes/solicitudes.py:115
+#: app/routes/solicitudes.py:122
 msgid "Transferencia rechazada"
 msgstr "Transfer rejected"
 
-#: app/routes/solicitudes.py:138
+#: app/routes/solicitudes.py:145
 msgid "No tienes permiso para cancelar este ticket"
 msgstr "You do not have permission to cancel this request"
 
-#: app/routes/solicitudes.py:142
+#: app/routes/solicitudes.py:149
 msgid "Solicitud cancelada"
 msgstr "Request cancelled"
 
-#: app/routes/solicitudes.py:169
+#: app/routes/solicitudes.py:176
 msgid "Área destino no válida"
 msgstr "Invalid target area"
 
-#: app/routes/solicitudes.py:179
+#: app/routes/solicitudes.py:186
 msgid "Solicitud de escalamiento enviada"
 msgstr "Escalation request sent"
 
-#: app/routes/solicitudes.py:201
+#: app/routes/solicitudes.py:208
 msgid "Escalamiento aprobado"
 msgstr "Escalation approved"
 
-#: app/routes/solicitudes.py:215
+#: app/routes/solicitudes.py:222
 msgid "Escalamiento rechazado"
 msgstr "Escalation rejected"
 
-#: app/routes/solicitudes.py:234
+#: app/routes/solicitudes.py:241
 msgid "No tienes permiso para cambiar este ticket"
 msgstr "You do not have permission to change this ticket"
 
-#: app/routes/solicitudes.py:241
+#: app/routes/solicitudes.py:248
 msgid "La prioridad no es válida"
 msgstr "Invalid priority"
 
-#: app/routes/solicitudes.py:251
+#: app/routes/solicitudes.py:258
 msgid "Solicitud de cambio de prioridad enviada"
 msgstr "Priority change request sent"
 
-#: app/routes/solicitudes.py:276
+#: app/routes/solicitudes.py:283
 msgid "Cambio de prioridad aprobado"
 msgstr "Priority change approved"
 
-#: app/routes/solicitudes.py:291
+#: app/routes/solicitudes.py:298
 msgid "Cambio de prioridad rechazado"
 msgstr "Priority change rejected"
 
-#: app/routes/tickets.py:34
+#: app/routes/tickets.py:35
 #, python-format
 msgid "Ticket #%(id)s creado. Categoría: %(categoria)s, prioridad: %(prioridad)s"
 msgstr "Ticket #%(id)s created. Category: %(categoria)s, priority: %(prioridad)s"
 
-#: app/routes/tickets.py:37
+#: app/routes/tickets.py:38
 msgid "No se pudo crear el ticket, intenta de nuevo"
 msgstr "The ticket could not be created, please try again"
 
-#: app/routes/tickets.py:52
+#: app/routes/tickets.py:53
 msgid "Área no válida"
 msgstr "Invalid area"
 
-#: app/routes/tickets.py:61
+#: app/routes/tickets.py:62
 msgid "No tienes permiso para ver tickets de esa área"
 msgstr "You do not have permission to view tickets from that area"
 
-#: app/routes/tickets.py:152
+#: app/routes/tickets.py:153
 msgid "No tienes permiso sobre tickets de esa área"
 msgstr "You do not have permission over tickets from that area"
 
-#: app/routes/tickets.py:167
+#: app/routes/tickets.py:168
 msgid "Debes indicar el motivo para cerrar un ticket sin pasar por en progreso"
 msgstr ""
 "You must provide a reason to close a ticket without moving it to in "
 "progress"
 
-#: app/routes/tickets.py:175
+#: app/routes/tickets.py:176
 #, python-format
 msgid "Ticket #%(id)s actualizado a %(estado)s"
 msgstr "Ticket #%(id)s updated to %(estado)s"
 
-#: app/routes/tickets.py:181
+#: app/routes/tickets.py:182
 #, python-format
 msgid "El ticket se cerró, pero no se pudo guardar el motivo: %(error)s"
 msgstr "The ticket was closed, but the reason could not be saved: %(error)s"
 
-#: app/routes/tickets.py:204
+#: app/routes/tickets.py:205
 #, python-format
 msgid "Ticket #%(id)s reasignado correctamente"
 msgstr "Ticket #%(id)s reassigned successfully"
 
-#: app/routes/tickets.py:224
+#: app/routes/tickets.py:225
 msgid "Comentario agregado"
 msgstr "Comment added"
 
-#: app/routes/tickets.py:358 app/templates/admin_tickets.html:68
+#: app/routes/tickets.py:370 app/templates/admin_tickets.html:68
 #: app/templates/dashboard.html:16 app/templates/tickets_por_area.html:54
 msgid "ID"
 msgstr "ID"
 
-#: app/routes/tickets.py:358 app/templates/admin_tickets.html:68
-#: app/templates/dashboard.html:16 app/templates/ticket_detalle.html:9
-#: app/templates/tickets_por_area.html:54
+#: app/routes/tickets.py:370 app/templates/admin_tickets.html:68
+#: app/templates/dashboard.html:16 app/templates/palabras_clave.html:37
+#: app/templates/palabras_clave.html:76 app/templates/palabras_clave.html:116
+#: app/templates/ticket_detalle.html:9 app/templates/tickets_por_area.html:54
 msgid "Texto"
 msgstr "Text"
 
-#: app/routes/tickets.py:358 app/templates/admin_tickets.html:24
+#: app/routes/tickets.py:370 app/templates/admin_tickets.html:24
 #: app/templates/admin_tickets.html:68 app/templates/dashboard.html:16
-#: app/templates/ticket_detalle.html:11
+#: app/templates/palabras_clave.html:20 app/templates/palabras_clave.html:37
+#: app/templates/palabras_clave.html:80 app/templates/ticket_detalle.html:11
 msgid "Categoría"
 msgstr "Category"
 
-#: app/routes/tickets.py:358 app/templates/admin_tickets.html:38
+#: app/routes/tickets.py:370 app/templates/admin_tickets.html:38
 #: app/templates/admin_tickets.html:68 app/templates/dashboard.html:16
 #: app/templates/ticket_detalle.html:13 app/templates/tickets_por_area.html:20
 #: app/templates/tickets_por_area.html:54
 msgid "Prioridad"
 msgstr "Priority"
 
-#: app/routes/tickets.py:358 app/templates/admin_tickets.html:14
+#: app/routes/tickets.py:370 app/templates/admin_tickets.html:14
 #: app/templates/admin_tickets.html:68 app/templates/dashboard.html:17
-#: app/templates/ticket_detalle.html:15 app/templates/tickets_por_area.html:10
+#: app/templates/palabras_clave.html:37 app/templates/ticket_detalle.html:15
+#: app/templates/tickets_por_area.html:10
 #: app/templates/tickets_por_area.html:54
 msgid "Estado"
 msgstr "Status"
 
-#: app/routes/tickets.py:359
+#: app/routes/tickets.py:371
 msgid "Creador"
 msgstr "Created by"
 
-#: app/routes/tickets.py:359 app/templates/dashboard.html:17
+#: app/routes/tickets.py:371 app/templates/dashboard.html:17
 #: app/templates/ticket_detalle.html:23
 msgid "Fecha creación"
 msgstr "Created date"
 
-#: app/routes/tickets.py:359 app/templates/admin_tickets.html:68
+#: app/routes/tickets.py:371 app/templates/admin_tickets.html:68
 #: app/templates/ticket_detalle.html:25 app/templates/tickets_por_area.html:55
 msgid "Fecha límite"
 msgstr "Due date"
 
-#: app/routes/tickets.py:430
-msgid "Categoría inválida"
-msgstr "Invalid category"
-
-#: app/routes/tickets.py:435
+#: app/routes/tickets.py:447
 msgid "Categoría del ticket confirmada"
 msgstr "Ticket category confirmed"
+
+#: app/services/apelacion.py:26 app/services/solicitud_transferencia.py:27
+#: app/services/solicitud_transferencia.py:207
+#: app/services/solicitud_transferencia.py:378 app/services/tickets.py:278
+msgid "El ticket no ha sido encontrado"
+msgstr "The ticket was not found"
+
+#: app/services/apelacion.py:29
+msgid "El ticket debe estar cerrado para apelar su cierre"
+msgstr "The ticket must be closed to appeal its closure"
+
+#: app/services/apelacion.py:32
+msgid "Se requiere un motivo para apelar el ticket"
+msgstr "A reason is required to appeal the ticket"
+
+#: app/services/apelacion.py:41
+msgid "Ya hay una apelacion en curso con este ticket"
+msgstr "There is already an ongoing appeal for this ticket"
+
+#: app/services/apelacion.py:55
+msgid "No se pudo crear la apelacion"
+msgstr "The appeal could not be created"
+
+#: app/services/apelacion.py:60
+#, python-format
+msgid "Apelacion iniciada para Ticket #%(p1)s"
+msgstr "Appeal started for Ticket #%(p1)s"
+
+#: app/services/apelacion.py:78 app/services/apelacion.py:121
+msgid "La apelacion no ha sido encontrada"
+msgstr "The appeal was not found"
+
+#: app/services/apelacion.py:81 app/services/apelacion.py:124
+msgid "Esta apelacion ya ha sido respondida"
+msgstr "This appeal has already been resolved"
+
+#: app/services/apelacion.py:102
+msgid "No se pudo aceptar la apelacion"
+msgstr "The appeal could not be accepted"
+
+#: app/services/apelacion.py:136
+msgid "No se pudo rechazar la apelacion"
+msgstr "The appeal could not be rejected"
 
 #: app/services/autenticacion.py:57
 msgid "No se pudo registrar al usuario"
@@ -715,19 +807,78 @@ msgstr "The image cannot be larger than 2MB"
 msgid "El archivo no es una imagen válida"
 msgstr "The file is not a valid image"
 
-#: app/services/solicitud_transferencia.py:27
-#: app/services/solicitud_transferencia.py:206
-#: app/services/solicitud_transferencia.py:376 app/services/tickets.py:274
-msgid "El ticket no ha sido encontrado"
-msgstr "The ticket was not found"
+#: app/services/metricas.py:180
+msgid "Excelente"
+msgstr "Excellent"
+
+#: app/services/metricas.py:181
+msgid "Muy bueno"
+msgstr "Very good"
+
+#: app/services/metricas.py:182
+msgid "Aceptable"
+msgstr "Acceptable"
+
+#: app/services/metricas.py:183
+msgid "Necesita mejorar"
+msgstr "Needs improvement"
+
+#: app/services/palabra_clave.py:33 app/services/palabra_clave.py:73
+msgid "Esta palabra clave ya se encuentra registrada"
+msgstr "This keyword is already registered"
+
+#: app/services/palabra_clave.py:42
+msgid "No se pudo agregar la palabra clave"
+msgstr "The keyword could not be added"
+
+#: app/services/palabra_clave.py:49
+#, python-format
+msgid "palabra #%(p1)s creada: categoria=%(p2)s, peso=%(p3)s"
+msgstr "keyword #%(p1)s created: category=%(p2)s, weight=%(p3)s"
+
+#: app/services/palabra_clave.py:61 app/services/palabra_clave.py:101
+#: app/services/palabra_clave.py:127
+msgid "No se ha encontrado la palabra clave"
+msgstr "Keyword not found"
+
+#: app/services/palabra_clave.py:84
+msgid "No se pudo editar la palabra clave"
+msgstr "The keyword could not be edited"
+
+#: app/services/palabra_clave.py:91
+#, python-format
+msgid "palabra #%(p1)s editada: categoria=%(p2)s, peso=%(p3)s"
+msgstr "keyword #%(p1)s edited: category=%(p2)s, weight=%(p3)s"
+
+#: app/services/palabra_clave.py:110
+msgid "No se pudo desactivar la palabra clave"
+msgstr "The keyword could not be deactivated"
+
+#: app/services/palabra_clave.py:117
+#, python-format
+msgid "palabra #%(p1)s desactivada"
+msgstr "keyword #%(p1)s deactivated"
+
+#: app/services/palabra_clave.py:138
+msgid "Ya existe una palabra clave activa con el mismo texto y categoría"
+msgstr "An active keyword with the same text and category already exists"
+
+#: app/services/palabra_clave.py:147
+msgid "No se pudo reactivar la palabra clave"
+msgstr "The keyword could not be reactivated"
+
+#: app/services/palabra_clave.py:154
+#, python-format
+msgid "palabra #%(p1)s reactivada"
+msgstr "keyword #%(p1)s reactivated"
 
 #: app/services/solicitud_transferencia.py:30
 msgid "El ticket debe estar en progreso para solicitar transferencia"
 msgstr "The ticket must be in progress to request a transfer"
 
 #: app/services/solicitud_transferencia.py:39
-#: app/services/solicitud_transferencia.py:219
-#: app/services/solicitud_transferencia.py:389
+#: app/services/solicitud_transferencia.py:220
+#: app/services/solicitud_transferencia.py:391
 msgid "Ya hay una solicitud en curso con este ticket"
 msgstr "There is already an open request for this ticket"
 
@@ -757,197 +908,197 @@ msgid "Ticket #%(p1)s: solicitud a agente %(p2)s"
 msgstr "Ticket #%(p1)s: request to agent %(p2)s"
 
 #: app/services/solicitud_transferencia.py:89
-#: app/services/solicitud_transferencia.py:134
-#: app/services/solicitud_transferencia.py:171
-#: app/services/solicitud_transferencia.py:265
-#: app/services/solicitud_transferencia.py:315
-#: app/services/solicitud_transferencia.py:436
-#: app/services/solicitud_transferencia.py:493
+#: app/services/solicitud_transferencia.py:135
+#: app/services/solicitud_transferencia.py:172
+#: app/services/solicitud_transferencia.py:266
+#: app/services/solicitud_transferencia.py:317
+#: app/services/solicitud_transferencia.py:438
+#: app/services/solicitud_transferencia.py:495
 msgid "La solicitud no ha sido encontrada"
 msgstr "The request was not found"
 
 #: app/services/solicitud_transferencia.py:92
-#: app/services/solicitud_transferencia.py:137
-#: app/services/solicitud_transferencia.py:174
-#: app/services/solicitud_transferencia.py:268
-#: app/services/solicitud_transferencia.py:318
-#: app/services/solicitud_transferencia.py:439
-#: app/services/solicitud_transferencia.py:496
+#: app/services/solicitud_transferencia.py:138
+#: app/services/solicitud_transferencia.py:175
+#: app/services/solicitud_transferencia.py:269
+#: app/services/solicitud_transferencia.py:320
+#: app/services/solicitud_transferencia.py:441
+#: app/services/solicitud_transferencia.py:498
 msgid "La solicitud ya fue resuelta"
 msgstr "The request has already been resolved"
 
 #: app/services/solicitud_transferencia.py:97
-#: app/services/solicitud_transferencia.py:273
-#: app/services/solicitud_transferencia.py:444
+#: app/services/solicitud_transferencia.py:274
+#: app/services/solicitud_transferencia.py:446
 msgid "El ticket no tiene el estado permitido"
 msgstr "The ticket is not in an allowed state"
 
-#: app/services/solicitud_transferencia.py:112
+#: app/services/solicitud_transferencia.py:113
 msgid "No se pudo aceptar la solicitud"
 msgstr "The request could not be accepted"
 
-#: app/services/solicitud_transferencia.py:117
+#: app/services/solicitud_transferencia.py:118
 #, python-format
 msgid "Ticket #%(p1)s: %(p2)s -> %(p3)s (solicitud #%(p4)s)"
 msgstr "Ticket #%(p1)s: %(p2)s -> %(p3)s (request #%(p4)s)"
 
-#: app/services/solicitud_transferencia.py:148
-#: app/services/solicitud_transferencia.py:329
-#: app/services/solicitud_transferencia.py:507
+#: app/services/solicitud_transferencia.py:149
+#: app/services/solicitud_transferencia.py:331
+#: app/services/solicitud_transferencia.py:509
 msgid "No se pudo rechazar la solicitud"
 msgstr "The request could not be rejected"
 
-#: app/services/solicitud_transferencia.py:153
-#: app/services/solicitud_transferencia.py:334
+#: app/services/solicitud_transferencia.py:154
+#: app/services/solicitud_transferencia.py:336
 #, python-format
 msgid "Solicitud #%(p1)s rechazada (ticket #%(p2)s)"
 msgstr "Request #%(p1)s rejected (ticket #%(p2)s)"
 
-#: app/services/solicitud_transferencia.py:185
+#: app/services/solicitud_transferencia.py:186
 msgid "No se pudo cancelar la solicitud"
 msgstr "The request could not be cancelled"
 
-#: app/services/solicitud_transferencia.py:190
+#: app/services/solicitud_transferencia.py:191
 #, python-format
 msgid "Solicitud #%(p1)s cancelada (ticket #%(p2)s)"
 msgstr "Request #%(p1)s cancelled (ticket #%(p2)s)"
 
-#: app/services/solicitud_transferencia.py:209
+#: app/services/solicitud_transferencia.py:210
 msgid "El ticket debe estar en progreso para solicitar cambio de area"
 msgstr "The ticket must be in progress to request an area change"
 
-#: app/services/solicitud_transferencia.py:221
+#: app/services/solicitud_transferencia.py:222
 msgid "El area no puede ser la misma"
 msgstr "The area cannot be the same"
 
-#: app/services/solicitud_transferencia.py:223
-#: app/services/solicitud_transferencia.py:393
+#: app/services/solicitud_transferencia.py:224
+#: app/services/solicitud_transferencia.py:395
 msgid "La solicitud requiere motivo"
 msgstr "The request requires a reason"
 
-#: app/services/solicitud_transferencia.py:240
+#: app/services/solicitud_transferencia.py:241
 msgid "No se pudo crear la solicitud de escalamiento"
 msgstr "The escalation request could not be created"
 
-#: app/services/solicitud_transferencia.py:245
+#: app/services/solicitud_transferencia.py:246
 #, python-format
 msgid "Ticket #%(p1)s: escalamiento solicitado de %(p2)s a %(p3)s"
 msgstr "Ticket #%(p1)s: escalation requested from %(p2)s to %(p3)s"
 
-#: app/services/solicitud_transferencia.py:276
+#: app/services/solicitud_transferencia.py:277
 msgid "Esta solicitud no es un escalamiento de área"
 msgstr "This request is not an area escalation"
 
-#: app/services/solicitud_transferencia.py:292
+#: app/services/solicitud_transferencia.py:294
 msgid "No se pudo aceptar la solicitud de escalamiento"
 msgstr "The escalation request could not be accepted"
 
-#: app/services/solicitud_transferencia.py:297
+#: app/services/solicitud_transferencia.py:299
 #, python-format
 msgid "Ticket #%(p1)s: escalamiento aprobado a %(p2)s (solicitud #%(p3)s)"
 msgstr "Ticket #%(p1)s: escalation approved to %(p2)s (request #%(p3)s)"
 
-#: app/services/solicitud_transferencia.py:379
+#: app/services/solicitud_transferencia.py:381
 msgid "El ticket debe estar en progreso para solicitar cambio de prioridad"
 msgstr "The ticket must be in progress to request a priority change"
 
-#: app/services/solicitud_transferencia.py:391
+#: app/services/solicitud_transferencia.py:393
 msgid "La prioridad no puede ser la misma"
 msgstr "The priority cannot be the same"
 
-#: app/services/solicitud_transferencia.py:411
+#: app/services/solicitud_transferencia.py:413
 msgid "No se pudo crear la solicitud de cambio de prioridad"
 msgstr "The priority change request could not be created"
 
-#: app/services/solicitud_transferencia.py:416
+#: app/services/solicitud_transferencia.py:418
 #, python-format
 msgid "Ticket #%(p1)s: cambio de prioridad solicitado de %(p2)s a %(p3)s"
 msgstr "Ticket #%(p1)s: priority change requested from %(p2)s to %(p3)s"
 
-#: app/services/solicitud_transferencia.py:447
+#: app/services/solicitud_transferencia.py:449
 msgid "Esta solicitud no es un cambio de prioridad"
 msgstr "This request is not a priority change"
 
-#: app/services/solicitud_transferencia.py:469
+#: app/services/solicitud_transferencia.py:471
 msgid "No se pudo aceptar la solicitud de cambio de prioridad"
 msgstr "The priority change request could not be accepted"
 
-#: app/services/solicitud_transferencia.py:474
+#: app/services/solicitud_transferencia.py:476
 #, python-format
 msgid "Ticket #%(p1)s: cambio de prioridad aprobado a %(p2)s (solicitud #%(p3)s)"
 msgstr "Ticket #%(p1)s: priority change approved to %(p2)s (request #%(p3)s)"
 
-#: app/services/solicitud_transferencia.py:512
+#: app/services/solicitud_transferencia.py:514
 #, python-format
 msgid "Solicitud #%(p1)s cambio a %(p2)s rechazada (ticket #%(p3)s)"
 msgstr "Request #%(p1)s change to %(p2)s rejected (ticket #%(p3)s)"
 
-#: app/services/tickets.py:60
+#: app/services/tickets.py:61
 msgid "No se pudo crear el ticket"
 msgstr "The ticket could not be created"
 
-#: app/services/tickets.py:75
+#: app/services/tickets.py:76
 #, python-format
 msgid "Ticket #%(p1)s creado: categoria=%(p2)s, prioridad=%(p3)s"
 msgstr "Ticket #%(p1)s created: category=%(p2)s, priority=%(p3)s"
 
-#: app/services/tickets.py:108 app/services/tickets.py:158
-#: app/services/tickets.py:185
+#: app/services/tickets.py:109 app/services/tickets.py:160
+#: app/services/tickets.py:189
 msgid "El ticket no a sido encontrado"
 msgstr "The ticket was not found"
 
-#: app/services/tickets.py:111
+#: app/services/tickets.py:112
 msgid "La transicion no es valida"
 msgstr "The transition is not valid"
 
-#: app/services/tickets.py:117
+#: app/services/tickets.py:118
 msgid "Se requiere un agente_id para pasar a EN_PROGRESO"
 msgstr "An agent_id is required to move to IN_PROGRESS"
 
-#: app/services/tickets.py:135
+#: app/services/tickets.py:137
 msgid "No se pudo cambiar el estado del ticket"
 msgstr "The ticket status could not be changed"
 
-#: app/services/tickets.py:141
+#: app/services/tickets.py:143
 #, python-format
 msgid "Ticket #%(p1)s: %(p2)s -> %(p3)s"
 msgstr "Ticket #%(p1)s: %(p2)s -> %(p3)s"
 
-#: app/services/tickets.py:161
+#: app/services/tickets.py:163
 msgid "Este ticket no esta en un estado valido para su reasignacion"
 msgstr "This ticket is not in a valid state for reassignment"
 
-#: app/services/tickets.py:163
+#: app/services/tickets.py:165
 msgid "Este ticket ya tiene asignado a este mismo agente"
 msgstr "This ticket is already assigned to that same agent"
 
-#: app/services/tickets.py:172
+#: app/services/tickets.py:176
 msgid "No se pudo reasignar el agente"
 msgstr "The agent could not be reassigned"
 
-#: app/services/tickets.py:178
+#: app/services/tickets.py:182
 #, python-format
 msgid "Ticket #%(p1)s: agente %(p2)s -> %(p3)s"
 msgstr "Ticket #%(p1)s: agent %(p2)s -> %(p3)s"
 
-#: app/services/tickets.py:188
+#: app/services/tickets.py:192
 msgid "El comentario no puede estar vacio"
 msgstr "The comment cannot be empty"
 
-#: app/services/tickets.py:200
+#: app/services/tickets.py:204
 msgid "No se pudo agregar el comentario"
 msgstr "The comment could not be added"
 
-#: app/services/tickets.py:206
+#: app/services/tickets.py:210
 #, python-format
 msgid "Se agrego un comentario al ticket #%(p1)s"
 msgstr "A comment was added to ticket #%(p1)s"
 
-#: app/services/tickets.py:277
+#: app/services/tickets.py:281
 msgid "Este ticket ya tiene confirmada su categoría"
 msgstr "This ticket already has its category confirmed"
 
-#: app/services/tickets.py:290
+#: app/services/tickets.py:305
 msgid "No se pudo confirmar la clasificación"
 msgstr "The classification could not be confirmed"
 
@@ -1030,8 +1181,50 @@ msgstr "Next"
 msgid "No hay tickets que coincidan con los filtros seleccionados."
 msgstr "There are no tickets matching the selected filters."
 
+#: app/templates/apelaciones_pendientes.html:2
+#: app/templates/apelaciones_pendientes.html:5
+msgid "Apelaciones pendientes"
+msgstr "Pending appeals"
+
+#: app/templates/apelaciones_pendientes.html:13
+#: app/templates/cambios_prioridad_pendientes.html:19
+#: app/templates/escalamientos_pendientes.html:19
+#: app/templates/revision_clasificacion.html:17
+#: app/templates/solicitudes_pendientes.html:20
+#: app/templates/ticket_detalle.html:5
+msgid "Ticket"
+msgstr "Ticket"
+
+#: app/templates/apelaciones_pendientes.html:14
+msgid "Motivo"
+msgstr "Reason"
+
+#: app/templates/apelaciones_pendientes.html:16
+#: app/templates/palabras_clave.html:37
+msgid "Acciones"
+msgstr "Actions"
+
+#: app/templates/apelaciones_pendientes.html:32
+#: app/templates/solicitudes_pendientes.html:40
+#: app/templates/ticket_detalle.html:85 app/templates/ticket_detalle.html:143
+msgid "Aceptar"
+msgstr "Accept"
+
+#: app/templates/apelaciones_pendientes.html:36
+#: app/templates/cambios_prioridad_pendientes.html:35
+#: app/templates/escalamientos_pendientes.html:35
+#: app/templates/solicitudes_pendientes.html:45
+#: app/templates/ticket_detalle.html:91 app/templates/ticket_detalle.html:149
+#: app/templates/ticket_detalle.html:162 app/templates/ticket_detalle.html:175
+msgid "Rechazar"
+msgstr "Reject"
+
+#: app/templates/apelaciones_pendientes.html:46
+msgid "No hay apelaciones pendientes."
+msgstr "There are no pending appeals."
+
 #: app/templates/auditoria.html:2 app/templates/auditoria.html:5
-#: app/templates/base.html:150
+#: app/templates/base.html:155
 msgid "Log de auditoría"
 msgstr "Audit log"
 
@@ -1068,101 +1261,114 @@ msgstr "Notifications"
 msgid "Marcar todas como leídas"
 msgstr "Mark all as read"
 
-#: app/templates/base.html:82 app/templates/base.html:217
+#: app/templates/base.html:82 app/templates/base.html:223
 msgid "Sin notificaciones"
 msgstr "No notifications"
 
-#: app/templates/base.html:91
+#: app/templates/base.html:90 app/templates/perfil.html:33
+msgid "Foto de perfil"
+msgstr "Profile photo"
+
+#: app/templates/base.html:95
 msgid "Cuenta"
 msgstr "Account"
 
-#: app/templates/base.html:98 app/templates/perfil.html:2
+#: app/templates/base.html:102 app/templates/perfil.html:2
 #: app/templates/perfil.html:25
 msgid "Mi perfil"
 msgstr "My profile"
 
-#: app/templates/base.html:100
+#: app/templates/base.html:104
 msgid "Cerrar sesión"
 msgstr "Log out"
 
-#: app/templates/base.html:106
+#: app/templates/base.html:110
 msgid "Abrir menú de navegación"
 msgstr "Open navigation menu"
 
-#: app/templates/base.html:119
+#: app/templates/base.html:123
 msgid "Panel"
 msgstr "Dashboard"
 
-#: app/templates/base.html:125
+#: app/templates/base.html:129
 msgid "Tickets"
 msgstr "Tickets"
 
-#: app/templates/base.html:127
+#: app/templates/base.html:131
 msgid "Todos los tickets"
 msgstr "All tickets"
 
-#: app/templates/base.html:128 app/templates/base.html:161
-#: app/templates/base.html:175 app/templates/dashboard.html:2
+#: app/templates/base.html:132 app/templates/base.html:167
+#: app/templates/base.html:181 app/templates/dashboard.html:2
 #: app/templates/dashboard.html:5
 msgid "Mis tickets"
 msgstr "My tickets"
 
-#: app/templates/base.html:135 app/templates/base.html:169
+#: app/templates/base.html:139 app/templates/base.html:175
 msgid "Solicitudes"
 msgstr "Requests"
 
-#: app/templates/base.html:137
+#: app/templates/base.html:141
 msgid "Transferencias"
 msgstr "Transfers"
 
-#: app/templates/base.html:138
+#: app/templates/base.html:142
 msgid "Escalamientos"
 msgstr "Escalations"
 
-#: app/templates/base.html:139
+#: app/templates/base.html:143
 msgid "Cambios de prioridad"
 msgstr "Priority changes"
 
-#: app/templates/base.html:140
+#: app/templates/base.html:144
 msgid "Revisión IA"
 msgstr "AI Review"
 
-#: app/templates/base.html:147
+#: app/templates/base.html:145
+msgid "Apelaciones"
+msgstr "Appeals"
+
+#: app/templates/base.html:152
 msgid "Administración"
 msgstr "Administration"
 
-#: app/templates/base.html:149 app/templates/registro.html:3
+#: app/templates/base.html:154 app/templates/registro.html:3
 msgid "Registrar usuario"
 msgstr "Register user"
 
-#: app/templates/base.html:157
+#: app/templates/base.html:156
+msgid "Palabras clave"
+msgstr "Keywords"
+
+#: app/templates/base.html:163
 msgid "Mi área"
 msgstr "My area"
 
-#: app/templates/base.html:195 app/templates/tickets_por_area.html:90
+#: app/templates/base.html:201 app/templates/base.html:224
+#: app/templates/tickets_por_area.html:90
 #: app/templates/tickets_por_area.html:110
 msgid "Cerrar"
 msgstr "Close"
 
-#: app/templates/base.html:212
+#: app/templates/base.html:218
 msgid "Notificación nueva"
 msgstr "New notification"
 
-#: app/templates/base.html:213
+#: app/templates/base.html:219
 msgid "ahora"
 msgstr "just now"
 
-#: app/templates/base.html:214
+#: app/templates/base.html:220
 #, python-format
 msgid "hace %(n)s min"
 msgstr "%(n)s min ago"
 
-#: app/templates/base.html:215
+#: app/templates/base.html:221
 #, python-format
 msgid "hace %(n)s h"
 msgstr "%(n)s h ago"
 
-#: app/templates/base.html:216
+#: app/templates/base.html:222
 #, python-format
 msgid "hace %(n)s d"
 msgstr "%(n)s d ago"
@@ -1175,13 +1381,6 @@ msgstr "Pending priority changes"
 #: app/templates/cambios_prioridad_pendientes.html:12
 msgid "No hay cambios de prioridad pendientes de aprobación."
 msgstr "There are no priority changes pending approval."
-
-#: app/templates/cambios_prioridad_pendientes.html:19
-#: app/templates/escalamientos_pendientes.html:19
-#: app/templates/solicitudes_pendientes.html:20
-#: app/templates/ticket_detalle.html:5
-msgid "Ticket"
-msgstr "Ticket"
 
 #: app/templates/cambios_prioridad_pendientes.html:22
 #: app/templates/escalamientos_pendientes.html:22
@@ -1198,14 +1397,9 @@ msgstr "View ticket"
 
 #: app/templates/cambios_prioridad_pendientes.html:30
 #: app/templates/escalamientos_pendientes.html:30
+#: app/templates/ticket_detalle.html:156 app/templates/ticket_detalle.html:169
 msgid "Aprobar"
 msgstr "Approve"
-
-#: app/templates/cambios_prioridad_pendientes.html:35
-#: app/templates/escalamientos_pendientes.html:35
-#: app/templates/solicitudes_pendientes.html:45
-msgid "Rechazar"
-msgstr "Reject"
 
 #: app/templates/crear_ticket.html:10
 msgid "Reportar un problema"
@@ -1277,6 +1471,75 @@ msgstr "Password"
 msgid "Entrar"
 msgstr "Sign in"
 
+#: app/templates/palabras_clave.html:2 app/templates/palabras_clave.html:5
+msgid "Palabras clave del clasificador"
+msgstr "Classifier keywords"
+
+#: app/templates/palabras_clave.html:8
+msgid "Ocultar inactivas"
+msgstr "Hide inactive"
+
+#: app/templates/palabras_clave.html:8
+msgid "Mostrar inactivas"
+msgstr "Show inactive"
+
+#: app/templates/palabras_clave.html:15
+msgid "Buscar"
+msgstr "Search"
+
+#: app/templates/palabras_clave.html:17
+msgid "Buscar por texto..."
+msgstr "Search by text..."
+
+#: app/templates/palabras_clave.html:22
+msgid "Todas"
+msgstr "All"
+
+#: app/templates/palabras_clave.html:37 app/templates/palabras_clave.html:92
+#: app/templates/palabras_clave.html:130
+msgid "Peso"
+msgstr "Weight"
+
+#: app/templates/palabras_clave.html:47
+msgid "Activa"
+msgstr "Active"
+
+#: app/templates/palabras_clave.html:47
+msgid "Inactiva"
+msgstr "Inactive"
+
+#: app/templates/palabras_clave.html:50
+msgid "Editar"
+msgstr "Edit"
+
+#: app/templates/palabras_clave.html:54
+msgid "Desactivar"
+msgstr "Deactivate"
+
+#: app/templates/palabras_clave.html:59
+msgid "Reactivar"
+msgstr "Reactivate"
+
+#: app/templates/palabras_clave.html:71
+msgid "Editar palabra clave"
+msgstr "Edit keyword"
+
+#: app/templates/palabras_clave.html:97 app/templates/perfil.html:69
+msgid "Guardar"
+msgstr "Save"
+
+#: app/templates/palabras_clave.html:108
+msgid "No hay palabras clave registradas."
+msgstr "No keywords registered."
+
+#: app/templates/palabras_clave.html:112
+msgid "Nueva palabra clave"
+msgstr "New keyword"
+
+#: app/templates/palabras_clave.html:133
+msgid "Agregar"
+msgstr "Add"
+
 #: app/templates/panel_metricas.html:2 app/templates/panel_metricas.html:5
 msgid "Panel de Métricas"
 msgstr "Metrics dashboard"
@@ -1293,9 +1556,80 @@ msgstr "By category"
 msgid "Por prioridad"
 msgstr "By priority"
 
-#: app/templates/perfil.html:33
-msgid "Foto de perfil"
-msgstr "Profile photo"
+#: app/templates/panel_metricas.html:112
+msgid "Confianza del clasificador"
+msgstr "Classifier confidence"
+
+#: app/templates/panel_metricas.html:118
+msgid "Tickets en revisión"
+msgstr "Tickets under review"
+
+#: app/templates/panel_metricas.html:128
+msgid "Tasa de corrección (30 días)"
+msgstr "Correction rate (30 days)"
+
+#: app/templates/panel_metricas.html:133 app/templates/panel_metricas.html:147
+#: app/templates/perfil.html:113 app/templates/perfil.html:125
+msgid "sin datos"
+msgstr "no data"
+
+#: app/templates/panel_metricas.html:142
+msgid "Exactitud en producción (30 días)"
+msgstr "Production accuracy (30 days)"
+
+#: app/templates/panel_metricas.html:156
+msgid "Exactitud de laboratorio"
+msgstr "Lab accuracy"
+
+#: app/templates/panel_metricas.html:161
+msgid "modelo sin entrenar"
+msgstr "model not trained"
+
+#: app/templates/panel_metricas.html:176
+msgid "Desempeño de agentes (últimos 30 días)"
+msgstr "Agent performance (last 30 days)"
+
+#: app/templates/panel_metricas.html:178
+msgid "Área"
+msgstr "Area"
+
+#: app/templates/panel_metricas.html:180
+msgid "Todas las áreas"
+msgstr "All areas"
+
+#: app/templates/panel_metricas.html:198
+#, python-format
+msgid "%(n)s agentes"
+msgstr "%(n)s agents"
+
+#: app/templates/panel_metricas.html:199
+#, python-format
+msgid "%(n)s cerrados"
+msgstr "%(n)s closed"
+
+#: app/templates/panel_metricas.html:201
+msgid "SLA prom."
+msgstr "Avg. SLA"
+
+#: app/templates/panel_metricas.html:207 app/templates/panel_metricas.html:280
+msgid "Expandir"
+msgstr "Expand"
+
+#: app/templates/panel_metricas.html:215
+msgid "Cerrados"
+msgstr "Closed"
+
+#: app/templates/panel_metricas.html:216
+msgid "Tiempo prom. (h)"
+msgstr "Avg. time (h)"
+
+#: app/templates/panel_metricas.html:217 app/templates/panel_metricas.html:258
+msgid "Cumplimiento SLA"
+msgstr "SLA compliance"
+
+#: app/templates/panel_metricas.html:279
+msgid "Contraer"
+msgstr "Collapse"
 
 #: app/templates/perfil.html:46
 msgid "Subir foto"
@@ -1324,10 +1658,6 @@ msgstr "Support area:"
 #: app/templates/perfil.html:65
 msgid "Cambiar nombre"
 msgstr "Change name"
-
-#: app/templates/perfil.html:69
-msgid "Guardar"
-msgstr "Save"
 
 #: app/templates/perfil.html:76
 msgid "Cambiar contraseña"
@@ -1360,6 +1690,43 @@ msgstr "Tickets taken"
 #: app/templates/perfil.html:102
 msgid "Tickets cerrados"
 msgstr "Tickets closed"
+
+#: app/templates/perfil.html:106
+msgid "Cerrados (últimos 30 días)"
+msgstr "Closed (last 30 days)"
+
+#: app/templates/perfil.html:109
+msgid "Tiempo promedio de resolución"
+msgstr "Average resolution time"
+
+#: app/templates/perfil.html:111
+msgid "h"
+msgstr "h"
+
+#: app/templates/perfil.html:118
+msgid "Cumplimiento de SLA"
+msgstr "SLA compliance"
+
+#: app/templates/perfil.html:139
+msgid "Comparativa con tu área"
+msgstr "Comparison with your area"
+
+#: app/templates/perfil.html:146
+msgid "Promedio del área"
+msgstr "Area average"
+
+#: app/templates/perfil.html:149
+msgid "pts vs. el promedio"
+msgstr "pts vs. the average"
+
+#: app/templates/perfil.html:155
+#, python-format
+msgid "Puesto %(pos)s de %(total)s en tu área"
+msgstr "Rank %(pos)s of %(total)s in your area"
+
+#: app/templates/perfil.html:156
+msgid "¡El mejor de tu área en los últimos 30 días!"
+msgstr "The best in your area in the last 30 days!"
 
 #: app/templates/registro.html:13
 msgid "Registrar nuevo usuario"
@@ -1443,10 +1810,6 @@ msgstr "Target: %(nombre)s"
 msgid "Cancelar"
 msgstr "Cancel"
 
-#: app/templates/solicitudes_pendientes.html:40
-msgid "Aceptar"
-msgstr "Accept"
-
 #: app/templates/ticket_detalle.html:2
 #, python-format
 msgid "Ticket #%(id)s"
@@ -1456,8 +1819,9 @@ msgstr "Ticket #%(id)s"
 msgid "Creado por"
 msgstr "Created by"
 
-#: app/templates/ticket_detalle.html:18 app/templates/ticket_detalle.html:72
-#: app/templates/ticket_detalle.html:77 app/templates/ticket_detalle.html:93
+#: app/templates/ticket_detalle.html:18 app/templates/ticket_detalle.html:76
+#: app/templates/ticket_detalle.html:125 app/templates/ticket_detalle.html:130
+#: app/templates/ticket_detalle.html:190
 msgid "Usuario desconocido"
 msgstr "Unknown user"
 
@@ -1466,72 +1830,100 @@ msgid ""
 "La categoría de este ticket fue asignada automáticamente con baja "
 "confianza y está pendiente de revisión."
 msgstr ""
-"This ticket's category was assigned automatically with low confidence "
-"and is pending review."
+"This ticket's category was assigned automatically with low confidence and"
+" is pending review."
 
 #: app/templates/ticket_detalle.html:46
 msgid "Confirmar categoría"
 msgstr "Confirm category"
 
-#: app/templates/ticket_detalle.html:55
-msgid "Solicitudes del ticket"
-msgstr "Ticket requests"
+#: app/templates/ticket_detalle.html:56
+msgid "Apelación en revisión"
+msgstr "Appeal under review"
 
-#: app/templates/ticket_detalle.html:70
-msgid "Transferencia"
-msgstr "Transfer"
+#: app/templates/ticket_detalle.html:57
+msgid ""
+"Tu apelación sobre el cierre de este ticket está pendiente de revisión "
+"por un administrador."
+msgstr ""
+"Your appeal about this ticket's closure is pending review by an "
+"administrator."
 
-#: app/templates/ticket_detalle.html:77
+#: app/templates/ticket_detalle.html:59
+msgid "¿No estás de acuerdo con el cierre de este ticket?"
+msgstr "Don't agree with this ticket's closure?"
+
+#: app/templates/ticket_detalle.html:63
+msgid "Explica por qué crees que este cierre fue incorrecto"
+msgstr "Explain why you think this closure was incorrect"
+
+#: app/templates/ticket_detalle.html:64
+msgid "Apelar decisión"
+msgstr "Appeal decision"
+
+#: app/templates/ticket_detalle.html:74
+msgid "Apelación pendiente de este ticket"
+msgstr "Pending appeal for this ticket"
+
+#: app/templates/ticket_detalle.html:76 app/templates/ticket_detalle.html:130
 #, python-format
 msgid "Solicitado por %(nombre)s"
 msgstr "Requested by %(nombre)s"
 
-#: app/templates/ticket_detalle.html:79
+#: app/templates/ticket_detalle.html:108
+msgid "Solicitudes del ticket"
+msgstr "Ticket requests"
+
+#: app/templates/ticket_detalle.html:123
+msgid "Transferencia"
+msgstr "Transfer"
+
+#: app/templates/ticket_detalle.html:132
 msgid "resuelto"
 msgstr "resolved"
 
-#: app/templates/ticket_detalle.html:90
+#: app/templates/ticket_detalle.html:187
 msgid "Comentarios"
 msgstr "Comments"
 
-#: app/templates/ticket_detalle.html:98
+#: app/templates/ticket_detalle.html:195
 msgid "Sin comentarios todavía."
 msgstr "No comments yet."
 
-#: app/templates/ticket_detalle.html:105
+#: app/templates/ticket_detalle.html:202
 msgid "Escribe un comentario..."
 msgstr "Write a comment..."
 
-#: app/templates/ticket_detalle.html:107
+#: app/templates/ticket_detalle.html:204
 msgid "Comentar"
 msgstr "Comment"
 
-#: app/templates/ticket_detalle.html:113
+#: app/templates/ticket_detalle.html:210
 msgid "Acciones sobre el ticket"
 msgstr "Ticket actions"
 
-#: app/templates/ticket_detalle.html:114
+#: app/templates/ticket_detalle.html:211
 msgid "Todas requieren aprobación antes de aplicarse."
 msgstr "All require approval before taking effect."
 
-#: app/templates/ticket_detalle.html:121
+#: app/templates/ticket_detalle.html:218
 msgid "Agente destino"
 msgstr "Target agent"
 
-#: app/templates/ticket_detalle.html:131
+#: app/templates/ticket_detalle.html:228
 msgid "Motivo (opcional)"
 msgstr "Reason (optional)"
 
-#: app/templates/ticket_detalle.html:135 app/templates/ticket_detalle.html:171
-#: app/templates/ticket_detalle.html:197
+#: app/templates/ticket_detalle.html:232 app/templates/ticket_detalle.html:268
+#: app/templates/ticket_detalle.html:294
 msgid "Enviar"
 msgstr "Send"
 
-#: app/templates/ticket_detalle.html:143
+#: app/templates/ticket_detalle.html:240
 msgid "Escalar a otra área"
 msgstr "Escalate to another area"
 
-#: app/templates/ticket_detalle.html:144
+#: app/templates/ticket_detalle.html:241
 msgid ""
 "El ticket queda sin agente asignado, disponible para cualquier agente del"
 " área destino."
@@ -1539,15 +1931,15 @@ msgstr ""
 "The ticket is left with no assigned agent, available to any agent in the "
 "target area."
 
-#: app/templates/ticket_detalle.html:148
+#: app/templates/ticket_detalle.html:245
 msgid "Área destino"
 msgstr "Target area"
 
-#: app/templates/ticket_detalle.html:167 app/templates/ticket_detalle.html:193
+#: app/templates/ticket_detalle.html:264 app/templates/ticket_detalle.html:290
 msgid "Motivo (obligatorio)"
 msgstr "Reason (required)"
 
-#: app/templates/ticket_detalle.html:183
+#: app/templates/ticket_detalle.html:280
 msgid "Nueva prioridad"
 msgstr "New priority"
 

@@ -19,7 +19,7 @@
         font-size: 2rem;
         font-weight: 600;
         color: #fff;
-        background: linear-gradient(135deg, #4a5fd6, #7a4ad6);
+        background: linear-gradient(135deg, var(--accent-500), var(--cyan-500));
     }
 </style>
 <h2 class="mb-4">{{ _('Mi perfil') }}</h2>
@@ -99,7 +99,65 @@
                 {% if usuario.rol.value == "agente" %}
                 <hr>
                 <p class="mb-2"><span class="meta-label">{{ _('Tickets tomados') }}</span> {{ estadisticas.tickets_tomados }}</p>
-                <p class="mb-0"><span class="meta-label">{{ _('Tickets cerrados') }}</span> {{ estadisticas.tickets_cerrados }}</p>
+                <p class="mb-2"><span class="meta-label">{{ _('Tickets cerrados') }}</span> {{ estadisticas.tickets_cerrados }}</p>
+
+                {% if metricas_agente %}
+                <hr>
+                <p class="mb-1"><span class="meta-label">{{ _('Cerrados (últimos 30 días)') }}</span> {{ metricas_agente.tickets_cerrados }}</p>
+
+                <p class="mb-1 mt-3">
+                    <span class="meta-label">{{ _('Tiempo promedio de resolución') }}</span>
+                    {% if metricas_agente.tiempo_promedio_resolucion_horas is not none %}
+                        <span class="badge bg-secondary">{{ "%.1f"|format(metricas_agente.tiempo_promedio_resolucion_horas) }} {{ _('h') }}</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ _('sin datos') }}</span>
+                    {% endif %}
+                </p>
+
+                <p class="mb-1 mt-3">
+                    <span class="meta-label">{{ _('Cumplimiento de SLA') }}</span>
+                    {% if metricas_agente.cumplimiento_sla is not none %}
+                        {% set porcentaje = (metricas_agente.cumplimiento_sla * 100) | round(0) | int %}
+                        <span class="{% if porcentaje >= 80 %}text-success{% elif porcentaje >= 50 %}text-warning{% else %}text-danger{% endif %} fw-semibold">
+                            {{ porcentaje }}%
+                        </span>
+                    {% else %}
+                        <span class="text-muted">{{ _('sin datos') }}</span>
+                    {% endif %}
+                </p>
+                {% if metricas_agente.cumplimiento_sla is not none %}
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar {% if porcentaje >= 80 %}bg-success{% elif porcentaje >= 50 %}bg-warning{% else %}bg-danger{% endif %}"
+                         role="progressbar" style="width: {{ porcentaje }}%;"
+                         aria-valuenow="{{ porcentaje }}" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if comparativa_area and comparativa_area.nivel_clave %}
+                <hr>
+                <h6 class="mb-2">{{ _('Comparativa con tu área') }}</h6>
+                <p class="mb-2">
+                    <span class="badge-pill nivel-{{ comparativa_area.nivel_clave }}">{{ comparativa_area.nivel_texto }}</span>
+                </p>
+                {% if comparativa_area.promedio_sla is not none %}
+                {% set diferencia = ((metricas_agente.cumplimiento_sla - comparativa_area.promedio_sla) * 100) | round(0) | int %}
+                <p class="mb-1 small">
+                    {{ _('Promedio del área') }}: {{ "%.0f"|format(comparativa_area.promedio_sla * 100) }}%
+                    &middot;
+                    <span class="{% if diferencia > 0 %}text-success{% elif diferencia < 0 %}text-danger{% else %}text-muted{% endif %} fw-semibold">
+                        {% if diferencia > 0 %}+{% endif %}{{ diferencia }} {{ _('pts vs. el promedio') }}
+                    </span>
+                </p>
+                {% endif %}
+                {% if comparativa_area.posicion and comparativa_area.total_agentes > 1 %}
+                <p class="mb-0 small text-muted">
+                    {{ _('Puesto %(pos)s de %(total)s en tu área', pos=comparativa_area.posicion, total=comparativa_area.total_agentes) }}
+                    {% if comparativa_area.posicion == 1 %}&middot; {{ _('¡El mejor de tu área en los últimos 30 días!') }}{% endif %}
+                </p>
+                {% endif %}
+                {% endif %}
+                {% endif %}
                 {% endif %}
             </div>
         </div>

@@ -4,6 +4,7 @@ from app.services.autenticacion import ServicioAutenticacion, ResultadoLogin
 from app.services.exceptions import ErrorPersistencia
 from app.routes.decoradores import requiere_login, requiere_admin
 from sqlalchemy import select
+from app.services.metricas import ServicioMetricas
 from app.models.usuario import Usuario
 from app.services.tickets import ServicioTickets
 from app.services.gestor_sla import GestorSLA
@@ -125,11 +126,36 @@ def registro():
 @requiere_login
 def perfil():
     usuario_id = session['usuario_id']
-    usuario = db.session.execute(select(Usuario).where(Usuario.id == usuario_id)).scalar_one_or_none()
+
+    usuario = db.session.execute(
+        select(Usuario).where(Usuario.id == usuario_id)
+    ).scalar_one_or_none()
+
     estadisticas = ServicioTickets.obtener_estadisticas_personales(usuario)
     nombre_foto = ServicioAutenticacion.obtener_nombre_archivo_foto(usuario)
 
-    return render_template("perfil.html", usuario=usuario, estadisticas=estadisticas, nombre_foto=nombre_foto)
+    metricas_agente = None
+    comparativa_area = None
+
+    if usuario.rol == RolUsuario.AGENTE:
+        metricas = ServicioMetricas.metricas_por_agente(
+            agente_id=usuario.id
+        )
+        metricas_agente = metricas[0] if metricas else None
+
+        if usuario.area_soporte is not None:
+            comparativa_area = ServicioMetricas.comparativa_area(
+                agente_id=usuario.id, area=usuario.area_soporte
+            )
+
+    return render_template(
+        "perfil.html",
+        usuario=usuario,
+        estadisticas=estadisticas,
+        nombre_foto=nombre_foto,
+        metricas_agente=metricas_agente,
+        comparativa_area=comparativa_area,
+    )
 
 @auth_bp.route("/perfil/cambiar-contrasena", methods=["POST"])
 @requiere_login

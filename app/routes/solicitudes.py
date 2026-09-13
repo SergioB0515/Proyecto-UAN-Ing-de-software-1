@@ -17,6 +17,13 @@ from app.routes.decoradores import requiere_login, requiere_admin
 solicitudes_bp = Blueprint("solicitudes", __name__)
 
 
+def _destino_tras_decision(fallback_endpoint):
+    ticket_id = request.form.get("ticket_id")
+    if request.form.get("origen") == "detalle" and ticket_id:
+        return url_for("tickets.detalle", ticket_id=ticket_id)
+    return url_for(fallback_endpoint)
+
+
 @solicitudes_bp.route("/tickets/<int:ticket_id>/solicitar-transferencia", methods=["POST"])
 @requiere_login
 def solicitar(ticket_id):
@@ -77,13 +84,13 @@ def aceptar(solicitud_id):
     ).scalar()
     if solicitud is None:
         flash(_("Solicitud no encontrada"), "danger")
-        return redirect(url_for("solicitudes.pendientes"))
+        return redirect(_destino_tras_decision("solicitudes.pendientes"))
 
     actor_id = session["usuario_id"]
 
     if actor_id != solicitud.agente_destino_id:
         flash(_("Usted no puede aceptar este ticket"), "warning")
-        return redirect(url_for("solicitudes.pendientes"))
+        return redirect(_destino_tras_decision("solicitudes.pendientes"))
     try:
         ServicioSolicitudesTransferencia.aceptar_solicitud(solicitud_id, actor_id)
         flash(_("Transferencia aceptada"), "success")
@@ -91,7 +98,7 @@ def aceptar(solicitud_id):
             TicketNoEnProgresoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
 
-    return redirect(url_for("solicitudes.pendientes"))
+    return redirect(_destino_tras_decision("solicitudes.pendientes"))
 
 
 @solicitudes_bp.route("/solicitudes/<int:solicitud_id>/rechazar", methods=["POST"])
@@ -103,13 +110,13 @@ def rechazar(solicitud_id):
     ).scalar()
     if solicitud is None:
         flash(_("Solicitud no encontrada"), "danger")
-        return redirect(url_for("solicitudes.pendientes"))
+        return redirect(_destino_tras_decision("solicitudes.pendientes"))
 
     actor_id = session["usuario_id"]
 
     if actor_id != solicitud.agente_destino_id:
         flash(_("Usted no puede rechazar este ticket"), "warning")
-        return redirect(url_for("solicitudes.pendientes"))
+        return redirect(_destino_tras_decision("solicitudes.pendientes"))
     try:
         ServicioSolicitudesTransferencia.rechazar_solicitud(solicitud_id, actor_id)
         flash(_("Transferencia rechazada"), "success")
@@ -117,7 +124,7 @@ def rechazar(solicitud_id):
             ErrorPersistencia) as e:
         flash(str(e), "danger")
 
-    return redirect(url_for("solicitudes.pendientes"))
+    return redirect(_destino_tras_decision("solicitudes.pendientes"))
 
 
 @solicitudes_bp.route("/solicitudes/<int:solicitud_id>/cancelar", methods=["POST"])
@@ -202,7 +209,7 @@ def aprobar_escalamiento(solicitud_id):
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
                 TicketNoEnProgresoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
-    return redirect(url_for("solicitudes.escalamientos_pendientes"))
+    return redirect(_destino_tras_decision("solicitudes.escalamientos_pendientes"))
         
 
 
@@ -216,7 +223,7 @@ def rechazar_escalamiento(solicitud_id):
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
                 TicketNoEnProgresoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
-    return redirect(url_for("solicitudes.escalamientos_pendientes"))
+    return redirect(_destino_tras_decision("solicitudes.escalamientos_pendientes"))
 
 @solicitudes_bp.route("/tickets/<int:ticket_id>/cambiar-prioridad", methods=["POST"])
 @requiere_login
@@ -277,7 +284,7 @@ def aprobar_cambio_prioridad(solicitud_id):
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
                 TicketNoEnProgresoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
-    return redirect(url_for("solicitudes.cambios_prioridad_pendientes"))
+    return redirect(_destino_tras_decision("solicitudes.cambios_prioridad_pendientes"))
     
 
 
@@ -292,4 +299,4 @@ def rechazar_cambio_prioridad(solicitud_id):
     except (SolicitudNoEncontradaError, SolicitudNoPendienteError,
                 TicketNoEnProgresoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
-    return redirect(url_for("solicitudes.cambios_prioridad_pendientes"))
+    return redirect(_destino_tras_decision("solicitudes.cambios_prioridad_pendientes"))

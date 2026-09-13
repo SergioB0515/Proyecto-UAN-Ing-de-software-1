@@ -104,4 +104,200 @@
         </div>
     </div>
 </div>
+
+<div class="row g-3 mt-1">
+    <div class="col-12">
+        <div class="table-card h-100">
+            <div class="px-3 pt-3">
+                <h5>{{ _('Confianza del clasificador') }}</h5>
+            </div>
+            <div class="row g-3 p-3">
+                <div class="col-md-3">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ _('Tickets en revisión') }}</h6>
+                            <p class="fs-3 mb-0">
+                                <a href="{{ url_for('tickets.revision_clasificacion') }}">{{ metricas_confianza.tickets_en_revision }}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ _('Tasa de corrección (30 días)') }}</h6>
+                            <p class="fs-3 mb-0">
+                                {% if metricas_confianza.tasa_correccion_30d is not none %}
+                                    {{ "%.1f"|format(metricas_confianza.tasa_correccion_30d * 100) }}%
+                                {% else %}
+                                    <span class="text-muted fs-6">{{ _('sin datos') }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ _('Exactitud en producción (30 días)') }}</h6>
+                            <p class="fs-3 mb-0">
+                                {% if metricas_confianza.exactitud_produccion_30d is not none %}
+                                    {{ "%.1f"|format(metricas_confianza.exactitud_produccion_30d * 100) }}%
+                                {% else %}
+                                    <span class="text-muted fs-6">{{ _('sin datos') }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ _('Exactitud de laboratorio') }}</h6>
+                            <p class="fs-3 mb-0">
+                                {% if metricas_confianza.exactitud_laboratorio is not none %}
+                                    {{ "%.1f"|format(metricas_confianza.exactitud_laboratorio * 100) }}%
+                                {% else %}
+                                    <span class="text-muted fs-6">{{ _('modelo sin entrenar') }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-12">
+        <div class="table-card h-100">
+            <div class="px-3 pt-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h5 class="mb-0">{{ _('Desempeño de agentes (últimos 30 días)') }}</h5>
+                <div class="d-flex align-items-center gap-2">
+                    <label for="selectorArea" class="form-label mb-0">{{ _('Área') }}</label>
+                    <select id="selectorArea" class="form-select form-select-sm" style="width: auto;">
+                        <option value="todas">{{ _('Todas las áreas') }}</option>
+                        {% for area in metricas_por_area.keys() %}
+                        <option value="{{ area.value }}">{{ area.value | etiqueta }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="p-3">
+                <canvas id="graficoCumplimientoAgentes" height="90"></canvas>
+            </div>
+            {% for area, agentes in metricas_por_area.items() %}
+                {% if agentes %}
+                {% set resumen = resumen_por_area[area] %}
+                <div class="px-3 pb-3 bloque-area" data-area="{{ area.value }}">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <h6 class="mt-3 mb-0">
+                            {{ area.value | etiqueta }}
+                            <span class="text-muted small">
+                                &middot; {{ _('%(n)s agentes', n=resumen.cantidad_agentes) }}
+                                &middot; {{ _('%(n)s cerrados', n=resumen.tickets_cerrados) }}
+                                {% if resumen.cumplimiento_sla_promedio is not none %}
+                                &middot; {{ _('SLA prom.') }} {{ "%.0f"|format(resumen.cumplimiento_sla_promedio * 100) }}%
+                                {% endif %}
+                            </span>
+                        </h6>
+                        <button class="btn btn-sm btn-outline-secondary" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#detalleArea{{ loop.index }}">
+                            {{ _('Expandir') }}
+                        </button>
+                    </div>
+                    <div class="collapse mt-2" id="detalleArea{{ loop.index }}">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>{{ _('Agente') }}</th>
+                                    <th class="text-end">{{ _('Cerrados') }}</th>
+                                    <th class="text-end">{{ _('Tiempo prom. (h)') }}</th>
+                                    <th class="text-end">{{ _('Cumplimiento SLA') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for agente in agentes %}
+                                <tr>
+                                    <td>{{ agente.nombre }}</td>
+                                    <td class="text-end">{{ agente.tickets_cerrados }}</td>
+                                    <td class="text-end">
+                                        {% if agente.tiempo_promedio_resolucion_horas is not none %}
+                                            {{ "%.1f"|format(agente.tiempo_promedio_resolucion_horas) }}
+                                        {% else %}—{% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        {% if agente.cumplimiento_sla is not none %}
+                                            {{ "%.0f"|format(agente.cumplimiento_sla * 100) }}%
+                                        {% else %}—{% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+(function () {
+    const datosPorArea = {{ grafico_por_area | tojson }};
+    const canvas = document.getElementById("graficoCumplimientoAgentes");
+
+    const grafico = new Chart(canvas, {
+        type: "line",
+        data: {
+            labels: datosPorArea.todas.etiquetas,
+            datasets: [{
+                label: "{{ _('Cumplimiento SLA') }} (%)",
+                data: datosPorArea.todas.valores,
+                fill: false,
+                borderColor: "#4a5fd6",
+                tension: 0.2,
+                pointRadius: 4,
+            }],
+        },
+        options: {
+            scales: { y: { beginAtZero: true, max: 100 } },
+            plugins: { legend: { display: false } },
+        },
+    });
+
+    const selector = document.getElementById("selectorArea");
+    const bloques = document.querySelectorAll(".bloque-area");
+
+    bloques.forEach(function (bloque) {
+        const boton = bloque.querySelector('button[data-bs-toggle="collapse"]');
+        const col = bloque.querySelector(".collapse");
+        if (!boton || !col) return;
+        col.addEventListener("shown.bs.collapse", function () { boton.textContent = "{{ _('Contraer') }}"; });
+        col.addEventListener("hidden.bs.collapse", function () { boton.textContent = "{{ _('Expandir') }}"; });
+    });
+
+    selector.addEventListener("change", function () {
+        const valor = selector.value;
+        const datos = datosPorArea[valor] || datosPorArea.todas;
+        grafico.data.labels = datos.etiquetas;
+        grafico.data.datasets[0].data = datos.valores;
+        grafico.update();
+
+        bloques.forEach(function (bloque) {
+            const visible = valor === "todas" || bloque.dataset.area === valor;
+            bloque.hidden = !visible;
+            if (visible && valor !== "todas") {
+                const col = bloque.querySelector(".collapse");
+                if (col && !col.classList.contains("show") && window.bootstrap) {
+                    new window.bootstrap.Collapse(col, { toggle: true });
+                }
+            }
+        });
+    });
+})();
+</script>
 {% endblock %}
