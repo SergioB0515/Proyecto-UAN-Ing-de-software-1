@@ -23,6 +23,9 @@ SLA_PROXIMO_AGENTE = "El ticket #%(id)s que tienes asignado está próximo a ven
 SLA_VENCIDO_CREADOR = "Tu ticket #%(id)s está vencido"
 SLA_VENCIDO_AGENTE = "El ticket #%(id)s que tienes asignado está vencido"
 CLASIFICACION_PENDIENTE = "El ticket #%(id)s necesita revision de categoria"
+APELACION_NUEVA = "Nueva apelación pendiente de revisar: ticket #%(id)s"
+APELACION_ACEPTADA = "Tu apelación del ticket #%(id)s fue aceptada, el ticket se reabrió"
+APELACION_RECHAZADA = "Tu apelación del ticket #%(id)s fue rechazada"
 
 
 def _catalogo_traducido():

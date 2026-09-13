@@ -1,6 +1,6 @@
 {
   "modelo_embeddings": "paraphrase-multilingual-MiniLM-L12-v2",
-  "fecha_entrenamiento": "2026-09-10T16:19:20.726027",
+  "fecha_entrenamiento": "2026-09-13T14:02:20.628195",
   "cantidad_tickets_entrenamiento": 971,
   "categorias": [
     "cuentas_contrasenas",

@@ -28,3 +28,15 @@ class PrioridadDestinoInvalidaError(Exception):
     pass
 class ClasificacionYaConfirmadaError(Exception):
     pass
+class PalabraClaveDuplicadaError(Exception):
+    pass
+class PalabraClaveNoEncontradaError(Exception):
+    pass
+class ApelacionDuplicadaError(Exception):
+    pass
+class ApelacionNoEncontradaError(Exception):
+    pass
+class ApelacionNoPendienteError(Exception):
+    pass
+class TicketNoCerradoError(Exception):
+    pass

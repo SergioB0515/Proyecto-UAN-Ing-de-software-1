@@ -9,9 +9,10 @@ from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoErr
 from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.comentario import Comentario 
-from app.models.enum import Categoria, EstadoTicket, RolUsuario, AccionAuditoria, Prioridad
+from app.models.enum import Categoria, EstadoTicket, RolUsuario, AccionAuditoria, Prioridad, EstadoApelacion
 from app.routes.decoradores import requiere_login,requiere_admin
 from app.services.gestor_sla import GestorSLA
+from app.models.apelacion import ApelacionCierre
 from datetime import datetime, timedelta
 import csv
 import io
@@ -254,6 +255,16 @@ def detalle(ticket_id):
     rol = session.get("rol")
     puede_gestionar = rol == RolUsuario.ADMIN or session["usuario_id"] == ticket.agente_id
 
+    
+    apelacion_pendiente = None
+    if ticket.estado == EstadoTicket.CERRADO:
+        apelacion_pendiente = db.session.execute(
+            select(ApelacionCierre).where(
+                ApelacionCierre.ticket_id == ticket_id,
+                ApelacionCierre.estado == EstadoApelacion.PENDIENTE,
+            )
+        ).scalar()
+        
     return render_template(
         "ticket_detalle.html",
         ticket=ticket,
@@ -262,6 +273,7 @@ def detalle(ticket_id):
         nombres_por_id=nombres_por_id,
         agentes_del_area=agentes_del_area,
         puede_gestionar=puede_gestionar,
+        apelacion_pendiente=apelacion_pendiente,
     )
     
 @tickets_bp.route("/admin/tickets")

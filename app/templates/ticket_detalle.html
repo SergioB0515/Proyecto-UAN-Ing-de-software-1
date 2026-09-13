@@ -49,6 +49,25 @@
 </div>
 {% endif %}
 
+{% if ticket.estado.value == "cerrado" and usuario_actual and usuario_actual.id == ticket.creador_id %}
+<div class="card mt-3">
+    <div class="card-body">
+        {% if apelacion_pendiente %}
+        <h6 class="card-title mb-1">{{ _('Apelación en revisión') }}</h6>
+        <p class="text-muted small mb-0">{{ _('Tu apelación sobre el cierre de este ticket está pendiente de revisión por un administrador.') }}</p>
+        {% else %}
+        <h6 class="card-title mb-2">{{ _('¿No estás de acuerdo con el cierre de este ticket?') }}</h6>
+        <form method="POST" action="{{ url_for('apelaciones.solicitar', ticket_id=ticket.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <textarea name="motivo" class="form-control mb-2" rows="2" required
+                      placeholder="{{ _('Explica por qué crees que este cierre fue incorrecto') }}"></textarea>
+            <button type="submit" class="btn btn-outline-danger btn-sm">{{ _('Apelar decisión') }}</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
 {% if puede_gestionar and solicitudes %}
 <div class="card mt-4">
     <div class="card-body">

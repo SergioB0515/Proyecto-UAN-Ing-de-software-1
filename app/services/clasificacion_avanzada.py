@@ -59,6 +59,9 @@ def invalidar_cache_palabras_clave():
     global _cache_palabras_clave
     _cache_palabras_clave = None
 
+def invalidar_cache_clasificador_ml():
+    global _clasificador_ml
+    _clasificador_ml = None
 
 def inicializar():
 

@@ -52,6 +52,13 @@ class AccionAuditoria(str, Enum):
     APROBAR_CAMBIO_PRIORIDAD = "aprobar_cambio_prioridad"
     RECHAZAR_CAMBIO_PRIORIDAD = "rechazar_cambio_prioridad"
     CONFIRMAR_CLASIFICACION = "confirmar_clasificacion"
+    CREAR_PALABRA_CLAVE = "crear_palabra_clave"
+    EDITAR_PALABRA_CLAVE = "editar_palabra_clave"
+    DESACTIVAR_PALABRA_CLAVE = "desactivar_palabra_clave"
+    REACTIVAR_PALABRA_CLAVE = "reactivar_palabra_clave"
+    SOLICITAR_APELACION = "solicitar_apelacion"
+    ACEPTAR_APELACION = "aceptar_apelacion"
+    RECHAZAR_APELACION = "rechazar_apelacion"
     
 class EstadoSolicitudTransferencia(str, Enum):
     PENDIENTE = "pendiente"
@@ -64,3 +71,7 @@ class TipoSolicitud(str, Enum):
     ESCALAMIENTO = "escalamiento"
     CAMBIO_PRIORIDAD = "cambio_prioridad"
 
+class EstadoApelacion(str, Enum):
+    PENDIENTE = "pendiente"
+    ACEPTADA = "aceptada"
+    RECHAZADA = "rechazada"

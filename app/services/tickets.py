@@ -14,6 +14,7 @@ from app.services.notificaciones import ServicioNotificaciones
 from app import notificaciones_i18n as notif
 from sqlalchemy import select, func,or_,and_
 from app.services.clasificacion_avanzada import clasificar_ticket
+from app.models.correccion_clasificacion import CorreccionClasificacion
 
 PRIORIDAD_BASE_POR_CATEGORIA={
     Categoria.SEGURIDAD : Prioridad.ALTA,
@@ -276,8 +277,19 @@ class ServicioTickets:
         if not ticket.clasificacion_baja_confianza:
             raise ClasificacionYaConfirmadaError(_("Este ticket ya tiene confirmada su categoría"))
         
+        categoria_original = ticket.categoria
         ticket.categoria = categoria_nueva
         ticket.clasificacion_baja_confianza = False
+        
+        correccion = CorreccionClasificacion(
+             ticket_id=ticket.id,
+             texto=ticket.texto,
+             categoria_original=categoria_original,
+             categoria_correcta=categoria_nueva,
+             actor_id=actor_id,
+         )
+        db.session.add(correccion)
+
         
 
 

@@ -7,6 +7,7 @@ from app.routes.tickets import tickets_bp
 from app.routes.metricas import metricas_bp
 from app.routes.auditoria import auditoria_bp
 from app.routes.solicitudes import solicitudes_bp
+from app.routes.apelacion import apelaciones_bp
 from flask_wtf import CSRFProtect
 from flask_babel import Babel
 from app.services.gestor_sla import GestorSLA
@@ -16,6 +17,7 @@ from app.services.notificaciones import ServicioNotificaciones
 from sqlalchemy import delete
 from threading import Lock
 import os
+from app.routes.palabra_clave import palabras_clave_bp
 
 def create_app():
     app = Flask(__name__)
@@ -32,9 +34,7 @@ def create_app():
             join_room(f"usuario_{session['usuario_id']}")
 
     def get_locale():
-        # Fuera de una request (jobs del scheduler, scripts de seed, tests que
-        # llaman a los servicios directamente) no hay session: se usa el idioma
-        # por defecto en vez de reventar.
+
         if not has_request_context():
             return app.config.get("BABEL_DEFAULT_LOCALE", "es")
         return session.get("idioma", "es")
@@ -58,12 +58,15 @@ def create_app():
     from app.models.ip_bloqueada import IPBloqueada
     from app.models.notificacion import Notificacion
     from app.models.palabra_clave import PalabraClave
+    from app.models.correccion_clasificacion import CorreccionClasificacion
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(tickets_bp)
     app.register_blueprint(metricas_bp)
     app.register_blueprint(auditoria_bp)
     app.register_blueprint(solicitudes_bp)
+    app.register_blueprint(palabras_clave_bp)
+    app.register_blueprint(apelaciones_bp)
     
     if app.config.get("CLASIFICADOR_ML_ACTIVO"):
         with app.app_context():
@@ -112,6 +115,17 @@ def create_app():
             except Exception as e:
                 db.session.rollback()
                 print(f"No se pudo limpiar intentos de login viejos, error: {e}")
+                
+    def reentrenar_clasificador_job():
+        with app.app_context():
+            if not app.config.get("CLASIFICADOR_ML_ACTIVO"):
+                return
+            try:
+                from app.services.reentrenamiento import reentrenar_si_mejora
+                reentrenar_si_mejora()
+            except Exception as e:
+                print(f"No se pudo completar el reentrenamiento periódico, error: {e}")
+                
     def verificar_vencimientos_sla():
         with app.app_context():
             try:
@@ -144,6 +158,13 @@ def create_app():
             id="limpiar_intentos_login_viejos",
             replace_existing=True,
         )
+        scheduler.add_job(
+            reentrenar_clasificador_job,
+            "interval",
+            hours=app.config.get("REENTRENAMIENTO_INTERVALO_HORAS", 24),
+            id="reentrenar_clasificador",
+            replace_existing=True,
+        )
         scheduler.start()
         app.scheduler = scheduler
         print(f"Scheduler SLA iniciado (cada {intervalo} min)")
@@ -156,9 +177,9 @@ def create_app():
         if app.scheduler is None and app.config.get("SCHEDULER_ACTIVO", True):
             with _lock_scheduler:
                 _iniciar_scheduler()
-
+    
 
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         _iniciar_scheduler()
-
+    
     return app

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Apelaciones pendientes') }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ _('Apelaciones pendientes') }}</h2>
+</div>
+
+{% if apelaciones %}
+<div class="table-card">
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>{{ _('Ticket') }}</th>
+            <th>{{ _('Motivo') }}</th>
+            <th>{{ _('Fecha') }}</th>
+            <th>{{ _('Acciones') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in apelaciones %}
+        <tr>
+            <td>
+                <a href="{{ url_for('tickets.detalle', ticket_id=a.ticket_id) }}" class="mono ticket-id-tag">
+                    #{{ a.ticket_id }}
+                </a>
+            </td>
+            <td>{{ a.motivo }}</td>
+            <td class="mono">{{ a.fecha_solicitud | fecha }}</td>
+            <td class="d-flex gap-1">
+                <form method="POST" action="{{ url_for('apelaciones.aceptar', apelacion_id=a.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-success">{{ _('Aceptar') }}</button>
+                </form>
+                <form method="POST" action="{{ url_for('apelaciones.rechazar', apelacion_id=a.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<div class="empty-state py-3">
+    <p class="mb-0">{{ _('No hay apelaciones pendientes.') }}</p>
+</div>
+{% endif %}
+{% endblock %}

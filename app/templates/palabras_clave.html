@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Palabras clave del clasificador') }}{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h2>{{ _('Palabras clave del clasificador') }}</h2>
+    <a href="{{ url_for('palabras_clave.listar', incluir_inactivas='0' if incluir_inactivas else '1') }}"
+       class="btn btn-outline-secondary btn-sm">
+        {{ _('Ocultar inactivas') if incluir_inactivas else _('Mostrar inactivas') }}
+    </a>
+</div>
+
+{% if palabras_clave %}
+<div class="table-card">
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>{{ _('Texto') }}</th><th>{{ _('Categoría') }}</th><th>{{ _('Peso') }}</th><th>{{ _('Estado') }}</th><th>{{ _('Acciones') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pc in palabras_clave %}
+        <tr>
+            <td>{{ pc.texto }}</td>
+            <td><span class="badge-pill categoria-tag">{{ pc.categoria.value | etiqueta }}</span></td>
+            <td class="mono">{{ pc.peso }}</td>
+            <td><span class="badge-pill {{ 'estado-abierto' if pc.activa else 'estado-cerrado' }}">
+                {{ _('Activa') if pc.activa else _('Inactiva') }}
+            </span></td>
+            <td class="d-flex gap-1">
+                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editar{{ pc.id }}">{{ _('Editar') }}</button>
+                {% if pc.activa %}
+                <form method="POST" action="{{ url_for('palabras_clave.desactivar', id=pc.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-warning">{{ _('Desactivar') }}</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{{ url_for('palabras_clave.reactivar', id=pc.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-success">{{ _('Reactivar') }}</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+
+        <div class="modal fade" id="editar{{ pc.id }}" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="POST" action="{{ url_for('palabras_clave.editar', id=pc.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-header">
+                  <h5 class="modal-title">{{ _('Editar palabra clave') }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label">{{ _('Texto') }}</label>
+                    <input type="text" name="texto" class="form-control" value="{{ pc.texto }}" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">{{ _('Categoría') }}</label>
+                    <select name="categoria" class="form-select" required>
+                        <option value="infraestructura" {% if pc.categoria.value == "infraestructura" %}selected{% endif %}>{{ _('Infraestructura') }}</option>
+                        <option value="redes" {% if pc.categoria.value == "redes" %}selected{% endif %}>{{ _('Redes') }}</option>
+                        <option value="permisos" {% if pc.categoria.value == "permisos" %}selected{% endif %}>{{ _('Permisos') }}</option>
+                        <option value="cuentas_contrasenas" {% if pc.categoria.value == "cuentas_contrasenas" %}selected{% endif %}>{{ _('Cuentas y contraseñas') }}</option>
+                        <option value="seguridad" {% if pc.categoria.value == "seguridad" %}selected{% endif %}>{{ _('Seguridad') }}</option>
+                        <option value="software" {% if pc.categoria.value == "software" %}selected{% endif %}>{{ _('Software') }}</option>
+                        <option value="otros" {% if pc.categoria.value == "otros" %}selected{% endif %}>{{ _('Otros') }}</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">{{ _('Peso') }}</label>
+                    <input type="number" step="0.1" min="0.1" name="peso" class="form-control" value="{{ pc.peso }}" required>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">{{ _('Guardar') }}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% else %}
+<p class="text-muted">{{ _('No hay palabras clave registradas.') }}</p>
+{% endif %}
+
+<hr>
+<h4>{{ _('Nueva palabra clave') }}</h4>
+<form method="POST" action="{{ url_for('palabras_clave.crear') }}" class="row g-2 align-items-end">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="col-auto">
+        <input type="text" name="texto" class="form-control" placeholder="{{ _('Texto') }}" required>
+    </div>
+    <div class="col-auto">
+        <select name="categoria" class="form-select" required>
+            <option value="infraestructura">{{ _('Infraestructura') }}</option>
+            <option value="redes">{{ _('Redes') }}</option>
+            <option value="permisos">{{ _('Permisos') }}</option>
+            <option value="cuentas_contrasenas">{{ _('Cuentas y contraseñas') }}</option>
+            <option value="seguridad">{{ _('Seguridad') }}</option>
+            <option value="software">{{ _('Software') }}</option>
+            <option value="otros">{{ _('Otros') }}</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <input type="number" step="0.1" min="0.1" name="peso" class="form-control" placeholder="{{ _('Peso') }}" value="1.0" required>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">{{ _('Agregar') }}</button>
+    </div>
+</form>
+{% endblock %}

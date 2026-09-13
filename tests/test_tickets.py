@@ -24,7 +24,8 @@ estos tests).
 from datetime import datetime
 
 import pytest
-
+from sqlalchemy import select
+from app.models.correccion_clasificacion import CorreccionClasificacion
 from app.extensions import db
 from app.services.autenticacion import ServicioAutenticacion
 from app.services.tickets import ServicioTickets, ORDEN_PRIORIDAD
@@ -496,7 +497,25 @@ def test_confirmar_clasificacion_valido():
         "tras confirmar, clasificacion_baja_confianza debe quedar en False"
     )
 
+def test_confirmar_clasificacion_crea_correccion():
+    normal = Usuario.query.filter_by(email=EMAIL_CLASIF_NORMAL).first()
+    admin = Usuario.query.filter_by(email=EMAIL_CLASIF_ADMIN).first()
 
+    ticket = _crear_ticket_baja_confianza(normal)
+    categoria_antes_de_confirmar = ticket.categoria
+
+    ServicioTickets.confirmar_clasificacion(ticket.id, Categoria.REDES, admin.id)
+
+    correccion = db.session.execute(
+        select(CorreccionClasificacion).where(CorreccionClasificacion.ticket_id == ticket.id)
+    ).scalar()
+
+    assert correccion is not None, "deberia haberse creado una fila en CorreccionClasificacion"
+    assert correccion.categoria_original == categoria_antes_de_confirmar
+    assert correccion.categoria_correcta == Categoria.REDES
+    assert correccion.texto == ticket.texto
+    assert correccion.actor_id == admin.id
+    
 def test_confirmar_clasificacion_ticket_inexistente():
     admin = Usuario.query.filter_by(email=EMAIL_CLASIF_ADMIN).first()
 

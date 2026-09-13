@@ -2,7 +2,9 @@ import os
 from flask import Flask
 from flask_babel import Babel
 from app.extensions import db
-
+from app.models.apelacion import ApelacionCierre
+from app.models.palabra_clave import PalabraClave
+from app.models.correccion_clasificacion import CorreccionClasificacion
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -38,6 +40,9 @@ def create_app():
     from app.models.ip_bloqueada import IPBloqueada
     from app.models.notificacion import Notificacion
     from app.models.transferencia import SolicitudTransferencia
+    from app.models.apelacion import ApelacionCierre
+    from app.models.palabra_clave import PalabraClave
+    from app.models.correccion_clasificacion import CorreccionClasificacion
 
     with app.app_context():
         db.drop_all()
