@@ -20,6 +20,7 @@ if not SECRET_KEY:
 class Config:
     SECRET_KEY = SECRET_KEY
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", "sqlite:///proyecto.db")
+    if SQLALCHEMY_DATABASE_URI.startswith('postgres://'): SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace('postgres://', 'postgresql://', 1)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     LANGUAGES = ["es", "en"]
 
