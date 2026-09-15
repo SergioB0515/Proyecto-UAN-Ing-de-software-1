@@ -742,6 +742,14 @@ a:focus-visible,
 .table-warning:hover,
 .table-warning:hover > td { background-color: rgba(194, 134, 15, 0.32) !important; }
 
+/* Fila con sugerencia de agente disponible (admin_tickets): un distintivo
+   discreto -- solo una franja dorada fina en el borde izquierdo, sin relleno
+   y sin enmarcar toda la fila. Mismo lenguaje visual que table-danger/
+   table-warning (franja lateral), pero sin su tinte de fondo. */
+.table-suggested-agent > td:first-child {
+    box-shadow: inset 3px 0 0 0 var(--gold-500);
+}
+
 .badge.bg-danger,
 .badge.text-bg-danger,
 .badge-pill.prioridad-alta,
@@ -909,6 +917,30 @@ a:focus-visible,
 .badge-pill.nivel-plata { background: linear-gradient(135deg, var(--accent-500), var(--cyan-500)) !important; color: #fff !important; }
 .badge-pill.nivel-bronce { background: rgba(18, 136, 95, 0.2); color: #5be0ac; }
 .badge-pill.nivel-bajo { background: rgba(234, 76, 59, 0.2); color: #ff9f92; }
+
+/* ---------- Sugerencia de agente (ticket_detalle) ---------- */
+.suggestion-card { border-color: rgba(224, 180, 89, 0.35); }
+.suggestion-card::before {
+    background: linear-gradient(90deg, var(--gold-600), var(--gold-500));
+    opacity: 1;
+}
+
+.suggestion-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.4rem;
+    margin-bottom: .3rem;
+    font-size: .88rem;
+}
+
+.suggestion-stats .meta-label {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-soft);
+    font-weight: 700;
+    margin-bottom: .15rem;
+}
 
 /* ---------- Acciones sobre el ticket ---------- */
 .accion-block { padding: .2rem 0; }

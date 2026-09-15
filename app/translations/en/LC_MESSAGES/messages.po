@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-13 18:10-0500\n"
+"POT-Creation-Date: 2026-09-14 19:27-0500\n"
 "PO-Revision-Date: 2026-09-07 01:33-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,86 +18,82 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: app/notificaciones_i18n.py:37
+#: app/notificaciones_i18n.py:40
 #, python-format
-msgid ""
-"Tu ticket #%(id)s fue cerrado directamente sin haber sido atendido — "
-"revisa los comentarios para ver el motivo"
-msgstr ""
-"Your ticket #%(id)s was closed directly without being handled — check the"
-" comments for the reason"
+msgid "Tu ticket #%(id)s fue cerrado directamente sin haber sido atendido — revisa los comentarios para ver el motivo"
+msgstr "Your ticket #%(id)s was closed directly without being handled — check the comments for the reason"
 
-#: app/notificaciones_i18n.py:39
+#: app/notificaciones_i18n.py:42
 #, python-format
 msgid "Tu ticket #%(id)s fue cerrado"
 msgstr "Your ticket #%(id)s was closed"
 
-#: app/notificaciones_i18n.py:40
+#: app/notificaciones_i18n.py:43
 #, python-format
 msgid "Nueva solicitud de transferencia para el ticket #%(id)s"
 msgstr "New transfer request for ticket #%(id)s"
 
-#: app/notificaciones_i18n.py:41
+#: app/notificaciones_i18n.py:44
 #, python-format
 msgid "Tu solicitud de transferencia del ticket #%(id)s fue aceptada"
 msgstr "Your transfer request for ticket #%(id)s was accepted"
 
-#: app/notificaciones_i18n.py:42
+#: app/notificaciones_i18n.py:45
 #, python-format
 msgid "Tu solicitud de transferencia del ticket #%(id)s fue rechazada"
 msgstr "Your transfer request for ticket #%(id)s was rejected"
 
-#: app/notificaciones_i18n.py:43
+#: app/notificaciones_i18n.py:46
 #, python-format
 msgid "Nuevo escalamiento pendiente de aprobar: ticket #%(id)s"
 msgstr "New escalation pending approval: ticket #%(id)s"
 
-#: app/notificaciones_i18n.py:44
+#: app/notificaciones_i18n.py:47
 #, python-format
 msgid "Tu escalamiento del ticket #%(id)s fue aprobado"
 msgstr "Your escalation for ticket #%(id)s was approved"
 
-#: app/notificaciones_i18n.py:45
+#: app/notificaciones_i18n.py:48
 #, python-format
 msgid "Tu escalamiento del ticket #%(id)s fue rechazado"
 msgstr "Your escalation for ticket #%(id)s was rejected"
 
-#: app/notificaciones_i18n.py:46
+#: app/notificaciones_i18n.py:49
 #, python-format
 msgid "Nuevo cambio de prioridad pendiente de aprobar: ticket #%(id)s"
 msgstr "New priority change pending approval: ticket #%(id)s"
 
-#: app/notificaciones_i18n.py:47
+#: app/notificaciones_i18n.py:50
 #, python-format
 msgid "Tu cambio de prioridad del ticket #%(id)s fue aprobado"
 msgstr "Your priority change for ticket #%(id)s was approved"
 
-#: app/notificaciones_i18n.py:48
+#: app/notificaciones_i18n.py:51
 #, python-format
 msgid "Tu cambio de prioridad del ticket #%(id)s fue rechazado"
 msgstr "Your priority change for ticket #%(id)s was rejected"
 
-#: app/notificaciones_i18n.py:49
+#: app/notificaciones_i18n.py:52
 #, python-format
 msgid "Tu ticket #%(id)s está próximo a vencer"
 msgstr "Your ticket #%(id)s is about to breach its SLA"
 
-#: app/notificaciones_i18n.py:50
+#: app/notificaciones_i18n.py:53
 #, python-format
 msgid "El ticket #%(id)s que tienes asignado está próximo a vencer"
 msgstr "Ticket #%(id)s assigned to you is about to breach its SLA"
 
-#: app/notificaciones_i18n.py:51
+#: app/notificaciones_i18n.py:54
 #, python-format
 msgid "Tu ticket #%(id)s está vencido"
 msgstr "Your ticket #%(id)s has breached its SLA"
 
-#: app/notificaciones_i18n.py:52
+#: app/notificaciones_i18n.py:55
 #, python-format
 msgid "El ticket #%(id)s que tienes asignado está vencido"
 msgstr "Ticket #%(id)s assigned to you has breached its SLA"
 
-#: app/notificaciones_i18n.py:53
+#: app/notificaciones_i18n.py:56
 #, python-format
 msgid "El ticket #%(id)s necesita revision de categoria"
 msgstr "Ticket #%(id)s needs its category reviewed"
@@ -105,7 +101,7 @@ msgstr "Ticket #%(id)s needs its category reviewed"
 #: app/templates/admin_tickets.html:27 app/templates/palabras_clave.html:23
 #: app/templates/palabras_clave.html:82 app/templates/palabras_clave.html:120
 #: app/templates/registro.html:50 app/templates/revision_clasificacion.html:24
-#: app/templates/ticket_detalle.html:38 app/templates/ticket_detalle.html:248
+#: app/templates/ticket_detalle.html:83 app/templates/ticket_detalle.html:293
 #: app/traducciones.py:8
 msgid "Infraestructura"
 msgstr "Infrastructure"
@@ -113,7 +109,7 @@ msgstr "Infrastructure"
 #: app/templates/admin_tickets.html:28 app/templates/palabras_clave.html:24
 #: app/templates/palabras_clave.html:83 app/templates/palabras_clave.html:121
 #: app/templates/registro.html:51 app/templates/revision_clasificacion.html:25
-#: app/templates/ticket_detalle.html:39 app/templates/ticket_detalle.html:249
+#: app/templates/ticket_detalle.html:84 app/templates/ticket_detalle.html:294
 #: app/traducciones.py:9
 msgid "Redes"
 msgstr "Networks"
@@ -121,7 +117,7 @@ msgstr "Networks"
 #: app/templates/admin_tickets.html:29 app/templates/palabras_clave.html:25
 #: app/templates/palabras_clave.html:84 app/templates/palabras_clave.html:122
 #: app/templates/registro.html:52 app/templates/revision_clasificacion.html:26
-#: app/templates/ticket_detalle.html:40 app/templates/ticket_detalle.html:250
+#: app/templates/ticket_detalle.html:85 app/templates/ticket_detalle.html:295
 #: app/traducciones.py:10
 msgid "Permisos"
 msgstr "Permissions"
@@ -129,7 +125,7 @@ msgstr "Permissions"
 #: app/templates/admin_tickets.html:30 app/templates/palabras_clave.html:26
 #: app/templates/palabras_clave.html:85 app/templates/palabras_clave.html:123
 #: app/templates/registro.html:53 app/templates/revision_clasificacion.html:27
-#: app/templates/ticket_detalle.html:41 app/templates/ticket_detalle.html:251
+#: app/templates/ticket_detalle.html:86 app/templates/ticket_detalle.html:296
 #: app/traducciones.py:11
 msgid "Cuentas y contraseñas"
 msgstr "Accounts and passwords"
@@ -137,7 +133,7 @@ msgstr "Accounts and passwords"
 #: app/templates/admin_tickets.html:31 app/templates/palabras_clave.html:27
 #: app/templates/palabras_clave.html:86 app/templates/palabras_clave.html:124
 #: app/templates/registro.html:54 app/templates/revision_clasificacion.html:28
-#: app/templates/ticket_detalle.html:42 app/templates/ticket_detalle.html:252
+#: app/templates/ticket_detalle.html:87 app/templates/ticket_detalle.html:297
 #: app/traducciones.py:12
 msgid "Seguridad"
 msgstr "Security"
@@ -145,7 +141,7 @@ msgstr "Security"
 #: app/templates/admin_tickets.html:32 app/templates/palabras_clave.html:28
 #: app/templates/palabras_clave.html:87 app/templates/palabras_clave.html:125
 #: app/templates/registro.html:55 app/templates/revision_clasificacion.html:29
-#: app/templates/ticket_detalle.html:43 app/templates/ticket_detalle.html:253
+#: app/templates/ticket_detalle.html:88 app/templates/ticket_detalle.html:298
 #: app/traducciones.py:13
 msgid "Software"
 msgstr "Software"
@@ -153,7 +149,7 @@ msgstr "Software"
 #: app/templates/admin_tickets.html:33 app/templates/palabras_clave.html:29
 #: app/templates/palabras_clave.html:88 app/templates/palabras_clave.html:126
 #: app/templates/registro.html:56 app/templates/revision_clasificacion.html:30
-#: app/templates/ticket_detalle.html:44 app/templates/ticket_detalle.html:254
+#: app/templates/ticket_detalle.html:89 app/templates/ticket_detalle.html:299
 #: app/traducciones.py:14
 msgid "Otros"
 msgstr "Other"
@@ -162,6 +158,7 @@ msgstr "Other"
 msgid "Usuario final"
 msgstr "End user"
 
+#: app/templates/email/ticket_notificacion.html:87
 #: app/templates/panel_metricas.html:214 app/templates/registro.html:34
 #: app/templates/ticket_detalle.html:20 app/traducciones.py:16
 msgid "Agente"
@@ -175,17 +172,17 @@ msgstr "Admin"
 msgid "Normal"
 msgstr "Normal"
 
-#: app/templates/admin_tickets.html:41 app/templates/ticket_detalle.html:282
+#: app/templates/admin_tickets.html:41 app/templates/ticket_detalle.html:327
 #: app/templates/tickets_por_area.html:23 app/traducciones.py:20
 msgid "Alta"
 msgstr "High"
 
-#: app/templates/admin_tickets.html:42 app/templates/ticket_detalle.html:282
+#: app/templates/admin_tickets.html:42 app/templates/ticket_detalle.html:327
 #: app/templates/tickets_por_area.html:24 app/traducciones.py:21
 msgid "Media"
 msgstr "Medium"
 
-#: app/templates/admin_tickets.html:43 app/templates/ticket_detalle.html:282
+#: app/templates/admin_tickets.html:43 app/templates/ticket_detalle.html:327
 #: app/templates/tickets_por_area.html:25 app/traducciones.py:22
 msgid "Baja"
 msgstr "Low"
@@ -225,11 +222,11 @@ msgstr "Cancelled"
 msgid "Reasignación"
 msgstr "Reassignment"
 
-#: app/templates/ticket_detalle.html:115 app/traducciones.py:31
+#: app/templates/ticket_detalle.html:160 app/traducciones.py:31
 msgid "Escalamiento"
 msgstr "Escalation"
 
-#: app/templates/ticket_detalle.html:119 app/traducciones.py:32
+#: app/templates/ticket_detalle.html:164 app/traducciones.py:32
 msgid "Cambio de prioridad"
 msgstr "Priority change"
 
@@ -281,7 +278,7 @@ msgstr "Password change"
 msgid "Cambio de nombre"
 msgstr "Name change"
 
-#: app/templates/ticket_detalle.html:214 app/traducciones.py:44
+#: app/templates/ticket_detalle.html:259 app/traducciones.py:44
 msgid "Solicitar transferencia"
 msgstr "Request transfer"
 
@@ -309,7 +306,7 @@ msgstr "Approve escalation"
 msgid "Rechazar escalamiento"
 msgstr "Reject escalation"
 
-#: app/templates/ticket_detalle.html:276 app/traducciones.py:51
+#: app/templates/ticket_detalle.html:321 app/traducciones.py:51
 msgid "Cambiar prioridad"
 msgstr "Change priority"
 
@@ -323,8 +320,8 @@ msgstr "Reject priority change"
 
 #: app/routes/apelacion.py:22 app/routes/solicitudes.py:32
 #: app/routes/solicitudes.py:162 app/routes/solicitudes.py:234
-#: app/routes/tickets.py:147 app/routes/tickets.py:196
-#: app/routes/tickets.py:216
+#: app/routes/tickets.py:148 app/routes/tickets.py:197
+#: app/routes/tickets.py:217
 msgid "Ticket no encontrado"
 msgstr "Ticket not found"
 
@@ -364,7 +361,7 @@ msgid "Detalle"
 msgstr "Detail"
 
 #: app/routes/auditoria.py:131 app/routes/auditoria.py:152
-#: app/routes/tickets.py:385 app/routes/tickets.py:409
+#: app/routes/tickets.py:397 app/routes/tickets.py:421
 msgid "Desconocido"
 msgstr "Unknown"
 
@@ -398,9 +395,7 @@ msgstr "An agent must have a specific area"
 
 #: app/routes/auth.py:113
 msgid "No se pudo registrar el usuario por un error interno, intente más tarde"
-msgstr ""
-"The user could not be registered due to an internal error, please try "
-"again later"
+msgstr "The user could not be registered due to an internal error, please try again later"
 
 #: app/routes/auth.py:117
 msgid "Ya existe un usuario con ese email"
@@ -470,7 +465,7 @@ msgid "Valor"
 msgstr "Value"
 
 #: app/routes/palabra_clave.py:30 app/routes/palabra_clave.py:61
-#: app/routes/tickets.py:442
+#: app/routes/tickets.py:454
 msgid "Categoría inválida"
 msgstr "Invalid category"
 
@@ -567,79 +562,77 @@ msgstr "Priority change approved"
 msgid "Cambio de prioridad rechazado"
 msgstr "Priority change rejected"
 
-#: app/routes/tickets.py:35
+#: app/routes/tickets.py:36
 #, python-format
 msgid "Ticket #%(id)s creado. Categoría: %(categoria)s, prioridad: %(prioridad)s"
 msgstr "Ticket #%(id)s created. Category: %(categoria)s, priority: %(prioridad)s"
 
-#: app/routes/tickets.py:38
+#: app/routes/tickets.py:39
 msgid "No se pudo crear el ticket, intenta de nuevo"
 msgstr "The ticket could not be created, please try again"
 
-#: app/routes/tickets.py:53
+#: app/routes/tickets.py:54
 msgid "Área no válida"
 msgstr "Invalid area"
 
-#: app/routes/tickets.py:62
+#: app/routes/tickets.py:63
 msgid "No tienes permiso para ver tickets de esa área"
 msgstr "You do not have permission to view tickets from that area"
 
-#: app/routes/tickets.py:153
+#: app/routes/tickets.py:154
 msgid "No tienes permiso sobre tickets de esa área"
 msgstr "You do not have permission over tickets from that area"
 
-#: app/routes/tickets.py:168
+#: app/routes/tickets.py:169
 msgid "Debes indicar el motivo para cerrar un ticket sin pasar por en progreso"
-msgstr ""
-"You must provide a reason to close a ticket without moving it to in "
-"progress"
+msgstr "You must provide a reason to close a ticket without moving it to in progress"
 
-#: app/routes/tickets.py:176
+#: app/routes/tickets.py:177
 #, python-format
 msgid "Ticket #%(id)s actualizado a %(estado)s"
 msgstr "Ticket #%(id)s updated to %(estado)s"
 
-#: app/routes/tickets.py:182
+#: app/routes/tickets.py:183
 #, python-format
 msgid "El ticket se cerró, pero no se pudo guardar el motivo: %(error)s"
 msgstr "The ticket was closed, but the reason could not be saved: %(error)s"
 
-#: app/routes/tickets.py:205
+#: app/routes/tickets.py:206
 #, python-format
 msgid "Ticket #%(id)s reasignado correctamente"
 msgstr "Ticket #%(id)s reassigned successfully"
 
-#: app/routes/tickets.py:225
+#: app/routes/tickets.py:226
 msgid "Comentario agregado"
 msgstr "Comment added"
 
-#: app/routes/tickets.py:370 app/templates/admin_tickets.html:68
+#: app/routes/tickets.py:382 app/templates/admin_tickets.html:68
 #: app/templates/dashboard.html:16 app/templates/tickets_por_area.html:54
 msgid "ID"
 msgstr "ID"
 
-#: app/routes/tickets.py:370 app/templates/admin_tickets.html:68
+#: app/routes/tickets.py:382 app/templates/admin_tickets.html:68
 #: app/templates/dashboard.html:16 app/templates/palabras_clave.html:37
 #: app/templates/palabras_clave.html:76 app/templates/palabras_clave.html:116
 #: app/templates/ticket_detalle.html:9 app/templates/tickets_por_area.html:54
 msgid "Texto"
 msgstr "Text"
 
-#: app/routes/tickets.py:370 app/templates/admin_tickets.html:24
+#: app/routes/tickets.py:382 app/templates/admin_tickets.html:24
 #: app/templates/admin_tickets.html:68 app/templates/dashboard.html:16
 #: app/templates/palabras_clave.html:20 app/templates/palabras_clave.html:37
 #: app/templates/palabras_clave.html:80 app/templates/ticket_detalle.html:11
 msgid "Categoría"
 msgstr "Category"
 
-#: app/routes/tickets.py:370 app/templates/admin_tickets.html:38
+#: app/routes/tickets.py:382 app/templates/admin_tickets.html:38
 #: app/templates/admin_tickets.html:68 app/templates/dashboard.html:16
 #: app/templates/ticket_detalle.html:13 app/templates/tickets_por_area.html:20
 #: app/templates/tickets_por_area.html:54
 msgid "Prioridad"
 msgstr "Priority"
 
-#: app/routes/tickets.py:370 app/templates/admin_tickets.html:14
+#: app/routes/tickets.py:382 app/templates/admin_tickets.html:14
 #: app/templates/admin_tickets.html:68 app/templates/dashboard.html:17
 #: app/templates/palabras_clave.html:37 app/templates/ticket_detalle.html:15
 #: app/templates/tickets_por_area.html:10
@@ -647,21 +640,22 @@ msgstr "Priority"
 msgid "Estado"
 msgstr "Status"
 
-#: app/routes/tickets.py:371
+#: app/routes/tickets.py:383
 msgid "Creador"
 msgstr "Created by"
 
-#: app/routes/tickets.py:371 app/templates/dashboard.html:17
+#: app/routes/tickets.py:383 app/templates/dashboard.html:17
 #: app/templates/ticket_detalle.html:23
 msgid "Fecha creación"
 msgstr "Created date"
 
-#: app/routes/tickets.py:371 app/templates/admin_tickets.html:68
+#: app/routes/tickets.py:383 app/templates/admin_tickets.html:68
+#: app/templates/email/ticket_notificacion.html:80
 #: app/templates/ticket_detalle.html:25 app/templates/tickets_por_area.html:55
 msgid "Fecha límite"
 msgstr "Due date"
 
-#: app/routes/tickets.py:447
+#: app/routes/tickets.py:459
 msgid "Categoría del ticket confirmada"
 msgstr "Ticket category confirmed"
 
@@ -822,6 +816,20 @@ msgstr "Acceptable"
 #: app/services/metricas.py:183
 msgid "Necesita mejorar"
 msgstr "Needs improvement"
+
+#: app/services/metricas.py:317
+msgid "Es el único agente disponible en esta área"
+msgstr "This is the only agent available in this area"
+
+#: app/services/metricas.py:320
+#, python-format
+msgid "Comparte la carga de trabajo más baja del área (%(n)s tickets en progreso) y tiene el mejor cumplimiento de SLA entre quienes están en ese caso"
+msgstr "Shares the lowest workload in the area (%(n)s tickets in progress) and has the best SLA compliance among those in that situation"
+
+#: app/services/metricas.py:327
+#, python-format
+msgid "Tiene la carga de trabajo más baja del área (%(n)s tickets en progreso) frente a un promedio de %(prom)s en el resto del equipo"
+msgstr "Has the lowest workload in the area (%(n)s tickets in progress) against an average of %(prom)s for the rest of the team"
 
 #: app/services/palabra_clave.py:33 app/services/palabra_clave.py:73
 msgid "Esta palabra clave ya se encuentra registrada"
@@ -1160,24 +1168,40 @@ msgstr "Filter"
 msgid "Limpiar"
 msgstr "Clear"
 
-#: app/templates/admin_tickets.html:87
+#: app/templates/admin_tickets.html:68 app/templates/ticket_detalle.html:32
+msgid "Agente sugerido"
+msgstr "Suggested agent"
+
+#: app/templates/admin_tickets.html:84
+msgid "ya asignado"
+msgstr "already assigned"
+
+#: app/templates/admin_tickets.html:92 app/templates/ticket_detalle.html:68
+msgid "Asignar"
+msgstr "Assign"
+
+#: app/templates/admin_tickets.html:96
+msgid "sin agentes en el área"
+msgstr "no agents in this area"
+
+#: app/templates/admin_tickets.html:107
 msgid "Paginación de tickets"
 msgstr "Ticket pagination"
 
-#: app/templates/admin_tickets.html:93 app/templates/auditoria.html:86
+#: app/templates/admin_tickets.html:113 app/templates/auditoria.html:86
 msgid "Anterior"
 msgstr "Previous"
 
-#: app/templates/admin_tickets.html:96 app/templates/auditoria.html:90
+#: app/templates/admin_tickets.html:116 app/templates/auditoria.html:90
 #, python-format
 msgid "Página %(page)s de %(pages)s"
 msgstr "Page %(page)s of %(pages)s"
 
-#: app/templates/admin_tickets.html:99 app/templates/auditoria.html:94
+#: app/templates/admin_tickets.html:119 app/templates/auditoria.html:94
 msgid "Siguiente"
 msgstr "Next"
 
-#: app/templates/admin_tickets.html:105 app/templates/tickets_por_area.html:47
+#: app/templates/admin_tickets.html:125 app/templates/tickets_por_area.html:47
 msgid "No hay tickets que coincidan con los filtros seleccionados."
 msgstr "There are no tickets matching the selected filters."
 
@@ -1206,7 +1230,7 @@ msgstr "Actions"
 
 #: app/templates/apelaciones_pendientes.html:32
 #: app/templates/solicitudes_pendientes.html:40
-#: app/templates/ticket_detalle.html:85 app/templates/ticket_detalle.html:143
+#: app/templates/ticket_detalle.html:130 app/templates/ticket_detalle.html:188
 msgid "Aceptar"
 msgstr "Accept"
 
@@ -1214,8 +1238,8 @@ msgstr "Accept"
 #: app/templates/cambios_prioridad_pendientes.html:35
 #: app/templates/escalamientos_pendientes.html:35
 #: app/templates/solicitudes_pendientes.html:45
-#: app/templates/ticket_detalle.html:91 app/templates/ticket_detalle.html:149
-#: app/templates/ticket_detalle.html:162 app/templates/ticket_detalle.html:175
+#: app/templates/ticket_detalle.html:136 app/templates/ticket_detalle.html:194
+#: app/templates/ticket_detalle.html:207 app/templates/ticket_detalle.html:220
 msgid "Rechazar"
 msgstr "Reject"
 
@@ -1390,6 +1414,7 @@ msgid "Solicitado el %(fecha)s"
 msgstr "Requested on %(fecha)s"
 
 #: app/templates/cambios_prioridad_pendientes.html:26
+#: app/templates/email/ticket_notificacion.html:102
 #: app/templates/escalamientos_pendientes.html:26
 #: app/templates/solicitudes_pendientes.html:30
 msgid "Ver ticket"
@@ -1397,7 +1422,7 @@ msgstr "View ticket"
 
 #: app/templates/cambios_prioridad_pendientes.html:30
 #: app/templates/escalamientos_pendientes.html:30
-#: app/templates/ticket_detalle.html:156 app/templates/ticket_detalle.html:169
+#: app/templates/ticket_detalle.html:201 app/templates/ticket_detalle.html:214
 msgid "Aprobar"
 msgstr "Approve"
 
@@ -1406,9 +1431,7 @@ msgid "Reportar un problema"
 msgstr "Report a problem"
 
 #: app/templates/crear_ticket.html:11
-msgid ""
-"Describe la situación con el mayor detalle posible para agilizar la "
-"atención."
+msgid "Describe la situación con el mayor detalle posible para agilizar la atención."
 msgstr "Describe the situation in as much detail as possible to speed up support."
 
 #: app/templates/crear_ticket.html:15
@@ -1570,6 +1593,7 @@ msgstr "Correction rate (30 days)"
 
 #: app/templates/panel_metricas.html:133 app/templates/panel_metricas.html:147
 #: app/templates/perfil.html:113 app/templates/perfil.html:125
+#: app/templates/ticket_detalle.html:51 app/templates/ticket_detalle.html:60
 msgid "sin datos"
 msgstr "no data"
 
@@ -1691,19 +1715,19 @@ msgstr "Tickets taken"
 msgid "Tickets cerrados"
 msgstr "Tickets closed"
 
-#: app/templates/perfil.html:106
+#: app/templates/perfil.html:106 app/templates/ticket_detalle.html:43
 msgid "Cerrados (últimos 30 días)"
 msgstr "Closed (last 30 days)"
 
-#: app/templates/perfil.html:109
+#: app/templates/perfil.html:109 app/templates/ticket_detalle.html:47
 msgid "Tiempo promedio de resolución"
 msgstr "Average resolution time"
 
-#: app/templates/perfil.html:111
+#: app/templates/perfil.html:111 app/templates/ticket_detalle.html:49
 msgid "h"
 msgstr "h"
 
-#: app/templates/perfil.html:118
+#: app/templates/perfil.html:118 app/templates/ticket_detalle.html:55
 msgid "Cumplimiento de SLA"
 msgstr "SLA compliance"
 
@@ -1773,7 +1797,7 @@ msgid "No hay tickets pendientes de revisión."
 msgstr "There are no tickets pending review."
 
 #: app/templates/revision_clasificacion.html:23
-#: app/templates/ticket_detalle.html:37
+#: app/templates/ticket_detalle.html:82
 msgid "-- elegir categoría --"
 msgstr "-- choose category --"
 
@@ -1819,127 +1843,124 @@ msgstr "Ticket #%(id)s"
 msgid "Creado por"
 msgstr "Created by"
 
-#: app/templates/ticket_detalle.html:18 app/templates/ticket_detalle.html:76
-#: app/templates/ticket_detalle.html:125 app/templates/ticket_detalle.html:130
-#: app/templates/ticket_detalle.html:190
+#: app/templates/ticket_detalle.html:18 app/templates/ticket_detalle.html:121
+#: app/templates/ticket_detalle.html:170 app/templates/ticket_detalle.html:175
+#: app/templates/ticket_detalle.html:235
 msgid "Usuario desconocido"
 msgstr "Unknown user"
 
-#: app/templates/ticket_detalle.html:31
-msgid ""
-"La categoría de este ticket fue asignada automáticamente con baja "
-"confianza y está pendiente de revisión."
-msgstr ""
-"This ticket's category was assigned automatically with low confidence and"
-" is pending review."
+#: app/templates/ticket_detalle.html:39
+msgid "Carga actual"
+msgstr "Current workload"
 
-#: app/templates/ticket_detalle.html:46
+#: app/templates/ticket_detalle.html:40
+#, python-format
+msgid "%(n)s tickets en progreso"
+msgstr "%(n)s tickets in progress"
+
+#: app/templates/ticket_detalle.html:76
+msgid "La categoría de este ticket fue asignada automáticamente con baja confianza y está pendiente de revisión."
+msgstr "This ticket's category was assigned automatically with low confidence and is pending review."
+
+#: app/templates/ticket_detalle.html:91
 msgid "Confirmar categoría"
 msgstr "Confirm category"
 
-#: app/templates/ticket_detalle.html:56
+#: app/templates/ticket_detalle.html:101
 msgid "Apelación en revisión"
 msgstr "Appeal under review"
 
-#: app/templates/ticket_detalle.html:57
-msgid ""
-"Tu apelación sobre el cierre de este ticket está pendiente de revisión "
-"por un administrador."
-msgstr ""
-"Your appeal about this ticket's closure is pending review by an "
-"administrator."
+#: app/templates/ticket_detalle.html:102
+msgid "Tu apelación sobre el cierre de este ticket está pendiente de revisión por un administrador."
+msgstr "Your appeal about this ticket's closure is pending review by an administrator."
 
-#: app/templates/ticket_detalle.html:59
+#: app/templates/ticket_detalle.html:104
 msgid "¿No estás de acuerdo con el cierre de este ticket?"
 msgstr "Don't agree with this ticket's closure?"
 
-#: app/templates/ticket_detalle.html:63
+#: app/templates/ticket_detalle.html:108
 msgid "Explica por qué crees que este cierre fue incorrecto"
 msgstr "Explain why you think this closure was incorrect"
 
-#: app/templates/ticket_detalle.html:64
+#: app/templates/ticket_detalle.html:109
 msgid "Apelar decisión"
 msgstr "Appeal decision"
 
-#: app/templates/ticket_detalle.html:74
+#: app/templates/ticket_detalle.html:119
 msgid "Apelación pendiente de este ticket"
 msgstr "Pending appeal for this ticket"
 
-#: app/templates/ticket_detalle.html:76 app/templates/ticket_detalle.html:130
+#: app/templates/ticket_detalle.html:121 app/templates/ticket_detalle.html:175
 #, python-format
 msgid "Solicitado por %(nombre)s"
 msgstr "Requested by %(nombre)s"
 
-#: app/templates/ticket_detalle.html:108
+#: app/templates/ticket_detalle.html:153
 msgid "Solicitudes del ticket"
 msgstr "Ticket requests"
 
-#: app/templates/ticket_detalle.html:123
+#: app/templates/ticket_detalle.html:168
 msgid "Transferencia"
 msgstr "Transfer"
 
-#: app/templates/ticket_detalle.html:132
+#: app/templates/ticket_detalle.html:177
 msgid "resuelto"
 msgstr "resolved"
 
-#: app/templates/ticket_detalle.html:187
+#: app/templates/ticket_detalle.html:232
 msgid "Comentarios"
 msgstr "Comments"
 
-#: app/templates/ticket_detalle.html:195
+#: app/templates/ticket_detalle.html:240
 msgid "Sin comentarios todavía."
 msgstr "No comments yet."
 
-#: app/templates/ticket_detalle.html:202
+#: app/templates/ticket_detalle.html:247
 msgid "Escribe un comentario..."
 msgstr "Write a comment..."
 
-#: app/templates/ticket_detalle.html:204
+#: app/templates/ticket_detalle.html:249
 msgid "Comentar"
 msgstr "Comment"
 
-#: app/templates/ticket_detalle.html:210
+#: app/templates/ticket_detalle.html:255
 msgid "Acciones sobre el ticket"
 msgstr "Ticket actions"
 
-#: app/templates/ticket_detalle.html:211
+#: app/templates/ticket_detalle.html:256
 msgid "Todas requieren aprobación antes de aplicarse."
 msgstr "All require approval before taking effect."
 
-#: app/templates/ticket_detalle.html:218
+#: app/templates/ticket_detalle.html:263
 msgid "Agente destino"
 msgstr "Target agent"
 
-#: app/templates/ticket_detalle.html:228
+#: app/templates/ticket_detalle.html:273
 msgid "Motivo (opcional)"
 msgstr "Reason (optional)"
 
-#: app/templates/ticket_detalle.html:232 app/templates/ticket_detalle.html:268
-#: app/templates/ticket_detalle.html:294
+#: app/templates/ticket_detalle.html:277 app/templates/ticket_detalle.html:313
+#: app/templates/ticket_detalle.html:339
 msgid "Enviar"
 msgstr "Send"
 
-#: app/templates/ticket_detalle.html:240
+#: app/templates/ticket_detalle.html:285
 msgid "Escalar a otra área"
 msgstr "Escalate to another area"
 
-#: app/templates/ticket_detalle.html:241
-msgid ""
-"El ticket queda sin agente asignado, disponible para cualquier agente del"
-" área destino."
-msgstr ""
-"The ticket is left with no assigned agent, available to any agent in the "
-"target area."
+#: app/templates/ticket_detalle.html:286
+msgid "El ticket queda sin agente asignado, disponible para cualquier agente del área destino."
+msgstr "The ticket is left with no assigned agent, available to any agent in the target area."
 
-#: app/templates/ticket_detalle.html:245
+#: app/templates/ticket_detalle.html:290
 msgid "Área destino"
 msgstr "Target area"
 
-#: app/templates/ticket_detalle.html:264 app/templates/ticket_detalle.html:290
+#: app/templates/ticket_detalle.html:309 app/templates/ticket_detalle.html:335
 msgid "Motivo (obligatorio)"
 msgstr "Reason (required)"
 
-#: app/templates/ticket_detalle.html:280
+#: app/templates/ticket_detalle.html:325
 msgid "Nueva prioridad"
 msgstr "New priority"
 
@@ -1978,6 +1999,14 @@ msgstr "No transitions"
 msgid "Reasignar"
 msgstr "Reassign"
 
+#: app/templates/email/ticket_notificacion.html:36
+msgid "Actualización de tu ticket"
+msgstr "Update on your ticket"
+
+#: app/templates/email/ticket_notificacion.html:108
+msgid "Este es un mensaje automático, por favor no respondas a este correo."
+msgstr "This is an automated message, please do not reply to this email."
+
 #~ msgid "Métricas"
 #~ msgstr "Metrics"
 
@@ -1987,20 +2016,15 @@ msgstr "Reassign"
 #~ msgid "Enviar solicitud"
 #~ msgstr "Send request"
 
-#~ msgid ""
-#~ "El ticket queda sin agente asignado, "
-#~ "disponible para cualquier agente del "
-#~ "área destino. Requiere aprobación de un"
-#~ " administrador."
-#~ msgstr ""
-#~ "The ticket is left with no "
-#~ "assigned agent, available to any agent"
-#~ " in the target area. Requires "
-#~ "administrator approval."
+#~ msgid "El ticket queda sin agente asignado, disponible para cualquier agente del área destino. Requiere aprobación de un administrador."
+#~ msgstr "The ticket is left with no assigned agent, available to any agent in the target area. Requires administrator approval."
 
 #~ msgid "Solicitar escalamiento"
 #~ msgstr "Request escalation"
 
 #~ msgid "Solicitar cambio de prioridad"
 #~ msgstr "Request priority change"
+
+#~ msgid "Sistema de Tickets"
+#~ msgstr "Ticket requests"
 

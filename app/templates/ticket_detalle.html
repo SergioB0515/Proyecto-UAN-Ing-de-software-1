@@ -26,6 +26,51 @@
     </p>
 </div>
 
+{% if sugerencia_agente %}
+<div class="card mt-3 suggestion-card">
+    <div class="card-body">
+        <h6 class="card-title mb-2">{{ _('Agente sugerido') }}</h6>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+            <span class="badge-pill">{{ sugerencia_agente.agente.nombre }}</span>
+        </div>
+        <p class="text-muted small mb-3">{{ sugerencia_agente.motivo }}</p>
+        <div class="suggestion-stats">
+            <div>
+                <span class="meta-label d-block">{{ _('Carga actual') }}</span>
+                {{ _('%(n)s tickets en progreso', n=sugerencia_agente.carga_actual) }}
+            </div>
+            <div>
+                <span class="meta-label d-block">{{ _('Cerrados (últimos 30 días)') }}</span>
+                {{ sugerencia_agente.tickets_cerrados_30d }}
+            </div>
+            <div>
+                <span class="meta-label d-block">{{ _('Tiempo promedio de resolución') }}</span>
+                {% if sugerencia_agente.tiempo_promedio_resolucion_horas is not none %}
+                    {{ "%.1f"|format(sugerencia_agente.tiempo_promedio_resolucion_horas) }} {{ _('h') }}
+                {% else %}
+                    {{ _('sin datos') }}
+                {% endif %}
+            </div>
+            <div>
+                <span class="meta-label d-block">{{ _('Cumplimiento de SLA') }}</span>
+                {% if sugerencia_agente.cumplimiento_sla is not none %}
+                    {% set porcentaje = (sugerencia_agente.cumplimiento_sla * 100) | round(0) | int %}
+                    <span class="{% if porcentaje >= 80 %}text-success{% elif porcentaje >= 50 %}text-warning{% else %}text-danger{% endif %} fw-semibold">{{ porcentaje }}%</span>
+                {% else %}
+                    {{ _('sin datos') }}
+                {% endif %}
+            </div>
+        </div>
+        <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=ticket.id) }}" class="mt-3">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="nuevo_estado" value="en_progreso">
+            <input type="hidden" name="agente_id" value="{{ sugerencia_agente.agente.id }}">
+            <button type="submit" class="btn btn-sm btn-primary">{{ _('Asignar') }}</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
 {% if ticket.clasificacion_baja_confianza %}
 <div class="alert alert-warning mt-3 mb-0">
     <p class="mb-2">{{ _('La categoría de este ticket fue asignada automáticamente con baja confianza y está pendiente de revisión.') }}</p>

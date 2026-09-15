@@ -69,6 +69,7 @@ def _crear_ticket_historico(creador_id, agente_id, categoria, prioridad, texto,
     return ticket
 
 
+
 def sembrar():
     if Usuario.query.filter_by(email=EMAIL_ADMIN_DEMO).first():
         print(f"Ya existen datos de demo ({EMAIL_ADMIN_DEMO} ya existe). No se siembra de nuevo.")
@@ -190,7 +191,52 @@ def sembrar():
                              "consulta sobre politica de vacaciones", dias_desde_asignacion=13, horas_hasta_cierre=2)
     _crear_ticket_historico(creadores[1], agente_otros.id, Categoria.OTROS, Prioridad.BAJA,
                              "duda sobre horario de atencion", dias_desde_asignacion=5, horas_hasta_cierre=1)
+    def _crear_ticket_sin_agente(creador_id, categoria, prioridad, texto, fecha_creacion, fecha_limite):
+        """
+        Ticket ABIERTO, sin agente asignado -- para probar sugerir_agente()
+        contra datos reales de la demo. Bypassea ServicioTickets/GestorSLA
+        (que usan datetime.now() y no permiten backdatear), mismo patron que
+        _crear_ticket_historico.
+        """
+        ticket = Ticket(
+            texto=texto,
+            categoria=categoria,
+            prioridad=prioridad,
+            estado=EstadoTicket.ABIERTO,
+            creador_id=creador_id,
+            agente_id=None,
+            fecha_creacion=fecha_creacion,
+            fecha_limite=fecha_limite,
+        )
+        db.session.add(ticket)
+        db.session.commit()
+        return ticket
 
+
+    # --- Tickets sin agente para probar sugerir_agente() (v2.4) -----------------
+    # PERMISOS: Andres (carga=1, de t1 EN_PROGRESO arriba) vs Diana (carga=0).
+    # Diana deberia ganar la sugerencia pese a tener peor cumplimiento historico
+    # -- la carga actual pesa antes que el desempeño pasado, por diseño.
+    ahora = datetime.now()
+    _crear_ticket_sin_agente(
+        creadores[0], Categoria.PERMISOS, Prioridad.BAJA,
+        "no puedo entrar a la vpn de la empresa",
+        fecha_creacion=ahora - timedelta(hours=80),
+        fecha_limite=ahora - timedelta(hours=8),  # vencido
+    )
+
+    # REDES: solo Sandra tiene esta area -- sugerencia sin ambiguedad, sirve
+    # para confirmar el caso simple antes del caso con desempate de arriba.
+    _crear_ticket_sin_agente(
+        creadores[1], Categoria.REDES, Prioridad.ALTA,
+        "la vpn se cae cada 5 minutos",
+        fecha_creacion=ahora - timedelta(hours=3, minutes=50),
+        fecha_limite=ahora + timedelta(minutes=10),  # proximo a vencer (<20% de ventana restante)
+    )
+
+    print("2 tickets sin agente creados (1 vencido en Permisos, 1 proximo a vencer en Redes) para probar sugerir_agente()")
+        
+    
     print("Historico de 26 tickets cerrados creado para poblar metricas por agente (ultimos 30 dias)")
 
 

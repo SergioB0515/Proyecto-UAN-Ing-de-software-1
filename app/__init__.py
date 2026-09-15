@@ -1,5 +1,5 @@
 from flask import Flask, session, has_request_context
-from app.extensions import db, socketio
+from app.extensions import db, socketio, mail
 from flask_socketio import join_room
 from app.config import Config
 from app.routes.auth import auth_bp
@@ -23,7 +23,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)
-
+    mail.init_app(app)
     csrf = CSRFProtect(app)
 
     socketio.init_app(app, async_mode="threading")
@@ -75,7 +75,11 @@ def create_app():
             
     @app.context_processor
     def inject_notificaciones():
-        if "usuario_id" not in session:
+        # render_template puede invocarse sin contexto de request (p.ej. al
+        # renderizar el HTML de un correo desde el scheduler de SLA o desde
+        # un hilo de envío), y este context processor corre para CUALQUIER
+        # render_template de la app -- sin este chequeo, `session` revienta.
+        if not has_request_context() or "usuario_id" not in session:
             return {}
         usuario_id = session["usuario_id"]
         no_leidas = ServicioNotificaciones.listar_no_leidas(usuario_id)
@@ -96,7 +100,7 @@ def create_app():
 
     @app.context_processor
     def inject_usuario_actual():
-        if "usuario_id" not in session:
+        if not has_request_context() or "usuario_id" not in session:
             return {}
         usuario = db.session.get(Usuario, session["usuario_id"])
         if usuario is None:

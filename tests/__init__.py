@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from flask_babel import Babel
-from app.extensions import db
+from app.extensions import db,mail
 from app.models.apelacion import ApelacionCierre
 from app.models.palabra_clave import PalabraClave
 from app.models.correccion_clasificacion import CorreccionClasificacion
@@ -13,7 +13,10 @@ def create_app():
 
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test_proyecto.db"
     app.config["LANGUAGES"] = ["es", "en"]
+    app.config["MAIL_SUPPRESS_SEND"] = True
+    app.config["MAIL_DEFAULT_SENDER"] = "pruebas@empresa.com"
     db.init_app(app)
+    mail.init_app(app)
 
     # Los servicios usan flask_babel.gettext para sus mensajes; sin esta
     # inicializacion, llamarlos fuera de una request revienta con KeyError.

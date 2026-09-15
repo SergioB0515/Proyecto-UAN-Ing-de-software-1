@@ -6,6 +6,7 @@ from app.extensions import db
 from app.services.tickets import ServicioTickets, TRANSICIONES_VALIDAS
 from app.services.solicitud_transferencia import ServicioSolicitudesTransferencia
 from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, ComentarioVacioError, TicketNoEncontradoError, TicketNoEnProgresoError, ErrorPersistencia, ClasificacionYaConfirmadaError
+from app.services.metricas import ServicioMetricas
 from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.comentario import Comentario 
@@ -255,7 +256,10 @@ def detalle(ticket_id):
     rol = session.get("rol")
     puede_gestionar = rol == RolUsuario.ADMIN or session["usuario_id"] == ticket.agente_id
 
-    
+    sugerencia_agente = None
+    if ticket.agente_id is None and rol == RolUsuario.ADMIN:
+        sugerencia_agente = ServicioMetricas.detalle_sugerencia_agente(ticket.categoria)
+
     apelacion_pendiente = None
     if ticket.estado == EstadoTicket.CERRADO:
         apelacion_pendiente = db.session.execute(
@@ -274,6 +278,7 @@ def detalle(ticket_id):
         agentes_del_area=agentes_del_area,
         puede_gestionar=puede_gestionar,
         apelacion_pendiente=apelacion_pendiente,
+        sugerencia_agente=sugerencia_agente,
     )
     
 @tickets_bp.route("/admin/tickets")
@@ -319,12 +324,19 @@ def listar_admin():
         "prioridad": prioridad_raw,
         "vista": vista,
     }
+    sugerencias_agente = {}
+    if vista in ("vencidos_actuales", "proximos_actuales"):
+
+        categorias_sin_agente = {t.categoria for t in tickets if t.agente_id is None}
+        for categoria in categorias_sin_agente:
+            sugerencias_agente[categoria] = ServicioMetricas.sugerir_agente(categoria)
 
     return render_template(
         "admin_tickets.html",
         tickets=tickets,
         paginacion=paginacion,
         filtros_actuales=filtros_actuales,
+        sugerencias_agente=sugerencias_agente,
     )
 
 @tickets_bp.route("/admin/tickets/exportar")

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="{{ idioma }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>{{ titulo }}</title>
+<style>
+  @media (max-width: 620px) {
+    .contenedor { width: 100% !important; }
+    .relleno { padding-left: 20px !important; padding-right: 20px !important; }
+  }
+</style>
+</head>
+<body style="margin:0; padding:0; background-color:#0a0c1e;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a0c1e;">
+<tr><td align="center" style="padding:32px 12px;">
+<table role="presentation" class="contenedor" width="560" cellpadding="0" cellspacing="0"
+       style="width:560px; max-width:100%; background-color:#131731; border-radius:18px; overflow:hidden; font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
+
+<tr><td style="height:4px; line-height:4px; font-size:0; background-color:{{ color_2 }}; background-image:linear-gradient(90deg,{{ color_1 }},{{ color_2 }});">&nbsp;</td></tr>
+
+<tr><td class="relleno" style="padding:28px 32px 4px;">
+  <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+    <td style="width:34px; height:34px; border-radius:9px; background-color:#5548c8; background-image:linear-gradient(135deg,#6d5df0,#4235a8); text-align:center; vertical-align:middle;">
+      <span style="color:#ffffff; font-size:16px; font-weight:700;">&#10003;</span>
+    </td>
+    <td style="padding-left:10px; font-size:15px; font-weight:700; color:#fdfcff;">
+      Sistema de Tickets <span style="color:#8f82f5;">IT</span>
+    </td>
+  </tr></table>
+</td></tr>
+
+<tr><td class="relleno" style="padding:14px 32px 0;">
+  <p style="margin:0 0 6px; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:#9d9ac4; font-weight:700;">
+    {{ _('Actualización de tu ticket') }}
+  </p>
+  <h1 style="margin:0 0 20px; font-size:20px; line-height:1.35; color:#f5f3ff; font-weight:600;">{{ titulo }}</h1>
+</td></tr>
+
+<tr><td class="relleno" style="padding:0 32px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+         style="background-color:#191e40; border-radius:13px;">
+    <tr><td style="padding:20px 22px;">
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="font-family:Consolas,'JetBrains Mono',monospace; font-size:13px; color:#8f82f5; font-weight:700;">
+            #{{ ticket.id }}
+          </td>
+          <td align="right">
+            {% set estado_bg, estado_fg = colores_estado.get(ticket.estado_valor, ("#2a2f57", "#cfc9ff")) %}
+            <span style="display:inline-block; padding:4px 10px; border-radius:7px; font-size:11px; font-weight:700; background-color:{{ estado_bg }}; color:{{ estado_fg }};">
+              {{ ticket.estado_valor | etiqueta }}
+            </span>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:14px 0 14px; font-size:14px; line-height:1.55; color:#e8e6f7;">{{ ticket.texto }}</p>
+
+      <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+        <td style="padding-right:6px; padding-bottom:14px;">
+          <span style="display:inline-block; padding:4px 10px; border-radius:7px; font-size:11px; font-weight:600; background-color:{{ color_categoria[0] }}; color:{{ color_categoria[1] }};">
+            {{ ticket.categoria_valor | etiqueta }}
+          </span>
+        </td>
+        <td style="padding-bottom:14px;">
+          {% set prio_bg, prio_fg = colores_prioridad.get(ticket.prioridad_valor, ("#2a2f57", "#cfc9ff")) %}
+          <span style="display:inline-block; padding:4px 10px; border-radius:7px; font-size:11px; font-weight:700; background-color:{{ prio_bg }}; color:{{ prio_fg }};">
+            {{ ticket.prioridad_valor | etiqueta }}
+          </span>
+        </td>
+      </tr></table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid rgba(154,148,224,.14);">
+        <tr>
+          <td style="padding-top:12px; width:50%;">
+            <span style="display:block; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#9d9ac4; font-weight:700; margin-bottom:3px;">
+              {{ _('Fecha límite') }}
+            </span>
+            <span style="font-family:Consolas,'JetBrains Mono',monospace; font-size:13px; color:#e8e6f7;">{{ ticket.fecha_limite | fecha }}</span>
+          </td>
+          {% if ticket.agente_nombre %}
+          <td style="padding-top:12px;">
+            <span style="display:block; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#9d9ac4; font-weight:700; margin-bottom:3px;">
+              {{ _('Agente') }}
+            </span>
+            <span style="font-size:13px; color:#e8e6f7;">{{ ticket.agente_nombre }}</span>
+          </td>
+          {% endif %}
+        </tr>
+      </table>
+
+    </td></tr>
+  </table>
+</td></tr>
+
+<tr><td class="relleno" align="center" style="padding:26px 32px 32px;">
+  <a href="{{ url_ticket }}"
+     style="display:inline-block; background-color:#5548c8; background-image:linear-gradient(135deg,#5548c8,#151a38); color:#ffffff; text-decoration:none; font-weight:600; font-size:14px; padding:12px 30px; border-radius:9px;">
+    {{ _('Ver ticket') }}
+  </a>
+</td></tr>
+
+<tr><td style="padding:16px 32px 26px; border-top:1px solid rgba(154,148,224,.09);">
+  <p style="margin:0; font-size:11px; color:#726f96;">
+    {{ _('Este es un mensaje automático, por favor no respondas a este correo.') }}
+  </p>
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>

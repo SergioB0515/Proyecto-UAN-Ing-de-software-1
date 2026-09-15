@@ -6,3 +6,4 @@ app/static/fotos_perfil/
 instance/*.db
 test_proyecto/*.db
 .env
+correos_preview/

@@ -65,18 +65,38 @@
 <table class="table table-hover align-middle">
     <thead>
         <tr>
-            <th>{{ _('ID') }}</th><th>{{ _('Texto') }}</th><th>{{ _('Categoría') }}</th><th>{{ _('Prioridad') }}</th><th>{{ _('Estado') }}</th><th>{{ _('Fecha límite') }}</th>
+            <th>{{ _('ID') }}</th><th>{{ _('Texto') }}</th><th>{{ _('Categoría') }}</th><th>{{ _('Prioridad') }}</th><th>{{ _('Estado') }}</th><th>{{ _('Fecha límite') }}</th>{% if filtros_actuales.vista in ("vencidos_actuales", "proximos_actuales") %}<th>{{ _('Agente sugerido') }}</th>{% endif %}
         </tr>
     </thead>
     <tbody>
         {% for t in tickets %}
-        <tr>
+        {% set tiene_sugerencia = filtros_actuales.vista in ("vencidos_actuales", "proximos_actuales") and not t.agente_id and sugerencias_agente.get(t.categoria) %}
+        <tr class="{% if tiene_sugerencia %}table-suggested-agent{% endif %}">
             <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
             <td><span class="badge-pill categoria-tag">{{ t.categoria.value | etiqueta }}</span></td>
             <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value | etiqueta }}</span></td>
             <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value | etiqueta }}</span></td>
             <td class="mono text-soft-mono">{{ t.fecha_limite | fecha }}</td>
+            {% if filtros_actuales.vista in ("vencidos_actuales", "proximos_actuales") %}
+            <td>
+                {% if t.agente_id %}
+                    <span class="text-muted">{{ _('ya asignado') }}</span>
+                {% elif sugerencias_agente.get(t.categoria) %}
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge-pill">{{ sugerencias_agente[t.categoria].nombre }}</span>
+                        <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=t.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="nuevo_estado" value="en_progreso">
+                            <input type="hidden" name="agente_id" value="{{ sugerencias_agente[t.categoria].id }}">
+                            <button type="submit" class="btn btn-sm btn-primary">{{ _('Asignar') }}</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <span class="text-muted">{{ _('sin agentes en el área') }}</span>
+                {% endif %}
+            </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

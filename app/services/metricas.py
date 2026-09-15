@@ -243,3 +243,98 @@ class ServicioMetricas:
             "exactitud_laboratorio": exactitud_laboratorio,
             "fecha_entrenamiento_modelo": fecha_entrenamiento_modelo,
         }
+        
+    @staticmethod
+    def _panorama_area(categoria):
+        """Agentes de un área con su carga actual (tickets EN_PROGRESO) y sus
+        métricas de desempeño (últimos 30 días), para sugerir/justificar un agente."""
+
+        agentes = db.session.execute(
+            select(Usuario).where(
+                Usuario.area_soporte == categoria, Usuario.rol == RolUsuario.AGENTE
+            )
+        ).scalars().all()
+
+        if not agentes:
+            return [], {}, {}
+
+        cargas = {}
+        for agente in agentes:
+            cargas[agente.id] = db.session.execute(
+                select(func.count()).select_from(Ticket).where(
+                    Ticket.agente_id == agente.id,
+                    Ticket.estado == EstadoTicket.EN_PROGRESO,
+                )
+            ).scalar()
+
+        dict_de_metricas = ServicioMetricas.metricas_por_agente(area=categoria)
+        metricas_por_id = {m["agente_id"]: m for m in dict_de_metricas}
+
+        return agentes, cargas, metricas_por_id
+
+    @staticmethod
+    def _clave_orden_sugerencia(cargas, metricas_por_id):
+        def clave_orden(agente):
+            carga = cargas[agente.id]
+            cumplimiento = metricas_por_id.get(agente.id, {}).get("cumplimiento_sla")
+            cumplimiento_para_orden = cumplimiento if cumplimiento is not None else -1
+            return (carga, -cumplimiento_para_orden)
+        return clave_orden
+
+    @staticmethod
+    def sugerir_agente(categoria):
+
+        agentes, cargas, metricas_por_id = ServicioMetricas._panorama_area(categoria)
+        if not agentes:
+            return None
+
+        clave_orden = ServicioMetricas._clave_orden_sugerencia(cargas, metricas_por_id)
+        return sorted(agentes, key=clave_orden)[0]
+
+    @staticmethod
+    def detalle_sugerencia_agente(categoria):
+        """Igual que sugerir_agente, pero además explica el motivo de la elección
+        y expone la carga/desempeño del agente elegido, para mostrarlo en el
+        detalle del ticket."""
+
+        agentes, cargas, metricas_por_id = ServicioMetricas._panorama_area(categoria)
+        if not agentes:
+            return None
+
+        clave_orden = ServicioMetricas._clave_orden_sugerencia(cargas, metricas_por_id)
+        ganador = sorted(agentes, key=clave_orden)[0]
+
+        carga_ganador = cargas[ganador.id]
+        metricas_ganador = metricas_por_id.get(ganador.id, {
+            "tickets_cerrados": 0,
+            "tiempo_promedio_resolucion_horas": None,
+            "cumplimiento_sla": None,
+        })
+
+        otras_cargas = [cargas[a.id] for a in agentes if a.id != ganador.id]
+
+        if not otras_cargas:
+            motivo = _("Es el único agente disponible en esta área")
+        elif any(c == carga_ganador for c in otras_cargas):
+            motivo = _(
+                "Comparte la carga de trabajo más baja del área (%(n)s tickets en progreso) "
+                "y tiene el mejor cumplimiento de SLA entre quienes están en ese caso",
+                n=carga_ganador,
+            )
+        else:
+            promedio_otros = round(sum(otras_cargas) / len(otras_cargas), 1)
+            motivo = _(
+                "Tiene la carga de trabajo más baja del área (%(n)s tickets en progreso) "
+                "frente a un promedio de %(prom)s en el resto del equipo",
+                n=carga_ganador, prom=promedio_otros,
+            )
+
+        return {
+            "agente": ganador,
+            "carga_actual": carga_ganador,
+            "tickets_cerrados_30d": metricas_ganador["tickets_cerrados"],
+            "tiempo_promedio_resolucion_horas": metricas_ganador["tiempo_promedio_resolucion_horas"],
+            "cumplimiento_sla": metricas_ganador["cumplimiento_sla"],
+            "motivo": motivo,
+            "total_agentes_area": len(agentes),
+        }
