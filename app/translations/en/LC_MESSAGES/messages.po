@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-14 19:27-0500\n"
+"POT-Creation-Date: 2026-09-29 16:12-0500\n"
 "PO-Revision-Date: 2026-09-07 01:33-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,82 +18,86 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: app/notificaciones_i18n.py:40
+#: app/notificaciones_i18n.py:37
 #, python-format
-msgid "Tu ticket #%(id)s fue cerrado directamente sin haber sido atendido — revisa los comentarios para ver el motivo"
-msgstr "Your ticket #%(id)s was closed directly without being handled — check the comments for the reason"
+msgid ""
+"Tu ticket #%(id)s fue cerrado directamente sin haber sido atendido — "
+"revisa los comentarios para ver el motivo"
+msgstr ""
+"Your ticket #%(id)s was closed directly without being handled — check the"
+" comments for the reason"
 
-#: app/notificaciones_i18n.py:42
+#: app/notificaciones_i18n.py:39
 #, python-format
 msgid "Tu ticket #%(id)s fue cerrado"
 msgstr "Your ticket #%(id)s was closed"
 
-#: app/notificaciones_i18n.py:43
+#: app/notificaciones_i18n.py:40
 #, python-format
 msgid "Nueva solicitud de transferencia para el ticket #%(id)s"
 msgstr "New transfer request for ticket #%(id)s"
 
-#: app/notificaciones_i18n.py:44
+#: app/notificaciones_i18n.py:41
 #, python-format
 msgid "Tu solicitud de transferencia del ticket #%(id)s fue aceptada"
 msgstr "Your transfer request for ticket #%(id)s was accepted"
 
-#: app/notificaciones_i18n.py:45
+#: app/notificaciones_i18n.py:42
 #, python-format
 msgid "Tu solicitud de transferencia del ticket #%(id)s fue rechazada"
 msgstr "Your transfer request for ticket #%(id)s was rejected"
 
-#: app/notificaciones_i18n.py:46
+#: app/notificaciones_i18n.py:43
 #, python-format
 msgid "Nuevo escalamiento pendiente de aprobar: ticket #%(id)s"
 msgstr "New escalation pending approval: ticket #%(id)s"
 
-#: app/notificaciones_i18n.py:47
+#: app/notificaciones_i18n.py:44
 #, python-format
 msgid "Tu escalamiento del ticket #%(id)s fue aprobado"
 msgstr "Your escalation for ticket #%(id)s was approved"
 
-#: app/notificaciones_i18n.py:48
+#: app/notificaciones_i18n.py:45
 #, python-format
 msgid "Tu escalamiento del ticket #%(id)s fue rechazado"
 msgstr "Your escalation for ticket #%(id)s was rejected"
 
-#: app/notificaciones_i18n.py:49
+#: app/notificaciones_i18n.py:46
 #, python-format
 msgid "Nuevo cambio de prioridad pendiente de aprobar: ticket #%(id)s"
 msgstr "New priority change pending approval: ticket #%(id)s"
 
-#: app/notificaciones_i18n.py:50
+#: app/notificaciones_i18n.py:47
 #, python-format
 msgid "Tu cambio de prioridad del ticket #%(id)s fue aprobado"
 msgstr "Your priority change for ticket #%(id)s was approved"
 
-#: app/notificaciones_i18n.py:51
+#: app/notificaciones_i18n.py:48
 #, python-format
 msgid "Tu cambio de prioridad del ticket #%(id)s fue rechazado"
 msgstr "Your priority change for ticket #%(id)s was rejected"
 
-#: app/notificaciones_i18n.py:52
+#: app/notificaciones_i18n.py:49
 #, python-format
 msgid "Tu ticket #%(id)s está próximo a vencer"
 msgstr "Your ticket #%(id)s is about to breach its SLA"
 
-#: app/notificaciones_i18n.py:53
+#: app/notificaciones_i18n.py:50
 #, python-format
 msgid "El ticket #%(id)s que tienes asignado está próximo a vencer"
 msgstr "Ticket #%(id)s assigned to you is about to breach its SLA"
 
-#: app/notificaciones_i18n.py:54
+#: app/notificaciones_i18n.py:51
 #, python-format
 msgid "Tu ticket #%(id)s está vencido"
 msgstr "Your ticket #%(id)s has breached its SLA"
 
-#: app/notificaciones_i18n.py:55
+#: app/notificaciones_i18n.py:52
 #, python-format
 msgid "El ticket #%(id)s que tienes asignado está vencido"
 msgstr "Ticket #%(id)s assigned to you has breached its SLA"
 
-#: app/notificaciones_i18n.py:56
+#: app/notificaciones_i18n.py:53
 #, python-format
 msgid "El ticket #%(id)s necesita revision de categoria"
 msgstr "Ticket #%(id)s needs its category reviewed"
@@ -106,9 +110,10 @@ msgstr "Ticket #%(id)s needs its category reviewed"
 msgid "Infraestructura"
 msgstr "Infrastructure"
 
-#: app/templates/admin_tickets.html:28 app/templates/palabras_clave.html:24
-#: app/templates/palabras_clave.html:83 app/templates/palabras_clave.html:121
-#: app/templates/registro.html:51 app/templates/revision_clasificacion.html:25
+#: app/templates/admin_tickets.html:28 app/templates/demo.html:122
+#: app/templates/palabras_clave.html:24 app/templates/palabras_clave.html:83
+#: app/templates/palabras_clave.html:121 app/templates/registro.html:51
+#: app/templates/revision_clasificacion.html:25
 #: app/templates/ticket_detalle.html:84 app/templates/ticket_detalle.html:294
 #: app/traducciones.py:9
 msgid "Redes"
@@ -122,17 +127,19 @@ msgstr "Networks"
 msgid "Permisos"
 msgstr "Permissions"
 
-#: app/templates/admin_tickets.html:30 app/templates/palabras_clave.html:26
-#: app/templates/palabras_clave.html:85 app/templates/palabras_clave.html:123
-#: app/templates/registro.html:53 app/templates/revision_clasificacion.html:27
+#: app/templates/admin_tickets.html:30 app/templates/demo.html:123
+#: app/templates/palabras_clave.html:26 app/templates/palabras_clave.html:85
+#: app/templates/palabras_clave.html:123 app/templates/registro.html:53
+#: app/templates/revision_clasificacion.html:27
 #: app/templates/ticket_detalle.html:86 app/templates/ticket_detalle.html:296
 #: app/traducciones.py:11
 msgid "Cuentas y contraseñas"
 msgstr "Accounts and passwords"
 
-#: app/templates/admin_tickets.html:31 app/templates/palabras_clave.html:27
-#: app/templates/palabras_clave.html:86 app/templates/palabras_clave.html:124
-#: app/templates/registro.html:54 app/templates/revision_clasificacion.html:28
+#: app/templates/admin_tickets.html:31 app/templates/demo.html:124
+#: app/templates/palabras_clave.html:27 app/templates/palabras_clave.html:86
+#: app/templates/palabras_clave.html:124 app/templates/registro.html:54
+#: app/templates/revision_clasificacion.html:28
 #: app/templates/ticket_detalle.html:87 app/templates/ticket_detalle.html:297
 #: app/traducciones.py:12
 msgid "Seguridad"
@@ -231,9 +238,9 @@ msgid "Cambio de prioridad"
 msgstr "Priority change"
 
 #: app/templates/auditoria.html:29 app/templates/base.html:133
-#: app/templates/base.html:171 app/templates/base.html:185
+#: app/templates/base.html:175 app/templates/base.html:189
 #: app/templates/crear_ticket.html:3 app/templates/dashboard.html:7
-#: app/traducciones.py:33
+#: app/templates/demo.html:135 app/traducciones.py:33
 msgid "Crear ticket"
 msgstr "Create ticket"
 
@@ -395,7 +402,9 @@ msgstr "An agent must have a specific area"
 
 #: app/routes/auth.py:113
 msgid "No se pudo registrar el usuario por un error interno, intente más tarde"
-msgstr "The user could not be registered due to an internal error, please try again later"
+msgstr ""
+"The user could not be registered due to an internal error, please try "
+"again later"
 
 #: app/routes/auth.py:117
 msgid "Ya existe un usuario con ese email"
@@ -424,6 +433,88 @@ msgstr "You must sign in"
 #: app/routes/decoradores.py:22
 msgid "No tienes permiso para entrar en esta funcion"
 msgstr "You do not have permission to access this feature"
+
+#: app/routes/demo.py:71
+#, python-format
+msgid "Notificación enviada a %(nombre)s"
+msgstr "Notification sent to %(nombre)s"
+
+#: app/routes/demo.py:73
+#, python-format
+msgid "(esta plantilla también dispara un correo a %(email)s)"
+msgstr "(this template also sends an email to %(email)s)"
+
+#: app/routes/demo.py:85
+#, python-format
+msgid "%(n)s notificaciones enviadas a tu usuario"
+msgstr "%(n)s notifications sent to your user"
+
+#: app/routes/demo.py:94
+msgid "Correo destinatario inválido"
+msgstr "Invalid recipient email"
+
+#: app/routes/demo.py:96 app/templates/demo.html:63
+msgid "El envío de correos está suprimido (TESTING=true)"
+msgstr "Email sending is suppressed (TESTING=true)"
+
+#: app/routes/demo.py:98 app/templates/demo.html:65
+msgid "Falta configurar MAIL_USERNAME y MAIL_PASSWORD en el .env"
+msgstr "MAIL_USERNAME and MAIL_PASSWORD must be set in .env"
+
+#: app/routes/demo.py:104
+#, python-format
+msgid "Error SMTP: %(error)s"
+msgstr "SMTP error: %(error)s"
+
+#: app/routes/demo.py:105
+#, python-format
+msgid "Correo enviado a %(email)s"
+msgstr "Email sent to %(email)s"
+
+#: app/routes/demo.py:127
+msgid "Selecciona un ticket"
+msgstr "Select a ticket"
+
+#: app/routes/demo.py:134
+#, python-format
+msgid "Ticket #%(id)s marcado como vencido; se notificó al creador"
+msgstr "Ticket #%(id)s marked as overdue; the creator was notified"
+
+#: app/routes/demo.py:136
+#, python-format
+msgid "Ticket #%(id)s marcado como próximo a vencer; se notificó al creador"
+msgstr "Ticket #%(id)s marked as about to expire; the creator was notified"
+
+#: app/routes/demo.py:138
+msgid "y al agente asignado"
+msgstr "and so was the assigned agent"
+
+#: app/routes/demo.py:147
+#, python-format
+msgid ""
+"Verificación de SLA ejecutada: %(v)s vencidos, %(p)s próximos a vencer "
+"(solo se notifican los que no se habían notificado)"
+msgstr ""
+"SLA check executed: %(v)s overdue, %(p)s about to expire (only tickets "
+"not notified before get notified)"
+
+#: app/routes/demo.py:157
+msgid "Escribe el texto del ticket"
+msgstr "Write the ticket text"
+
+#: app/routes/demo.py:163 app/routes/tickets.py:36
+#, python-format
+msgid "Ticket #%(id)s creado. Categoría: %(categoria)s, prioridad: %(prioridad)s"
+msgstr "Ticket #%(id)s created. Category: %(categoria)s, priority: %(prioridad)s"
+
+#: app/routes/demo.py:166
+msgid "— clasificación de baja confianza, se notificó a los administradores"
+msgstr "— low-confidence classification, administrators were notified"
+
+#: app/routes/demo.py:175
+#, python-format
+msgid "Se borraron %(n)s notificaciones de tu usuario"
+msgstr "%(n)s notifications of your user were deleted"
 
 #: app/routes/metricas.py:66
 #, python-format
@@ -562,11 +653,6 @@ msgstr "Priority change approved"
 msgid "Cambio de prioridad rechazado"
 msgstr "Priority change rejected"
 
-#: app/routes/tickets.py:36
-#, python-format
-msgid "Ticket #%(id)s creado. Categoría: %(categoria)s, prioridad: %(prioridad)s"
-msgstr "Ticket #%(id)s created. Category: %(categoria)s, priority: %(prioridad)s"
-
 #: app/routes/tickets.py:39
 msgid "No se pudo crear el ticket, intenta de nuevo"
 msgstr "The ticket could not be created, please try again"
@@ -585,7 +671,9 @@ msgstr "You do not have permission over tickets from that area"
 
 #: app/routes/tickets.py:169
 msgid "Debes indicar el motivo para cerrar un ticket sin pasar por en progreso"
-msgstr "You must provide a reason to close a ticket without moving it to in progress"
+msgstr ""
+"You must provide a reason to close a ticket without moving it to in "
+"progress"
 
 #: app/routes/tickets.py:177
 #, python-format
@@ -612,9 +700,10 @@ msgid "ID"
 msgstr "ID"
 
 #: app/routes/tickets.py:382 app/templates/admin_tickets.html:68
-#: app/templates/dashboard.html:16 app/templates/palabras_clave.html:37
-#: app/templates/palabras_clave.html:76 app/templates/palabras_clave.html:116
-#: app/templates/ticket_detalle.html:9 app/templates/tickets_por_area.html:54
+#: app/templates/dashboard.html:16 app/templates/demo.html:119
+#: app/templates/palabras_clave.html:37 app/templates/palabras_clave.html:76
+#: app/templates/palabras_clave.html:116 app/templates/ticket_detalle.html:9
+#: app/templates/tickets_por_area.html:54
 msgid "Texto"
 msgstr "Text"
 
@@ -801,6 +890,29 @@ msgstr "The image cannot be larger than 2MB"
 msgid "El archivo no es una imagen válida"
 msgstr "The file is not a valid image"
 
+#: app/services/demo.py:45 app/services/demo.py:93 app/services/tickets.py:109
+#: app/services/tickets.py:160 app/services/tickets.py:189
+msgid "El ticket no a sido encontrado"
+msgstr "The ticket was not found"
+
+#: app/services/demo.py:55
+msgid "Plantilla de notificación inválida"
+msgstr "Invalid notification template"
+
+#: app/services/demo.py:71
+msgid "Plantilla de correo inválida"
+msgstr "Invalid email template"
+
+#: app/services/demo.py:95
+msgid ""
+"El ticket está cerrado; el SLA solo aplica a tickets abiertos o en "
+"progreso"
+msgstr "The ticket is closed; SLA only applies to open or in-progress tickets"
+
+#: app/services/demo.py:108
+msgid "Modo de SLA inválido"
+msgstr "Invalid SLA mode"
+
 #: app/services/metricas.py:180
 msgid "Excelente"
 msgstr "Excellent"
@@ -823,13 +935,22 @@ msgstr "This is the only agent available in this area"
 
 #: app/services/metricas.py:320
 #, python-format
-msgid "Comparte la carga de trabajo más baja del área (%(n)s tickets en progreso) y tiene el mejor cumplimiento de SLA entre quienes están en ese caso"
-msgstr "Shares the lowest workload in the area (%(n)s tickets in progress) and has the best SLA compliance among those in that situation"
+msgid ""
+"Comparte la carga de trabajo más baja del área (%(n)s tickets en "
+"progreso) y tiene el mejor cumplimiento de SLA entre quienes están en ese"
+" caso"
+msgstr ""
+"Shares the lowest workload in the area (%(n)s tickets in progress) and "
+"has the best SLA compliance among those in that situation"
 
 #: app/services/metricas.py:327
 #, python-format
-msgid "Tiene la carga de trabajo más baja del área (%(n)s tickets en progreso) frente a un promedio de %(prom)s en el resto del equipo"
-msgstr "Has the lowest workload in the area (%(n)s tickets in progress) against an average of %(prom)s for the rest of the team"
+msgid ""
+"Tiene la carga de trabajo más baja del área (%(n)s tickets en progreso) "
+"frente a un promedio de %(prom)s en el resto del equipo"
+msgstr ""
+"Has the lowest workload in the area (%(n)s tickets in progress) against "
+"an average of %(prom)s for the rest of the team"
 
 #: app/services/palabra_clave.py:33 app/services/palabra_clave.py:73
 msgid "Esta palabra clave ya se encuentra registrada"
@@ -1050,11 +1171,6 @@ msgstr "The ticket could not be created"
 msgid "Ticket #%(p1)s creado: categoria=%(p2)s, prioridad=%(p3)s"
 msgstr "Ticket #%(p1)s created: category=%(p2)s, priority=%(p3)s"
 
-#: app/services/tickets.py:109 app/services/tickets.py:160
-#: app/services/tickets.py:189
-msgid "El ticket no a sido encontrado"
-msgstr "The ticket was not found"
-
 #: app/services/tickets.py:112
 msgid "La transicion no es valida"
 msgstr "The transition is not valid"
@@ -1164,7 +1280,7 @@ msgid "Filtrar"
 msgstr "Filter"
 
 #: app/templates/admin_tickets.html:59 app/templates/auditoria.html:53
-#: app/templates/tickets_por_area.html:41
+#: app/templates/demo.html:150 app/templates/tickets_por_area.html:41
 msgid "Limpiar"
 msgstr "Clear"
 
@@ -1212,6 +1328,7 @@ msgstr "Pending appeals"
 
 #: app/templates/apelaciones_pendientes.html:13
 #: app/templates/cambios_prioridad_pendientes.html:19
+#: app/templates/demo.html:45 app/templates/demo.html:76
 #: app/templates/escalamientos_pendientes.html:19
 #: app/templates/revision_clasificacion.html:17
 #: app/templates/solicitudes_pendientes.html:20
@@ -1285,7 +1402,7 @@ msgstr "Notifications"
 msgid "Marcar todas como leídas"
 msgstr "Mark all as read"
 
-#: app/templates/base.html:82 app/templates/base.html:223
+#: app/templates/base.html:82 app/templates/base.html:227
 msgid "Sin notificaciones"
 msgstr "No notifications"
 
@@ -1322,13 +1439,13 @@ msgstr "Tickets"
 msgid "Todos los tickets"
 msgstr "All tickets"
 
-#: app/templates/base.html:132 app/templates/base.html:167
-#: app/templates/base.html:181 app/templates/dashboard.html:2
+#: app/templates/base.html:132 app/templates/base.html:171
+#: app/templates/base.html:185 app/templates/dashboard.html:2
 #: app/templates/dashboard.html:5
 msgid "Mis tickets"
 msgstr "My tickets"
 
-#: app/templates/base.html:139 app/templates/base.html:175
+#: app/templates/base.html:139 app/templates/base.html:179
 msgid "Solicitudes"
 msgstr "Requests"
 
@@ -1364,35 +1481,40 @@ msgstr "Register user"
 msgid "Palabras clave"
 msgstr "Keywords"
 
-#: app/templates/base.html:163
+#: app/templates/base.html:159 app/templates/demo.html:2
+#: app/templates/demo.html:6
+msgid "Modo demo"
+msgstr "Demo mode"
+
+#: app/templates/base.html:167
 msgid "Mi área"
 msgstr "My area"
 
-#: app/templates/base.html:201 app/templates/base.html:224
+#: app/templates/base.html:205 app/templates/base.html:228
 #: app/templates/tickets_por_area.html:90
 #: app/templates/tickets_por_area.html:110
 msgid "Cerrar"
 msgstr "Close"
 
-#: app/templates/base.html:218
+#: app/templates/base.html:222
 msgid "Notificación nueva"
 msgstr "New notification"
 
-#: app/templates/base.html:219
+#: app/templates/base.html:223
 msgid "ahora"
 msgstr "just now"
 
-#: app/templates/base.html:220
+#: app/templates/base.html:224
 #, python-format
 msgid "hace %(n)s min"
 msgstr "%(n)s min ago"
 
-#: app/templates/base.html:221
+#: app/templates/base.html:225
 #, python-format
 msgid "hace %(n)s h"
 msgstr "%(n)s h ago"
 
-#: app/templates/base.html:222
+#: app/templates/base.html:226
 #, python-format
 msgid "hace %(n)s d"
 msgstr "%(n)s d ago"
@@ -1414,7 +1536,7 @@ msgid "Solicitado el %(fecha)s"
 msgstr "Requested on %(fecha)s"
 
 #: app/templates/cambios_prioridad_pendientes.html:26
-#: app/templates/email/ticket_notificacion.html:102
+#: app/templates/demo.html:168 app/templates/email/ticket_notificacion.html:102
 #: app/templates/escalamientos_pendientes.html:26
 #: app/templates/solicitudes_pendientes.html:30
 msgid "Ver ticket"
@@ -1431,7 +1553,9 @@ msgid "Reportar un problema"
 msgstr "Report a problem"
 
 #: app/templates/crear_ticket.html:11
-msgid "Describe la situación con el mayor detalle posible para agilizar la atención."
+msgid ""
+"Describe la situación con el mayor detalle posible para agilizar la "
+"atención."
 msgstr "Describe the situation in as much detail as possible to speed up support."
 
 #: app/templates/crear_ticket.html:15
@@ -1446,11 +1570,11 @@ msgstr "Submit ticket"
 msgid "SLA"
 msgstr "SLA"
 
-#: app/templates/dashboard.html:31
+#: app/templates/dashboard.html:31 app/templates/demo.html:99
 msgid "Vencido"
 msgstr "Overdue"
 
-#: app/templates/dashboard.html:33
+#: app/templates/dashboard.html:33 app/templates/demo.html:98
 msgid "Próximo a vencer"
 msgstr "Due soon"
 
@@ -1461,6 +1585,140 @@ msgstr "On time"
 #: app/templates/dashboard.html:45
 msgid "No has creado ningún ticket todavía."
 msgstr "You haven't created any tickets yet."
+
+#: app/templates/demo.html:7
+msgid ""
+"Dispara a mano los eventos del sistema para una presentación. Usa los "
+"servicios reales: los cambios quedan guardados en la base de datos."
+msgstr ""
+"Trigger system events manually for a presentation. It uses the real "
+"services: changes are saved to the database."
+
+#: app/templates/demo.html:13
+msgid "Último ticket creado"
+msgstr "Latest ticket created"
+
+#: app/templates/demo.html:28
+msgid "Notificación en tiempo real"
+msgstr "Real-time notification"
+
+#: app/templates/demo.html:29
+msgid ""
+"Crea una notificación y la empuja por socket.io: aparece el toast y se "
+"actualiza la campanita sin recargar."
+msgstr ""
+"Creates a notification and pushes it through socket.io: the toast appears"
+" and the bell updates without reloading."
+
+#: app/templates/demo.html:31 app/templates/demo.html:68
+msgid "Plantilla"
+msgstr "Template"
+
+#: app/templates/demo.html:37
+msgid "Destinatario"
+msgstr "Recipient"
+
+#: app/templates/demo.html:41
+msgid "yo"
+msgstr "me"
+
+#: app/templates/demo.html:47
+msgid "Enviar notificación"
+msgstr "Send notification"
+
+#: app/templates/demo.html:50
+msgid "Ráfaga de 3 notificaciones para mí"
+msgstr "Burst of 3 notifications for me"
+
+#: app/templates/demo.html:60
+msgid "Correo HTML"
+msgstr "HTML email"
+
+#: app/templates/demo.html:61
+msgid ""
+"Envía por SMTP el correo que recibe el usuario, o ábrelo en una pestaña "
+"para mostrarlo sin depender del correo."
+msgstr ""
+"Sends the email the user receives via SMTP, or opens it in a tab to show "
+"it without relying on email."
+
+#: app/templates/demo.html:74
+msgid "Enviar a"
+msgstr "Send to"
+
+#: app/templates/demo.html:79
+msgid "Enviar correo"
+msgstr "Send email"
+
+#: app/templates/demo.html:80
+msgid "Previsualizar"
+msgstr "Preview"
+
+#: app/templates/demo.html:91
+msgid "Alertas de SLA"
+msgstr "SLA alerts"
+
+#: app/templates/demo.html:92
+msgid ""
+"Mueve la fecha límite del ticket y corre la verificación de SLA del "
+"scheduler: notifica (y envía correo) al creador y al agente."
+msgstr ""
+"Moves the ticket's deadline and runs the scheduler's SLA check: notifies "
+"(and emails) the creator and the agent."
+
+#: app/templates/demo.html:95
+msgid "Ticket abierto o en progreso"
+msgstr "Open or in-progress ticket"
+
+#: app/templates/demo.html:103
+msgid "No hay tickets abiertos o en progreso."
+msgstr "There are no open or in-progress tickets."
+
+#: app/templates/demo.html:106
+msgid "Ejecutar verificación de SLA ahora"
+msgstr "Run SLA check now"
+
+#: app/templates/demo.html:116
+msgid "Crear ticket (clasificador)"
+msgstr "Create ticket (classifier)"
+
+#: app/templates/demo.html:117
+msgid ""
+"Crea un ticket por el flujo normal: se clasifica, se le asigna prioridad "
+"y SLA. Si la confianza es baja, llega la notificación de revisión a los "
+"admins."
+msgstr ""
+"Creates a ticket through the normal flow: it is classified and gets a "
+"priority and SLA. If confidence is low, admins receive the review "
+"notification."
+
+#: app/templates/demo.html:125
+msgid "Ambiguo"
+msgstr "Ambiguous"
+
+#: app/templates/demo.html:127 app/templates/ticket_detalle.html:18
+msgid "Creado por"
+msgstr "Created by"
+
+#: app/templates/demo.html:149
+msgid "Registro de eventos"
+msgstr "Event log"
+
+#: app/templates/demo.html:153
+msgid "Aún no has disparado ningún evento."
+msgstr "You haven't triggered any events yet."
+
+#: app/templates/demo.html:157
+msgid "Borrar mis notificaciones"
+msgstr "Delete my notifications"
+
+#: app/templates/demo.html:168
+msgid "Error"
+msgstr "Error"
+
+#: app/templates/demo.html:168
+msgid "Procesando…"
+msgstr "Processing…"
 
 #: app/templates/escalamientos_pendientes.html:3
 msgid "Escalamientos pendientes"
@@ -1839,10 +2097,6 @@ msgstr "Cancel"
 msgid "Ticket #%(id)s"
 msgstr "Ticket #%(id)s"
 
-#: app/templates/ticket_detalle.html:18
-msgid "Creado por"
-msgstr "Created by"
-
 #: app/templates/ticket_detalle.html:18 app/templates/ticket_detalle.html:121
 #: app/templates/ticket_detalle.html:170 app/templates/ticket_detalle.html:175
 #: app/templates/ticket_detalle.html:235
@@ -1859,8 +2113,12 @@ msgid "%(n)s tickets en progreso"
 msgstr "%(n)s tickets in progress"
 
 #: app/templates/ticket_detalle.html:76
-msgid "La categoría de este ticket fue asignada automáticamente con baja confianza y está pendiente de revisión."
-msgstr "This ticket's category was assigned automatically with low confidence and is pending review."
+msgid ""
+"La categoría de este ticket fue asignada automáticamente con baja "
+"confianza y está pendiente de revisión."
+msgstr ""
+"This ticket's category was assigned automatically with low confidence and"
+" is pending review."
 
 #: app/templates/ticket_detalle.html:91
 msgid "Confirmar categoría"
@@ -1871,8 +2129,12 @@ msgid "Apelación en revisión"
 msgstr "Appeal under review"
 
 #: app/templates/ticket_detalle.html:102
-msgid "Tu apelación sobre el cierre de este ticket está pendiente de revisión por un administrador."
-msgstr "Your appeal about this ticket's closure is pending review by an administrator."
+msgid ""
+"Tu apelación sobre el cierre de este ticket está pendiente de revisión "
+"por un administrador."
+msgstr ""
+"Your appeal about this ticket's closure is pending review by an "
+"administrator."
 
 #: app/templates/ticket_detalle.html:104
 msgid "¿No estás de acuerdo con el cierre de este ticket?"
@@ -1949,8 +2211,12 @@ msgid "Escalar a otra área"
 msgstr "Escalate to another area"
 
 #: app/templates/ticket_detalle.html:286
-msgid "El ticket queda sin agente asignado, disponible para cualquier agente del área destino."
-msgstr "The ticket is left with no assigned agent, available to any agent in the target area."
+msgid ""
+"El ticket queda sin agente asignado, disponible para cualquier agente del"
+" área destino."
+msgstr ""
+"The ticket is left with no assigned agent, available to any agent in the "
+"target area."
 
 #: app/templates/ticket_detalle.html:290
 msgid "Área destino"
@@ -2016,8 +2282,16 @@ msgstr "This is an automated message, please do not reply to this email."
 #~ msgid "Enviar solicitud"
 #~ msgstr "Send request"
 
-#~ msgid "El ticket queda sin agente asignado, disponible para cualquier agente del área destino. Requiere aprobación de un administrador."
-#~ msgstr "The ticket is left with no assigned agent, available to any agent in the target area. Requires administrator approval."
+#~ msgid ""
+#~ "El ticket queda sin agente asignado, "
+#~ "disponible para cualquier agente del "
+#~ "área destino. Requiere aprobación de un"
+#~ " administrador."
+#~ msgstr ""
+#~ "The ticket is left with no "
+#~ "assigned agent, available to any agent"
+#~ " in the target area. Requires "
+#~ "administrator approval."
 
 #~ msgid "Solicitar escalamiento"
 #~ msgstr "Request escalation"

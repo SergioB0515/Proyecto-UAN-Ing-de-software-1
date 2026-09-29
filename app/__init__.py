@@ -18,6 +18,7 @@ from sqlalchemy import delete
 from threading import Lock
 import os
 from app.routes.palabra_clave import palabras_clave_bp
+from app.routes.demo import demo_bp
 
 def create_app():
     app = Flask(__name__)
@@ -67,6 +68,7 @@ def create_app():
     app.register_blueprint(solicitudes_bp)
     app.register_blueprint(palabras_clave_bp)
     app.register_blueprint(apelaciones_bp)
+    app.register_blueprint(demo_bp)
     
     if app.config.get("CLASIFICADOR_ML_ACTIVO"):
         with app.app_context():

@@ -127,39 +127,45 @@ class ServicioNotificaciones:
         }
 
     @staticmethod
+    def construir_correo(mensaje, ticket_id, contexto_ticket):
+        """Arma (asunto, texto plano, html) del correo. Requiere app context.
+        html es None si no hay ticket."""
+        locale = ServicioNotificaciones.LOCALE_CORREO
+        texto = render_mensaje(mensaje, ticket_id, locale=locale)
+        asunto = f"Sistema de Tickets IT — {texto}"
+
+        html = None
+        if contexto_ticket:
+            color_1, color_2 = ServicioNotificaciones._ACENTOS_POR_PLANTILLA.get(
+                mensaje, ServicioNotificaciones._ACENTO_POR_DEFECTO
+            )
+            with force_locale(locale):
+                html = render_template(
+                    "email/ticket_notificacion.html",
+                    titulo=texto,
+                    ticket=contexto_ticket,
+                    url_ticket=f"{current_app.config['BASE_URL']}/tickets/{contexto_ticket['id']}",
+                    color_1=color_1,
+                    color_2=color_2,
+                    idioma=locale,
+                    colores_estado=ServicioNotificaciones._COLORES_ESTADO,
+                    colores_prioridad=ServicioNotificaciones._COLORES_PRIORIDAD,
+                    color_categoria=ServicioNotificaciones._COLOR_CATEGORIA,
+                )
+        return asunto, texto, html
+
+    @staticmethod
+    def enviar_correo_sincrono(destinatario, mensaje, ticket_id, contexto_ticket):
+        """Envía el correo en el hilo actual y deja propagar cualquier error
+        (lo usa el modo demo para mostrar si el SMTP funcionó)."""
+        asunto, texto, html = ServicioNotificaciones.construir_correo(mensaje, ticket_id, contexto_ticket)
+        mail.send(Message(subject=asunto, recipients=[destinatario], body=texto, html=html))
+
+    @staticmethod
     def _enviar_correo(app, destinatario, mensaje, ticket_id, contexto_ticket):
         with app.app_context():
             try:
-                locale = ServicioNotificaciones.LOCALE_CORREO
-                texto = render_mensaje(mensaje, ticket_id, locale=locale)
-                asunto = f"Sistema de Tickets IT — {texto}"
-
-                html = None
-                if contexto_ticket:
-                    color_1, color_2 = ServicioNotificaciones._ACENTOS_POR_PLANTILLA.get(
-                        mensaje, ServicioNotificaciones._ACENTO_POR_DEFECTO
-                    )
-                    with force_locale(locale):
-                        html = render_template(
-                            "email/ticket_notificacion.html",
-                            titulo=texto,
-                            ticket=contexto_ticket,
-                            url_ticket=f"{app.config['BASE_URL']}/tickets/{contexto_ticket['id']}",
-                            color_1=color_1,
-                            color_2=color_2,
-                            idioma=locale,
-                            colores_estado=ServicioNotificaciones._COLORES_ESTADO,
-                            colores_prioridad=ServicioNotificaciones._COLORES_PRIORIDAD,
-                            color_categoria=ServicioNotificaciones._COLOR_CATEGORIA,
-                        )
-
-                msg = Message(
-                    subject=asunto,
-                    recipients=[destinatario],
-                    body=texto,
-                    html=html,
-                )
-                mail.send(msg)
+                ServicioNotificaciones.enviar_correo_sincrono(destinatario, mensaje, ticket_id, contexto_ticket)
             except Exception as e:
                 print(f"No se pudo enviar el correo a {destinatario}: {e}")
 

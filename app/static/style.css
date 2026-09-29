@@ -1246,3 +1246,32 @@ hr { border-color: var(--border-soft); opacity: 1; }
     transition: color .15s var(--ease);
 }
 .notif-toast-close:hover { color: var(--text-body); }
+/* ---------- Modo demo ---------- */
+.demo-card .card-title { margin-bottom: .35rem; }
+.demo-help { font-size: .82rem; color: var(--text-soft); margin-bottom: .8rem; }
+.demo-log-card { position: sticky; top: 1rem; }
+.demo-log {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 55vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+}
+.demo-log-vacio { font-size: .85rem; color: var(--text-soft); }
+.demo-log-item {
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
+    padding: .5rem .65rem;
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--ok-600);
+    background: var(--surface-2);
+    font-size: .84rem;
+    word-break: break-word;
+}
+.demo-log-item.is-error { border-left-color: var(--danger-500); }
+.demo-log-item time { font-size: .72rem; color: var(--text-soft); }
+.demo-log-item a { font-size: .78rem; color: var(--accent-400); }

@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Modo demo') }}{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2>{{ _('Modo demo') }}</h2>
+        <span class="text-muted">{{ _('Dispara a mano los eventos del sistema para una presentación. Usa los servicios reales: los cambios quedan guardados en la base de datos.') }}</span>
+    </div>
+</div>
+
+{% macro select_ticket(nombre, lista, opcional=True, id=None) %}
+<select name="{{ nombre }}" class="form-select form-select-sm" {% if id %}id="{{ id }}"{% endif %} {% if not opcional %}required{% endif %}>
+    {% if opcional %}<option value="">{{ _('Último ticket creado') }}</option>{% endif %}
+    {% for t in lista %}
+    <option value="{{ t.id }}">#{{ t.id }} · {{ t.estado.value | etiqueta }} · {{ t.texto[:50] }}</option>
+    {% endfor %}
+</select>
+{% endmacro %}
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="row g-3">
+
+            {# ---------- Notificaciones ---------- #}
+            <div class="col-md-6">
+                <div class="card h-100 demo-card">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ _('Notificación en tiempo real') }}</h6>
+                        <p class="demo-help">{{ _('Crea una notificación y la empuja por socket.io: aparece el toast y se actualiza la campanita sin recargar.') }}</p>
+                        <form data-demo action="{{ url_for('demo.notificacion') }}">
+                            <label class="form-label mb-1">{{ _('Plantilla') }}</label>
+                            <select name="plantilla" class="form-select form-select-sm mb-2">
+                                {% for clave, texto in plantillas.items() %}
+                                <option value="{{ clave }}">{{ texto }}</option>
+                                {% endfor %}
+                            </select>
+                            <label class="form-label mb-1">{{ _('Destinatario') }}</label>
+                            <select name="usuario_id" class="form-select form-select-sm mb-2">
+                                {% for u in usuarios %}
+                                <option value="{{ u.id }}" {% if u.id == usuario_actual.id %}selected{% endif %}>
+                                    {{ u.nombre }} ({{ u.rol.value | etiqueta }}){% if u.id == usuario_actual.id %} — {{ _('yo') }}{% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <label class="form-label mb-1">{{ _('Ticket') }}</label>
+                            {{ select_ticket('ticket_id', tickets) }}
+                            <button class="btn btn-primary btn-sm mt-3">{{ _('Enviar notificación') }}</button>
+                        </form>
+                        <form data-demo action="{{ url_for('demo.rafaga') }}" class="mt-2">
+                            <button class="btn btn-outline-primary btn-sm">{{ _('Ráfaga de 3 notificaciones para mí') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {# ---------- Correos ---------- #}
+            <div class="col-md-6">
+                <div class="card h-100 demo-card">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ _('Correo HTML') }}</h6>
+                        <p class="demo-help">{{ _('Envía por SMTP el correo que recibe el usuario, o ábrelo en una pestaña para mostrarlo sin depender del correo.') }}</p>
+                        {% if correo_suprimido %}
+                        <div class="alert alert-warning py-1 px-2 small">{{ _('El envío de correos está suprimido (TESTING=true)') }}</div>
+                        {% elif not correo_configurado %}
+                        <div class="alert alert-warning py-1 px-2 small">{{ _('Falta configurar MAIL_USERNAME y MAIL_PASSWORD en el .env') }}</div>
+                        {% endif %}
+                        <form data-demo action="{{ url_for('demo.correo') }}" id="formCorreo">
+                            <label class="form-label mb-1">{{ _('Plantilla') }}</label>
+                            <select name="plantilla" class="form-select form-select-sm mb-2">
+                                {% for clave, texto in plantillas_correo.items() %}
+                                <option value="{{ clave }}">{{ texto }}</option>
+                                {% endfor %}
+                            </select>
+                            <label class="form-label mb-1">{{ _('Enviar a') }}</label>
+                            <input type="email" name="destinatario" class="form-control form-control-sm mb-2" value="{{ email_admin }}" required>
+                            <label class="form-label mb-1">{{ _('Ticket') }}</label>
+                            {{ select_ticket('ticket_id', tickets) }}
+                            <div class="d-flex gap-2 mt-3">
+                                <button class="btn btn-primary btn-sm">{{ _('Enviar correo') }}</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnPreviewCorreo">{{ _('Previsualizar') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {# ---------- SLA ---------- #}
+            <div class="col-md-6">
+                <div class="card h-100 demo-card">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ _('Alertas de SLA') }}</h6>
+                        <p class="demo-help">{{ _('Mueve la fecha límite del ticket y corre la verificación de SLA del scheduler: notifica (y envía correo) al creador y al agente.') }}</p>
+                        {% if tickets_activos %}
+                        <form data-demo action="{{ url_for('demo.sla') }}">
+                            <label class="form-label mb-1">{{ _('Ticket abierto o en progreso') }}</label>
+                            {{ select_ticket('ticket_id', tickets_activos, opcional=False) }}
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                <button name="modo" value="proximo" class="btn btn-warning btn-sm">{{ _('Próximo a vencer') }}</button>
+                                <button name="modo" value="vencido" class="btn btn-danger btn-sm">{{ _('Vencido') }}</button>
+                            </div>
+                        </form>
+                        {% else %}
+                        <p class="text-muted small">{{ _('No hay tickets abiertos o en progreso.') }}</p>
+                        {% endif %}
+                        <form data-demo action="{{ url_for('demo.sla_verificar') }}" class="mt-2">
+                            <button class="btn btn-outline-secondary btn-sm">{{ _('Ejecutar verificación de SLA ahora') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {# ---------- Crear ticket / clasificador ---------- #}
+            <div class="col-md-6">
+                <div class="card h-100 demo-card">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ _('Crear ticket (clasificador)') }}</h6>
+                        <p class="demo-help">{{ _('Crea un ticket por el flujo normal: se clasifica, se le asigna prioridad y SLA. Si la confianza es baja, llega la notificación de revisión a los admins.') }}</p>
+                        <form data-demo action="{{ url_for('demo.ticket') }}">
+                            <label class="form-label mb-1">{{ _('Texto') }}</label>
+                            <textarea name="texto" rows="3" class="form-control form-control-sm mb-2" required id="textoTicketDemo"></textarea>
+                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm demo-ejemplo" data-texto="No tengo acceso a internet desde esta mañana, el wifi de la oficina no conecta">{{ _('Redes') }}</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm demo-ejemplo" data-texto="Olvidé mi contraseña y mi cuenta quedó bloqueada">{{ _('Cuentas y contraseñas') }}</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm demo-ejemplo" data-texto="Recibí un correo sospechoso pidiendo mis credenciales, creo que es phishing">{{ _('Seguridad') }}</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm demo-ejemplo" data-texto="hola necesito ayuda con algo">{{ _('Ambiguo') }}</button>
+                            </div>
+                            <label class="form-label mb-1">{{ _('Creado por') }}</label>
+                            <select name="creador_id" class="form-select form-select-sm">
+                                {% for u in usuarios %}
+                                <option value="{{ u.id }}" {% if u.id == usuario_actual.id %}selected{% endif %}>
+                                    {{ u.nombre }} ({{ u.rol.value | etiqueta }}{% if u.nivel.value == 'vip' %}, VIP{% endif %})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-primary btn-sm mt-3">{{ _('Crear ticket') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {# ---------- Registro de eventos ---------- #}
+    <div class="col-lg-4">
+        <div class="card demo-card demo-log-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="card-title mb-0">{{ _('Registro de eventos') }}</h6>
+                    <button type="button" class="btn btn-link btn-sm p-0" id="btnLimpiarLog">{{ _('Limpiar') }}</button>
+                </div>
+                <ul class="demo-log" id="demoLog">
+                    <li class="demo-log-vacio" id="demoLogVacio">{{ _('Aún no has disparado ningún evento.') }}</li>
+                </ul>
+                <hr>
+                <form data-demo action="{{ url_for('demo.limpiar_notificaciones') }}">
+                    <button class="btn btn-outline-danger btn-sm w-100">{{ _('Borrar mis notificaciones') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const CSRF = "{{ csrf_token() }}";
+    const PREVIEW_URL = "{{ url_for('demo.correo_preview') }}";
+    const I18N = {{ {"error": _('Error'), "verTicket": _('Ver ticket'), "enviando": _('Procesando…')} | tojson }};
+    const log = document.getElementById('demoLog');
+    const vacio = document.getElementById('demoLogVacio');
+
+    function registrar(ok, mensaje, url) {
+        vacio.hidden = true;
+        const li = document.createElement('li');
+        li.className = 'demo-log-item ' + (ok ? 'is-ok' : 'is-error');
+        const hora = document.createElement('time');
+        hora.textContent = new Date().toLocaleTimeString();
+        const texto = document.createElement('span');
+        texto.textContent = mensaje;
+        li.append(hora, texto);
+        if (url) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.textContent = I18N.verTicket + ' →';
+            li.append(a);
+        }
+        log.prepend(li);
+    }
+
+    document.querySelectorAll('form[data-demo]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const datos = new FormData(form);
+            datos.append('csrf_token', CSRF);
+            if (e.submitter && e.submitter.name) datos.append(e.submitter.name, e.submitter.value);
+            const botones = form.querySelectorAll('button');
+            botones.forEach(function (b) { b.disabled = true; });
+            fetch(form.action, { method: 'POST', body: datos, headers: { 'X-Requested-With': 'fetch' } })
+                .then(function (r) { return r.json(); })
+                .then(function (r) {
+                    registrar(r.ok, r.mensaje, r.url);
+                    if (r.recargar) window.location.reload();
+                })
+                .catch(function (err) { registrar(false, I18N.error + ': ' + err); })
+                .finally(function () { botones.forEach(function (b) { b.disabled = false; }); });
+        });
+    });
+
+    document.getElementById('btnPreviewCorreo').addEventListener('click', function () {
+        const form = document.getElementById('formCorreo');
+        const params = new URLSearchParams({
+            plantilla: form.plantilla.value,
+            ticket_id: form.ticket_id.value
+        });
+        window.open(PREVIEW_URL + '?' + params.toString(), '_blank');
+    });
+
+    document.querySelectorAll('.demo-ejemplo').forEach(function (b) {
+        b.addEventListener('click', function () {
+            document.getElementById('textoTicketDemo').value = b.dataset.texto;
+        });
+    });
+
+    document.getElementById('btnLimpiarLog').addEventListener('click', function () {
+        log.querySelectorAll('.demo-log-item').forEach(function (li) { li.remove(); });
+        vacio.hidden = false;
+    });
+})();
+</script>
+{% endblock %}

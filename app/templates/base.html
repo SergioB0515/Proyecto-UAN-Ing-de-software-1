@@ -146,7 +146,7 @@
                 </ul>
             </li>
             
-            {% set admin_activo = ep in ['auth.registro', 'auditoria.mostrar_auditoria', 'palabras_clave.listar'] %}
+            {% set admin_activo = ep in ['auth.registro', 'auditoria.mostrar_auditoria', 'palabras_clave.listar', 'demo.panel'] %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle {% if admin_activo %}active{% endif %}" href="#"
                    role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ _('Administración') }}</a>
@@ -154,6 +154,10 @@
                     <li><a class="dropdown-item {% if ep == 'auth.registro' %}active{% endif %}" href="{{ url_for('auth.registro') }}">{{ _('Registrar usuario') }}</a></li>
                     <li><a class="dropdown-item {% if ep == 'auditoria.mostrar_auditoria' %}active{% endif %}" href="{{ url_for('auditoria.mostrar_auditoria') }}">{{ _('Log de auditoría') }}</a></li>
                     <li><a class="dropdown-item {% if ep == 'palabras_clave.listar' %}active{% endif %}" href="{{ url_for('palabras_clave.listar') }}">{{ _('Palabras clave') }}</a></li>
+                    {% if config.MODO_DEMO %}
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item {% if ep == 'demo.panel' %}active{% endif %}" href="{{ url_for('demo.panel') }}">{{ _('Modo demo') }}</a></li>
+                    {% endif %}
                 </ul>
             </li>
 
