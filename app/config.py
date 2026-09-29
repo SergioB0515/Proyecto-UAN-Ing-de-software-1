@@ -29,7 +29,6 @@ class Config:
     SLA_INTERVALO_MINUTOS = int(os.environ.get("SLA_INTERVALO_MINUTOS", "30"))
     SCHEDULER_ACTIVO = _bool_env("SCHEDULER_ACTIVO", "1")
     CLASIFICADOR_ML_ACTIVO = _bool_env("CLASIFICADOR_ML_ACTIVO", "0")
-    # Pestaña "Modo demo" del admin (disparar eventos a mano en presentaciones).
     MODO_DEMO = _bool_env("MODO_DEMO", "1")
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))

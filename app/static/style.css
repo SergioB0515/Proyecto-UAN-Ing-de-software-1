@@ -106,7 +106,6 @@ h2 { font-size: 1.8rem; }
 
 a { color: var(--accent-400); }
 
-/* ---------- Entrada de página ---------- */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -122,7 +121,6 @@ a { color: var(--accent-400); }
 .app-main > *:nth-child(3) { animation-delay: .08s; }
 .app-main > *:nth-child(4) { animation-delay: .12s; }
 
-/* ---------- Navbar ---------- */
 .app-navbar {
     background: linear-gradient(115deg, var(--ink-950) 0%, var(--ink-900) 55%, var(--ink-850) 100%);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03), 0 10px 30px rgba(5, 7, 18, 0.45);
@@ -150,7 +148,6 @@ a { color: var(--accent-400); }
     padding-inline: 1.15rem;
 }
 
-/* ---- Brand ---- */
 .navbar-brand {
     font-family: "Space Grotesk", sans-serif;
     font-weight: 600;
@@ -188,7 +185,6 @@ a { color: var(--accent-400); }
     box-shadow: 0 6px 20px rgba(109, 93, 240, 0.6);
 }
 
-/* ---- Main nav links ---- */
 .navbar-collapse { flex-grow: 1; }
 
 .navbar-nav-main {
@@ -227,7 +223,6 @@ a { color: var(--accent-400); }
     opacity: .7;
 }
 
-/* ---- Right-side utilities ---- */
 .navbar-utils {
     display: flex;
     align-items: center;
@@ -364,7 +359,6 @@ a { color: var(--accent-400); }
 .user-role { font-size: .68rem; color: var(--text-soft); text-transform: capitalize; }
 .user-btn .caret { color: var(--text-soft); flex: none; }
 
-/* ---- Toggler ---- */
 .navbar-toggler {
     border: 1px solid var(--border-soft);
     border-radius: var(--radius-sm);
@@ -392,10 +386,8 @@ a { color: var(--accent-400); }
     .user-name { max-width: none; }
 }
 
-/* ---------- Layout ---------- */
 .app-main { max-width: 1140px; margin-top: 2.25rem; margin-bottom: 4rem; }
 
-/* ---------- Cards ---------- */
 .card {
     background-color: var(--surface);
     color: var(--text-body);
@@ -441,7 +433,6 @@ a { color: var(--accent-400); }
     transition: color .2s var(--ease);
 }
 
-/* ---------- Auth pages ---------- */
 .auth-shell {
     min-height: calc(100vh - 4.5rem);
     display: flex;
@@ -500,7 +491,6 @@ a { color: var(--accent-400); }
 
 .auth-badge svg { width: 1.4rem; height: 1.4rem; stroke: white; }
 
-/* ---------- Forms ---------- */
 .form-label {
     font-weight: 600;
     font-size: .82rem;
@@ -533,9 +523,6 @@ a { color: var(--accent-400); }
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%239d9ac4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
 }
 
-/* Bootstrap pinta el texto de <option> con el color del sistema; en
-   navegadores basados en Chromium heredan el fondo oscuro gracias a
-   color-scheme: dark declarado en :root. */
 .form-check-input {
     background-color: var(--surface-2);
     border-color: var(--border-soft);
@@ -543,7 +530,6 @@ a { color: var(--accent-400); }
 
 .form-control-sm, .form-select-sm { border-radius: var(--radius-sm); }
 
-/* ---------- Buttons ---------- */
 .btn {
     border-radius: var(--radius-sm);
     font-weight: 600;
@@ -630,7 +616,6 @@ a { color: var(--accent-400); }
 
 .btn-sm:hover { filter: brightness(1.03); }
 
-/* Accesibilidad: foco visible coherente en toda la app */
 a:focus-visible,
 .btn:focus-visible,
 .nav-link:focus-visible,
@@ -641,7 +626,6 @@ a:focus-visible,
     outline-offset: 2px;
 }
 
-/* ---------- Page header ---------- */
 .page-header {
     display: flex;
     align-items: center;
@@ -668,7 +652,6 @@ a:focus-visible,
     vertical-align: middle;
 }
 
-/* ---------- Tables ---------- */
 .table-card {
     background: var(--surface);
     border: 1px solid var(--border-soft);
@@ -713,11 +696,6 @@ a:focus-visible,
 .table td a { color: var(--accent-400); font-weight: 600; text-decoration: none; transition: color .15s var(--ease-soft); }
 .table td a:hover { color: var(--cyan-400); text-decoration: underline; }
 
-/* ---------- Estados de urgencia (SLA) ----------
-   Rojo/ámbar sólidos con franja lateral y respiración sutil — nunca un
-   tono pastel casi invisible. Cubre utilidades nativas de Bootstrap
-   (table-danger/table-warning, bg-danger, text-bg-danger) y las
-   badge-pill/sla-* propias de esta hoja. */
 
 .table-danger,
 .table-danger > td {
@@ -742,10 +720,6 @@ a:focus-visible,
 .table-warning:hover,
 .table-warning:hover > td { background-color: rgba(194, 134, 15, 0.32) !important; }
 
-/* Fila con sugerencia de agente disponible (admin_tickets): un distintivo
-   discreto -- solo una franja dorada fina en el borde izquierdo, sin relleno
-   y sin enmarcar toda la fila. Mismo lenguaje visual que table-danger/
-   table-warning (franja lateral), pero sin su tinte de fondo. */
 .table-suggested-agent > td:first-child {
     box-shadow: inset 3px 0 0 0 var(--gold-500);
 }
@@ -792,7 +766,6 @@ a:focus-visible,
     box-shadow: 0 0 0 3px rgba(18, 136, 95, .25), 0 0 8px rgba(91, 224, 172, .6);
 }
 
-/* ---------- Badges: estado / prioridad (chips tipo LED) ---------- */
 .badge-pill {
     display: inline-flex;
     align-items: center;
@@ -826,7 +799,6 @@ a:focus-visible,
 
 .badge-pill.prioridad-media  { background: rgba(194, 134, 15, 0.22); color: var(--gold-500); }
 .badge-pill.prioridad-baja   { background: rgba(18, 136, 95, 0.22);  color: #5be0ac; }
-/* .prioridad-alta / .sla-vencido / .sla-proximo heredan color sólido de arriba (sin dot extra) */
 .badge-pill.prioridad-alta::before,
 .badge-pill.sla-vencido::before,
 .badge-pill.sla-proximo::before,
@@ -841,7 +813,6 @@ a:focus-visible,
     font-size: .7rem;
 }
 
-/* ---------- Comments (ticket detail) ---------- */
 .comment-card {
     background: var(--surface);
     color: var(--text-body);
@@ -888,7 +859,6 @@ a:focus-visible,
     font-weight: 700;
     margin-right: .35rem;
 }
-/* ---------- Solicitudes del ticket ---------- */
 .solicitud-list { display: flex; flex-direction: column; }
 
 .solicitud-row {
@@ -918,7 +888,6 @@ a:focus-visible,
 .badge-pill.nivel-bronce { background: rgba(18, 136, 95, 0.2); color: #5be0ac; }
 .badge-pill.nivel-bajo { background: rgba(234, 76, 59, 0.2); color: #ff9f92; }
 
-/* ---------- Sugerencia de agente (ticket_detalle) ---------- */
 .suggestion-card { border-color: rgba(224, 180, 89, 0.35); }
 .suggestion-card::before {
     background: linear-gradient(90deg, var(--gold-600), var(--gold-500));
@@ -942,7 +911,6 @@ a:focus-visible,
     margin-bottom: .15rem;
 }
 
-/* ---------- Acciones sobre el ticket ---------- */
 .accion-block { padding: .2rem 0; }
 .accion-title {
     font-family: "Space Grotesk", sans-serif;
@@ -953,7 +921,6 @@ a:focus-visible,
 }
 .accion-sep { margin: 1.2rem 0; border-color: var(--border-soft); }
 
-/* ---------- Alerts ---------- */
 .alert {
     border: none;
     border-radius: var(--radius-md);
@@ -969,7 +936,6 @@ a:focus-visible,
 .alert-warning { border-left-color: var(--gold-500); }
 .alert-info    { border-left-color: var(--info-600); }
 
-/* ---------- Pagination ---------- */
 .pagination .page-link {
     background-color: var(--surface-2);
     border-radius: var(--radius-sm);
@@ -991,13 +957,11 @@ a:focus-visible,
 
 .pagination .page-item.disabled .page-link { background-color: var(--surface); color: #5c5980; }
 
-/* ---------- Scrollbar (WebKit) ---------- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--accent-400); border-radius: 999px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-600); }
 
-/* ---------- Misc ---------- */
 hr { border-color: var(--border-soft); opacity: 1; }
 
 .text-muted { color: var(--text-soft) !important; }
@@ -1009,7 +973,6 @@ hr { border-color: var(--border-soft); opacity: 1; }
     animation: fadeInUp .45s var(--ease) both;
 }
 
-/* ---------- Dropdown menus ---------- */
 .dropdown-menu {
     background-color: var(--surface);
     border: 1px solid var(--border-soft);
@@ -1071,7 +1034,6 @@ hr { border-color: var(--border-soft); opacity: 1; }
 
 .dropdown-divider { border-color: var(--border-soft); margin: .35rem .2rem; }
 
-/* ---------- Notification dropdown ---------- */
 .notif-menu {
     width: 23rem;
     max-width: calc(100vw - 1.5rem);
@@ -1181,7 +1143,6 @@ hr { border-color: var(--border-soft); opacity: 1; }
 }
 .notif-empty svg { opacity: .45; }
 
-/* ---------- Toasts ---------- */
 @keyframes toastIn {
     from { opacity: 0; transform: translateX(24px) scale(.96); }
     to   { opacity: 1; transform: translateX(0) scale(1); }
@@ -1246,7 +1207,6 @@ hr { border-color: var(--border-soft); opacity: 1; }
     transition: color .15s var(--ease);
 }
 .notif-toast-close:hover { color: var(--text-body); }
-/* ---------- Modo demo ---------- */
 .demo-card .card-title { margin-bottom: .35rem; }
 .demo-help { font-size: .82rem; color: var(--text-soft); margin-bottom: .8rem; }
 .demo-log-card { position: sticky; top: 1rem; }

@@ -1,33 +1,3 @@
-"""
-Pruebas de app.services.reentrenamiento
-
-PARTE 1 -- _construir_dataset_combinado (rapidas, sin modelo de embeddings,
-solo DB real + pandas):
-1. Sin tickets reales ni correcciones, el combinado es exactamente el
-   dataset sintetico (mismo tamano).
-2. Un ticket real CERRADO y ya confirmado (clasificacion_baja_confianza
-   False) se agrega como fila extra.
-3. Un ticket EN_PROGRESO no se agrega (no esta cerrado).
-4. Un ticket CERRADO pero todavia en baja confianza (sin confirmar) no
-   se agrega -- solo cuentan los ya confirmados.
-5. Un ticket que aparece en CorreccionClasificacion NO se cuenta dos
-   veces (una por ser "ticket real" y otra por la correccion) -- el que
-   habria sido el bug de doble peso si no se excluye explicitamente.
-6. Una correccion de un ticket ya BORRADO de la tabla tickets se sigue
-   contando igual (el texto esta denormalizado en la propia correccion,
-   no depende de un join contra tickets).
-
-PARTE 2 -- reentrenar_si_mejora (requiere sentence-transformers real,
-NO se corrio en este sandbox por espacio en disco -- ver nota al final
-del archivo. Sergio debe correr estas manualmente antes de dar el punto
-por cerrado):
-7. Sin metadata.json previo, aborta sin tronar y sin tocar nada.
-8. Caso real: corre contra el dataset combinado y compara exactitudes
-   (no se puede forzar de forma determinista si mejora o empeora sin
-   mockear sklearn, que va contra la regla de "DB real, no mocks" del
-   proyecto -- por eso esta prueba solo confirma que CORRE sin excepciones
-   y que deja metadata.json en un estado valido, no que gane o pierda).
-"""
 import os
 import json
 import shutil
@@ -80,8 +50,6 @@ def usuarios_de_prueba():
 
 
 def _crear_ticket_cerrado_confirmado(creador, agente):
-    """Ticket real, cerrado, SIN baja confianza -- el caso normal que
-    deberia contar como dato de entrenamiento confiable."""
     ticket = ServicioTickets.crear_ticket(creador=creador, texto="no puedo entrar a mi correo")
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id, nuevo_estado=EstadoTicket.EN_PROGRESO,
@@ -91,17 +59,7 @@ def _crear_ticket_cerrado_confirmado(creador, agente):
     return ticket
 
 
-# ---------------------------------------------------------------------------
-# PARTE 1 -- _construir_dataset_combinado
-# ---------------------------------------------------------------------------
-
 def test_el_combinado_siempre_incluye_todo_el_dataset_sintetico():
-    """No se compara el tamano exacto contra el CSV -- esta es una DB
-    compartida por TODA la sesion de pytest (ver tests/conftest.py), y
-    para cuando este archivo corre, otros ya crearon tickets reales
-    cerrados. Comparar por igualdad exacta aqui es el mismo error de
-    'conteo absoluto contra DB compartida' que ya esta documentado como
-    gotcha del proyecto -- se verifica el subconjunto, no el total."""
     import pandas as pd
     df_sintetico = pd.read_csv(re_.RUTA_DATASET_REFERENCIA)
 
@@ -194,8 +152,6 @@ def test_ticket_con_correccion_no_se_cuenta_dos_veces():
 
 
 def test_correccion_de_ticket_ya_borrado_se_sigue_contando():
-    """El texto de la correccion esta denormalizado -- no depende de que
-    el ticket original siga existiendo en la tabla tickets."""
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
@@ -221,23 +177,16 @@ def test_correccion_de_ticket_ya_borrado_se_sigue_contando():
     )
 
 
-# ---------------------------------------------------------------------------
-# PARTE 2 -- reentrenar_si_mejora (requiere el modelo real de embeddings)
-# ---------------------------------------------------------------------------
-
 def test_sin_metadata_previo_aborta_sin_tronar():
-    """No requiere el modelo de embeddings -- el chequeo de metadata.json
-    ocurre ANTES de cargar nada pesado."""
     respaldo = re_.RUTA_METADATA + ".respaldo_test"
     existia = os.path.exists(re_.RUTA_METADATA)
     if existia:
         shutil.move(re_.RUTA_METADATA, respaldo)
     try:
-        re_.reentrenar_si_mejora()  # no debe lanzar excepcion
+        re_.reentrenar_si_mejora()
     finally:
         if existia:
             shutil.move(respaldo, re_.RUTA_METADATA)
-
 
 
 def test_reentrenar_corre_sin_excepciones_y_deja_metadata_valido():

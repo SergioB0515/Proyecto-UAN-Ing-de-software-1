@@ -1,25 +1,3 @@
-"""
-Pruebas de ServicioMetricas.sugerir_agente
-
-Que verifica:
-1. Area sin ningun agente -> None.
-2. Un solo agente candidato dominante (carga 0, cumplimiento 100%) es
-   sugerido por encima de un agente con carga alta, aunque este ultimo
-   tambien tenga cumplimiento perfecto -- prueba que la carga actual
-   pesa mas que el historial, no al reves.
-3. Con carga empatada en 0, desempata por mejor cumplimiento_sla.
-
-Nota de aislamiento: sugerir_agente() compara contra TODOS los agentes
-reales del area en la DB compartida de tests, no solo los creados aqui --
-a diferencia de metricas_por_agente(agente_id=X), esta funcion no admite
-filtrar a un agente especifico. Se compensa haciendo que los agentes de
-"deberia ganar" sean dominantes en ambos criterios (carga=0, cumplimiento=1.0),
-el maximo y minimo posibles respectivamente -- solo pierden ante un agente
-real que por coincidencia tenga el mismo perfil exacto (carga=0 Y
-cumplimiento=1.0), un caso extremo aceptado y no cerrado del todo aqui.
-El primer test SI verifica la precondicion de area vacia antes de afirmar
-nada, en vez de asumirla.
-"""
 from datetime import datetime, timedelta
 
 import pytest
@@ -124,12 +102,8 @@ def test_menor_carga_gana_aunque_el_otro_tenga_buen_historial():
     agente_libre = _crear_agente("libre", CATEGORIA_PRUEBA)
     agente_ocupado = _crear_agente("ocupado", CATEGORIA_PRUEBA)
 
-    # agente_libre: carga 0, buen historial (cumplimiento 1.0) -- dominante
     _crear_ticket_cerrado_a_tiempo(agente_libre.id, normal.id, CATEGORIA_PRUEBA)
 
-    # agente_ocupado: carga alta (3 tickets EN_PROGRESO ahora mismo), pero
-    # TAMBIEN cumplimiento perfecto -- para que quede claro que pierde por
-    # la carga, no porque su historial sea peor
     for _ in range(3):
         _crear_ticket_en_progreso(agente_ocupado.id, normal.id, CATEGORIA_PRUEBA)
     _crear_ticket_cerrado_a_tiempo(agente_ocupado.id, normal.id, CATEGORIA_PRUEBA)
@@ -143,7 +117,7 @@ def test_menor_carga_gana_aunque_el_otro_tenga_buen_historial():
 
 
 def test_carga_empatada_desempata_por_cumplimiento():
-    CATEGORIA_AISLADA = Categoria.SOFTWARE  # distinta a CATEGORIA_PRUEBA, para no heredar agentes del test anterior
+    CATEGORIA_AISLADA = Categoria.SOFTWARE
 
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
 

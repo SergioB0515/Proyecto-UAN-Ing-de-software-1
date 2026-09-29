@@ -18,12 +18,6 @@ def create_app():
     db.init_app(app)
     mail.init_app(app)
 
-    # Los servicios usan flask_babel.gettext para sus mensajes; sin esta
-    # inicializacion, llamarlos fuera de una request revienta con KeyError.
-    # default_translation_directories apunta a la carpeta real de traducciones
-    # (app/translations), no a la del paquete tests -- sin esto, cualquier
-    # prueba que fuerce un locale distinto a "es" nunca encuentra el
-    # catalogo compilado y siempre cae al texto original en español.
     Babel(app, default_locale="es",
           default_translation_directories=os.path.join(BASE_DIR, "app", "translations"))
 

@@ -1,22 +1,3 @@
-"""
-Pruebas de ServicioSolicitudesTransferencia -- escalamiento entre areas (v1.8)
-
-Que verifica:
-1-7.   escalar_a_area: caso valido, ticket inexistente, ticket no en
-       progreso, area destino igual a la actual, motivo vacio, solicitud
-       duplicada (mismo tipo), solicitud duplicada cruzada contra una
-       transferencia normal ya pendiente sobre el mismo ticket.
-8-11.  aprobar_escalamiento: caso valido (categoria/agente/estado del
-       ticket mutan correctamente), solicitud inexistente, solicitud ya
-       resuelta, ticket que dejo de estar en progreso mientras el
-       escalamiento seguia pendiente (condicion de carrera simulada).
-12-13. rechazar_escalamiento: caso valido (no toca el ticket), ya resuelta.
-14.    listar_escalamientos_pendientes: solo trae escalamientos PENDIENTES,
-       nunca transferencias normales ni escalamientos ya resueltos.
-
-Nota: "no puedo entrar a mi correo" clasifica como PERMISOS (ver
-tests/test_solicitudes.py y tests/test_clasificador.py).
-"""
 import pytest
 
 from app.extensions import db
@@ -90,8 +71,6 @@ def usuarios_de_prueba():
 
 
 def _crear_ticket_en_progreso(creador, agente):
-    """Helper local: crea un ticket de PERMISOS y lo deja EN_PROGRESO con
-    `agente` como responsable."""
     ticket = ServicioTickets.crear_ticket(creador=creador, texto=TEXTO_TICKET_PERMISOS)
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id,
@@ -101,10 +80,6 @@ def _crear_ticket_en_progreso(creador, agente):
     )
     return ticket
 
-
-# ---------------------------------------------------------------------------
-# escalar_a_area
-# ---------------------------------------------------------------------------
 
 def test_escalar_a_area_valido():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
@@ -147,7 +122,6 @@ def test_escalar_a_area_ticket_no_en_progreso():
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE_PERMISOS).first()
 
     ticket = ServicioTickets.crear_ticket(creador=normal, texto=TEXTO_TICKET_PERMISOS)
-    # queda ABIERTO, nunca paso por cambiar_estado
 
     with pytest.raises(TicketNoEnProgresoError):
         ServicioSolicitudesTransferencia.escalar_a_area(
@@ -164,7 +138,7 @@ def test_escalar_a_area_misma_area():
 
     with pytest.raises(AreaDestinoInvalidaError):
         ServicioSolicitudesTransferencia.escalar_a_area(
-            ticket_id=ticket.id, area_destino=Categoria.PERMISOS,  # misma area del ticket
+            ticket_id=ticket.id, area_destino=Categoria.PERMISOS,
             solicitante_id=agente.id, motivo="motivo cualquiera",
         )
 
@@ -178,7 +152,7 @@ def test_escalar_a_area_motivo_vacio():
     with pytest.raises(MotivoRequeridoError):
         ServicioSolicitudesTransferencia.escalar_a_area(
             ticket_id=ticket.id, area_destino=Categoria.REDES,
-            solicitante_id=agente.id, motivo="   ",  # solo espacios
+            solicitante_id=agente.id, motivo="   ",
         )
 
 
@@ -201,10 +175,6 @@ def test_escalar_a_area_duplicada():
 
 
 def test_escalar_a_area_duplicada_contra_transferencia_normal():
-    """El chequeo de duplicados es compartido: una transferencia normal
-    (v1.7) pendiente sobre un ticket tambien debe bloquear un intento de
-    escalamiento (v1.8) sobre ese mismo ticket -- ambos tipos viven en la
-    misma tabla y se validan con el mismo criterio (ticket_id + PENDIENTE)."""
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE_PERMISOS).first()
     agente_2 = Usuario.query.filter_by(email=EMAIL_AGENTE_PERMISOS_2).first()
@@ -221,10 +191,6 @@ def test_escalar_a_area_duplicada_contra_transferencia_normal():
             solicitante_id=agente.id, motivo="No deberia poder crearse",
         )
 
-
-# ---------------------------------------------------------------------------
-# aprobar_escalamiento
-# ---------------------------------------------------------------------------
 
 def test_aprobar_escalamiento_valido():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
@@ -280,8 +246,6 @@ def test_aprobar_escalamiento_ya_resuelto():
 
 
 def test_aprobar_escalamiento_ticket_ya_no_en_progreso():
-    """Simula la condicion de carrera: el ticket se cierra (forzado directo
-    por SQLAlchemy) mientras el escalamiento seguia PENDIENTE de aprobacion."""
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE_PERMISOS).first()
     admin = Usuario.query.filter_by(email=EMAIL_ADMIN).first()
@@ -299,10 +263,6 @@ def test_aprobar_escalamiento_ticket_ya_no_en_progreso():
     with pytest.raises(TicketNoEnProgresoError):
         ServicioSolicitudesTransferencia.aprobar_escalamiento(solicitud.id, admin.id)
 
-
-# ---------------------------------------------------------------------------
-# rechazar_escalamiento
-# ---------------------------------------------------------------------------
 
 def test_rechazar_escalamiento_valido():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
@@ -348,24 +308,18 @@ def test_rechazar_escalamiento_ya_resuelto():
         ServicioSolicitudesTransferencia.rechazar_escalamiento(solicitud.id, admin.id)
 
 
-# ---------------------------------------------------------------------------
-# listar_escalamientos_pendientes
-# ---------------------------------------------------------------------------
-
 def test_listar_escalamientos_pendientes():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE_PERMISOS).first()
     agente_2 = Usuario.query.filter_by(email=EMAIL_AGENTE_PERMISOS_2).first()
     admin = Usuario.query.filter_by(email=EMAIL_ADMIN).first()
 
-    # 1. Un escalamiento pendiente -- SI debe aparecer
     ticket_pendiente = _crear_ticket_en_progreso(normal, agente)
     escalamiento_pendiente = ServicioSolicitudesTransferencia.escalar_a_area(
         ticket_id=ticket_pendiente.id, area_destino=Categoria.REDES,
         solicitante_id=agente.id, motivo="Pendiente de revisar",
     )
 
-    # 2. Un escalamiento ya aprobado -- NO debe aparecer
     ticket_resuelto = _crear_ticket_en_progreso(normal, agente)
     escalamiento_resuelto = ServicioSolicitudesTransferencia.escalar_a_area(
         ticket_id=ticket_resuelto.id, area_destino=Categoria.SEGURIDAD,
@@ -373,8 +327,6 @@ def test_listar_escalamientos_pendientes():
     )
     ServicioSolicitudesTransferencia.aprobar_escalamiento(escalamiento_resuelto.id, admin.id)
 
-    # 3. Una transferencia normal (agente-a-agente) pendiente -- NO debe
-    #    aparecer aqui, tiene su propia lista (listar_pendientes_para_agente)
     ticket_transferencia = _crear_ticket_en_progreso(normal, agente)
     transferencia_normal = ServicioSolicitudesTransferencia.crear_solicitud(
         ticket_id=ticket_transferencia.id, agente_destino_id=agente_2.id,

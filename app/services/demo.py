@@ -1,6 +1,3 @@
-"""Acciones del modo demo: disparan a mano los eventos que normalmente ocurren
-solos (notificaciones, correos, alertas de SLA, clasificación) para poder
-mostrarlos en una presentación. Reusa los servicios reales, no los simula."""
 from datetime import datetime, timedelta
 
 from flask_babel import gettext as _
@@ -19,7 +16,6 @@ from app import notificaciones_i18n as notif
 
 
 def plantillas_notificacion():
-    """{nombre_constante: plantilla} de todas las notificaciones del sistema."""
     return {
         nombre: valor
         for nombre, valor in vars(notif).items()
@@ -86,8 +82,6 @@ class ServicioDemo:
 
     @staticmethod
     def forzar_sla(ticket_id, modo):
-        """Mueve las fechas del ticket para que quede próximo a vencer o vencido
-        y corre la verificación real de SLA (la misma que hace el scheduler)."""
         ticket = db.session.get(Ticket, ticket_id)
         if ticket is None:
             raise TicketNoEncontradoError(_("El ticket no a sido encontrado"))
@@ -99,7 +93,6 @@ class ServicioDemo:
             ticket.fecha_limite = ahora - timedelta(minutes=5)
             ticket.notificado_vencido = False
         elif modo == "proximo":
-            # 10 min restantes de un SLA de 2h -> ~8% restante (< 20%)
             ticket.fecha_creacion = ahora - timedelta(hours=2)
             ticket.fecha_limite = ahora + timedelta(minutes=10)
             ticket.notificado_proximo_vencer = False

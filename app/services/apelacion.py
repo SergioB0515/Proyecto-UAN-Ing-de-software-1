@@ -150,7 +150,6 @@ class ServicioApelaciones:
         return solicitud
 
 
-
     @staticmethod
     def listar_pendientes():
         query = select(ApelacionCierre).where(ApelacionCierre.estado == EstadoApelacion.PENDIENTE).order_by(ApelacionCierre.fecha_solicitud)

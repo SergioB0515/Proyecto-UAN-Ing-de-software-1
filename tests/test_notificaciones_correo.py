@@ -1,25 +1,3 @@
-"""
-Pruebas de la integracion de correo en ServicioNotificaciones.crear()
-
-Que verifica:
-1. Una plantilla en PLANTILLAS_CON_CORREO (CERRADO) dispara un correo con
-   el destinatario y el texto correctos.
-2. CERRADO_SIN_ATENDER tambien dispara correo (segunda plantilla del set,
-   para no depender de un solo caso).
-3. Las plantillas de SLA (vencido/proximo, creador/agente) disparan correo
-   -- las 4 variantes.
-4. Una plantilla que NO esta en el set (TRANSFERENCIA_NUEVA) no dispara
-   ningun correo -- control negativo, confirma que el filtro realmente
-   filtra y no manda correo para todo.
-
-Nota de sincronizacion: _enviar_correo corre en threading.Thread para no
-bloquear la request real, lo que lo hace asincrono respecto al test --
-mail.record_messages() podria revisar el buzon antes de que el hilo
-real termine. Se fuerza Thread.start() a ejecutar el target de forma
-sincrona (mismo hilo del test) solo para esta suite, via monkeypatch --
-no se mockea ningun comportamiento de negocio, mail.send() sigue
-corriendo de verdad (interceptado por record_messages, no por un mock).
-"""
 import threading
 
 import pytest

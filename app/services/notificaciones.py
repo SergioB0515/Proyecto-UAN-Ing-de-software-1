@@ -15,9 +15,6 @@ from app import notificaciones_i18n as notif
 class ServicioNotificaciones:
     LIMITE_POR_USUARIO = 15
 
-    # Idioma usado para renderizar el correo. La app no guarda un idioma
-    # preferido por usuario (ver limitación conocida en notificaciones_i18n),
-    # así que se usa el idioma por defecto de la app.
     LOCALE_CORREO = "es"
 
     PLANTILLAS_CON_CORREO = frozenset({
@@ -26,8 +23,6 @@ class ServicioNotificaciones:
         notif.SLA_VENCIDO_CREADOR, notif.SLA_VENCIDO_AGENTE,
      })
 
-    # Color de acento del correo según la urgencia de la plantilla (coincide
-    # con la paleta oro/verde/rojo usada en la app para SLA y cierres).
     _ACENTOS_POR_PLANTILLA = {
         notif.CERRADO: ("#0d6c4a", "#12885f"),
         notif.CERRADO_SIN_ATENDER: ("#c2860f", "#e0b459"),
@@ -107,9 +102,6 @@ class ServicioNotificaciones:
 
     @staticmethod
     def _contexto_correo(ticket):
-        """Extrae del ticket los datos primitivos que necesita el correo, para no
-        cruzar el objeto ORM (ligado a la sesión de este hilo) hacia el hilo
-        que envía el correo."""
 
         agente_nombre = None
         if ticket.agente_id:
@@ -128,8 +120,6 @@ class ServicioNotificaciones:
 
     @staticmethod
     def construir_correo(mensaje, ticket_id, contexto_ticket):
-        """Arma (asunto, texto plano, html) del correo. Requiere app context.
-        html es None si no hay ticket."""
         locale = ServicioNotificaciones.LOCALE_CORREO
         texto = render_mensaje(mensaje, ticket_id, locale=locale)
         asunto = f"Sistema de Tickets IT — {texto}"
@@ -156,8 +146,6 @@ class ServicioNotificaciones:
 
     @staticmethod
     def enviar_correo_sincrono(destinatario, mensaje, ticket_id, contexto_ticket):
-        """Envía el correo en el hilo actual y deja propagar cualquier error
-        (lo usa el modo demo para mostrar si el SMTP funcionó)."""
         asunto, texto, html = ServicioNotificaciones.construir_correo(mensaje, ticket_id, contexto_ticket)
         mail.send(Message(subject=asunto, recipients=[destinatario], body=texto, html=html))
 
@@ -186,7 +174,6 @@ class ServicioNotificaciones:
         ).order_by(Notificacion.fecha.desc())
 
         return db.session.execute(query).scalars().all()
-
 
 
     @staticmethod

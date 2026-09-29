@@ -145,8 +145,6 @@ class ServicioMetricas:
 
     @staticmethod
     def comparativa_area(agente_id, area, dias=30):
-        """Compara al agente con sus pares del área: promedio de SLA, puesto en el
-        ranking del área y una insignia de nivel según su cumplimiento de SLA."""
 
         metricas_area = ServicioMetricas.metricas_por_agente(area=area, dias=dias)
 
@@ -246,8 +244,6 @@ class ServicioMetricas:
         
     @staticmethod
     def _panorama_area(categoria):
-        """Agentes de un área con su carga actual (tickets EN_PROGRESO) y sus
-        métricas de desempeño (últimos 30 días), para sugerir/justificar un agente."""
 
         agentes = db.session.execute(
             select(Usuario).where(
@@ -293,9 +289,6 @@ class ServicioMetricas:
 
     @staticmethod
     def detalle_sugerencia_agente(categoria):
-        """Igual que sugerir_agente, pero además explica el motivo de la elección
-        y expone la carga/desempeño del agente elegido, para mostrarlo en el
-        detalle del ticket."""
 
         agentes, cargas, metricas_por_id = ServicioMetricas._panorama_area(categoria)
         if not agentes:

@@ -1,26 +1,3 @@
-"""
-Pruebas de ServicioTickets
-
-Que verifica (igual que el script manual original):
-1. Un ticket de un usuario NORMAL con texto de Seguridad queda con
-   categoria=SEGURIDAD, prioridad=ALTA, y un SLA de ~4 horas.
-2. El mismo texto, creado por un usuario VIP, produce la misma categoria
-   pero la prioridad se eleva a ALTA (si no lo era ya) y el SLA es el
-   corto de VIP (~1.5 horas), no el normal.
-3. Un ticket sin ninguna palabra clave conocida cae en OTROS con
-   prioridad BAJA, pero si el creador es VIP la prioridad se eleva a ALTA.
-4. listar_tickets_por_area reordena los tickets por prioridad (Alta -> Media -> Baja).
-5-9. Transiciones de estado (ABIERTO -> EN_PROGRESO, agente obligatorio,
-   conflictos de agente, transiciones invalidas, ticket inexistente).
-10-13. Reasignacion de agente (valida, ticket inexistente, ticket no en
-   progreso, mismo agente).
-14-16. Comentarios (valido, ticket inexistente, texto vacio).
-
-Nota de migracion: la contraseña de prueba paso de "ClaveSegura123" a
-"ClaveSegura123!" porque validar_politica_contrasena ahora exige un simbolo
-(registrar() fallaba con ValueError antes de llegar a nada de lo que prueban
-estos tests).
-"""
 from datetime import datetime
 
 import pytest
@@ -158,17 +135,13 @@ def test_listar_tickets_por_area_ordenados_por_prioridad():
     usuario_normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     usuario_vip = Usuario.query.filter_by(email=EMAIL_VIP).first()
 
-    # Software tiene prioridad base BAJA. Creamos primero el de prioridad Baja
-    # (usuario normal) y despues el de prioridad Alta (usuario VIP, se eleva),
-    # ambos en la misma categoria/area, para confirmar que listar_tickets_por_area
-    # de verdad reordena y no solo devuelve el orden de inserción.
     ServicioTickets.crear_ticket(
         creador=usuario_normal,
-        texto="el programa de facturación se cierra solo",  # Software -> BAJA
+        texto="el programa de facturación se cierra solo",
     )
     ServicioTickets.crear_ticket(
         creador=usuario_vip,
-        texto="no abre el programa de nomina",  # Software -> BAJA, pero VIP -> se eleva a ALTA
+        texto="no abre el programa de nomina",
     )
 
     tickets_del_area = ServicioTickets.listar_tickets_por_area(Categoria.SOFTWARE)
@@ -243,7 +216,7 @@ def test_cambiar_estado_agente_en_conflicto():
         agente_id=agente.id,
     )
 
-    otro_agente_id = agente.id + 1  # id distinto, no necesita existir para esta prueba de conflicto
+    otro_agente_id = agente.id + 1
 
     with pytest.raises(TransicionInvalidaError):
         ServicioTickets.cambiar_estado(
@@ -333,7 +306,6 @@ def test_reasignar_agente_ticket_no_en_progreso():
         creador=usuario_normal,
         texto="no puedo entrar a mi correo",
     )
-    # ticket recien creado queda en ABIERTO, nunca paso por cambiar_estado
 
     with pytest.raises(TicketNoEnProgresoError):
         ServicioTickets.reasignar_agente(
@@ -437,7 +409,6 @@ carrera (forzar estado directo).
 """
 
 
-
 EMAIL_CLASIF_ADMIN = "prueba_clasif_admin@empresa.com"
 EMAIL_CLASIF_NORMAL = "prueba_clasif_normal@empresa.com"
 
@@ -468,19 +439,12 @@ def usuarios_confirmar_clasificacion():
 
 
 def _crear_ticket_baja_confianza(creador):
-    """Helper local: crea un ticket normal y fuerza clasificacion_baja_confianza=True
-    directo por SQLAlchemy -- el clasificador simple de los tests nunca
-    produce ese estado por si solo."""
     ticket = ServicioTickets.crear_ticket(creador=creador, texto="texto cualquiera para la prueba")
     ticket.clasificacion_baja_confianza = True
     db.session.add(ticket)
     db.session.commit()
     return ticket
 
-
-# ---------------------------------------------------------------------------
-# confirmar_clasificacion
-# ---------------------------------------------------------------------------
 
 def test_confirmar_clasificacion_valido():
     normal = Usuario.query.filter_by(email=EMAIL_CLASIF_NORMAL).first()
@@ -527,16 +491,11 @@ def test_confirmar_clasificacion_ya_confirmada():
     normal = Usuario.query.filter_by(email=EMAIL_CLASIF_NORMAL).first()
     admin = Usuario.query.filter_by(email=EMAIL_CLASIF_ADMIN).first()
 
-    # Ticket normal, creado sin forzar baja_confianza -- nunca estuvo pendiente
     ticket = ServicioTickets.crear_ticket(creador=normal, texto="ticket normal sin baja confianza")
 
     with pytest.raises(ClasificacionYaConfirmadaError):
         ServicioTickets.confirmar_clasificacion(ticket.id, Categoria.REDES, admin.id)
 
-
-# ---------------------------------------------------------------------------
-# listar_pendientes_revision_clasificacion
-# ---------------------------------------------------------------------------
 
 def test_listar_pendientes_revision_clasificacion():
     normal = Usuario.query.filter_by(email=EMAIL_CLASIF_NORMAL).first()
@@ -554,7 +513,6 @@ def test_listar_pendientes_revision_clasificacion():
         "un ticket sin clasificacion_baja_confianza no deberia aparecer en la lista"
     )
 
-    # Orden: el mas viejo primero
     posicion_1 = ids_pendientes.index(ticket_pendiente_1.id)
     posicion_2 = ids_pendientes.index(ticket_pendiente_2.id)
     assert posicion_1 < posicion_2, (
@@ -565,7 +523,6 @@ def test_listar_pendientes_revision_clasificacion():
 def test_listar_pendientes_revision_clasificacion_vacio():
     normal = Usuario.query.filter_by(email=EMAIL_CLASIF_NORMAL).first()
 
-    # Confirmar cualquier pendiente que haya quedado de tests anteriores en este archivo
     pendientes_previos = ServicioTickets.listar_pendientes_revision_clasificacion()
     for t in pendientes_previos:
         t.clasificacion_baja_confianza = False

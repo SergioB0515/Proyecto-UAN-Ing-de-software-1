@@ -4,7 +4,6 @@ from app.models.palabra_clave import PalabraClave
 from app.models.enum import Categoria
 
 PALABRAS = [
-    # --- SEGURIDAD ---
     ("no fui yo", Categoria.SEGURIDAD, 1.5),
     ("alguien entró", Categoria.SEGURIDAD, 2.0),
     ("alguien tiene mi contraseña", Categoria.SEGURIDAD, 2.5),
@@ -22,7 +21,6 @@ PALABRAS = [
     ("intento de conexión", Categoria.SEGURIDAD, 1.5),
     ("configuró reglas en mi correo", Categoria.SEGURIDAD, 2.0),
 
-    # --- REDES ---
     ("no hay wifi", Categoria.REDES, 2.0),
     ("no tengo internet", Categoria.REDES, 2.0),
     ("sin conexión", Categoria.REDES, 1.5),
@@ -36,7 +34,6 @@ PALABRAS = [
     ("wifi lento", Categoria.REDES, 1.2),
     ("firmware del router", Categoria.REDES, 1.8),
 
-    # --- INFRAESTRUCTURA ---
     ("no enciende", Categoria.INFRAESTRUCTURA, 2.0),
     ("se apaga solo", Categoria.INFRAESTRUCTURA, 1.8),
     ("pantalla azul", Categoria.INFRAESTRUCTURA, 2.2),
@@ -52,8 +49,7 @@ PALABRAS = [
     ("ventilador", Categoria.INFRAESTRUCTURA, 1.2),
     ("pantalla descalibrada", Categoria.INFRAESTRUCTURA, 1.8),
 
-    # --- PERMISOS (peso alto = "acceso a recurso especifico") ---
-    ("no puedo entrar a", Categoria.PERMISOS, 1.2),   # generico, peso mas bajo
+    ("no puedo entrar a", Categoria.PERMISOS, 1.2),
     ("no tengo acceso a", Categoria.PERMISOS, 1.5),
     ("acceso denegado", Categoria.PERMISOS, 1.8),
     ("no me deja ver", Categoria.PERMISOS, 1.5),
@@ -65,7 +61,6 @@ PALABRAS = [
     ("no tengo permisos para", Categoria.PERMISOS, 2.0),
     ("restricción de lectura", Categoria.PERMISOS, 1.8),
 
-    # --- CUENTAS_CONTRASENAS (peso alto = mencion explicita de contraseña/clave) ---
     ("olvidé mi contraseña", Categoria.CUENTAS_CONTRASENAS, 2.2),
     ("cuenta bloqueada", Categoria.CUENTAS_CONTRASENAS, 2.0),
     ("contraseña incorrecta", Categoria.CUENTAS_CONTRASENAS, 2.2),
@@ -78,7 +73,6 @@ PALABRAS = [
     ("código de recuperación", Categoria.CUENTAS_CONTRASENAS, 2.0),
     ("relación de confianza con el dominio", Categoria.CUENTAS_CONTRASENAS, 2.0),
 
-    # --- SOFTWARE ---
     ("se cierra solo", Categoria.SOFTWARE, 1.8),
     ("no abre el programa", Categoria.SOFTWARE, 2.0),
     ("no abre la aplicación", Categoria.SOFTWARE, 2.0),

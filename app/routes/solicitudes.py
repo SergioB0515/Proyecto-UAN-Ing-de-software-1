@@ -198,7 +198,6 @@ def escalamientos_pendientes():
     return render_template("escalamientos_pendientes.html", escalamientos=escalamientos)
 
 
-
 @solicitudes_bp.route("/escalamientos/<int:solicitud_id>/aprobar", methods=["POST"])
 @requiere_admin
 def aprobar_escalamiento(solicitud_id):
@@ -269,7 +268,6 @@ def cambios_prioridad_pendientes():
     
     cambios= ServicioSolicitudesTransferencia.listar_cambios_prioridad_pendientes()
     return render_template("cambios_prioridad_pendientes.html", cambios=cambios)
-
 
 
 @solicitudes_bp.route("/cambios-prioridad/<int:solicitud_id>/aprobar", methods=["POST"])

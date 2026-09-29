@@ -1,15 +1,3 @@
-"""
-Pruebas de ClasificadorTickets.clasificar()
-
-Que verifica:
-1. Que cada categoria se detecta correctamente con un texto claro y sin ambiguedad.
-2. Que un texto sin ninguna palabra clave conocida cae en OTROS.
-3. El caso de ambiguedad Permisos vs Cuentas_contrasenas: por el orden de
-   criticidad definido, Permisos debe ganar siempre, incluso si el texto
-   menciona "contraseña" explicitamente.
-
-No depende de la base de datos ni del app_context: son funciones puras.
-"""
 import pytest
 
 from app.services.clasificador import ClasificadorTickets

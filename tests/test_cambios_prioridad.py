@@ -1,24 +1,3 @@
-"""
-Pruebas de ServicioSolicitudesTransferencia -- cambio de prioridad (v1.8.5)
-
-Que verifica:
-1-7.   cambiar_prioridad: caso valido, ticket inexistente, ticket no en
-       progreso, misma prioridad, motivo vacio, solicitud duplicada (mismo
-       tipo), solicitud duplicada cruzada contra una transferencia normal
-       ya pendiente sobre el mismo ticket.
-8-9.   aprobar_cambio_prioridad: caso valido con creador NORMAL (SLA normal),
-       caso valido con creador VIP (SLA vip) -- este ultimo es la prueba de
-       regresion del bug donde se usaba usuario.rol en vez de usuario.nivel
-       al recalcular la fecha limite.
-10-12. aprobar_cambio_prioridad: solicitud inexistente, ya resuelta, ticket
-       que dejo de estar en progreso mientras seguia pendiente.
-13-14. rechazar_cambio_prioridad: caso valido (no toca el ticket), ya resuelta.
-15.    listar_cambios_prioridad_pendientes: solo trae tipo CAMBIO_PRIORIDAD
-       pendientes, nunca transferencias normales ni escalamientos de area.
-
-Nota: "no puedo entrar a mi correo" clasifica como PERMISOS, con prioridad
-base BAJA (ver PRIORIDAD_BASE_POR_CATEGORIA en app/services/tickets.py).
-"""
 from datetime import datetime
 
 import pytest
@@ -44,7 +23,7 @@ EMAIL_NORMAL = "prueba_cambios_prioridad_normal@empresa.com"
 EMAIL_VIP = "prueba_cambios_prioridad_vip@empresa.com"
 EMAIL_AGENTE = "prueba_cambios_prioridad_agente@empresa.com"
 
-TEXTO_TICKET_PERMISOS = "no puedo entrar a mi correo"  # PERMISOS, base BAJA
+TEXTO_TICKET_PERMISOS = "no puedo entrar a mi correo"
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -93,8 +72,6 @@ def usuarios_de_prueba():
 
 
 def _crear_ticket_en_progreso(creador, agente):
-    """Helper local: crea un ticket de PERMISOS y lo deja EN_PROGRESO con
-    `agente` como responsable."""
     ticket = ServicioTickets.crear_ticket(creador=creador, texto=TEXTO_TICKET_PERMISOS)
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id,
@@ -104,10 +81,6 @@ def _crear_ticket_en_progreso(creador, agente):
     )
     return ticket
 
-
-# ---------------------------------------------------------------------------
-# cambiar_prioridad
-# ---------------------------------------------------------------------------
 
 def test_cambiar_prioridad_valido():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
@@ -149,7 +122,6 @@ def test_cambiar_prioridad_ticket_no_en_progreso():
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
     ticket = ServicioTickets.crear_ticket(creador=normal, texto=TEXTO_TICKET_PERMISOS)
-    # queda ABIERTO, nunca paso por cambiar_estado
 
     with pytest.raises(TicketNoEnProgresoError):
         ServicioSolicitudesTransferencia.cambiar_prioridad(
@@ -162,11 +134,11 @@ def test_cambiar_prioridad_misma_prioridad():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
-    ticket = _crear_ticket_en_progreso(normal, agente)  # queda en BAJA
+    ticket = _crear_ticket_en_progreso(normal, agente)
 
     with pytest.raises(PrioridadDestinoInvalidaError):
         ServicioSolicitudesTransferencia.cambiar_prioridad(
-            ticket_id=ticket.id, prioridad_destino=Prioridad.BAJA,  # misma que ya tiene
+            ticket_id=ticket.id, prioridad_destino=Prioridad.BAJA,
             solicitante_id=agente.id, motivo="motivo cualquiera",
         )
 
@@ -180,7 +152,7 @@ def test_cambiar_prioridad_motivo_vacio():
     with pytest.raises(MotivoRequeridoError):
         ServicioSolicitudesTransferencia.cambiar_prioridad(
             ticket_id=ticket.id, prioridad_destino=Prioridad.ALTA,
-            solicitante_id=agente.id, motivo="   ",  # solo espacios
+            solicitante_id=agente.id, motivo="   ",
         )
 
 
@@ -203,10 +175,6 @@ def test_cambiar_prioridad_duplicada():
 
 
 def test_cambiar_prioridad_duplicada_contra_transferencia_normal():
-    """El chequeo de duplicados sigue siendo compartido entre los tres
-    tipos: una transferencia normal (v1.7) pendiente sobre un ticket
-    tambien bloquea un intento de cambio de prioridad (v1.8.5) sobre ese
-    mismo ticket."""
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
 
@@ -234,16 +202,12 @@ def test_cambiar_prioridad_duplicada_contra_transferencia_normal():
         )
 
 
-# ---------------------------------------------------------------------------
-# aprobar_cambio_prioridad
-# ---------------------------------------------------------------------------
-
 def test_aprobar_cambio_prioridad_valido_usuario_normal():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
     admin = Usuario.query.filter_by(email=EMAIL_ADMIN).first()
 
-    ticket = _crear_ticket_en_progreso(normal, agente)  # BAJA
+    ticket = _crear_ticket_en_progreso(normal, agente)
     solicitud = ServicioSolicitudesTransferencia.cambiar_prioridad(
         ticket_id=ticket.id, prioridad_destino=Prioridad.ALTA,
         solicitante_id=agente.id, motivo="Se volvio urgente",
@@ -275,9 +239,6 @@ def test_aprobar_cambio_prioridad_valido_usuario_normal():
 
 
 def test_aprobar_cambio_prioridad_valido_usuario_vip_usa_sla_vip():
-    """Prueba de regresion: si el bug de usuario.rol vs usuario.nivel
-    volviera a aparecer, este test falla porque el SLA le saldria calculado
-    como normal (~24h) en vez de vip (~4.5h)."""
     vip = Usuario.query.filter_by(email=EMAIL_VIP).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
     admin = Usuario.query.filter_by(email=EMAIL_ADMIN).first()
@@ -348,16 +309,12 @@ def test_aprobar_cambio_prioridad_ticket_ya_no_en_progreso():
         ServicioSolicitudesTransferencia.aprobar_cambio_prioridad(solicitud.id, admin.id)
 
 
-# ---------------------------------------------------------------------------
-# rechazar_cambio_prioridad
-# ---------------------------------------------------------------------------
-
 def test_rechazar_cambio_prioridad_valido():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
     admin = Usuario.query.filter_by(email=EMAIL_ADMIN).first()
 
-    ticket = _crear_ticket_en_progreso(normal, agente)  # BAJA
+    ticket = _crear_ticket_en_progreso(normal, agente)
     fecha_limite_original = ticket.fecha_limite
 
     solicitud = ServicioSolicitudesTransferencia.cambiar_prioridad(
@@ -397,23 +354,17 @@ def test_rechazar_cambio_prioridad_ya_resuelto():
         ServicioSolicitudesTransferencia.rechazar_cambio_prioridad(solicitud.id, admin.id)
 
 
-# ---------------------------------------------------------------------------
-# listar_cambios_prioridad_pendientes
-# ---------------------------------------------------------------------------
-
 def test_listar_cambios_prioridad_pendientes():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
     admin = Usuario.query.filter_by(email=EMAIL_ADMIN).first()
 
-    # 1. Un cambio de prioridad pendiente -- SI debe aparecer
     ticket_pendiente = _crear_ticket_en_progreso(normal, agente)
     cambio_pendiente = ServicioSolicitudesTransferencia.cambiar_prioridad(
         ticket_id=ticket_pendiente.id, prioridad_destino=Prioridad.ALTA,
         solicitante_id=agente.id, motivo="Pendiente de revisar",
     )
 
-    # 2. Un cambio de prioridad ya aprobado -- NO debe aparecer
     ticket_resuelto = _crear_ticket_en_progreso(normal, agente)
     cambio_resuelto = ServicioSolicitudesTransferencia.cambiar_prioridad(
         ticket_id=ticket_resuelto.id, prioridad_destino=Prioridad.MEDIA,
@@ -421,8 +372,6 @@ def test_listar_cambios_prioridad_pendientes():
     )
     ServicioSolicitudesTransferencia.aprobar_cambio_prioridad(cambio_resuelto.id, admin.id)
 
-    # 3. Un escalamiento de area pendiente -- NO debe aparecer aqui, tiene
-    #    su propia lista (listar_escalamientos_pendientes)
     ticket_escalamiento = _crear_ticket_en_progreso(normal, agente)
     escalamiento = ServicioSolicitudesTransferencia.escalar_a_area(
         ticket_id=ticket_escalamiento.id, area_destino=Categoria.REDES,

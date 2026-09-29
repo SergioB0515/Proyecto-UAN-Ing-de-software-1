@@ -1,33 +1,3 @@
-"""
-Pruebas de ServicioApelaciones -- apelacion de cierre de tickets (v2.1)
-
-Que verifica:
-1-5.   solicitar_apelacion: caso valido, ticket inexistente, ticket no
-       cerrado (abierto), ticket no cerrado (en progreso), motivo vacio,
-       apelacion duplicada (ya hay una pendiente sobre el mismo ticket).
-6-8.   aceptar_apelacion: caso valido -- el ticket vuelve a ABIERTO SIN
-       agente asignado (no el mismo que lo cerro, para evitar que el
-       usuario que apelo vuelva a toparse con quien descarto su caso),
-       apelacion inexistente, apelacion ya resuelta.
-9-10.  rechazar_apelacion: caso valido -- el ticket se queda EXACTAMENTE
-       como estaba (CERRADO, con su agente original intacto), apelacion
-       ya resuelta.
-11.    listar_pendientes: solo trae apelaciones PENDIENTE, nunca
-       ACEPTADA ni RECHAZADA.
-
-Nota: estas pruebas cubren ServicioApelaciones directamente, sin pasar
-por Flask ni por las rutas -- mismo alcance que el resto de la suite
-(test_escalamientos.py, test_solicitudes.py, etc). El bug real que
-encontramos en esta sesion (la ruta "rechazar" llamando por error a
-aceptar_apelacion()) vivia en app/routes/apelacion.py, NO en el
-servicio -- un test de servicio como este nunca lo habria atrapado,
-porque nunca ejecuta el codigo de la ruta. Detectar ese tipo de bug
-requeriria un test de integracion con app.test_client() haciendo un
-POST real a /apelaciones/<id>/rechazar, que este proyecto no usa en
-ningun archivo de tests existente. test_rechazar_apelacion_valido si
-sirve para blindar el SERVICIO contra una regresion futura si alguien
-vuelve a mezclar aceptar/rechazar ahi adentro.
-"""
 import pytest
 
 from app.extensions import db
@@ -87,9 +57,6 @@ def usuarios_de_prueba():
 
 
 def _crear_ticket_cerrado_con_agente(creador, agente):
-    """Helper local: crea un ticket, lo lleva a EN_PROGRESO con `agente`
-    como responsable, y lo cierra. Simula el caso real que motiva esta
-    feature: un agente cerro el ticket y el usuario no esta de acuerdo."""
     ticket = ServicioTickets.crear_ticket(creador=creador, texto=TEXTO_TICKET_PRUEBA)
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id, nuevo_estado=EstadoTicket.EN_PROGRESO,
@@ -100,10 +67,6 @@ def _crear_ticket_cerrado_con_agente(creador, agente):
     )
     return ticket
 
-
-# ---------------------------------------------------------------------------
-# solicitar_apelacion
-# ---------------------------------------------------------------------------
 
 def test_solicitar_apelacion_valido():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
@@ -137,7 +100,6 @@ def test_solicitar_apelacion_ticket_abierto():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
 
     ticket = ServicioTickets.crear_ticket(creador=normal, texto=TEXTO_TICKET_PRUEBA)
-    # queda ABIERTO, nunca paso por cambiar_estado
 
     with pytest.raises(TicketNoCerradoError):
         ServicioApelaciones.solicitar_apelacion(
@@ -188,10 +150,6 @@ def test_solicitar_apelacion_duplicada():
             ticket_id=ticket.id, solicitante_id=normal.id, motivo="segunda apelacion",
         )
 
-
-# ---------------------------------------------------------------------------
-# aceptar_apelacion
-# ---------------------------------------------------------------------------
 
 def test_aceptar_apelacion_valido():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
@@ -247,15 +205,7 @@ def test_aceptar_apelacion_ya_resuelta():
         ServicioApelaciones.aceptar_apelacion(apelacion_id=apelacion.id, actor_id=admin.id)
 
 
-# ---------------------------------------------------------------------------
-# rechazar_apelacion
-# ---------------------------------------------------------------------------
-
 def test_rechazar_apelacion_valido():
-    """Este es el test que habria atrapado el bug de la ruta que llamaba
-    a aceptar_apelacion() dentro de rechazar(). Verifica el TICKET
-    completo, no solo el estado de la apelacion -- si rechazar()
-    reabriera el ticket por error, este assert lo revienta."""
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE).first()
     admin = Usuario.query.filter_by(email=EMAIL_ADMIN).first()
@@ -298,10 +248,6 @@ def test_rechazar_apelacion_ya_resuelta():
     with pytest.raises(ApelacionNoPendienteError):
         ServicioApelaciones.rechazar_apelacion(apelacion_id=apelacion.id, actor_id=admin.id)
 
-
-# ---------------------------------------------------------------------------
-# listar_pendientes
-# ---------------------------------------------------------------------------
 
 def test_listar_pendientes_solo_trae_pendientes():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()

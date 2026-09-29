@@ -1,11 +1,3 @@
-"""
-Pruebas de GestorSLA.verificar_vencimientos()
-
-Nota de migracion: la contraseña de prueba paso de "ClaveSegura123" a
-"ClaveSegura123!" porque validar_politica_contrasena ahora exige un simbolo
-(registrar() fallaba con ValueError antes de llegar a nada de lo que prueba
-este archivo).
-"""
 from datetime import datetime, timedelta
 
 import pytest
@@ -103,8 +95,6 @@ def test_verificar_vencimientos(usuario_normal):
 
 
 def test_verificar_vencimientos_no_truena_con_ventana_cero(usuario_normal):
-    """fecha_limite == fecha_creacion (datos raros) no debe provocar
-    ZeroDivisionError; el ticket ya pasado se clasifica como vencido."""
     ahora = datetime.now()
 
     ticket_raro = Ticket(
@@ -156,7 +146,6 @@ def test_verificar_y_notificar_vencimientos_crea_notificacion_una_sola_vez(usuar
     assert "vencido" in notificaciones[0].mensaje.lower()
     assert ticket.notificado_vencido is True
 
-    # Segunda pasada: la bandera evita duplicados.
     GestorSLA.verificar_y_notificar_vencimientos()
 
     notificaciones = (

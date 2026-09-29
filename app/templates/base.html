@@ -234,7 +234,6 @@
     const CATALOGO = JSON.parse(document.getElementById('notif-catalogo').textContent);
     const CSRF = "{{ csrf_token() }}";
 
-    // Traduce el mensaje de una notificación al idioma de esta página.
     function textoNotif(n) {
         const tpl = (n.plantilla && CATALOGO[n.plantilla]) || null;
         const id = (n.ticket_id === null || n.ticket_id === undefined) ? '' : n.ticket_id;
@@ -268,7 +267,6 @@
         }
     }
 
-    /* ---------- tiempo relativo ---------- */
     function tiempoRelativo(iso) {
         const t = new Date(iso);
         if (isNaN(t)) return '';
@@ -291,7 +289,6 @@
         });
     }
 
-    /* ---------- badge ---------- */
     function setBadge(n) {
         if (!badge) return;
         if (n > 0) {
@@ -306,7 +303,6 @@
         return badge.textContent === '9+' ? 10 : (parseInt(badge.textContent, 10) || 0);
     }
 
-    /* ---------- lista del desplegable ---------- */
     function construirItem(n) {
         const li = document.createElement('li');
         li.className = 'notif-item is-unread';
@@ -339,7 +335,6 @@
         refrescarTiempos();
     }
 
-    // clic en un item: marcar leido (fetch) y navegar al ticket si aplica
     if (lista) {
         lista.addEventListener('submit', function (e) {
             const form = e.target.closest('form');
@@ -364,7 +359,6 @@
         });
     }
 
-    // "marcar todas como leidas" sin recargar
     if (markAllForm) {
         markAllForm.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -381,7 +375,6 @@
         });
     }
 
-    /* ---------- toast ---------- */
     function mostrarToast(n) {
         const el = document.createElement('div');
         el.className = 'toast notif-toast';

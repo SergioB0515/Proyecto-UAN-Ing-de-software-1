@@ -1,12 +1,3 @@
-"""
-Genera una previsualizacion en HTML de todos los correos que envia la app y
-los ENVIA DE VERDAD (por SMTP, usando las credenciales MAIL_USERNAME /
-MAIL_PASSWORD de tu .env) a DESTINATARIO_PREVIEW, ademas de guardar una
-copia de cada uno en disco para revisarlos sin depender del correo.
-
-Uso:
-    venv/Scripts/python.exe -m app.scripts.previsualizar_correos
-"""
 import os
 import threading
 import webbrowser
@@ -16,16 +7,10 @@ DESTINATARIO_PREVIEW = "ticketssoporte057@gmail.com"
 
 os.environ.setdefault("SECRET_KEY", "clave-previsualizacion-correos")
 os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
-# TESTING="false" (a diferencia de los tests) para que MAIL_SUPPRESS_SEND
-# quede en False y el correo se mande de verdad por SMTP.
 os.environ["TESTING"] = "false"
 os.environ["SCHEDULER_ACTIVO"] = "0"
 os.environ["CLASIFICADOR_ML_ACTIVO"] = "0"
 
-# El envio real corre en threading.Thread para no bloquear la request; para
-# esta previsualizacion lo forzamos a ejecutar sincronicamente (mismo patron
-# que tests/test_notificaciones_correo.py) asi mail.record_messages() ve el
-# correo antes de seguir.
 threading.Thread.start = lambda self: self.run()
 
 from app import create_app
@@ -42,8 +27,6 @@ CARPETA_SALIDA = os.path.join(
 )
 CARPETA_SALIDA = os.path.abspath(CARPETA_SALIDA)
 
-# (plantilla, nombre de archivo, estado que debe tener el ticket para que la
-# previsualizacion tenga sentido)
 PLANTILLAS_A_PROBAR = [
     (notif.CERRADO, "cerrado", EstadoTicket.CERRADO),
     (notif.CERRADO_SIN_ATENDER, "cerrado_sin_atender", EstadoTicket.CERRADO),

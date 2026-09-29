@@ -1,37 +1,3 @@
-"""
-Pruebas de ServicioNotificaciones
-
-PARTE 1 -- servicio aislado (crear, poda, listar, contar, marcar leida):
-1. crear: caso valido (guarda con leida=False por defecto).
-2. crear: poda automatica -- al superar LIMITE_POR_USUARIO (15), se borra
-   la mas vieja y se conserva exactamente 15.
-3. crear: la poda es por usuario.
-4. listar_para_usuario: orden mas reciente primero, solo las de ese usuario.
-5. contar_no_leidas: cuenta solo las no leidas, solo las de ese usuario.
-6-8. marcar_leida: valido, inexistente, de otro usuario.
-9. marcar_todas_leidas: marca solo las del usuario dado, no toca otras.
-
-PARTE 2 -- integracion con los servicios de negocio reales (los "enganches"):
-verifica que cada accion real dispara la notificacion correcta, comparando
-contra las CONSTANTES de app.notificaciones_i18n (no contra texto
-interpolado -- Notificacion.mensaje guarda la plantilla cruda sin
-resolver, la interpolacion del ticket_id ocurre despues, en render()).
-
-10. crear_solicitud -> notif.TRANSFERENCIA_NUEVA al agente destino.
-11. aceptar_solicitud -> notif.TRANSFERENCIA_ACEPTADA al solicitante.
-12. rechazar_solicitud -> notif.TRANSFERENCIA_RECHAZADA al solicitante.
-13. escalar_a_area -> notif.ESCALAMIENTO_PENDIENTE a TODOS los admins (fan-out).
-14. aprobar_escalamiento -> notif.ESCALAMIENTO_APROBADO al solicitante.
-15. rechazar_escalamiento -> notif.ESCALAMIENTO_RECHAZADO al solicitante.
-16. cambiar_prioridad -> notif.PRIORIDAD_PENDIENTE a TODOS los admins (fan-out).
-17. aprobar_cambio_prioridad -> notif.PRIORIDAD_APROBADO al solicitante.
-18. rechazar_cambio_prioridad -> notif.PRIORIDAD_RECHAZADO al solicitante.
-19. cambiar_estado a CERRADO desde EN_PROGRESO -> notif.CERRADO al creador.
-20. cambiar_estado a CERRADO desde ABIERTO (cierre directo) -> notif.CERRADO_SIN_ATENDER.
-21. cambiar_estado a EN_PROGRESO (solo tomar) -> NO genera ninguna notificacion (caso negativo).
-
-Nota: "no puedo entrar a mi correo" clasifica como PERMISOS.
-"""
 import pytest
 
 from app.extensions import db
@@ -104,16 +70,11 @@ def usuarios_de_prueba():
 
 
 def _limpiar_notificaciones(usuario_id):
-    """Helper local: borra cualquier notificacion previa de ese usuario,
-    para que cada test que dependa de un conteo exacto empiece en cero."""
     db.session.query(Notificacion).filter(Notificacion.usuario_id == usuario_id).delete()
     db.session.commit()
 
 
 def _plantillas_de(usuario_id):
-    """Helper local: devuelve solo las plantillas (Notificacion.mensaje) de
-    un usuario -- comparar contra estas, no contra texto interpolado, ya
-    que mensaje guarda la constante cruda de notificaciones_i18n."""
     return [n.mensaje for n in ServicioNotificaciones.listar_para_usuario(usuario_id)]
 
 
@@ -125,10 +86,6 @@ def _crear_ticket_en_progreso(creador, agente):
     )
     return ticket
 
-
-# ===========================================================================
-# PARTE 1 -- ServicioNotificaciones aislado
-# ===========================================================================
 
 def test_crear_valido():
     usuario_a = Usuario.query.filter_by(email=EMAIL_USUARIO_A).first()
@@ -268,10 +225,6 @@ def test_marcar_todas_leidas():
     assert ServicioNotificaciones.contar_no_leidas(usuario_a.id) == 0, "A no debe tener notificaciones sin leer"
     assert ServicioNotificaciones.contar_no_leidas(usuario_b.id) == 1, "marcar todas de A no debe tocar las de B"
 
-
-# ===========================================================================
-# PARTE 2 -- Integracion con los servicios de negocio reales
-# ===========================================================================
 
 def test_notificacion_al_crear_solicitud_transferencia():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
@@ -444,7 +397,7 @@ def test_notificacion_al_cerrar_ticket_directo_desde_abierto():
     origen = Usuario.query.filter_by(email=EMAIL_AGENTE_ORIGEN).first()
     _limpiar_notificaciones(normal.id)
 
-    ticket = ServicioTickets.crear_ticket(creador=normal, texto=TEXTO_TICKET_PERMISOS)  # queda ABIERTO
+    ticket = ServicioTickets.crear_ticket(creador=normal, texto=TEXTO_TICKET_PERMISOS)
     ServicioTickets.cambiar_estado(ticket_id=ticket.id, nuevo_estado=EstadoTicket.CERRADO, actor_id=origen.id)
 
     assert notif.CERRADO_SIN_ATENDER in _plantillas_de(normal.id), (
@@ -453,8 +406,6 @@ def test_notificacion_al_cerrar_ticket_directo_desde_abierto():
 
 
 def test_no_hay_notificacion_al_solo_tomar_el_ticket():
-    """Caso negativo: pasar de ABIERTO a EN_PROGRESO (tomar el ticket) no
-    debe generar ninguna notificacion -- el guard esta acotado a CERRADO."""
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     origen = Usuario.query.filter_by(email=EMAIL_AGENTE_ORIGEN).first()
     _limpiar_notificaciones(normal.id)

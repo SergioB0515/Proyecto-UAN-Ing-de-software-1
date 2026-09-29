@@ -1,16 +1,3 @@
-"""
-Pruebas de ServicioAutenticacion.registrar()
-
-Que verifica:
-1. Que un usuario nuevo se registra correctamente.
-2. Que la contraseña se guarda como hash, NUNCA en texto plano.
-3. Que intentar registrar el mismo email dos veces falla la segunda vez.
-
-Nota de migracion: las contraseñas de prueba se cambiaron de "ClaveSegura123"
-a "ClaveSegura123!" (y similares) porque validar_politica_contrasena ahora
-exige al menos un simbolo; con las contraseñas originales, registrar()
-lanzaba ValueError antes de llegar a la logica que estas pruebas verifican.
-"""
 import pytest
 
 from app.extensions import db
@@ -23,7 +10,6 @@ EMAIL_ADMIN_PRUEBA = "prueba_registro_admin@empresa.com"
 
 
 def limpiar_usuario_de_prueba(email):
-    """Borra el usuario de prueba si ya existe, para poder correr la suite varias veces sin chocar."""
     usuario_existente = Usuario.query.filter_by(email=email).first()
     if usuario_existente:
         db.session.delete(usuario_existente)
@@ -32,8 +18,6 @@ def limpiar_usuario_de_prueba(email):
 
 @pytest.fixture(scope="module")
 def admin_prueba():
-    """Crea un admin directo por SQLAlchemy (sin pasar por registrar()) para poder
-    llamar registrar() en las pruebas, que ahora requiere admin_id obligatorio."""
     limpiar_usuario_de_prueba(EMAIL_ADMIN_PRUEBA)
 
     admin = Usuario(
@@ -66,7 +50,6 @@ def test_registro_exitoso(admin_prueba):
     usuario_guardado = Usuario.query.filter_by(email=email_prueba).first()
     assert usuario_guardado is not None, "el usuario no quedó guardado en la base de datos"
 
-    # Verificación crítica: la contraseña NUNCA debe quedar en texto plano
     assert usuario_guardado.contrasena_hash != "ClaveSegura123!", (
         "FALLO GRAVE: la contraseña se guardó en texto plano"
     )

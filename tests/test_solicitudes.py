@@ -1,27 +1,3 @@
-"""
-Pruebas de ServicioSolicitudesTransferencia
-
-Que verifica:
-1-8.   crear_solicitud: caso valido, ticket inexistente, ticket no en progreso,
-       solicitud duplicada, agente destino inexistente, agente destino que no
-       es AGENTE, agente destino de otra area, auto-transferencia (destino ==
-       agente actual del ticket).
-9-12.  aceptar_solicitud: caso valido (mueve ticket.agente_id), solicitud
-       inexistente, solicitud ya resuelta, ticket que dejo de estar en
-       progreso mientras la solicitud seguia pendiente (condicion de carrera
-       simulada moviendo el ticket directamente, sin pasar por el servicio).
-13-15. rechazar_solicitud: caso valido (no toca el ticket), solicitud
-       inexistente, solicitud ya resuelta.
-16-17. cancelar_solicitud: caso valido, solicitud ya resuelta.
-18.    listar_pendientes_para_agente: solo devuelve PENDIENTE del agente
-       destino correspondiente, no las resueltas ni las de otro agente.
-
-Nota: "no puedo entrar a mi correo" clasifica como PERMISOS (coincide con la
-palabra clave "no puedo entrar a" de ClasificadorTickets, ver
-tests/test_clasificador.py). Los agentes de prueba se crean con
-area_soporte=Categoria.PERMISOS para que la validacion de area de
-crear_solicitud los acepte como destino valido.
-"""
 from datetime import datetime
 
 import pytest
@@ -109,9 +85,6 @@ def usuarios_de_prueba():
 
 
 def _crear_ticket_en_progreso(creador, agente):
-    """Helper local: crea un ticket de PERMISOS y lo deja EN_PROGRESO con `agente`
-    como responsable. No es parte del servicio, solo reduce repeticion en este
-    archivo -- cada test sigue siendo responsable de sus propias aserciones."""
     ticket = ServicioTickets.crear_ticket(creador=creador, texto=TEXTO_TICKET_PERMISOS)
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id,
@@ -121,10 +94,6 @@ def _crear_ticket_en_progreso(creador, agente):
     )
     return ticket
 
-
-# ---------------------------------------------------------------------------
-# crear_solicitud
-# ---------------------------------------------------------------------------
 
 def test_crear_solicitud_valida():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
@@ -168,7 +137,6 @@ def test_crear_solicitud_ticket_no_en_progreso():
     destino = Usuario.query.filter_by(email=EMAIL_AGENTE_DESTINO).first()
 
     ticket = ServicioTickets.crear_ticket(creador=normal, texto=TEXTO_TICKET_PERMISOS)
-    # ticket recien creado queda en ABIERTO, nunca paso por cambiar_estado
 
     with pytest.raises(TicketNoEnProgresoError):
         ServicioSolicitudesTransferencia.crear_solicitud(
@@ -244,10 +212,6 @@ def test_crear_solicitud_auto_transferencia():
         )
 
 
-# ---------------------------------------------------------------------------
-# aceptar_solicitud
-# ---------------------------------------------------------------------------
-
 def test_aceptar_solicitud_valida():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     origen = Usuario.query.filter_by(email=EMAIL_AGENTE_ORIGEN).first()
@@ -295,8 +259,6 @@ def test_aceptar_solicitud_ya_resuelta():
 
 
 def test_aceptar_solicitud_ticket_ya_no_en_progreso():
-    """Simula la condicion de carrera: el ticket se cierra (por otra via, aqui
-    se fuerza directo por SQLAlchemy) mientras la solicitud seguia PENDIENTE."""
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     origen = Usuario.query.filter_by(email=EMAIL_AGENTE_ORIGEN).first()
     destino = Usuario.query.filter_by(email=EMAIL_AGENTE_DESTINO).first()
@@ -313,10 +275,6 @@ def test_aceptar_solicitud_ticket_ya_no_en_progreso():
     with pytest.raises(TicketNoEnProgresoError):
         ServicioSolicitudesTransferencia.aceptar_solicitud(solicitud.id, destino.id)
 
-
-# ---------------------------------------------------------------------------
-# rechazar_solicitud
-# ---------------------------------------------------------------------------
 
 def test_rechazar_solicitud_valida():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
@@ -363,10 +321,6 @@ def test_rechazar_solicitud_ya_resuelta():
         ServicioSolicitudesTransferencia.rechazar_solicitud(solicitud.id, destino.id)
 
 
-# ---------------------------------------------------------------------------
-# cancelar_solicitud
-# ---------------------------------------------------------------------------
-
 def test_cancelar_solicitud_valida():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     origen = Usuario.query.filter_by(email=EMAIL_AGENTE_ORIGEN).first()
@@ -398,10 +352,6 @@ def test_cancelar_solicitud_ya_resuelta():
     with pytest.raises(SolicitudNoPendienteError):
         ServicioSolicitudesTransferencia.cancelar_solicitud(solicitud.id, origen.id)
 
-
-# ---------------------------------------------------------------------------
-# listar_pendientes_para_agente
-# ---------------------------------------------------------------------------
 
 def test_listar_pendientes_para_agente():
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()

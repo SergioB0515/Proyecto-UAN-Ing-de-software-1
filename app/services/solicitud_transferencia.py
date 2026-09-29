@@ -363,8 +363,6 @@ class ServicioSolicitudesTransferencia:
 
     @staticmethod
     def listar_por_ticket(ticket_id):
-        """Todas las solicitudes (de cualquier tipo/estado) de un ticket,
-        de la más reciente a la más antigua."""
         query = select(SolicitudTransferencia).where(
             SolicitudTransferencia.ticket_id == ticket_id,
         ).order_by(SolicitudTransferencia.fecha_solicitud.desc())

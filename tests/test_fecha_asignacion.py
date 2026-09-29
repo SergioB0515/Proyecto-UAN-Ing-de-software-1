@@ -1,12 +1,3 @@
-"""
-Pruebas de sincronizacion de Ticket.fecha_asignacion en los 5 puntos donde
-agente_id cambia:
-1. cambiar_estado -> EN_PROGRESO (toma/asignacion inicial)
-2. reasignar_agente (admin reasigna directo)
-3. aceptar_solicitud (transferencia agente-a-agente, tipo REASIGNACION)
-4. aprobar_escalamiento (limpia agente al escalar de area)
-5. aceptar_apelacion (limpia agente al reabrir por apelacion)
-"""
 import pytest
 
 from app.extensions import db
@@ -183,12 +174,6 @@ def test_aceptar_apelacion_limpia_fecha_asignacion():
     )
     
 def test_reabrir_mismo_agente_si_actualiza_fecha_asignacion():
-    """Decision de diseño explicita: reabrir un ticket resetea
-    fecha_asignacion igual que resetea fecha_cierre, incluso si es
-    el mismo agente que ya lo tenia -- una reapertura es un ciclo de
-    trabajo nuevo, no continuacion del anterior. No debe agregarse un
-    guard tipo AgenteYaAsignadoError aqui (a diferencia de
-    reasignar_agente, donde si tiene sentido)."""
     normal = Usuario.query.filter_by(email=EMAIL_NORMAL).first()
     agente = Usuario.query.filter_by(email=EMAIL_AGENTE_1).first()
 
@@ -205,7 +190,7 @@ def test_reabrir_mismo_agente_si_actualiza_fecha_asignacion():
 
     ServicioTickets.cambiar_estado(
         ticket_id=ticket.id, nuevo_estado=EstadoTicket.EN_PROGRESO,
-        actor_id=agente.id, agente_id=agente.id,  # mismo agente reabriendo
+        actor_id=agente.id, agente_id=agente.id,
     )
     db.session.refresh(ticket)
     assert ticket.agente_id == agente.id

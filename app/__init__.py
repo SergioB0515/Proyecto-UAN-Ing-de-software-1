@@ -77,10 +77,6 @@ def create_app():
             
     @app.context_processor
     def inject_notificaciones():
-        # render_template puede invocarse sin contexto de request (p.ej. al
-        # renderizar el HTML de un correo desde el scheduler de SLA o desde
-        # un hilo de envío), y este context processor corre para CUALQUIER
-        # render_template de la app -- sin este chequeo, `session` revienta.
         if not has_request_context() or "usuario_id" not in session:
             return {}
         usuario_id = session["usuario_id"]

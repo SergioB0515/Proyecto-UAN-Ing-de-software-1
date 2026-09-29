@@ -1,25 +1,3 @@
-"""
-Pruebas de ServicioMetricas.metricas_por_agente
-
-Que verifica:
-1. Cuenta correctamente tickets_cerrados dentro de la ventana de dias.
-2. Excluye tickets cerrados fuera de la ventana.
-3. Calcula tiempo_promedio_resolucion_horas con datos conocidos.
-4. Ignora tickets sin fecha_asignacion en el promedio, pero los cuenta
-   en tickets_cerrados y en cumplimiento_sla (caso defensivo).
-5. Calcula cumplimiento_sla correctamente (mezcla de a tiempo/tarde).
-6. Devuelve None en tiempo_promedio y cumplimiento_sla si no hay cerrados.
-7. Filtro por area trae a todos los agentes de esa area.
-8. Sin agente_id ni area -> ValueError.
-
-Nota de aislamiento: los tests que hacen aritmetica exacta (promedios,
-proporciones) usan un agente dedicado via _crear_agente_aislado(), no
-EMAIL_AGENTE_1/2 -- la DB de tests es compartida entre funciones del mismo
-modulo (fixture scope="module"), y reutilizar un agente entre tests con
-aserciones de igualdad exacta arrastra tickets de tests anteriores al
-calculo. EMAIL_AGENTE_1/2 solo se usan donde no importa la cifra exacta
-(test_filtro_por_area_trae_todos_los_agentes).
-"""
 from datetime import datetime, timedelta
 
 import pytest
@@ -71,9 +49,6 @@ def usuarios_de_prueba():
 
 
 def _crear_agente_aislado(sufijo):
-    """Agente con email unico por test -- necesario cuando el test hace
-    aritmetica exacta (promedios, proporciones) sobre metricas_por_agente,
-    ya que la DB de tests es compartida entre funciones del mismo modulo."""
     email = f"prueba_metricas_agente_{sufijo}@empresa.com"
     agente = Usuario(
         nombre=f"Agente Aislado {sufijo}", email=email,
@@ -86,9 +61,6 @@ def _crear_agente_aislado(sufijo):
 
 
 def _crear_ticket_cerrado(agente_id, creador_id, fecha_asignacion, fecha_cierre, fecha_limite):
-    """Ticket insertado directo (sin pasar por ServicioTickets) para controlar
-    exactamente las fechas -- necesario para probar el calculo de promedios
-    y de cumplimiento de SLA con valores conocidos."""
     ticket = Ticket(
         texto="ticket de prueba metricas agente",
         categoria=Categoria.PERMISOS,
@@ -114,13 +86,13 @@ def test_cuenta_solo_dentro_de_la_ventana():
     _crear_ticket_cerrado(
         agente.id, normal.id,
         fecha_asignacion=ahora - timedelta(days=5),
-        fecha_cierre=ahora - timedelta(days=3),   # dentro de 30 dias
-        fecha_limite=ahora - timedelta(days=2),   # cerro a tiempo
+        fecha_cierre=ahora - timedelta(days=3),
+        fecha_limite=ahora - timedelta(days=2),
     )
     _crear_ticket_cerrado(
         agente.id, normal.id,
         fecha_asignacion=ahora - timedelta(days=60),
-        fecha_cierre=ahora - timedelta(days=45),  # fuera de 30 dias
+        fecha_cierre=ahora - timedelta(days=45),
         fecha_limite=ahora - timedelta(days=44),
     )
 
@@ -136,7 +108,6 @@ def test_tiempo_promedio_resolucion_con_valores_conocidos():
     agente = _crear_agente_aislado("promedio")
     ahora = datetime.now()
 
-    # 2 horas y 4 horas de duracion -> promedio esperado 3.0
     _crear_ticket_cerrado(
         agente.id, normal.id,
         fecha_asignacion=ahora - timedelta(days=1, hours=2),
@@ -186,14 +157,12 @@ def test_cumplimiento_sla_mezcla_a_tiempo_y_tarde():
     agente = _crear_agente_aislado("cumplimiento_sla")
     ahora = datetime.now()
 
-    # a tiempo: fecha_cierre <= fecha_limite
     _crear_ticket_cerrado(
         agente.id, normal.id,
         fecha_asignacion=ahora - timedelta(hours=5),
         fecha_cierre=ahora - timedelta(hours=3),
         fecha_limite=ahora - timedelta(hours=2),
     )
-    # tarde: fecha_cierre > fecha_limite
     _crear_ticket_cerrado(
         agente.id, normal.id,
         fecha_asignacion=ahora - timedelta(hours=5),
