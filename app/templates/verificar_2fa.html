@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_iconos.html" import icono %}
+{% block title %}{{ _('Verificación en dos pasos') }}{% endblock %}
+{% block content %}
+<div class="auth-shell">
+    <div class="auth-card auth-card-sm">
+        <div class="auth-badge">{{ icono('escudo', 20) }}</div>
+        <h2>{{ _('Verificación en dos pasos') }}</h2>
+        <p class="auth-subtitle">{{ _('Abre tu app de autenticación e ingresa el código de 6 dígitos.') }}</p>
+        <form method="POST" action="{{ url_for('seguridad.verificar_login') }}" data-otp-form>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label class="form-label" for="codigo">{{ _('Código') }}</label>
+            <input type="text" id="codigo" name="codigo" class="form-control otp-input" inputmode="numeric"
+                   autocomplete="one-time-code" maxlength="9" placeholder="000000" autofocus required data-otp>
+            <button type="submit" class="btn btn-primary w-100 mt-3 py-2">{{ _('Verificar') }}</button>
+        </form>
+        <details class="otp-help mt-3">
+            <summary>{{ _('¿No tienes tu teléfono?') }}</summary>
+            <p class="mb-0">{{ _('Escribe uno de tus códigos de respaldo (formato XXXX-XXXX) en el mismo campo. Cada código sirve una sola vez.') }}</p>
+        </details>
+        <div class="auth-foot">
+            <a href="{{ url_for('seguridad.cancelar_verificacion') }}">{{ icono('salir', 14) }} {{ _('Usar otra cuenta') }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

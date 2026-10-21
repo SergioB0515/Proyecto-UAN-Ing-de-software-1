@@ -12,6 +12,21 @@ from app.services.notificaciones import ServicioNotificaciones
 from app.extensions import db
 auth_bp = Blueprint("auth", __name__)
 from app.models.enum import RolUsuario, NivelUsuario, Categoria
+from app.services.doble_factor import ServicioDobleFactor
+import time
+
+
+def completar_inicio_sesion(usuario):
+    session['usuario_id'] = usuario.id
+    session['rol'] = usuario.rol
+    session['area_soporte'] = usuario.area_soporte.value if usuario.area_soporte is not None else None
+    if usuario.rol == RolUsuario.ADMIN:
+        return redirect(url_for("metricas.mostrar_metricas"))
+    elif usuario.rol == RolUsuario.AGENTE:
+        return redirect(url_for("tickets.listar_por_area", area=usuario.area_soporte.value))
+    else:
+        return redirect(url_for("auth.dashboard"))
+
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
@@ -23,15 +38,12 @@ def login():
         usuario, resultado = ServicioAutenticacion.iniciar_sesion(email, contrasena, ip)
 
         if resultado == ResultadoLogin.EXITOSO:
-            session['usuario_id'] = usuario.id
-            session['rol'] = usuario.rol
-            session['area_soporte'] = usuario.area_soporte.value if usuario.area_soporte is not None else None
-            if usuario.rol == RolUsuario.ADMIN:
-                return redirect(url_for("metricas.mostrar_metricas"))
-            elif usuario.rol == RolUsuario.AGENTE:
-                return redirect(url_for("tickets.listar_por_area", area=usuario.area_soporte.value))
-            else:
-                return redirect(url_for("auth.dashboard"))
+            if ServicioDobleFactor.esta_activo(usuario.id):
+                session['2fa_usuario_id'] = usuario.id
+                session['2fa_desde'] = time.time()
+                session['2fa_intentos'] = 0
+                return redirect(url_for("seguridad.verificar_login"))
+            return completar_inicio_sesion(usuario)
 
         elif resultado in (ResultadoLogin.USUARIO_NO_EXISTE, ResultadoLogin.CREDENCIALES_INVALIDAS):
             flash(_("usuario o contraseña incorrectos"), "danger")
@@ -150,6 +162,8 @@ def perfil():
 
     return render_template(
         "perfil.html",
+        dos_pasos_activo=ServicioDobleFactor.esta_activo(usuario.id),
+        codigos_respaldo_restantes=ServicioDobleFactor.codigos_restantes(usuario.id),
         usuario=usuario,
         estadisticas=estadisticas,
         nombre_foto=nombre_foto,

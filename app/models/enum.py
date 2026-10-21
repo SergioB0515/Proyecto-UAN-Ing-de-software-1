@@ -59,6 +59,13 @@ class AccionAuditoria(str, Enum):
     SOLICITAR_APELACION = "solicitar_apelacion"
     ACEPTAR_APELACION = "aceptar_apelacion"
     RECHAZAR_APELACION = "rechazar_apelacion"
+    ACTIVAR_2FA = "activar_2fa"
+    DESACTIVAR_2FA = "desactivar_2fa"
+    VERIFICACION_2FA_FALLIDA = "verificacion_2fa_fallida"
+    USO_CODIGO_RESPALDO = "uso_codigo_respaldo"
+    REGENERAR_CODIGOS_RESPALDO = "regenerar_codigos_respaldo"
+    SOLICITAR_RECUPERACION = "solicitar_recuperacion"
+    RESTABLECER_CONTRASENA = "restablecer_contrasena"
     
 class EstadoSolicitudTransferencia(str, Enum):
     PENDIENTE = "pendiente"

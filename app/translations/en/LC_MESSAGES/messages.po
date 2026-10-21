@@ -2273,6 +2273,871 @@ msgstr "Update on your ticket"
 msgid "Este es un mensaje automático, por favor no respondas a este correo."
 msgstr "This is an automated message, please do not reply to this email."
 
+#: app/templates
+msgid "Saltar al contenido"
+msgstr "Skip to content"
+
+#: app/templates
+msgid "Cambiar tema"
+msgstr "Toggle theme"
+
+#: app/templates
+msgid "Atajos de teclado"
+msgstr "Keyboard shortcuts"
+
+#: app/templates
+msgid "Confirmar acción"
+msgstr "Confirm action"
+
+#: app/templates
+msgid "Esta acción no se puede deshacer fácilmente."
+msgstr "This action cannot be easily undone."
+
+#: app/templates
+msgid "Buscar en la tabla"
+msgstr "Search the table"
+
+#: app/templates
+msgid "Crear un ticket"
+msgstr "Create a ticket"
+
+#: app/templates
+msgid "Cambiar tema claro / oscuro"
+msgstr "Switch between light and dark theme"
+
+#: app/templates
+msgid "Mostrar esta ayuda"
+msgstr "Show this help"
+
+#: app/templates
+msgid "Enviar el formulario desde un cuadro de texto"
+msgstr "Submit the form from a text box"
+
+#: app/templates
+msgid "Mostrar contraseña"
+msgstr "Show password"
+
+#: app/templates
+msgid "Ocultar contraseña"
+msgstr "Hide password"
+
+#: app/templates
+msgid "Filtrar en esta página…"
+msgstr "Filter this page…"
+
+#: app/templates
+msgid "Ningún resultado coincide con tu búsqueda."
+msgstr "No results match your search."
+
+#: app/templates
+msgid "Copiado"
+msgstr "Copied"
+
+#: app/templates
+msgid "Copiar enlace"
+msgstr "Copy link"
+
+#: app/templates
+msgid "Ctrl + Enter para enviar"
+msgstr "Ctrl + Enter to submit"
+
+#: app/templates
+msgid "Volver al inicio"
+msgstr "Back to home"
+
+#: app/templates
+msgid "Página anterior"
+msgstr "Previous page"
+
+#: app/templates
+msgid "Sesión expirada"
+msgstr "Session expired"
+
+#: app/templates
+msgid ""
+"El formulario expiró o no es válido. Recarga la página e inténtalo de "
+"nuevo."
+msgstr "The form expired or is not valid. Reload the page and try again."
+
+#: app/templates
+msgid "Acceso denegado"
+msgstr "Access denied"
+
+#: app/templates
+msgid "No tienes permisos para ver esta página."
+msgstr "You do not have permission to view this page."
+
+#: app/templates
+msgid "Página no encontrada"
+msgstr "Page not found"
+
+#: app/templates
+msgid "La página que buscas no existe o fue movida."
+msgstr "The page you are looking for does not exist or has moved."
+
+#: app/templates
+msgid "Algo salió mal"
+msgstr "Something went wrong"
+
+#: app/templates
+msgid "Ocurrió un error inesperado. Inténtalo de nuevo en unos instantes."
+msgstr "An unexpected error occurred. Please try again in a moment."
+
+#: app/templates
+msgid "Contraer menú"
+msgstr "Collapse menu"
+
+#: app/templates
+msgid "Expandir menú"
+msgstr "Expand menu"
+
+#: app/templates
+msgid "Ordenar"
+msgstr "Sort"
+
+#: app/templates
+msgid "Buscar o ir a…"
+msgstr "Search or jump to…"
+
+#: app/templates
+msgid "Nuevo ticket"
+msgstr "New ticket"
+
+#: app/templates
+msgid "Volver arriba"
+msgstr "Back to top"
+
+#: app/templates
+msgid "Escribe para buscar páginas o un número de ticket"
+msgstr "Type to search pages or a ticket number"
+
+#: app/templates
+#, python-format
+msgid "Ir al ticket #%(id)s"
+msgstr "Go to ticket #%(id)s"
+
+#: app/templates
+msgid "Navegación"
+msgstr "Navigation"
+
+#: app/templates
+msgid "Soporte IT, sin fricción."
+msgstr "IT support, without friction."
+
+#: app/templates
+msgid ""
+"Gestiona incidencias con SLA, clasificación automática y trazabilidad "
+"completa en un solo lugar."
+msgstr ""
+"Manage incidents with SLAs, automatic classification and full "
+"traceability in one place."
+
+#: app/templates
+msgid "Clasificación automática de tickets"
+msgstr "Automatic ticket classification"
+
+#: app/templates
+msgid "Alertas de SLA en tiempo real"
+msgstr "Real-time SLA alerts"
+
+#: app/templates
+msgid "Auditoría de cada acción"
+msgstr "Audit trail for every action"
+
+#: app/templates
+msgid "Sigue el estado de tus solicitudes y sus plazos de atención."
+msgstr "Track the status of your requests and their response deadlines."
+
+#: app/templates
+msgid "Abiertos"
+msgstr "Open"
+
+#: app/templates
+msgid "Vencidos"
+msgstr "Overdue"
+
+#: app/templates
+msgid "Descripción"
+msgstr "Description"
+
+#: app/templates
+msgid "Detalles"
+msgstr "Details"
+
+#: app/templates
+msgid "Estado general del soporte, SLA y desempeño del equipo."
+msgstr "Overall support status, SLAs and team performance."
+
+#: app/templates
+msgid "Consejos para un buen reporte"
+msgstr "Tips for a good report"
+
+#: app/templates
+msgid "Qué pasa y desde cuándo"
+msgstr "What is happening and since when"
+
+#: app/templates
+msgid "Equipo, programa o servicio afectado"
+msgstr "Affected device, program or service"
+
+#: app/templates
+msgid "Mensajes de error exactos"
+msgstr "Exact error messages"
+
+#: app/templates
+msgid ""
+"La categoría y la prioridad se asignan automáticamente a partir de tu "
+"descripción."
+msgstr "Category and priority are assigned automatically from your description."
+
+#: app/templates
+msgid "Buenos días"
+msgstr "Good morning"
+
+#: app/templates
+msgid "Buenas tardes"
+msgstr "Good afternoon"
+
+#: app/templates
+msgid "Buenas noches"
+msgstr "Good evening"
+
+#: app/templates
+msgid "La VPN no conecta desde casa"
+msgstr "VPN won't connect from home"
+
+#: app/templates
+msgid "Moverse entre filas de la tabla"
+msgstr "Move between table rows"
+
+#: app/templates
+msgid "Abrir la fila seleccionada"
+msgstr "Open the selected row"
+
+#: app/templates
+msgid "Sin conexión. Lo que envíes no llegará hasta que vuelvas a estar en línea."
+msgstr ""
+"You are offline. Anything you send will not arrive until you are back "
+"online."
+
+#: app/templates
+msgid "Conexión restablecida."
+msgstr "Back online."
+
+#: app/templates
+msgid "Tiempo restante"
+msgstr "Time left"
+
+#: app/templates
+msgid "Vencido hace"
+msgstr "Overdue by"
+
+#: app/templates
+msgid "Activar notificaciones de escritorio"
+msgstr "Enable desktop notifications"
+
+#: app/templates
+msgid "Ir al panel"
+msgstr "Go to dashboard"
+
+#: app/templates
+msgid "Ir a la lista de tickets"
+msgstr "Go to the ticket list"
+
+#: app/templates
+msgid "Ir a mis tickets"
+msgstr "Go to my tickets"
+
+#: app/templates
+msgid "Recientes"
+msgstr "Recent"
+
+#: app/templates
+msgid "Borrador restaurado"
+msgstr "Draft restored"
+
+#: app/templates
+msgid "Descartar"
+msgstr "Discard"
+
+#: app/templates
+msgid "Notificaciones de escritorio activadas"
+msgstr "Desktop notifications enabled"
+
+#: app/templates
+msgid "caracteres"
+msgstr "characters"
+
+#: app/templates
+msgid "Añade más detalle para una mejor clasificación automática."
+msgstr "Add more detail for better automatic classification."
+
+#: app/templates
+msgid "Bloq Mayús está activado"
+msgstr "Caps Lock is on"
+
+#: app/templates
+msgid "Al menos 8 caracteres"
+msgstr "At least 8 characters"
+
+#: app/templates
+msgid "Una mayúscula"
+msgstr "One uppercase letter"
+
+#: app/templates
+msgid "Una minúscula"
+msgstr "One lowercase letter"
+
+#: app/templates
+msgid "Un número"
+msgstr "One number"
+
+#: app/templates
+msgid "Un símbolo"
+msgstr "One symbol"
+
+#: app/templates
+msgid "Filtros activos"
+msgstr "Active filters"
+
+#: app/templates
+msgid "Quitar filtro"
+msgstr "Remove filter"
+
+#: app/templates
+msgid "Limpiar todo"
+msgstr "Clear all"
+
+#: app/templates
+msgid "Vista compacta"
+msgstr "Compact view"
+
+#: app/templates
+msgid "Imprimir"
+msgstr "Print"
+
+#: app/templates/panel_metricas.html
+#, python-format
+msgid "%(num)d agente"
+msgid_plural "%(num)d agentes"
+msgstr[0] "%(num)d agent"
+msgstr[1] "%(num)d agents"
+
+#: app/templates/panel_metricas.html
+#, python-format
+msgid "%(num)d cerrado"
+msgid_plural "%(num)d cerrados"
+msgstr[0] "%(num)d closed"
+msgstr[1] "%(num)d closed"
+
+#: app/templates
+msgid "Escribir un comentario (en un ticket)"
+msgstr "Write a comment (on a ticket)"
+
+#: app/templates
+msgid "Copiar"
+msgstr "Copy"
+
+#: app/templates
+msgid "Traspasos de tickets entre agentes que esperan una decisión."
+msgstr "Ticket handovers between agents awaiting a decision."
+
+#: app/templates
+msgid "Tickets que un agente pidió mover a otra área de soporte."
+msgstr "Tickets an agent asked to move to another support area."
+
+#: app/templates
+msgid "Al aprobar, el SLA del ticket se recalcula con la nueva prioridad."
+msgstr "When approved, the ticket SLA is recalculated with the new priority."
+
+#: app/templates
+msgid "Usuarios que no están de acuerdo con el cierre de su ticket."
+msgstr "Users who disagree with the closing of their ticket."
+
+#: app/templates
+msgid ""
+"El clasificador no estuvo seguro: confirma la categoría correcta. Tus "
+"correcciones ayudan a reentrenarlo."
+msgstr ""
+"The classifier was not sure: confirm the correct category. Your "
+"corrections help retrain it."
+
+#: app/templates
+msgid "Recordar mi email en este equipo"
+msgstr "Remember my email on this device"
+
+#: app/templates
+msgid ""
+"Registro de cada acción relevante: inicios de sesión, cambios de estado, "
+"comentarios y más."
+msgstr ""
+"A record of every relevant action: logins, status changes, comments and "
+"more."
+
+#: app/templates
+msgid ""
+"Términos y pesos que usa la primera capa del clasificador para sugerir la"
+" categoría."
+msgstr ""
+"Terms and weights used by the classifier's first layer to suggest the "
+"category."
+
+#: app/templates
+msgid "Todos los tickets, con filtros por estado, categoría, prioridad y SLA."
+msgstr "All tickets, filterable by status, category, priority and SLA."
+
+#: app/templates
+msgid "Preferencias"
+msgstr "Preferences"
+
+#: app/templates
+msgid "Se guardan en este navegador."
+msgstr "Saved in this browser."
+
+#: app/templates
+msgid "Tema"
+msgstr "Theme"
+
+#: app/templates
+msgid "Apariencia de la aplicación"
+msgstr "App appearance"
+
+#: app/templates
+msgid "Oscuro"
+msgstr "Dark"
+
+#: app/templates
+msgid "Claro"
+msgstr "Light"
+
+#: app/templates
+msgid "Sistema"
+msgstr "System"
+
+#: app/templates
+msgid "Idioma de la interfaz"
+msgstr "Interface language"
+
+#: app/templates
+msgid "Filas más densas en las tablas"
+msgstr "Denser rows in tables"
+
+#: app/templates
+msgid "Menú lateral contraído"
+msgstr "Collapsed sidebar"
+
+#: app/templates
+msgid "Mostrar solo iconos en el menú"
+msgstr "Show only icons in the menu"
+
+#: app/templates
+msgid "Historial de recientes"
+msgstr "Recent history"
+
+#: app/templates
+msgid "Tickets visitados que aparecen en Ctrl+K"
+msgstr "Visited tickets shown in Ctrl+K"
+
+#: app/services/doble_factor.py:124 app/services/doble_factor.py:153
+msgid "La verificación en dos pasos ya está activa"
+msgstr "Two-step verification is already on"
+
+#: app/services/doble_factor.py:137
+msgid "No se pudo iniciar la configuración de la verificación en dos pasos"
+msgstr "Could not start two-step verification setup"
+
+#: app/services/doble_factor.py:151
+msgid "Primero inicia la configuración de la verificación en dos pasos"
+msgstr "Start the two-step verification setup first"
+
+#: app/services/doble_factor.py:158
+msgid ""
+"El código no es válido. Revisa que la hora de tu teléfono esté "
+"sincronizada."
+msgstr "The code is not valid. Check that your phone clock is in sync."
+
+#: app/services/doble_factor.py:165
+msgid "No se pudo activar la verificación en dos pasos"
+msgstr "Could not turn on two-step verification"
+
+#: app/services/doble_factor.py:170
+#, python-format
+msgid "Se activó la verificación en dos pasos para %(p1)s"
+msgstr "Two-step verification turned on for %(p1)s"
+
+#: app/services/doble_factor.py:178 app/services/doble_factor.py:251
+msgid "La verificación en dos pasos no está activa"
+msgstr "Two-step verification is not on"
+
+#: app/services/doble_factor.py:182
+msgid "Demasiados códigos incorrectos. Intenta de nuevo en unos minutos."
+msgstr "Too many wrong codes. Try again in a few minutes."
+
+#: app/services/doble_factor.py:208
+msgid "No se pudo registrar el intento de verificación"
+msgstr "Could not record the verification attempt"
+
+#: app/services/doble_factor.py:212
+msgid "Código de verificación en dos pasos incorrecto"
+msgstr "Wrong two-step verification code"
+
+#: app/services/doble_factor.py:214
+msgid "El código no es válido"
+msgstr "The code is not valid"
+
+#: app/services/doble_factor.py:218
+msgid "No se pudo completar la verificación en dos pasos"
+msgstr "Could not complete two-step verification"
+
+#: app/services/doble_factor.py:224
+#, python-format
+msgid "Se usó un código de respaldo (quedan %(p1)s)"
+msgstr "A backup code was used (%(p1)s left)"
+
+#: app/services/doble_factor.py:234
+msgid "No se pudieron regenerar los códigos de respaldo"
+msgstr "Could not regenerate backup codes"
+
+#: app/services/doble_factor.py:238
+#, python-format
+msgid "Se regeneraron los códigos de respaldo de %(p1)s"
+msgstr "Backup codes regenerated for %(p1)s"
+
+#: app/services/doble_factor.py:254
+msgid "No se pudo desactivar la verificación en dos pasos"
+msgstr "Could not turn off two-step verification"
+
+#: app/services/doble_factor.py:258
+#, python-format
+msgid "Se desactivó la verificación en dos pasos para %(p1)s"
+msgstr "Two-step verification turned off for %(p1)s"
+
+#: app/services/recuperacion.py:66
+msgid "No se pudo procesar la solicitud de recuperación"
+msgstr "Could not process the recovery request"
+
+#: app/services/recuperacion.py:71
+#, python-format
+msgid "Se solicitó recuperar la contraseña de %(p1)s"
+msgstr "Password recovery requested for %(p1)s"
+
+#: app/services/recuperacion.py:81
+msgid "Sistema de Tickets IT — Restablecer contraseña"
+msgstr "IT Ticket System — Reset password"
+
+#: app/services/recuperacion.py:83
+#, python-format
+msgid ""
+"Hola %(nombre)s, recibimos una solicitud para restablecer tu contraseña. "
+"Abre este enlace en los próximos %(min)s minutos: %(enlace)s . Si no "
+"fuiste tú, ignora este correo."
+msgstr ""
+"Hi %(nombre)s, we received a request to reset your password. Open this "
+"link within the next %(min)s minutes: %(enlace)s . If it was not you, "
+"ignore this email."
+
+#: app/services/recuperacion.py:121 app/services/recuperacion.py:124
+msgid "El enlace de recuperación no es válido o ya expiró"
+msgstr "The recovery link is not valid or has expired"
+
+#: app/services/recuperacion.py:134 app/templates/base.html:366
+msgid "Las contraseñas no coinciden"
+msgstr "Passwords do not match"
+
+#: app/services/recuperacion.py:149
+msgid "No se pudo restablecer la contraseña"
+msgstr "Could not reset the password"
+
+#: app/services/recuperacion.py:154
+#, python-format
+msgid "Se restableció la contraseña de %(p1)s mediante enlace de recuperación"
+msgstr "Password for %(p1)s was reset using a recovery link"
+
+#: app/routes/seguridad.py:44
+msgid "Tu sesión de verificación expiró. Inicia sesión de nuevo."
+msgstr "Your verification session expired. Sign in again."
+
+#: app/routes/seguridad.py:58
+msgid "Demasiados códigos incorrectos. Inicia sesión de nuevo."
+msgstr "Too many wrong codes. Sign in again."
+
+#: app/routes/seguridad.py:120
+msgid "Verificación en dos pasos activada"
+msgstr "Two-step verification turned on"
+
+#: app/routes/seguridad.py:133
+msgid "Se generaron nuevos códigos de respaldo; los anteriores ya no sirven"
+msgstr "New backup codes generated; the previous ones no longer work"
+
+#: app/routes/seguridad.py:142
+msgid "Verificación en dos pasos desactivada"
+msgstr "Two-step verification turned off"
+
+#: app/routes/seguridad.py:161
+msgid ""
+"Si el email está registrado, te enviamos un enlace para restablecer la "
+"contraseña. Revisa tu bandeja de entrada."
+msgstr ""
+"If the email is registered, we sent you a link to reset your password. "
+"Check your inbox."
+
+#: app/routes/seguridad.py:188
+msgid "Contraseña restablecida. Ya puedes iniciar sesión."
+msgstr "Password reset. You can sign in now."
+
+#: app/templates/dos_pasos_configurar.html:3
+#: app/templates/dos_pasos_configurar.html:7 app/templates/perfil.html:86
+#: app/traducciones.py:43
+msgid "Activar verificación en dos pasos"
+msgstr "Turn on two-step verification"
+
+#: app/traducciones.py:44
+msgid "Desactivar verificación en dos pasos"
+msgstr "Turn off two-step verification"
+
+#: app/traducciones.py:45
+msgid "Verificación en dos pasos fallida"
+msgstr "Failed two-step verification"
+
+#: app/traducciones.py:46
+msgid "Uso de código de respaldo"
+msgstr "Backup code used"
+
+#: app/traducciones.py:47
+msgid "Regenerar códigos de respaldo"
+msgstr "Regenerate backup codes"
+
+#: app/traducciones.py:48
+msgid "Solicitud de recuperación de contraseña"
+msgstr "Password recovery request"
+
+#: app/templates/email/recuperar_contrasena.html:7 app/traducciones.py:49
+msgid "Restablecer contraseña"
+msgstr "Reset password"
+
+#: app/templates/perfil.html:60 app/templates/verificar_2fa.html:3
+#: app/templates/verificar_2fa.html:8
+msgid "Verificación en dos pasos"
+msgstr "Two-step verification"
+
+#: app/templates/verificar_2fa.html:9
+msgid "Abre tu app de autenticación e ingresa el código de 6 dígitos."
+msgstr "Open your authenticator app and enter the 6-digit code."
+
+#: app/templates/dos_pasos_configurar.html:36 app/templates/perfil.html:75
+#: app/templates/verificar_2fa.html:12
+msgid "Código"
+msgstr "Code"
+
+#: app/templates/verificar_2fa.html:15
+msgid "Verificar"
+msgstr "Verify"
+
+#: app/templates/verificar_2fa.html:18
+msgid "¿No tienes tu teléfono?"
+msgstr "Don't have your phone?"
+
+#: app/templates/verificar_2fa.html:19
+msgid ""
+"Escribe uno de tus códigos de respaldo (formato XXXX-XXXX) en el mismo "
+"campo. Cada código sirve una sola vez."
+msgstr ""
+"Type one of your backup codes (format XXXX-XXXX) in the same field. Each "
+"code works only once."
+
+#: app/templates/verificar_2fa.html:22
+msgid "Usar otra cuenta"
+msgstr "Use another account"
+
+#: app/templates/recuperar.html:3 app/templates/recuperar.html:8
+msgid "Recuperar contraseña"
+msgstr "Recover password"
+
+#: app/templates/recuperar.html:9
+msgid ""
+"Escribe el email de tu cuenta y te enviaremos un enlace para crear una "
+"contraseña nueva."
+msgstr ""
+"Enter your account email and we'll send you a link to create a new "
+"password."
+
+#: app/templates/recuperar.html:14
+msgid "Enviar enlace"
+msgstr "Send link"
+
+#: app/templates/recuperar.html:17
+msgid "Volver a iniciar sesión"
+msgstr "Back to sign in"
+
+#: app/templates/restablecer.html:8
+msgid "Crea una contraseña nueva"
+msgstr "Create a new password"
+
+#: app/templates/restablecer.html:9
+#, python-format
+msgid "Para la cuenta %(email)s."
+msgstr "For the account %(email)s."
+
+#: app/templates/restablecer.html:18
+msgid "Confirmar contraseña"
+msgstr "Confirm password"
+
+#: app/templates/restablecer.html:21
+msgid "Guardar contraseña"
+msgstr "Save password"
+
+#: app/templates/dos_pasos_configurar.html:8
+msgid ""
+"Además de tu contraseña, se pedirá un código de tu teléfono al iniciar "
+"sesión."
+msgstr "Besides your password, a code from your phone will be required to sign in."
+
+#: app/templates/dos_pasos_configurar.html:17
+msgid "Instala una app de autenticación"
+msgstr "Install an authenticator app"
+
+#: app/templates/dos_pasos_configurar.html:18
+msgid "Google Authenticator, Microsoft Authenticator, Authy o la que prefieras."
+msgstr "Google Authenticator, Microsoft Authenticator, Authy or any you prefer."
+
+#: app/templates/dos_pasos_configurar.html:21
+msgid "Escanea este código QR"
+msgstr "Scan this QR code"
+
+#: app/templates/dos_pasos_configurar.html:23
+msgid "Código QR para la app de autenticación"
+msgstr "QR code for the authenticator app"
+
+#: app/templates/dos_pasos_configurar.html:25
+msgid "¿No puedes escanearlo? Ingresa esta clave manualmente:"
+msgstr "Can't scan it? Enter this key manually:"
+
+#: app/templates/dos_pasos_configurar.html:27
+#, python-format
+msgid "Cuenta: %(email)s · Tipo: basado en tiempo"
+msgstr "Account: %(email)s · Type: time-based"
+
+#: app/templates/dos_pasos_configurar.html:32
+msgid "Escribe el código que muestra la app"
+msgstr "Enter the code shown in the app"
+
+#: app/templates/dos_pasos_configurar.html:37
+msgid "Activar"
+msgstr "Turn on"
+
+#: app/templates/dos_pasos_configurar.html:45
+msgid "¿Por qué activarla?"
+msgstr "Why turn it on?"
+
+#: app/templates/dos_pasos_configurar.html:47
+msgid "Una contraseña filtrada ya no basta para entrar"
+msgstr "A leaked password is no longer enough to get in"
+
+#: app/templates/dos_pasos_configurar.html:48
+msgid "El código cambia cada 30 segundos"
+msgstr "The code changes every 30 seconds"
+
+#: app/templates/dos_pasos_configurar.html:49
+msgid "Funciona sin internet en el teléfono"
+msgstr "Works without internet on the phone"
+
+#: app/templates/dos_pasos_configurar.html:51
+msgid "Al activarla recibirás códigos de respaldo por si pierdes el teléfono."
+msgstr "When you turn it on you'll get backup codes in case you lose your phone."
+
+#: app/templates/base.html:367 app/templates/dos_pasos_codigos.html:3
+msgid "Códigos de respaldo"
+msgstr "Backup codes"
+
+#: app/templates/dos_pasos_codigos.html:7
+msgid "Guarda tus códigos de respaldo"
+msgstr "Save your backup codes"
+
+#: app/templates/dos_pasos_codigos.html:8
+msgid ""
+"Úsalos si pierdes el teléfono. Cada código sirve una vez y no se volverán"
+" a mostrar."
+msgstr ""
+"Use them if you lose your phone. Each code works once and they won't be "
+"shown again."
+
+#: app/templates/dos_pasos_codigos.html:16
+msgid ""
+"Guárdalos en un lugar seguro (gestor de contraseñas o impresos). Quien "
+"los tenga puede pasar el segundo paso."
+msgstr ""
+"Keep them somewhere safe (a password manager or printed). Anyone who has "
+"them can pass the second step."
+
+#: app/templates/dos_pasos_codigos.html:22
+msgid "Copiar todos"
+msgstr "Copy all"
+
+#: app/templates/dos_pasos_codigos.html:23
+msgid "Descargar .txt"
+msgstr "Download .txt"
+
+#: app/templates/dos_pasos_codigos.html:25
+msgid "Ya los guardé"
+msgstr "I've saved them"
+
+#: app/templates/email/recuperar_contrasena.html:21
+msgid "Restablece tu contraseña"
+msgstr "Reset your password"
+
+#: app/templates/email/recuperar_contrasena.html:22
+#, python-format
+msgid "Hola %(nombre)s,"
+msgstr "Hi %(nombre)s,"
+
+#: app/templates/email/recuperar_contrasena.html:23
+#, python-format
+msgid ""
+"Recibimos una solicitud para restablecer la contraseña de tu cuenta. El "
+"enlace vence en %(min)s minutos y solo funciona una vez."
+msgstr ""
+"We received a request to reset your account password. The link expires in"
+" %(min)s minutes and works only once."
+
+#: app/templates/email/recuperar_contrasena.html:26
+msgid "Crear contraseña nueva"
+msgstr "Create new password"
+
+#: app/templates/email/recuperar_contrasena.html:29
+msgid "Si el botón no funciona, copia este enlace en tu navegador:"
+msgstr "If the button doesn't work, copy this link into your browser:"
+
+#: app/templates/email/recuperar_contrasena.html:33
+msgid ""
+"Si no solicitaste este cambio, ignora este correo: tu contraseña seguirá "
+"siendo la misma."
+msgstr ""
+"If you didn't request this change, ignore this email: your password will "
+"stay the same."
+
+#: app/templates/perfil.html:61
+msgid "Pide un código de tu teléfono además de la contraseña."
+msgstr "Asks for a code from your phone in addition to the password."
+
+#: app/templates/perfil.html:71
+#, python-format
+msgid "Te queda %(num)d código de respaldo."
+msgid_plural "Te quedan %(num)d códigos de respaldo."
+msgstr[0] "You have %(num)d backup code left."
+msgstr[1] "You have %(num)d backup codes left."
+
+#: app/templates/perfil.html:76
+msgid "Nuevos códigos de respaldo"
+msgstr "New backup codes"
+
+#: app/templates/perfil.html:81
+msgid "Tu cuenta quedará protegida solo con la contraseña."
+msgstr "Your account will be protected by the password only."
+
+#: app/templates/login.html:49
+msgid "¿Olvidaste tu contraseña?"
+msgstr "Forgot your password?"
+
 #~ msgid "Métricas"
 #~ msgstr "Metrics"
 

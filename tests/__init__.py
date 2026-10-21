@@ -40,6 +40,8 @@ def create_app():
     from app.models.apelacion import ApelacionCierre
     from app.models.palabra_clave import PalabraClave
     from app.models.correccion_clasificacion import CorreccionClasificacion
+    from app.models.doble_factor import DobleFactor
+    from app.models.token_recuperacion import TokenRecuperacion
 
     with app.app_context():
         db.drop_all()

@@ -16,15 +16,15 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label class="form-label">{{ _('Nombre') }}</label>
-                        <input type="text" name="nombre" class="form-control" required>
+                        <input type="text" name="nombre" class="form-control" autocomplete="off" autofocus required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{ _('Email') }}</label>
-                        <input type="email" name="email" class="form-control" required>
+                        <input type="email" name="email" class="form-control" autocomplete="off" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">{{ _('Contraseña') }}</label>
-                        <input type="password" name="contrasena" class="form-control" required>
+                        <input type="password" name="contrasena" class="form-control" autocomplete="new-password" data-politica required>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">

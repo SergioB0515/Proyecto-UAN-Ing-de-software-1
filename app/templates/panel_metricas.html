@@ -1,19 +1,25 @@
 {% extends "base.html" %}
 {% block title %}{{ _('Panel de Métricas') }}{% endblock %}
+{% from "_iconos.html" import icono %}
 {% block content %}
 <div class="page-header d-flex justify-content-between align-items-center">
-    <h2>{{ _('Panel de Métricas') }}</h2>
+    <div>
+        <div class="eyebrow" data-saludo data-nombre="{{ usuario_actual.nombre.split()[0] if usuario_actual else '' }}"></div>
+        <h2>{{ _('Panel de Métricas') }}</h2>
+        <span class="text-muted">{{ _('Estado general del soporte, SLA y desempeño del equipo.') }}</span>
+    </div>
     <div class="d-flex gap-2">
-        <a href="{{ url_for('metricas.exportar_metricas', formato='csv') }}" class="btn btn-outline-secondary btn-sm">{{ _('Exportar CSV') }}</a>
-        <a href="{{ url_for('metricas.exportar_metricas', formato='xlsx') }}" class="btn btn-outline-secondary btn-sm">{{ _('Exportar Excel') }}</a>
+        <a href="{{ url_for('metricas.exportar_metricas', formato='csv') }}" class="btn btn-outline-secondary btn-sm">{{ icono('descargar', 15) }} {{ _('Exportar CSV') }}</a>
+        <a href="{{ url_for('metricas.exportar_metricas', formato='xlsx') }}" class="btn btn-outline-secondary btn-sm">{{ icono('descargar', 15) }} {{ _('Exportar Excel') }}</a>
     </div>
 </div>
 
 <div class="row mb-4 g-3">
     <div class="col-md-3">
         <a href="{{ url_for('tickets.listar_admin', vista='vencidos_actuales') }}" class="text-decoration-none">
-            <div class="card text-center h-100">
+            <div class="card stat-card h-100">
                 <div class="card-body">
+                    <span class="stat-ico t-danger">{{ icono('alerta', 17) }}</span>
                     <h6 class="card-title">{{ _('Vencidos actualmente') }}</h6>
                     <p class="fs-3 mb-0">{{ metricas.tickets_vencidos_actualmente }}</p>
                 </div>
@@ -22,8 +28,9 @@
     </div>
     <div class="col-md-3">
         <a href="{{ url_for('tickets.listar_admin', vista='proximos_actuales') }}" class="text-decoration-none">
-            <div class="card text-center h-100">
+            <div class="card stat-card h-100">
                 <div class="card-body">
+                    <span class="stat-ico t-warn">{{ icono('reloj', 17) }}</span>
                     <h6 class="card-title">{{ _('Próximos a vencer') }}</h6>
                     <p class="fs-3 mb-0">{{ metricas.tickets_proximos_a_vencer_actualmente }}</p>
                 </div>
@@ -32,8 +39,9 @@
     </div>
     <div class="col-md-3">
         <a href="{{ url_for('tickets.listar_admin', vista='vencidos_30_dias') }}" class="text-decoration-none">
-            <div class="card text-center h-100">
+            <div class="card stat-card h-100">
                 <div class="card-body">
+                    <span class="stat-ico t-info">{{ icono('calendario', 17) }}</span>
                     <h6 class="card-title">{{ _('Vencidos últimos 30 días') }}</h6>
                     <p class="fs-3 mb-0">{{ metricas.tickets_vencidos_ultimos_30_dias }}</p>
                 </div>
@@ -41,9 +49,10 @@
         </a>
     </div>
     <div class="col-md-3">
-        <div class="card text-center h-100">
+        <div class="card stat-card h-100">
             <div class="card-body">
-                <h6 class="card-title">{{ _('Cantidad de agentes') }}</h6>
+                <span class="stat-ico ">{{ icono('usuarios', 17) }}</span>
+                    <h6 class="card-title">{{ _('Cantidad de agentes') }}</h6>
                 <p class="fs-3 mb-0">{{ metricas.cantidad_agentes }}</p>
             </div>
         </div>
@@ -112,9 +121,10 @@
             </div>
             <div class="row g-3 p-3">
                 <div class="col-md-3">
-                    <div class="card text-center h-100">
+                    <div class="card stat-card h-100">
                         <div class="card-body">
-                            <h6 class="card-title">{{ _('Tickets en revisión') }}</h6>
+                            <span class="stat-ico t-warn">{{ icono('ia', 17) }}</span>
+                    <h6 class="card-title">{{ _('Tickets en revisión') }}</h6>
                             <p class="fs-3 mb-0">
                                 <a href="{{ url_for('tickets.revision_clasificacion') }}">{{ metricas_confianza.tickets_en_revision }}</a>
                             </p>
@@ -122,9 +132,10 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-center h-100">
+                    <div class="card stat-card h-100">
                         <div class="card-body">
-                            <h6 class="card-title">{{ _('Tasa de corrección (30 días)') }}</h6>
+                            <span class="stat-ico ">{{ icono('historial', 17) }}</span>
+                    <h6 class="card-title">{{ _('Tasa de corrección (30 días)') }}</h6>
                             <p class="fs-3 mb-0">
                                 {% if metricas_confianza.tasa_correccion_30d is not none %}
                                     {{ "%.1f"|format(metricas_confianza.tasa_correccion_30d * 100) }}%
@@ -136,9 +147,10 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-center h-100">
+                    <div class="card stat-card h-100">
                         <div class="card-body">
-                            <h6 class="card-title">{{ _('Exactitud en producción (30 días)') }}</h6>
+                            <span class="stat-ico t-ok">{{ icono('objetivo', 17) }}</span>
+                    <h6 class="card-title">{{ _('Exactitud en producción (30 días)') }}</h6>
                             <p class="fs-3 mb-0">
                                 {% if metricas_confianza.exactitud_produccion_30d is not none %}
                                     {{ "%.1f"|format(metricas_confianza.exactitud_produccion_30d * 100) }}%
@@ -150,9 +162,10 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card text-center h-100">
+                    <div class="card stat-card h-100">
                         <div class="card-body">
-                            <h6 class="card-title">{{ _('Exactitud de laboratorio') }}</h6>
+                            <span class="stat-ico t-info">{{ icono('grafico', 17) }}</span>
+                    <h6 class="card-title">{{ _('Exactitud de laboratorio') }}</h6>
                             <p class="fs-3 mb-0">
                                 {% if metricas_confianza.exactitud_laboratorio is not none %}
                                     {{ "%.1f"|format(metricas_confianza.exactitud_laboratorio * 100) }}%
@@ -194,14 +207,14 @@
                         <h6 class="mt-3 mb-0">
                             {{ area.value | etiqueta }}
                             <span class="text-muted small">
-                                &middot; {{ _('%(n)s agentes', n=resumen.cantidad_agentes) }}
-                                &middot; {{ _('%(n)s cerrados', n=resumen.tickets_cerrados) }}
+                                &middot; {{ ngettext('%(num)d agente', '%(num)d agentes', resumen.cantidad_agentes) }}
+                                &middot; {{ ngettext('%(num)d cerrado', '%(num)d cerrados', resumen.tickets_cerrados) }}
                                 {% if resumen.cumplimiento_sla_promedio is not none %}
                                 &middot; {{ _('SLA prom.') }} {{ "%.0f"|format(resumen.cumplimiento_sla_promedio * 100) }}%
                                 {% endif %}
                             </span>
                         </h6>
-                        <button class="btn btn-sm btn-outline-secondary" type="button"
+                        <button class="btn btn-sm btn-outline-secondary btn-expandir" type="button" aria-expanded="false"
                                 data-bs-toggle="collapse" data-bs-target="#detalleArea{{ loop.index }}">
                             {{ _('Expandir') }}
                         </button>
@@ -249,6 +262,52 @@
     const datosPorArea = {{ grafico_por_area | tojson }};
     const canvas = document.getElementById("graficoCumplimientoAgentes");
 
+    function paleta() {
+        const estilo = getComputedStyle(document.documentElement);
+        return {
+            linea: estilo.getPropertyValue("--accent").trim(),
+            texto: estilo.getPropertyValue("--ink-soft").trim(),
+            rejilla: estilo.getPropertyValue("--line").trim(),
+            superficie: estilo.getPropertyValue("--surface").trim(),
+        };
+    }
+
+    function conAlfa(color, a) {
+        const h = color.replace('#', '');
+        if (h.length !== 6) return color;
+        return 'rgba(' + parseInt(h.slice(0, 2), 16) + ',' + parseInt(h.slice(2, 4), 16) + ',' + parseInt(h.slice(4, 6), 16) + ',' + a + ')';
+    }
+
+    function aplicarPaleta(grafico) {
+        const p = paleta();
+        const ds = grafico.data.datasets[0];
+        ds.borderColor = p.linea;
+        ds.fill = true;
+        ds.backgroundColor = function (ctx) {
+            const area = ctx.chart.chartArea;
+            if (!area) return conAlfa(p.linea, 0.15);
+            const g = ctx.chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
+            g.addColorStop(0, conAlfa(p.linea, 0.32));
+            g.addColorStop(1, conAlfa(p.linea, 0));
+            return g;
+        };
+        ds.pointHoverRadius = 6;
+        grafico.options.plugins.tooltip = {
+            backgroundColor: p.superficie, titleColor: p.texto, bodyColor: p.linea,
+            borderColor: p.rejilla, borderWidth: 1, padding: 10, cornerRadius: 8, displayColors: false,
+        };
+        grafico.options.interaction = { mode: 'index', intersect: false };
+        ds.pointBackgroundColor = p.superficie;
+        ds.pointBorderColor = p.linea;
+        grafico.options.scales.x.ticks.color = p.texto;
+        grafico.options.scales.y.ticks.color = p.texto;
+        grafico.options.scales.x.grid.color = p.rejilla;
+        grafico.options.scales.y.grid.color = p.rejilla;
+        grafico.update();
+    }
+
+    Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+
     const grafico = new Chart(canvas, {
         type: "line",
         data: {
@@ -256,17 +315,24 @@
             datasets: [{
                 label: "{{ _('Cumplimiento SLA') }} (%)",
                 data: datosPorArea.todas.valores,
-                fill: false,
-                borderColor: "#4a5fd6",
-                tension: 0.2,
+                fill: true,
+                borderWidth: 2,
+                tension: 0.25,
                 pointRadius: 4,
+                pointBorderWidth: 2,
             }],
         },
         options: {
-            scales: { y: { beginAtZero: true, max: 100 } },
+            scales: {
+                x: { ticks: {}, grid: { drawTicks: false } },
+                y: { beginAtZero: true, max: 100, ticks: {}, grid: { drawTicks: false } },
+            },
             plugins: { legend: { display: false } },
         },
     });
+
+    aplicarPaleta(grafico);
+    document.addEventListener("themechange", function () { aplicarPaleta(grafico); });
 
     const selector = document.getElementById("selectorArea");
     const bloques = document.querySelectorAll(".bloque-area");

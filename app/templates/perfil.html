@@ -1,28 +1,10 @@
 {% extends "base.html" %}
 {% block title %}{{ _('Mi perfil') }}{% endblock %}
+{% from "_iconos.html" import icono %}
 {% block content %}
-<style>
-    .avatar-perfil {
-        width: 96px;
-        height: 96px;
-        border-radius: 50%;
-        object-fit: cover;
-        display: block;
-    }
-    .avatar-iniciales {
-        width: 96px;
-        height: 96px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        font-weight: 600;
-        color: #fff;
-        background: linear-gradient(135deg, var(--accent-500), var(--cyan-500));
-    }
-</style>
-<h2 class="mb-4">{{ _('Mi perfil') }}</h2>
+<div class="page-header">
+    <h2>{{ _('Mi perfil') }}</h2>
+</div>
 
 <div class="row g-4">
     <div class="col-md-6">
@@ -71,6 +53,42 @@
             </div>
         </div>
 
+        <div class="card mb-4" id="seguridad">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                    <div>
+                        <h5 class="card-title mb-1">{{ _('Verificación en dos pasos') }}</h5>
+                        <p class="text-muted small mb-0">{{ _('Pide un código de tu teléfono además de la contraseña.') }}</p>
+                    </div>
+                    {% if dos_pasos_activo %}
+                    <span class="badge-pill estado-cerrado">{{ _('Activa') }}</span>
+                    {% else %}
+                    <span class="badge-pill">{{ _('Inactiva') }}</span>
+                    {% endif %}
+                </div>
+                {% if dos_pasos_activo %}
+                <p class="small mb-3 {% if codigos_respaldo_restantes <= 2 %}text-warning{% else %}text-muted{% endif %}">
+                    {{ ngettext('Te queda %(num)d código de respaldo.', 'Te quedan %(num)d códigos de respaldo.', codigos_respaldo_restantes) }}
+                </p>
+                <form method="POST" action="{{ url_for('seguridad.regenerar_codigos') }}" class="d-flex gap-2 mb-2">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="text" name="codigo" class="form-control form-control-sm otp-input-sm" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="000000" required data-otp aria-label="{{ _('Código') }}">
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">{{ _('Nuevos códigos de respaldo') }}</button>
+                </form>
+                <form method="POST" action="{{ url_for('seguridad.desactivar_2fa') }}" class="d-flex gap-2">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="password" name="contrasena" class="form-control form-control-sm" autocomplete="current-password" placeholder="{{ _('Contraseña actual') }}" required aria-label="{{ _('Contraseña actual') }}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="{{ _('Tu cuenta quedará protegida solo con la contraseña.') }}">{{ _('Desactivar') }}</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{{ url_for('seguridad.iniciar_2fa') }}" class="mt-3">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-primary btn-sm">{{ icono('escudo', 15) }} {{ _('Activar verificación en dos pasos') }}</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title mb-3">{{ _('Cambiar contraseña') }}</h5>
@@ -78,11 +96,11 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label for="contrasena_actual" class="form-label">{{ _('Contraseña actual') }}</label>
-                        <input type="password" class="form-control" id="contrasena_actual" name="contrasena_actual" required>
+                        <input type="password" class="form-control" id="contrasena_actual" name="contrasena_actual" autocomplete="current-password" required>
                     </div>
                     <div class="mb-3">
                         <label for="contrasena_nueva" class="form-label">{{ _('Nueva contraseña') }}</label>
-                        <input type="password" class="form-control" id="contrasena_nueva" name="contrasena_nueva" required>
+                        <input type="password" class="form-control" id="contrasena_nueva" name="contrasena_nueva" autocomplete="new-password" data-politica required>
                     </div>
                     <button type="submit" class="btn btn-primary">{{ _('Guardar cambios') }}</button>
                 </form>
@@ -91,6 +109,55 @@
     </div>
 
     <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-1">{{ _('Preferencias') }}</h5>
+                <p class="text-muted small mb-3">{{ _('Se guardan en este navegador.') }}</p>
+                <div class="pref-row">
+                    <div>
+                        <div class="pref-title">{{ _('Tema') }}</div>
+                        <div class="pref-sub">{{ _('Apariencia de la aplicación') }}</div>
+                    </div>
+                    <div class="seg" role="group" aria-label="{{ _('Tema') }}" data-pref-tema>
+                        <button type="button" data-valor="dark">{{ icono('luna', 14) }} {{ _('Oscuro') }}</button>
+                        <button type="button" data-valor="light">{{ icono('sol', 14) }} {{ _('Claro') }}</button>
+                        <button type="button" data-valor="sistema">{{ _('Sistema') }}</button>
+                    </div>
+                </div>
+                <div class="pref-row">
+                    <div>
+                        <div class="pref-title">{{ _('Idioma') }}</div>
+                        <div class="pref-sub">{{ _('Idioma de la interfaz') }}</div>
+                    </div>
+                    <div class="seg" role="group" aria-label="{{ _('Idioma') }}">
+                        <a href="{{ url_for('auth.cambiar_idioma', codigo='es') }}" class="{% if session.get('idioma', 'es') == 'es' %}is-on{% endif %}">Español</a>
+                        <a href="{{ url_for('auth.cambiar_idioma', codigo='en') }}" class="{% if session.get('idioma') == 'en' %}is-on{% endif %}">English</a>
+                    </div>
+                </div>
+                <div class="pref-row">
+                    <div>
+                        <div class="pref-title">{{ _('Vista compacta') }}</div>
+                        <div class="pref-sub">{{ _('Filas más densas en las tablas') }}</div>
+                    </div>
+                    <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" data-pref-densidad aria-label="{{ _('Vista compacta') }}"></div>
+                </div>
+                <div class="pref-row">
+                    <div>
+                        <div class="pref-title">{{ _('Menú lateral contraído') }}</div>
+                        <div class="pref-sub">{{ _('Mostrar solo iconos en el menú') }}</div>
+                    </div>
+                    <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" data-pref-menu aria-label="{{ _('Menú lateral contraído') }}"></div>
+                </div>
+                <div class="pref-row">
+                    <div>
+                        <div class="pref-title">{{ _('Historial de recientes') }}</div>
+                        <div class="pref-sub">{{ _('Tickets visitados que aparecen en Ctrl+K') }}</div>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-pref-limpiar-recientes>{{ _('Limpiar') }}</button>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title mb-3">{{ _('Mis estadísticas') }}</h5>

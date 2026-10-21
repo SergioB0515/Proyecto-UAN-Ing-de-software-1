@@ -24,26 +24,26 @@ class ServicioNotificaciones:
      })
 
     _ACENTOS_POR_PLANTILLA = {
-        notif.CERRADO: ("#0d6c4a", "#12885f"),
-        notif.CERRADO_SIN_ATENDER: ("#c2860f", "#e0b459"),
-        notif.SLA_PROXIMO_CREADOR: ("#c2860f", "#e0b459"),
-        notif.SLA_PROXIMO_AGENTE: ("#c2860f", "#e0b459"),
-        notif.SLA_VENCIDO_CREADOR: ("#8f2318", "#ea4c3b"),
-        notif.SLA_VENCIDO_AGENTE: ("#8f2318", "#ea4c3b"),
+        notif.CERRADO: ("#2f6b4b", "#4d8a69"),
+        notif.CERRADO_SIN_ATENDER: ("#96660f", "#c4962f"),
+        notif.SLA_PROXIMO_CREADOR: ("#96660f", "#c4962f"),
+        notif.SLA_PROXIMO_AGENTE: ("#96660f", "#c4962f"),
+        notif.SLA_VENCIDO_CREADOR: ("#9b2f2a", "#c4584f"),
+        notif.SLA_VENCIDO_AGENTE: ("#9b2f2a", "#c4584f"),
     }
-    _ACENTO_POR_DEFECTO = ("#4235a8", "#6d5df0")
+    _ACENTO_POR_DEFECTO = ("#4f46e5", "#818cf8")
 
     _COLORES_ESTADO = {
-        "abierto": ("rgba(37, 99, 168, 0.22)", "#7fc0ff"),
-        "en_progreso": ("rgba(194, 134, 15, 0.22)", "#e0b459"),
-        "cerrado": ("rgba(18, 136, 95, 0.22)", "#5be0ac"),
+        "abierto": ("#e4ebf4", "#2e4d70"),
+        "en_progreso": ("#f6ebd3", "#7a520b"),
+        "cerrado": ("#dcebe2", "#245a3d"),
     }
     _COLORES_PRIORIDAD = {
-        "alta": ("#d43f2f", "#ffffff"),
-        "media": ("rgba(194, 134, 15, 0.22)", "#e0b459"),
-        "baja": ("rgba(18, 136, 95, 0.22)", "#5be0ac"),
+        "alta": ("#f3dedb", "#8a2924"),
+        "media": ("#f6ebd3", "#7a520b"),
+        "baja": ("#dcebe2", "#245a3d"),
     }
-    _COLOR_CATEGORIA = ("rgba(109, 93, 240, 0.18)", "#8f82f5")
+    _COLOR_CATEGORIA = ("#f4f4f5", "#52525b")
 
     @staticmethod
     def crear(usuario_id, mensaje, ticket_id=None):

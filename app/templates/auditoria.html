@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% block title %}{{ _('Log de auditoría') }}{% endblock %}
+{% from "_iconos.html" import icono %}
 {% block content %}
 <div class="page-header d-flex justify-content-between align-items-center">
-    <h2>{{ _('Log de auditoría') }}</h2>
+    <div>
+        <h2>{{ _('Log de auditoría') }}</h2>
+        <span class="text-muted">{{ _('Registro de cada acción relevante: inicios de sesión, cambios de estado, comentarios y más.') }}</span>
+    </div>
     <div class="d-flex gap-2">
-        <a href="{{ url_for('auditoria.exportar_auditoria', formato='csv', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">{{ _('Exportar CSV') }}</a>
-        <a href="{{ url_for('auditoria.exportar_auditoria', formato='xlsx', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">{{ _('Exportar Excel') }}</a>
+        <a href="{{ url_for('auditoria.exportar_auditoria', formato='csv', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">{{ icono('descargar', 15) }} {{ _('Exportar CSV') }}</a>
+        <a href="{{ url_for('auditoria.exportar_auditoria', formato='xlsx', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">{{ icono('descargar', 15) }} {{ _('Exportar Excel') }}</a>
     </div>
 </div>
 

@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% block title %}{{ _('Tickets (Admin)') }}{% endblock %}
+{% from "_iconos.html" import icono %}
 {% block content %}
 <div class="page-header d-flex justify-content-between align-items-center">
-    <h2>{{ _('Tickets del sistema') }}</h2>
+    <div>
+        <h2>{{ _('Tickets del sistema') }}</h2>
+        <span class="text-muted">{{ _('Todos los tickets, con filtros por estado, categoría, prioridad y SLA.') }}</span>
+    </div>
     <div class="d-flex gap-2">
-        <a href="{{ url_for('tickets.exportar_tickets', formato='csv', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">{{ _('Exportar CSV') }}</a>
-        <a href="{{ url_for('tickets.exportar_tickets', formato='xlsx', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">{{ _('Exportar Excel') }}</a>
+        <a href="{{ url_for('tickets.exportar_tickets', formato='csv', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">{{ icono('descargar', 15) }} {{ _('Exportar CSV') }}</a>
+        <a href="{{ url_for('tickets.exportar_tickets', formato='xlsx', **filtros_actuales) }}" class="btn btn-outline-secondary btn-sm">{{ icono('descargar', 15) }} {{ _('Exportar Excel') }}</a>
     </div>
 </div>
 

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "_iconos.html" import icono %}
+{% block title %}{{ _('Nueva contraseña') }}{% endblock %}
+{% block content %}
+<div class="auth-shell">
+    <div class="auth-card auth-card-sm">
+        <div class="auth-badge">{{ icono('candado', 20) }}</div>
+        <h2>{{ _('Crea una contraseña nueva') }}</h2>
+        <p class="auth-subtitle">{{ _('Para la cuenta %(email)s.', email=email) }}</p>
+        <form method="POST" data-no-lock-dirty>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="email" name="username" value="{{ email }}" autocomplete="username" hidden>
+            <div class="mb-3">
+                <label class="form-label" for="contrasena">{{ _('Nueva contraseña') }}</label>
+                <input type="password" id="contrasena" name="contrasena" class="form-control" autocomplete="new-password" data-politica autofocus required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="confirmacion">{{ _('Confirmar contraseña') }}</label>
+                <input type="password" id="confirmacion" name="confirmacion" class="form-control" autocomplete="new-password" data-confirma="contrasena" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2">{{ _('Guardar contraseña') }}</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

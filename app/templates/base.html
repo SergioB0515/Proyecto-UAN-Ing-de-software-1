@@ -1,219 +1,374 @@
 <!DOCTYPE html>
-<html lang="{{ session.get('idioma', 'es') }}">
+{% from "_iconos.html" import icono %}
+<html lang="{{ session.get('idioma', 'es') }}" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Sistema de Tickets{% endblock %}</title>
+    <meta name="theme-color" content="#0b0d12">
+    {% if ahora is defined %}<meta name="server-now" content="{{ ahora().strftime('%Y-%m-%dT%H:%M:%S') }}">{% endif %}
+    <title>{% block title %}Sistema de Tickets{% endblock %} · Tickets IT</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b7cf8'/%3E%3Cstop offset='1' stop-color='%235b4be0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <script>
+        (function () {
+            var d = document.documentElement, tema, menu;
+            try { tema = localStorage.getItem('tema'); menu = localStorage.getItem('menu'); } catch (e) {}
+            if (tema === 'sistema') tema = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            d.setAttribute('data-bs-theme', tema === 'light' ? 'light' : 'dark');
+            if (menu === 'colapsado') d.setAttribute('data-sidebar', 'colapsado');
+            try { if (localStorage.getItem('densidad') === '"compacta"') d.setAttribute('data-densidad', 'compacta'); } catch (e) {}
+        })();
+    </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-
 {% set rol = session.get('rol') %}
 {% set ep = request.endpoint or '' %}
 {% set bp = request.blueprint or '' %}
+{% set logueado = session.get('usuario_id') %}
 {% set home_url = url_for('metricas.mostrar_metricas') if rol == 'admin'
         else (url_for('tickets.listar_por_area', area=session.get('area_soporte')) if rol == 'agente'
         else url_for('auth.dashboard')) %}
+<body class="{% if logueado %}con-menu{% else %}sin-menu{% endif %}">
 
-<nav class="navbar navbar-dark navbar-expand-lg app-navbar">
-  <div class="container-fluid app-navbar-inner">
+<div class="nav-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#contenido">{{ _('Saltar al contenido') }}</a>
 
-    <a class="navbar-brand" href="{{ home_url if session.get('usuario_id') else url_for('auth.login') }}">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-text">Sistema de Tickets <span class="brand-accent">IT</span></span>
-    </a>
+{% set pm = pendientes_menu or {} %}
+{% macro enlace(endpoint, url, texto, ico, activo=None, cuenta=0) -%}
+<a class="side-link {% if (activo if activo is not none else ep == endpoint) %}active{% endif %}" href="{{ url }}" data-label="{{ texto }}" data-ico="{{ ico }}"{% if endpoint == 'tickets.crear' %} data-shortcut="nuevo"{% endif %}>
+    {{ icono(ico) }}<span class="side-label">{{ texto }}</span>
+    {% if cuenta %}<span class="side-count">{{ cuenta if cuenta < 100 else '99+' }}</span>{% endif %}
+</a>
+{%- endmacro %}
 
-    <div class="navbar-utils order-lg-last">
-        <div class="lang-switch" role="group" aria-label="{{ _('Idioma') }}">
-            <a href="{{ url_for('auth.cambiar_idioma', codigo='es') }}"
-               class="{% if session.get('idioma', 'es') == 'es' %}is-active{% endif %}">ES</a>
-            <a href="{{ url_for('auth.cambiar_idioma', codigo='en') }}"
-               class="{% if session.get('idioma') == 'en' %}is-active{% endif %}">EN</a>
-        </div>
-
-        {% if session.get('usuario_id') %}
-        <div class="dropdown notif-dropdown">
-            <button class="icon-btn position-relative" id="notifBtn" type="button"
-                    data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
-                    aria-label="{{ _('Notificaciones') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="notif-bell" width="18" height="18" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                </svg>
-                <span class="notif-badge" id="notifBadge" {% if not notificaciones_no_leidas %}hidden{% endif %}>{{ notificaciones_no_leidas if notificaciones_no_leidas and notificaciones_no_leidas <= 9 else '9+' }}</span>
-            </button>
-            <div class="dropdown-menu dropdown-menu-end notif-menu">
-                <div class="notif-head">
-                    <span class="notif-title">{{ _('Notificaciones') }}</span>
-                    <form method="POST" action="{{ url_for('auth.marcar_todas_notificaciones_leidas') }}" id="notifMarkAllForm">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="notif-markall">{{ _('Marcar todas como leídas') }}</button>
-                    </form>
-                </div>
-                <ul class="notif-list" id="notifList">
-                    {% for n in notificaciones_recientes %}
-                    <li class="notif-item {% if not n.leida %}is-unread{% endif %}" data-id="{{ n.id }}"
-                        {% if n.ticket_id %}data-ticket="{{ n.ticket_id }}"{% endif %}>
-                        <form method="POST" action="{{ url_for('auth.marcar_notificacion_leida', notificacion_id=n.id) }}">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <button type="submit" class="notif-link">
-                                <span class="notif-dot" aria-hidden="true"></span>
-                                <span class="notif-body">
-                                    <span class="notif-text">{{ n | notif_msg }}</span>
-                                    <time class="notif-time" data-ts="{{ n.fecha.isoformat() }}">{{ n.fecha.strftime('%d/%m %H:%M') }}</time>
-                                </span>
-                            </button>
-                        </form>
-                    </li>
-                    {% endfor %}
-                </ul>
-                <div class="notif-empty" id="notifEmpty" {% if notificaciones_recientes %}hidden{% endif %}>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                        <path d="M18.63 13A17.89 17.89 0 0 1 18 8"/>
-                        <path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/>
-                        <path d="M18 8a6 6 0 0 0-9.33-5"/>
-                        <line x1="1" y1="1" x2="23" y2="23"/>
-                    </svg>
-                    <span>{{ _('Sin notificaciones') }}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="dropdown">
-            <button class="user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {% if usuario_nombre_foto %}
-                <img class="user-avatar user-avatar-img" src="{{ url_for('static', filename='fotos_perfil/' ~ usuario_nombre_foto) }}" alt="{{ _('Foto de perfil') }}">
-                {% else %}
-                <span class="user-avatar">{{ usuario_iniciales | default('?', true) }}</span>
-                {% endif %}
-                <span class="user-meta d-none d-sm-flex">
-                    <span class="user-name">{{ usuario_actual.nombre if usuario_actual else _('Cuenta') }}</span>
-                    <span class="user-role">{{ rol | etiqueta }}</span>
-                </span>
-                <svg class="caret" width="12" height="12" viewBox="0 0 16 16" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item {% if ep == 'auth.perfil' %}active{% endif %}" href="{{ url_for('auth.perfil') }}">{{ _('Mi perfil') }}</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item dropdown-item-danger" href="{{ url_for('auth.logout') }}">{{ _('Cerrar sesión') }}</a></li>
-            </ul>
-        </div>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false"
-                aria-label="{{ _('Abrir menú de navegación') }}">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        {% endif %}
+{% if logueado %}
+<aside class="sidebar" id="sidebar" aria-label="{{ _('Abrir menú de navegación') }}">
+    <div class="sidebar-head">
+        <a class="brand" href="{{ home_url }}">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-text">Tickets <span class="brand-accent">IT</span></span>
+        </a>
+        <button type="button" class="icon-btn sidebar-toggle" data-sidebar-toggle
+                aria-label="{{ _('Contraer menú') }}" title="{{ _('Contraer menú') }} ([)">{{ icono('colapsar') }}</button>
     </div>
 
-    {% if session.get('usuario_id') %}
-    <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav navbar-nav-main">
+    <nav class="sidebar-nav">
+        {% if rol == 'admin' %}
+            {{ enlace('metricas.mostrar_metricas', url_for('metricas.mostrar_metricas'), _('Panel'), 'panel') }}
 
-            {% if rol == 'admin' %}
-            <li class="nav-item">
-                <a class="nav-link {% if ep == 'metricas.mostrar_metricas' %}active{% endif %}"
-                   href="{{ url_for('metricas.mostrar_metricas') }}">{{ _('Panel') }}</a>
-            </li>
+            <div class="side-section">{{ _('Tickets') }}</div>
+            {{ enlace('tickets.listar_admin', url_for('tickets.listar_admin'), _('Todos los tickets'), 'tickets') }}
+            {{ enlace('auth.dashboard', url_for('auth.dashboard'), _('Mis tickets'), 'bandeja') }}
+            {{ enlace('tickets.crear', url_for('tickets.crear'), _('Crear ticket'), 'mas') }}
 
-            {% set tickets_activo = ep in ['auth.dashboard', 'tickets.crear', 'tickets.listar_admin', 'tickets.detalle'] %}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle {% if tickets_activo %}active{% endif %}" href="#"
-                   role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ _('Tickets') }}</a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item {% if ep == 'tickets.listar_admin' %}active{% endif %}" href="{{ url_for('tickets.listar_admin') }}">{{ _('Todos los tickets') }}</a></li>
-                    <li><a class="dropdown-item {% if ep == 'auth.dashboard' %}active{% endif %}" href="{{ url_for('auth.dashboard') }}">{{ _('Mis tickets') }}</a></li>
-                    <li><a class="dropdown-item {% if ep == 'tickets.crear' %}active{% endif %}" href="{{ url_for('tickets.crear') }}">{{ _('Crear ticket') }}</a></li>
-                </ul>
-            </li>
+            <div class="side-section">{{ _('Solicitudes') }}</div>
+            {{ enlace('solicitudes.pendientes', url_for('solicitudes.pendientes'), _('Transferencias'), 'transferir', cuenta=pm.get('transferencias', 0)) }}
+            {{ enlace('solicitudes.escalamientos_pendientes', url_for('solicitudes.escalamientos_pendientes'), _('Escalamientos'), 'escalar', cuenta=pm.get('escalamientos', 0)) }}
+            {{ enlace('solicitudes.cambios_prioridad_pendientes', url_for('solicitudes.cambios_prioridad_pendientes'), _('Cambios de prioridad'), 'bandera', cuenta=pm.get('prioridad', 0)) }}
+            {{ enlace('tickets.revision_clasificacion', url_for('tickets.revision_clasificacion'), _('Revisión IA'), 'ia', cuenta=pm.get('revision', 0)) }}
+            {{ enlace('apelaciones.pendientes', url_for('apelaciones.pendientes'), _('Apelaciones'), 'mazo', cuenta=pm.get('apelaciones', 0)) }}
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle {% if bp == 'solicitudes' %}active{% endif %}" href="#"
-                   role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ _('Solicitudes') }}</a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item {% if ep == 'solicitudes.pendientes' %}active{% endif %}" href="{{ url_for('solicitudes.pendientes') }}">{{ _('Transferencias') }}</a></li>
-                    <li><a class="dropdown-item {% if ep == 'solicitudes.escalamientos_pendientes' %}active{% endif %}" href="{{ url_for('solicitudes.escalamientos_pendientes') }}">{{ _('Escalamientos') }}</a></li>
-                    <li><a class="dropdown-item {% if ep == 'solicitudes.cambios_prioridad_pendientes' %}active{% endif %}" href="{{ url_for('solicitudes.cambios_prioridad_pendientes') }}">{{ _('Cambios de prioridad') }}</a></li>
-                    <li><a class="dropdown-item {% if ep == 'tickets.revision_clasificacion' %}active{% endif %}" href="{{ url_for('tickets.revision_clasificacion') }}">{{ _('Revisión IA') }}</a></li>
-                    <li><a class="dropdown-item {% if ep == 'apelaciones.pendientes' %}active{% endif %}" href="{{ url_for('apelaciones.pendientes') }}">{{ _('Apelaciones') }}</a></li>
-                </ul>
-            </li>
-            
-            {% set admin_activo = ep in ['auth.registro', 'auditoria.mostrar_auditoria', 'palabras_clave.listar', 'demo.panel'] %}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle {% if admin_activo %}active{% endif %}" href="#"
-                   role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ _('Administración') }}</a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item {% if ep == 'auth.registro' %}active{% endif %}" href="{{ url_for('auth.registro') }}">{{ _('Registrar usuario') }}</a></li>
-                    <li><a class="dropdown-item {% if ep == 'auditoria.mostrar_auditoria' %}active{% endif %}" href="{{ url_for('auditoria.mostrar_auditoria') }}">{{ _('Log de auditoría') }}</a></li>
-                    <li><a class="dropdown-item {% if ep == 'palabras_clave.listar' %}active{% endif %}" href="{{ url_for('palabras_clave.listar') }}">{{ _('Palabras clave') }}</a></li>
-                    {% if config.MODO_DEMO %}
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item {% if ep == 'demo.panel' %}active{% endif %}" href="{{ url_for('demo.panel') }}">{{ _('Modo demo') }}</a></li>
-                    {% endif %}
-                </ul>
-            </li>
-
-            {% elif rol == 'agente' %}
-            <li class="nav-item">
-                <a class="nav-link {% if ep == 'tickets.listar_por_area' %}active{% endif %}"
-                   href="{{ url_for('tickets.listar_por_area', area=session.get('area_soporte')) }}">{{ _('Mi área') }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if ep == 'auth.dashboard' %}active{% endif %}"
-                   href="{{ url_for('auth.dashboard') }}">{{ _('Mis tickets') }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if ep == 'tickets.crear' %}active{% endif %}"
-                   href="{{ url_for('tickets.crear') }}">{{ _('Crear ticket') }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if bp == 'solicitudes' %}active{% endif %}"
-                   href="{{ url_for('solicitudes.pendientes') }}">{{ _('Solicitudes') }}</a>
-            </li>
-
-            {% else %}
-            <li class="nav-item">
-                <a class="nav-link {% if ep == 'auth.dashboard' %}active{% endif %}"
-                   href="{{ url_for('auth.dashboard') }}">{{ _('Mis tickets') }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if ep == 'tickets.crear' %}active{% endif %}"
-                   href="{{ url_for('tickets.crear') }}">{{ _('Crear ticket') }}</a>
-            </li>
+            <div class="side-section">{{ _('Administración') }}</div>
+            {{ enlace('auth.registro', url_for('auth.registro'), _('Registrar usuario'), 'usuario_mas') }}
+            {{ enlace('auditoria.mostrar_auditoria', url_for('auditoria.mostrar_auditoria'), _('Log de auditoría'), 'historial') }}
+            {{ enlace('palabras_clave.listar', url_for('palabras_clave.listar'), _('Palabras clave'), 'etiqueta') }}
+            {% if config.MODO_DEMO %}
+            {{ enlace('demo.panel', url_for('demo.panel'), _('Modo demo'), 'rayo') }}
             {% endif %}
+        {% elif rol == 'agente' %}
+            {{ enlace('tickets.listar_por_area', url_for('tickets.listar_por_area', area=session.get('area_soporte')), _('Mi área'), 'capas') }}
+            {{ enlace('auth.dashboard', url_for('auth.dashboard'), _('Mis tickets'), 'bandeja') }}
+            {{ enlace('tickets.crear', url_for('tickets.crear'), _('Crear ticket'), 'mas') }}
+            {{ enlace('solicitudes.pendientes', url_for('solicitudes.pendientes'), _('Solicitudes'), 'transferir', activo=(bp == 'solicitudes'), cuenta=pm.get('transferencias', 0)) }}
+        {% else %}
+            {{ enlace('auth.dashboard', url_for('auth.dashboard'), _('Mis tickets'), 'bandeja') }}
+            {{ enlace('tickets.crear', url_for('tickets.crear'), _('Crear ticket'), 'mas') }}
+        {% endif %}
+    </nav>
+
+    <div class="sidebar-foot dropup">
+        <button class="user-card" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {% if usuario_nombre_foto %}
+            <img class="user-avatar user-avatar-img" src="{{ url_for('static', filename='fotos_perfil/' ~ usuario_nombre_foto) }}" alt="{{ _('Foto de perfil') }}">
+            {% else %}
+            <span class="user-avatar">{{ usuario_iniciales | default('?', true) }}</span>
+            {% endif %}
+            <span class="user-meta side-label">
+                <span class="user-name">{{ usuario_actual.nombre if usuario_actual else _('Cuenta') }}</span>
+                <span class="user-role">{{ rol | etiqueta }}</span>
+            </span>
+            <span class="side-label user-caret">{{ icono('abajo', 14) }}</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item {% if ep == 'auth.perfil' %}active{% endif %}" href="{{ url_for('auth.perfil') }}">{{ icono('usuario', 16) }} {{ _('Mi perfil') }}</a></li>
+            <li><button type="button" class="dropdown-item" data-open-shortcuts>{{ icono('teclado', 16) }} {{ _('Atajos de teclado') }}</button></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item dropdown-item-danger" href="{{ url_for('auth.logout') }}">{{ icono('salir', 16) }} {{ _('Cerrar sesión') }}</a></li>
         </ul>
     </div>
-    {% endif %}
-  </div>
-</nav>
+</aside>
+<div class="sidebar-backdrop" data-sidebar-close></div>
+{% endif %}
 
-<main class="container app-main">
+<div class="shell">
+    <header class="topbar">
+        {% if logueado %}
+        <button type="button" class="icon-btn topbar-menu" data-sidebar-open aria-label="{{ _('Abrir menú de navegación') }}">{{ icono('menu') }}</button>
+        {% set secciones = {'tickets': _('Tickets'), 'solicitudes': _('Solicitudes'), 'apelaciones': _('Solicitudes'), 'auditoria': _('Administración'), 'palabras_clave': _('Administración'), 'demo': _('Administración')} %}
+        {% if ep == 'auth.registro' %}{% set seccion = _('Administración') %}
+        {% elif ep == 'tickets.revision_clasificacion' %}{% set seccion = _('Solicitudes') %}
+        {% elif ep == 'auth.dashboard' %}{% set seccion = _('Tickets') %}
+        {% else %}{% set seccion = secciones.get(bp) %}{% endif %}
+        <div class="topbar-title">{% if seccion %}<span class="crumb">{{ seccion }}</span><span class="crumb-sep" aria-hidden="true">/</span>{% endif %}<span>{{ self.title() }}</span></div>
+        <button type="button" class="search-trigger" data-palette-open>
+            {{ icono('buscar', 16) }}<span class="search-label">{{ _('Buscar o ir a…') }}</span><kbd>Ctrl K</kbd>
+        </button>
+        {% else %}
+        <a class="brand" href="{{ url_for('auth.login') }}">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-text">Tickets <span class="brand-accent">IT</span></span>
+        </a>
+        {% endif %}
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ _('Cerrar') }}"></button>
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+        <div class="topbar-actions">
+            {% if logueado and ep != 'tickets.crear' %}
+            <a href="{{ url_for('tickets.crear') }}" class="btn btn-primary btn-sm btn-new">{{ icono('mas', 16) }}<span>{{ _('Nuevo ticket') }}</span></a>
+            {% endif %}
 
-    {% block content %}{% endblock %}
-</main>
+            <div class="lang-switch" role="group" aria-label="{{ _('Idioma') }}">
+                <a href="{{ url_for('auth.cambiar_idioma', codigo='es') }}" class="{% if session.get('idioma', 'es') == 'es' %}is-active{% endif %}">ES</a>
+                <a href="{{ url_for('auth.cambiar_idioma', codigo='en') }}" class="{% if session.get('idioma') == 'en' %}is-active{% endif %}">EN</a>
+            </div>
+
+            <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-pressed="false"
+                    aria-label="{{ _('Cambiar tema') }}" title="{{ _('Cambiar tema') }} (t)">
+                {{ icono('luna', 17, 'icon-moon') }}{{ icono('sol', 17, 'icon-sun') }}
+            </button>
+
+            {% if logueado %}
+            <div class="dropdown notif-dropdown">
+                <button class="icon-btn position-relative" id="notifBtn" type="button"
+                        data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
+                        aria-label="{{ _('Notificaciones') }}">
+                    {{ icono('campana', 17, 'notif-bell') }}
+                    <span class="notif-badge" id="notifBadge" {% if not notificaciones_no_leidas %}hidden{% endif %}>{{ notificaciones_no_leidas if notificaciones_no_leidas and notificaciones_no_leidas <= 9 else '9+' }}</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end notif-menu">
+                    <div class="notif-head">
+                        <span class="notif-title">{{ _('Notificaciones') }}</span>
+                        <form method="POST" action="{{ url_for('auth.marcar_todas_notificaciones_leidas') }}" id="notifMarkAllForm">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="notif-markall">{{ _('Marcar todas como leídas') }}</button>
+                        </form>
+                    </div>
+                    <ul class="notif-list" id="notifList">
+                        {% for n in notificaciones_recientes %}
+                        <li class="notif-item {% if not n.leida %}is-unread{% endif %}" data-id="{{ n.id }}"
+                            {% if n.ticket_id %}data-ticket="{{ n.ticket_id }}"{% endif %}>
+                            <form method="POST" action="{{ url_for('auth.marcar_notificacion_leida', notificacion_id=n.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="notif-link">
+                                    <span class="notif-dot" aria-hidden="true"></span>
+                                    <span class="notif-body">
+                                        <span class="notif-text">{{ n | notif_msg }}</span>
+                                        <time class="notif-time" data-ts="{{ n.fecha.isoformat() }}">{{ n.fecha.strftime('%d/%m %H:%M') }}</time>
+                                    </span>
+                                </button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="notif-empty" id="notifEmpty" {% if notificaciones_recientes %}hidden{% endif %}>
+                        {{ icono('campana', 26) }}
+                        <span>{{ _('Sin notificaciones') }}</span>
+                    </div>
+                    <div class="notif-foot" data-notif-escritorio hidden>
+                        <button type="button" class="notif-markall">{{ icono('campana', 14) }} {{ _('Activar notificaciones de escritorio') }}</button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="app-main" id="contenido" tabindex="-1">
+        {% block content %}{% endblock %}
+    </main>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+<div class="flash-stack" aria-live="polite">
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        <span class="flash-ico">{{ icono('check' if category == 'success' else ('alerta' if category in ('danger', 'warning') else 'circulo'), 18) }}</span>
+        <span class="flash-msg">{{ message }}</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ _('Cerrar') }}"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endwith %}
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;" id="toastContainer"></div>
 
+<button type="button" class="to-top icon-btn" data-to-top aria-label="{{ _('Volver arriba') }}" hidden>{{ icono('arriba') }}</button>
+
+{% if logueado %}
+<div class="modal fade" id="modalConfirmar" tabindex="-1" aria-labelledby="modalConfirmarTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-4">
+                <div class="d-flex gap-3 align-items-start">
+                    <span class="confirm-icon" aria-hidden="true">{{ icono('alerta', 20) }}</span>
+                    <div>
+                        <h5 class="mb-1" id="modalConfirmarTitulo" data-confirm-title>{{ _('Confirmar acción') }}</h5>
+                        <p class="mb-0 text-muted" data-confirm-body>{{ _('Esta acción no se puede deshacer fácilmente.') }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 px-4 pb-4">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ _('Cancelar') }}</button>
+                <button type="button" class="btn btn-primary" data-confirm-accept>{{ _('Confirmar') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAtajos" tabindex="-1" aria-labelledby="modalAtajosTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title" id="modalAtajosTitulo">{{ _('Atajos de teclado') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ _('Cerrar') }}"></button>
+            </div>
+            <div class="modal-body pt-3 pb-4">
+                <ul class="shortcut-list">
+                    <li><span>{{ _('Buscar o ir a…') }}</span><span><kbd>Ctrl</kbd> + <kbd>K</kbd></span></li>
+                    <li><span>{{ _('Buscar en la tabla') }}</span><kbd>/</kbd></li>
+                    <li><span>{{ _('Crear un ticket') }}</span><kbd>n</kbd></li>
+                    <li><span>{{ _('Ir al panel') }}</span><span><kbd>g</kbd> <kbd>p</kbd></span></li>
+                    <li><span>{{ _('Ir a la lista de tickets') }}</span><span><kbd>g</kbd> <kbd>t</kbd></span></li>
+                    <li><span>{{ _('Ir a mis tickets') }}</span><span><kbd>g</kbd> <kbd>m</kbd></span></li>
+                    <li><span>{{ _('Cambiar tema claro / oscuro') }}</span><kbd>t</kbd></li>
+                    <li><span>{{ _('Contraer menú') }}</span><kbd>[</kbd></li>
+                    <li><span>{{ _('Moverse entre filas de la tabla') }}</span><span><kbd>j</kbd> / <kbd>k</kbd></span></li>
+                    <li><span>{{ _('Abrir la fila seleccionada') }}</span><kbd>Enter</kbd></li>
+                    <li><span>{{ _('Escribir un comentario (en un ticket)') }}</span><kbd>c</kbd></li>
+                    <li><span>{{ _('Mostrar esta ayuda') }}</span><kbd>?</kbd></li>
+                    <li><span>{{ _('Enviar el formulario desde un cuadro de texto') }}</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade palette" id="paleta" tabindex="-1" aria-label="{{ _('Buscar o ir a…') }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="palette-search">
+                {{ icono('buscar', 18) }}
+                <input type="text" class="palette-input" placeholder="{{ _('Escribe para buscar páginas o un número de ticket') }}" autocomplete="off" spellcheck="false" aria-label="{{ _('Buscar o ir a…') }}">
+                <kbd>Esc</kbd>
+            </div>
+            <ul class="palette-list" role="listbox"></ul>
+            <div class="palette-empty" hidden>{{ _('Ningún resultado coincide con tu búsqueda.') }}</div>
+        </div>
+    </div>
+</div>
+
+{% set items_paleta = [] %}
+{% if rol == 'admin' %}
+    {% set _a = items_paleta.extend([
+        {"t": _('Panel'), "u": url_for('metricas.mostrar_metricas'), "g": "nav", "i": "panel"},
+        {"t": _('Todos los tickets'), "u": url_for('tickets.listar_admin'), "g": "nav", "i": "tickets"},
+        {"t": _('Mis tickets'), "u": url_for('auth.dashboard'), "g": "nav", "i": "bandeja"},
+        {"t": _('Crear ticket'), "u": url_for('tickets.crear'), "g": "nav", "i": "mas"},
+        {"t": _('Transferencias'), "u": url_for('solicitudes.pendientes'), "g": "nav", "i": "transferir"},
+        {"t": _('Escalamientos'), "u": url_for('solicitudes.escalamientos_pendientes'), "g": "nav", "i": "escalar"},
+        {"t": _('Cambios de prioridad'), "u": url_for('solicitudes.cambios_prioridad_pendientes'), "g": "nav", "i": "bandera"},
+        {"t": _('Revisión IA'), "u": url_for('tickets.revision_clasificacion'), "g": "nav", "i": "ia"},
+        {"t": _('Apelaciones'), "u": url_for('apelaciones.pendientes'), "g": "nav", "i": "mazo"},
+        {"t": _('Registrar usuario'), "u": url_for('auth.registro'), "g": "nav", "i": "usuario_mas"},
+        {"t": _('Log de auditoría'), "u": url_for('auditoria.mostrar_auditoria'), "g": "nav", "i": "historial"},
+        {"t": _('Palabras clave'), "u": url_for('palabras_clave.listar'), "g": "nav", "i": "etiqueta"},
+        {"t": _('Vencidos actualmente'), "u": url_for('tickets.listar_admin', vista='vencidos_actuales'), "g": "nav", "i": "alerta"},
+        {"t": _('Próximos a vencer'), "u": url_for('tickets.listar_admin', vista='proximos_actuales'), "g": "nav", "i": "reloj"}
+    ]) %}
+    {% if config.MODO_DEMO %}{% set _b = items_paleta.append({"t": _('Modo demo'), "u": url_for('demo.panel'), "g": "nav", "i": "rayo"}) %}{% endif %}
+{% elif rol == 'agente' %}
+    {% set _a = items_paleta.extend([
+        {"t": _('Mi área'), "u": url_for('tickets.listar_por_area', area=session.get('area_soporte')), "g": "nav", "i": "capas"},
+        {"t": _('Mis tickets'), "u": url_for('auth.dashboard'), "g": "nav", "i": "bandeja"},
+        {"t": _('Crear ticket'), "u": url_for('tickets.crear'), "g": "nav", "i": "mas"},
+        {"t": _('Solicitudes'), "u": url_for('solicitudes.pendientes'), "g": "nav", "i": "transferir"}
+    ]) %}
+{% elif logueado %}
+    {% set _a = items_paleta.extend([
+        {"t": _('Mis tickets'), "u": url_for('auth.dashboard'), "g": "nav", "i": "bandeja"},
+        {"t": _('Crear ticket'), "u": url_for('tickets.crear'), "g": "nav", "i": "mas"}
+    ]) %}
+{% endif %}
+{% if logueado %}
+{% set _c = items_paleta.extend([
+    {"t": _('Mi perfil'), "u": url_for('auth.perfil'), "g": "acc", "i": "usuario"},
+    {"t": _('Cambiar tema claro / oscuro'), "a": "tema", "g": "acc", "i": "luna"},
+    {"t": "English", "u": url_for('auth.cambiar_idioma', codigo='en'), "g": "acc", "i": "idioma"},
+    {"t": "Español", "u": url_for('auth.cambiar_idioma', codigo='es'), "g": "acc", "i": "idioma"},
+    {"t": _('Atajos de teclado'), "a": "atajos", "g": "acc", "i": "teclado"},
+    {"t": _('Cerrar sesión'), "u": url_for('auth.logout'), "g": "acc", "i": "salir"}
+]) %}
+<script type="application/json" id="paleta-datos">{{ {
+    "items": items_paleta,
+    "ticketUrl": url_for('tickets.detalle', ticket_id=0),
+    "irTicket": _('Ir al ticket #%(id)s', id='__ID__'),
+    "grupos": {"nav": _('Navegación'), "acc": _('Acciones'), "tk": _('Tickets'), "rec": _('Recientes')}
+} | tojson }}</script>
+<template id="paleta-iconos">
+    <span data-i="panel">{{ icono('panel', 16) }}</span><span data-i="tickets">{{ icono('tickets', 16) }}</span><span data-i="bandeja">{{ icono('bandeja', 16) }}</span><span data-i="mas">{{ icono('mas', 16) }}</span><span data-i="transferir">{{ icono('transferir', 16) }}</span><span data-i="escalar">{{ icono('escalar', 16) }}</span><span data-i="bandera">{{ icono('bandera', 16) }}</span><span data-i="ia">{{ icono('ia', 16) }}</span><span data-i="mazo">{{ icono('mazo', 16) }}</span><span data-i="usuario_mas">{{ icono('usuario_mas', 16) }}</span><span data-i="historial">{{ icono('historial', 16) }}</span><span data-i="etiqueta">{{ icono('etiqueta', 16) }}</span><span data-i="rayo">{{ icono('rayo', 16) }}</span><span data-i="capas">{{ icono('capas', 16) }}</span><span data-i="alerta">{{ icono('alerta', 16) }}</span><span data-i="reloj">{{ icono('reloj', 16) }}</span><span data-i="usuario">{{ icono('usuario', 16) }}</span><span data-i="luna">{{ icono('luna', 16) }}</span><span data-i="idioma">{{ icono('idioma', 16) }}</span><span data-i="teclado">{{ icono('teclado', 16) }}</span><span data-i="salir">{{ icono('salir', 16) }}</span><span data-i="flecha">{{ icono('flecha', 16) }}</span><span data-i="reciente">{{ icono('historial', 16) }}</span>
+</template>
+{% endif %}
+{% endif %}
+
+<script>
+    window.APP_I18N = {{ {
+        "mostrarClave": _('Mostrar contraseña'),
+        "ocultarClave": _('Ocultar contraseña'),
+        "confirmarTitulo": _('Confirmar acción'),
+        "confirmarCuerpo": _('Esta acción no se puede deshacer fácilmente.'),
+        "filtrarTabla": _('Filtrar en esta página…'),
+        "sinCoincidencias": _('Ningún resultado coincide con tu búsqueda.'),
+        "copiado": _('Copiado'),
+        "contraerMenu": _('Contraer menú'),
+        "expandirMenu": _('Expandir menú'),
+        "ordenar": _('Ordenar'),
+        "buenosDias": _('Buenos días'),
+        "buenasTardes": _('Buenas tardes'),
+        "buenasNoches": _('Buenas noches'),
+        "sinConexion": _('Sin conexión. Lo que envíes no llegará hasta que vuelvas a estar en línea.'),
+        "conexionOk": _('Conexión restablecida.'),
+        "restante": _('Tiempo restante'),
+        "vencidoHace": _('Vencido hace'),
+        "borradorRestaurado": _('Borrador restaurado'),
+        "descartar": _('Descartar'),
+        "notifActivadas": _('Notificaciones de escritorio activadas'),
+        "caracteres": _('caracteres'),
+        "masDetalle": _('Añade más detalle para una mejor clasificación automática.'),
+        "bloqMayus": _('Bloq Mayús está activado'),
+        "reglas": [_('Al menos 8 caracteres'), _('Una mayúscula'), _('Una minúscula'), _('Un número'), _('Un símbolo')],
+        "filtrosActivos": _('Filtros activos'),
+        "quitarFiltro": _('Quitar filtro'),
+        "limpiarTodo": _('Limpiar todo'),
+        "vistaCompacta": _('Vista compacta'),
+        "nuevaNotif": _('Notificación nueva'),
+        "copiar": _('Copiar'),
+        "noCoinciden": _('Las contraseñas no coinciden'),
+        "codigosRespaldo": _('Códigos de respaldo')
+    } | tojson }};
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
 
 {% if session.get('usuario_id') %}
 <script type="application/json" id="notificaciones-toast-data">{{ notificaciones_no_leidas_lista | tojson }}</script>
@@ -428,6 +583,7 @@
                 mostrarToast(n);
                 recordarToast(n.id);
             }
+            document.dispatchEvent(new CustomEvent('notif:nueva', { detail: { texto: textoNotif(n), ticket: n.ticket_id ? urlTicket(n.ticket_id) : null } }));
         });
     });
 })();

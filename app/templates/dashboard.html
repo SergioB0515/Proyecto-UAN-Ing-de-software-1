@@ -1,14 +1,49 @@
 {% extends "base.html" %}
 {% block title %}{{ _('Mis tickets') }}{% endblock %}
+{% from "_iconos.html" import icono %}
 {% block content %}
 <div class="page-header">
-    <h2>{{ _('Mis tickets') }}</h2>
-    {% if session.get('rol') == 'final' %}
-    <a href="{{ url_for('tickets.crear') }}" class="btn btn-primary btn-sm">{{ _('Crear ticket') }}</a>
-    {% endif %}
+    <div>
+        <div class="eyebrow" data-saludo data-nombre="{{ usuario_actual.nombre.split()[0] if usuario_actual else '' }}"></div>
+        <h2>{{ _('Mis tickets') }}</h2>
+        <span class="text-muted">{{ _('Sigue el estado de tus solicitudes y sus plazos de atención.') }}</span>
+    </div>
 </div>
 
 {% if tickets %}
+{% set n_abiertos = tickets | selectattr('estado.value', 'equalto', 'abierto') | list | length %}
+{% set n_progreso = tickets | selectattr('estado.value', 'equalto', 'en_progreso') | list | length %}
+{% set n_cerrados = tickets | selectattr('estado.value', 'equalto', 'cerrado') | list | length %}
+<div class="row g-3 kpi-row">
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100"><div class="card-body">
+            <span class="stat-ico t-info">{{ icono('circulo', 17) }}</span>
+            <h6 class="card-title">{{ _('Abiertos') }}</h6>
+            <p class="fs-3 mb-0">{{ n_abiertos }}</p>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100"><div class="card-body">
+            <span class="stat-ico t-warn">{{ icono('progreso', 17) }}</span>
+            <h6 class="card-title">{{ _('En progreso') }}</h6>
+            <p class="fs-3 mb-0">{{ n_progreso }}</p>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100"><div class="card-body">
+            <span class="stat-ico t-ok">{{ icono('check', 17) }}</span>
+            <h6 class="card-title">{{ _('Cerrados') }}</h6>
+            <p class="fs-3 mb-0">{{ n_cerrados }}</p>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card stat-card h-100"><div class="card-body">
+            <span class="stat-ico t-danger">{{ icono('alerta', 17) }}</span>
+            <h6 class="card-title">{{ _('Vencidos') }}</h6>
+            <p class="fs-3 mb-0">{{ ids_vencidos | length }}</p>
+        </div></div>
+    </div>
+</div>
 <div class="table-card">
 <table class="table table-hover align-middle">
     <thead>
@@ -43,6 +78,7 @@
 {% else %}
 <div class="empty-state">
     <p class="mb-0">{{ _('No has creado ningún ticket todavía.') }}</p>
+    <a href="{{ url_for('tickets.crear') }}" class="btn btn-primary">{{ _('Crear ticket') }}</a>
 </div>
 {% endif %}
 {% endblock %}

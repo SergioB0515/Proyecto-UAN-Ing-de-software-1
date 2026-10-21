@@ -1,31 +1,62 @@
 {% extends "base.html" %}
+{% from "_iconos.html" import icono %}
 
 {% block title %}{{ _('Iniciar sesión') }}{% endblock %}
 
 {% block content %}
-<div class="auth-shell">
-    <div class="row justify-content-center w-100">
-        <div class="col-md-5 col-lg-4">
-            <div class="auth-card">
-                <div class="auth-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+<div class="auth-wrap">
+    <section class="auth-aside" aria-hidden="true">
+        <span class="orb orb-1"></span><span class="orb orb-2"></span>
+        <div class="preview-stack">
+            <div class="preview-card preview-back"></div>
+            <div class="preview-card">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="mono preview-id">#128</span>
+                    <span class="badge-pill prioridad-alta">{{ _('Alta') }}</span>
+                    <span class="badge-pill estado-en_progreso">{{ _('En progreso') }}</span>
                 </div>
-                <h2>{{ _('Iniciar sesión') }}</h2>
-                <p class="auth-subtitle">{{ _('Accede con tus credenciales para gestionar tickets.') }}</p>
-                    <form method="POST" action="{{ url_for('auth.login') }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <div class="mb-3">
-                            <label class="form-label">{{ _('Email') }}</label>
-                            <input type="email" name="email" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">{{ _('Contraseña') }}</label>
-                            <input type="password" name="contrasena" class="form-control" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 mt-2">{{ _('Entrar') }}</button>
-                    </form>
+                <div class="preview-title">{{ _('La VPN no conecta desde casa') }}</div>
+                <div class="preview-foot">
+                    <span class="person"><span class="person-av">LG</span>Laura G.</span>
+                    <span class="preview-sla">{{ icono('reloj', 14) }} SLA 2h 15m</span>
+                </div>
+                <div class="preview-bar"><span></span></div>
             </div>
         </div>
-    </div>
+        <h1>{{ _('Soporte IT, sin fricción.') }}</h1>
+        <p>{{ _('Gestiona incidencias con SLA, clasificación automática y trazabilidad completa en un solo lugar.') }}</p>
+        <ul class="auth-features">
+            <li><span class="feat-ico">{{ icono('ia', 17) }}</span>{{ _('Clasificación automática de tickets') }}</li>
+            <li><span class="feat-ico">{{ icono('reloj', 17) }}</span>{{ _('Alertas de SLA en tiempo real') }}</li>
+            <li><span class="feat-ico">{{ icono('escudo', 17) }}</span>{{ _('Auditoría de cada acción') }}</li>
+        </ul>
+    </section>
+
+    <section class="auth-main">
+        <div class="auth-form">
+            <div class="auth-badge">{{ icono('candado', 20) }}</div>
+            <h2>{{ _('Iniciar sesión') }}</h2>
+            <p class="auth-subtitle">{{ _('Accede con tus credenciales para gestionar tickets.') }}</p>
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-3">
+                    <label class="form-label" for="email">{{ _('Email') }}</label>
+                    <input type="email" id="email" name="email" class="form-control" autocomplete="username" autofocus required>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <label class="form-label" for="contrasena">{{ _('Contraseña') }}</label>
+                        <a href="{{ url_for('seguridad.recuperar') }}" class="small-link">{{ _('¿Olvidaste tu contraseña?') }}</a>
+                    </div>
+                    <input type="password" id="contrasena" name="contrasena" class="form-control" autocomplete="current-password" required>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="recordarEmail" data-recordar-email>
+                    <label class="form-check-label" for="recordarEmail">{{ _('Recordar mi email en este equipo') }}</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">{{ _('Entrar') }}</button>
+            </form>
+        </div>
+    </section>
 </div>
 {% endblock %}

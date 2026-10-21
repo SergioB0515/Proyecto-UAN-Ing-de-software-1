@@ -40,3 +40,13 @@ class ApelacionNoPendienteError(Exception):
     pass
 class TicketNoCerradoError(Exception):
     pass
+class CodigoInvalidoError(Exception):
+    pass
+class DobleFactorNoConfiguradoError(Exception):
+    pass
+class DobleFactorYaActivoError(Exception):
+    pass
+class DobleFactorBloqueadoError(Exception):
+    pass
+class TokenRecuperacionInvalidoError(Exception):
+    pass

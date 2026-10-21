@@ -3,8 +3,9 @@
 {% block title %}{{ _('Crear ticket') }}{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-7">
+{% from "_iconos.html" import icono %}
+<div class="row g-4 justify-content-center">
+    <div class="col-lg-7">
         <div class="card">
             <div class="card-body p-4">
                 <h2 class="mb-1">{{ _('Reportar un problema') }}</h2>
@@ -13,10 +14,24 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label class="form-label">{{ _('Describe el problema') }}</label>
-                        <textarea name="texto" class="form-control" rows="5" required></textarea>
+                        <textarea name="texto" class="form-control" rows="5" autofocus data-min-detalle="30" required></textarea>
+                        <div class="form-text">{{ _('Ctrl + Enter para enviar') }}</div>
                     </div>
-                    <button type="submit" class="btn btn-primary">{{ _('Enviar ticket') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ icono('enviar', 15) }} {{ _('Enviar ticket') }}</button>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-3">{{ _('Consejos para un buen reporte') }}</h5>
+                <ul class="props">
+                    <li><span class="prop-k">{{ icono('objetivo', 15) }}{{ _('Qué pasa y desde cuándo') }}</span></li>
+                    <li><span class="prop-k">{{ icono('capas', 15) }}{{ _('Equipo, programa o servicio afectado') }}</span></li>
+                    <li><span class="prop-k">{{ icono('alerta', 15) }}{{ _('Mensajes de error exactos') }}</span></li>
+                </ul>
+                <p class="form-text mt-3 mb-0">{{ _('La categoría y la prioridad se asignan automáticamente a partir de tu descripción.') }}</p>
             </div>
         </div>
     </div>

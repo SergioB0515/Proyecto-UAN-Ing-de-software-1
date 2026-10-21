@@ -121,15 +121,15 @@ def main():
     with open(indice, "w", encoding="utf-8") as f:
         f.write("<!doctype html><meta charset='utf-8'><title>Previsualización de correos</title>")
         f.write(
-            "<body style=\"margin:0;padding:2rem;background:#0a0c1e;color:#e8e6f7;"
+            "<body style=\"margin:0;padding:2rem;background:#fafafa;color:#09090b;"
             "font-family:'Segoe UI',Helvetica,Arial,sans-serif;\">"
         )
-        f.write("<h1 style='color:#f5f3ff;'>Previsualización de correos</h1>")
+        f.write("<h1 style='color:#09090b;font-weight:700;'>Previsualización de correos</h1>")
         f.write("<ul style='line-height:2.2;font-size:1.05rem;'>")
         for nombre_archivo, asunto in generados:
             f.write(
-                f"<li><a style='color:#8f82f5' href='{nombre_archivo}.html'>{nombre_archivo}</a>"
-                f" &mdash; <span style='color:#9d9ac4'>{asunto}</span></li>"
+                f"<li><a style='color:#4f46e5' href='{nombre_archivo}.html'>{nombre_archivo}</a>"
+                f" &mdash; <span style='color:#52525b'>{asunto}</span></li>"
             )
         f.write("</ul></body>")
 

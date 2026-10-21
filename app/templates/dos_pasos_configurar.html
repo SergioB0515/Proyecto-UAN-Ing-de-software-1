@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% from "_iconos.html" import icono %}
+{% block title %}{{ _('Activar verificación en dos pasos') }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>{{ _('Activar verificación en dos pasos') }}</h2>
+        <span class="text-muted">{{ _('Además de tu contraseña, se pedirá un código de tu teléfono al iniciar sesión.') }}</span>
+    </div>
+</div>
+
+<div class="setup-grid">
+    <div class="card">
+        <div class="card-body p-4">
+            <ol class="setup-steps">
+                <li>
+                    <div class="step-title">{{ _('Instala una app de autenticación') }}</div>
+                    <p class="text-muted mb-0">{{ _('Google Authenticator, Microsoft Authenticator, Authy o la que prefieras.') }}</p>
+                </li>
+                <li>
+                    <div class="step-title">{{ _('Escanea este código QR') }}</div>
+                    <div class="qr-wrap">
+                        <div class="qr-box" data-qr="{{ uri }}" aria-label="{{ _('Código QR para la app de autenticación') }}"></div>
+                        <div class="qr-manual">
+                            <span class="text-muted small">{{ _('¿No puedes escanearlo? Ingresa esta clave manualmente:') }}</span>
+                            <button type="button" class="secret-key mono" data-copy="{{ secreto | replace(' ', '') }}" title="{{ _('Copiar') }}">{{ secreto }}</button>
+                            <span class="text-muted small">{{ _('Cuenta: %(email)s · Tipo: basado en tiempo', email=email) }}</span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-title">{{ _('Escribe el código que muestra la app') }}</div>
+                    <form method="POST" action="{{ url_for('seguridad.confirmar_2fa') }}" class="otp-row">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="text" name="codigo" class="form-control otp-input" inputmode="numeric" autocomplete="one-time-code"
+                               maxlength="7" placeholder="000000" required data-otp aria-label="{{ _('Código') }}">
+                        <button type="submit" class="btn btn-primary">{{ _('Activar') }}</button>
+                    </form>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body p-4">
+            <h5 class="card-title mb-3">{{ icono('escudo', 18) }} {{ _('¿Por qué activarla?') }}</h5>
+            <ul class="props">
+                <li><span class="prop-k">{{ icono('candado', 15) }}{{ _('Una contraseña filtrada ya no basta para entrar') }}</span></li>
+                <li><span class="prop-k">{{ icono('reloj', 15) }}{{ _('El código cambia cada 30 segundos') }}</span></li>
+                <li><span class="prop-k">{{ icono('check', 15) }}{{ _('Funciona sin internet en el teléfono') }}</span></li>
+            </ul>
+            <p class="form-text mt-3 mb-0">{{ _('Al activarla recibirás códigos de respaldo por si pierdes el teléfono.') }}</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function () {
+    var el = document.querySelector('[data-qr]');
+    if (!el || !window.QRCode) return;
+    new QRCode(el, {
+        text: el.getAttribute('data-qr'),
+        width: 184,
+        height: 184,
+        colorDark: '#0f1218',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+    });
+    el.removeAttribute('title');
+})();
+</script>
+{% endblock %}

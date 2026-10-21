@@ -1,48 +1,42 @@
 {% extends "base.html" %}
+{% from "_iconos.html" import icono %}
 {% block title %}{{ _('Apelaciones pendientes') }}{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{{ _('Apelaciones pendientes') }}</h2>
+    <div>
+        <h2>{{ _('Apelaciones pendientes') }} <span class="count-pill">{{ apelaciones | length }}</span></h2>
+        <span class="text-muted">{{ _('Usuarios que no están de acuerdo con el cierre de su ticket.') }}</span>
+    </div>
 </div>
 
 {% if apelaciones %}
-<div class="table-card">
-<table class="table table-hover align-middle">
-    <thead>
-        <tr>
-            <th>{{ _('Ticket') }}</th>
-            <th>{{ _('Motivo') }}</th>
-            <th>{{ _('Fecha') }}</th>
-            <th>{{ _('Acciones') }}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for a in apelaciones %}
-        <tr>
-            <td>
-                <a href="{{ url_for('tickets.detalle', ticket_id=a.ticket_id) }}" class="mono ticket-id-tag">
-                    #{{ a.ticket_id }}
-                </a>
-            </td>
-            <td>{{ a.motivo }}</td>
-            <td class="mono">{{ a.fecha_solicitud | fecha }}</td>
-            <td class="d-flex gap-1">
-                <form method="POST" action="{{ url_for('apelaciones.aceptar', apelacion_id=a.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-outline-success">{{ _('Aceptar') }}</button>
-                </form>
-                <form method="POST" action="{{ url_for('apelaciones.rechazar', apelacion_id=a.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="req-list">
+    {% for a in apelaciones %}
+    <article class="req-card">
+        <span class="req-ico t-danger">{{ icono('mazo', 18) }}</span>
+        <div class="req-body">
+            <div class="req-head">
+                <a class="mono ticket-id-tag ms-0" href="{{ url_for('tickets.detalle', ticket_id=a.ticket_id) }}">#{{ a.ticket_id }}</a>
+            </div>
+            <div class="req-meta">{{ icono('reloj', 13) }} {{ a.fecha_solicitud | fecha }}</div>
+            <p class="req-text">{{ a.motivo }}</p>
+        </div>
+        <div class="req-actions">
+            <a href="{{ url_for('tickets.detalle', ticket_id=a.ticket_id) }}" class="btn btn-outline-secondary btn-sm">{{ _('Ver ticket') }} {{ icono('flecha', 14) }}</a>
+            <form method="POST" action="{{ url_for('apelaciones.rechazar', apelacion_id=a.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-danger" data-confirm>{{ _('Rechazar') }}</button>
+            </form>
+            <form method="POST" action="{{ url_for('apelaciones.aceptar', apelacion_id=a.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-success">{{ _('Aceptar') }}</button>
+            </form>
+        </div>
+    </article>
+    {% endfor %}
 </div>
 {% else %}
-<div class="empty-state py-3">
+<div class="empty-state">
     <p class="mb-0">{{ _('No hay apelaciones pendientes.') }}</p>
 </div>
 {% endif %}

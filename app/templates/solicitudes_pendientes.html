@@ -1,10 +1,14 @@
 {% extends "base.html" %}
+{% from "_iconos.html" import icono %}
 
 {% block title %}{{ _('Solicitudes de transferencia') }}{% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h2>{% if es_admin %}{{ _('Todas las solicitudes de transferencia pendientes') }}{% else %}{{ _('Solicitudes de transferencia pendientes') }}{% endif %}</h2>
+    <div>
+        <h2>{% if es_admin %}{{ _('Todas las solicitudes de transferencia pendientes') }}{% else %}{{ _('Solicitudes de transferencia pendientes') }}{% endif %} <span class="count-pill">{{ solicitudes | length }}</span></h2>
+        <span class="text-muted">{{ _('Traspasos de tickets entre agentes que esperan una decisión.') }}</span>
+    </div>
 </div>
 
 {% if not solicitudes %}
@@ -14,39 +18,41 @@
     </p>
 </div>
 {% else %}
+<div class="req-list">
     {% for s in solicitudes %}
-    <div class="comment-card mb-2 d-flex justify-content-between align-items-start flex-wrap gap-3">
-        <div>
-            <h5 class="mb-1">{{ _('Ticket') }} <span class="mono ticket-id-tag">#{{ s.ticket_id }}</span></h5>
-            {% if es_admin %}
-            <small class="text-muted d-block">{{ _('Destino: %(nombre)s', nombre=nombres_por_id.get(s.agente_destino_id, "Agente #" ~ s.agente_destino_id)) }}</small>
-            {% endif %}
-            <small class="text-muted d-block mb-2">{{ _('Solicitado el %(fecha)s', fecha=s.fecha_solicitud.strftime('%d/%m/%Y %H:%M')) }}</small>
-            {% if s.motivo %}
-            <p class="mb-0">{{ s.motivo }}</p>
-            {% endif %}
+    <article class="req-card">
+        <span class="req-ico t-info">{{ icono('transferir', 18) }}</span>
+        <div class="req-body">
+            <div class="req-head">
+                <a class="mono ticket-id-tag ms-0" href="{{ url_for('tickets.detalle', ticket_id=s.ticket_id) }}">#{{ s.ticket_id }}</a>
+                {% if es_admin %}
+                <span class="solicitud-arrow">&rarr;</span>
+                <span class="solicitud-dest">{{ nombres_por_id.get(s.agente_destino_id, "Agente #" ~ s.agente_destino_id) }}</span>
+                {% endif %}
+            </div>
+            <div class="req-meta">{{ icono('reloj', 13) }} {{ _('Solicitado el %(fecha)s', fecha=s.fecha_solicitud.strftime('%d/%m/%Y %H:%M')) }}</div>
+            {% if s.motivo %}<p class="req-text">{{ s.motivo }}</p>{% endif %}
         </div>
-        <div class="d-flex gap-2 flex-shrink-0">
-            <a href="{{ url_for('tickets.detalle', ticket_id=s.ticket_id) }}" class="btn btn-outline-secondary btn-sm">{{ _('Ver ticket') }}</a>
-
+        <div class="req-actions">
+            <a href="{{ url_for('tickets.detalle', ticket_id=s.ticket_id) }}" class="btn btn-outline-secondary btn-sm">{{ _('Ver ticket') }} {{ icono('flecha', 14) }}</a>
             {% if es_admin %}
             <form method="POST" action="{{ url_for('solicitudes.cancelar', solicitud_id=s.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" class="btn btn-outline-danger btn-sm">{{ _('Cancelar') }}</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm>{{ _('Cancelar') }}</button>
             </form>
             {% else %}
+            <form method="POST" action="{{ url_for('solicitudes.rechazar', solicitud_id=s.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm>{{ _('Rechazar') }}</button>
+            </form>
             <form method="POST" action="{{ url_for('solicitudes.aceptar', solicitud_id=s.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn btn-success btn-sm">{{ _('Aceptar') }}</button>
             </form>
-
-            <form method="POST" action="{{ url_for('solicitudes.rechazar', solicitud_id=s.id) }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" class="btn btn-outline-danger btn-sm">{{ _('Rechazar') }}</button>
-            </form>
             {% endif %}
         </div>
-    </div>
+    </article>
     {% endfor %}
+</div>
 {% endif %}
 {% endblock %}

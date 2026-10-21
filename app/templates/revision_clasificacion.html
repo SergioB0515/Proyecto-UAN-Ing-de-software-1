@@ -1,10 +1,14 @@
 {% extends "base.html" %}
+{% from "_iconos.html" import icono %}
 
 {% block title %}{{ _('Revisión de clasificación') }}{% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h2>{{ _('Tickets pendientes de revisión de categoría') }}</h2>
+    <div>
+        <h2>{{ _('Tickets pendientes de revisión de categoría') }} <span class="count-pill">{{ pendientes | length }}</span></h2>
+        <span class="text-muted">{{ _('El clasificador no estuvo seguro: confirma la categoría correcta. Tus correcciones ayudan a reentrenarlo.') }}</span>
+    </div>
 </div>
 
 {% if not pendientes %}
@@ -12,26 +16,30 @@
     <p class="mb-0">{{ _('No hay tickets pendientes de revisión.') }}</p>
 </div>
 {% else %}
+<div class="req-list">
     {% for t in pendientes %}
-    <div class="comment-card mb-2">
-        <h5 class="mb-1">{{ _('Ticket') }} <span class="mono ticket-id-tag">#{{ t.id }}</span></h5>
-        <small class="text-muted d-block mb-2">{{ t.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</small>
-        <p class="mb-2">{{ t.texto }}</p>
-        <form method="POST" action="{{ url_for('tickets.confirmar_clasificacion', ticket_id=t.id) }}" class="d-flex gap-2">
+    <article class="req-card">
+        <span class="req-ico t-warn">{{ icono('ia', 18) }}</span>
+        <div class="req-body">
+            <div class="req-head">
+                <a class="mono ticket-id-tag ms-0" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a>
+                <span class="badge-pill categoria-tag">{{ t.categoria.value | etiqueta }}</span>
+            </div>
+            <div class="req-meta">{{ icono('reloj', 13) }} {{ t.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</div>
+            <p class="req-text">{{ t.texto }}</p>
+        </div>
+        <form method="POST" action="{{ url_for('tickets.confirmar_clasificacion', ticket_id=t.id) }}" class="req-actions">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <select name="categoria" class="form-select form-select-sm" required>
                 <option value="">{{ _('-- elegir categoría --') }}</option>
-                <option value="infraestructura">{{ _('Infraestructura') }}</option>
-                <option value="redes">{{ _('Redes') }}</option>
-                <option value="permisos">{{ _('Permisos') }}</option>
-                <option value="cuentas_contrasenas">{{ _('Cuentas y contraseñas') }}</option>
-                <option value="seguridad">{{ _('Seguridad') }}</option>
-                <option value="software">{{ _('Software') }}</option>
-                <option value="otros">{{ _('Otros') }}</option>
+                {% for valor, texto in [("infraestructura", _('Infraestructura')), ("redes", _('Redes')), ("permisos", _('Permisos')), ("cuentas_contrasenas", _('Cuentas y contraseñas')), ("seguridad", _('Seguridad')), ("software", _('Software')), ("otros", _('Otros'))] %}
+                <option value="{{ valor }}" {% if t.categoria.value == valor %}selected{% endif %}>{{ texto }}</option>
+                {% endfor %}
             </select>
             <button type="submit" class="btn btn-primary btn-sm">{{ _('Confirmar') }}</button>
         </form>
-    </div>
+    </article>
     {% endfor %}
+</div>
 {% endif %}
 {% endblock %}

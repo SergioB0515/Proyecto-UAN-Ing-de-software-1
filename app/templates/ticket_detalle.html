@@ -1,29 +1,35 @@
 {% extends "base.html" %}
 {% block title %}{{ _('Ticket #%(id)s', id=ticket.id) }}{% endblock %}
 {% block content %}
-<div class="page-header">
-    <h2>{{ _('Ticket') }} <span class="mono ticket-id-tag">#{{ ticket.id }}</span></h2>
+{% from "_iconos.html" import icono %}
+{% macro iniciales(nombre) -%}{{ (nombre.split()[:2] | map('first') | join | upper) if nombre else '?' }}{%- endmacro %}
+{% set nombre_creador = nombres_por_id.get(ticket.creador_id, _('Usuario desconocido')) %}
+{% set nombre_agente = nombres_por_id.get(ticket.agente_id) if ticket.agente_id else None %}
+<div class="page-header" data-ticket-reciente data-id="{{ ticket.id }}" data-titulo="{{ ticket.texto | truncate(60, True) }}">
+    <div class="min-w-0">
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <button type="button" class="mono ticket-id-tag ms-0 tag-copy" data-copy="#{{ ticket.id }}">#{{ ticket.id }}</button>
+            <span class="badge-pill estado-{{ ticket.estado.value }}">{{ ticket.estado.value | etiqueta }}</span>
+            <span class="badge-pill prioridad-{{ ticket.prioridad.value }}">{{ ticket.prioridad.value | etiqueta }}</span>
+        </div>
+        <h2>{{ ticket.texto | truncate(90, True) }}</h2>
+    </div>
+    <div class="ticket-actions">
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-imprimir>{{ icono('imprimir', 15) }} {{ _('Imprimir') }}</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" data-copy>
+            {{ icono('copiar', 15) }} <span data-copy-label>{{ _('Copiar enlace') }}</span>
+        </button>
+    </div>
 </div>
 
-<div class="ticket-meta">
-    <p class="mb-2"><span class="meta-label">{{ _('Texto') }}</span>{{ ticket.texto }}</p>
-    <p class="mb-2">
-        <span class="meta-label">{{ _('Categoría') }}</span><span class="badge-pill categoria-tag">{{ ticket.categoria.value | etiqueta }}</span>
-        &nbsp;
-        <span class="meta-label">{{ _('Prioridad') }}</span><span class="badge-pill prioridad-{{ ticket.prioridad.value }}">{{ ticket.prioridad.value | etiqueta }}</span>
-        &nbsp;
-        <span class="meta-label">{{ _('Estado') }}</span><span class="badge-pill estado-{{ ticket.estado.value }}">{{ ticket.estado.value | etiqueta }}</span>
-    </p>
-    <p class="mb-2">
-        <span class="meta-label">{{ _('Creado por') }}</span>{{ nombres_por_id.get(ticket.creador_id, _('Usuario desconocido')) }}
-        &nbsp;
-        <span class="meta-label">{{ _('Agente') }}</span>{{ nombres_por_id.get(ticket.agente_id, '—') if ticket.agente_id else '—' }}
-    </p>
-    <p class="mb-0">
-        <span class="meta-label">{{ _('Fecha creación') }}</span><span class="mono">{{ ticket.fecha_creacion | fecha }}</span>
-        &nbsp;
-        <span class="meta-label">{{ _('Fecha límite') }}</span><span class="mono">{{ ticket.fecha_limite | fecha }}</span>
-    </p>
+<div class="ticket-layout">
+<div class="ticket-main">
+
+<div class="card">
+    <div class="card-body p-4">
+        <div class="card-title mb-2">{{ _('Descripción') }}</div>
+        <p class="ticket-desc">{{ ticket.texto }}</p>
+    </div>
 </div>
 
 {% if sugerencia_agente %}
@@ -133,7 +139,7 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="origen" value="detalle">
                 <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
-                <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
+                <button class="btn btn-sm btn-outline-danger" data-confirm>{{ _('Rechazar') }}</button>
             </form>
         </div>
     </div>
@@ -191,7 +197,7 @@
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="origen" value="detalle">
                         <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
-                        <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
+                        <button class="btn btn-sm btn-outline-danger" data-confirm>{{ _('Rechazar') }}</button>
                     </form>
                     {% elif s.tipo.value == 'escalamiento' and usuario_actual and usuario_actual.rol.value == 'admin' %}
                     <form method="POST" action="{{ url_for('solicitudes.aprobar_escalamiento', solicitud_id=s.id) }}">
@@ -204,7 +210,7 @@
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="origen" value="detalle">
                         <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
-                        <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
+                        <button class="btn btn-sm btn-outline-danger" data-confirm>{{ _('Rechazar') }}</button>
                     </form>
                     {% elif s.tipo.value == 'cambio_prioridad' and usuario_actual and usuario_actual.rol.value == 'admin' %}
                     <form method="POST" action="{{ url_for('solicitudes.aprobar_cambio_prioridad', solicitud_id=s.id) }}">
@@ -217,7 +223,7 @@
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="origen" value="detalle">
                         <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
-                        <button class="btn btn-sm btn-outline-danger">{{ _('Rechazar') }}</button>
+                        <button class="btn btn-sm btn-outline-danger" data-confirm>{{ _('Rechazar') }}</button>
                     </form>
                     {% endif %}
                 </div>
@@ -229,24 +235,34 @@
 </div>
 {% endif %}
 
-<h4 class="mt-4 mb-3">{{ _('Comentarios') }}</h4>
-{% for c in comentarios %}
-<div class="comment-card mb-2">
-    <small class="text-muted">{{ nombres_por_id.get(c.autor_id, _('Usuario desconocido')) }} &mdash; {{ c.fecha | fecha }}</small>
-    <p class="mb-0 mt-1">{{ c.texto }}</p>
-</div>
+<h4 class="section-title">{{ icono('mensaje', 18) }} {{ _('Comentarios') }} <span class="count">{{ comentarios | length }}</span></h4>
+{% if comentarios %}
+<ol class="timeline">
+    {% for c in comentarios %}
+    {% set autor = nombres_por_id.get(c.autor_id, _('Usuario desconocido')) %}
+    <li class="tl-item">
+        <span class="tl-av" aria-hidden="true">{{ iniciales(autor) }}</span>
+        <div class="tl-body">
+            <div class="tl-meta"><strong>{{ autor }}</strong><span>{{ c.fecha | fecha }}</span></div>
+            <p class="tl-text">{{ c.texto }}</p>
+        </div>
+    </li>
+    {% endfor %}
+</ol>
 {% else %}
 <div class="empty-state py-3">
     <p class="mb-0">{{ _('Sin comentarios todavía.') }}</p>
 </div>
-{% endfor %}
+{% endif %}
 
-<form method="POST" class="mt-3">
+<form method="POST" class="composer mt-2">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <div class="mb-2">
-        <textarea name="texto" class="form-control" rows="3" placeholder="{{ _('Escribe un comentario...') }}" required></textarea>
+    <label for="nuevoComentario" class="visually-hidden">{{ _('Escribe un comentario...') }}</label>
+    <textarea id="nuevoComentario" name="texto" class="form-control" rows="3" placeholder="{{ _('Escribe un comentario...') }}" required></textarea>
+    <div class="composer-foot">
+        <span class="form-text m-0">{{ _('Ctrl + Enter para enviar') }}</span>
+        <button type="submit" class="btn btn-primary btn-sm">{{ icono('enviar', 15) }} {{ _('Comentar') }}</button>
     </div>
-    <button type="submit" class="btn btn-primary">{{ _('Comentar') }}</button>
 </form>
 
 {% if puede_gestionar and ticket.estado.value == "en_progreso" %}
@@ -343,4 +359,33 @@
     </div>
 </div>
 {% endif %}
+
+</div>
+
+<aside class="ticket-side">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-3">{{ _('Detalles') }}</h5>
+            <ul class="props">
+                <li><span class="prop-k">{{ icono('circulo', 15) }}{{ _('Estado') }}</span><span class="badge-pill estado-{{ ticket.estado.value }}">{{ ticket.estado.value | etiqueta }}</span></li>
+                <li><span class="prop-k">{{ icono('bandera', 15) }}{{ _('Prioridad') }}</span><span class="badge-pill prioridad-{{ ticket.prioridad.value }}">{{ ticket.prioridad.value | etiqueta }}</span></li>
+                <li><span class="prop-k">{{ icono('etiqueta', 15) }}{{ _('Categoría') }}</span><span class="badge-pill categoria-tag">{{ ticket.categoria.value | etiqueta }}</span></li>
+                <li><span class="prop-k">{{ icono('usuario', 15) }}{{ _('Creado por') }}</span><span class="prop-v person"><span class="person-av">{{ iniciales(nombre_creador) }}</span>{{ nombre_creador }}</span></li>
+                <li><span class="prop-k">{{ icono('usuarios', 15) }}{{ _('Agente') }}</span><span class="prop-v">{% if nombre_agente %}<span class="person"><span class="person-av">{{ iniciales(nombre_agente) }}</span>{{ nombre_agente }}</span>{% else %}<span class="text-muted">—</span>{% endif %}</span></li>
+                <li><span class="prop-k">{{ icono('calendario', 15) }}{{ _('Fecha creación') }}</span><span class="prop-v mono">{{ ticket.fecha_creacion | fecha }}</span></li>
+                <li><span class="prop-k">{{ icono('reloj', 15) }}{{ _('Fecha límite') }}</span><span class="prop-v mono">{{ ticket.fecha_limite | fecha }}</span></li>
+            </ul>
+            {% if ticket.fecha_limite and ticket.estado.value != 'cerrado' %}
+            <div class="sla-box" data-sla data-inicio="{{ (ticket.fecha_asignacion or ticket.fecha_creacion).strftime('%Y-%m-%dT%H:%M:%S') }}" data-limite="{{ ticket.fecha_limite.strftime('%Y-%m-%dT%H:%M:%S') }}">
+                <div class="d-flex justify-content-between align-items-baseline mb-2">
+                    <span class="sla-label">SLA</span>
+                    <span class="sla-value" data-sla-texto>—</span>
+                </div>
+                <div class="sla-track"><span data-sla-barra></span></div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</aside>
+</div>
 {% endblock %}

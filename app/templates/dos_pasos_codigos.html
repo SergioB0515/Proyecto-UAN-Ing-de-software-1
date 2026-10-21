@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_iconos.html" import icono %}
+{% block title %}{{ _('Códigos de respaldo') }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>{{ _('Guarda tus códigos de respaldo') }}</h2>
+        <span class="text-muted">{{ _('Úsalos si pierdes el teléfono. Cada código sirve una vez y no se volverán a mostrar.') }}</span>
+    </div>
+</div>
+
+<div class="card codes-card">
+    <div class="card-body p-4">
+        <div class="alert alert-warning mb-4">
+            <span class="flash-ico">{{ icono('alerta', 18) }}</span>
+            <span class="flash-msg">{{ _('Guárdalos en un lugar seguro (gestor de contraseñas o impresos). Quien los tenga puede pasar el segundo paso.') }}</span>
+        </div>
+        <ol class="codes-grid" data-codigos>
+            {% for c in codigos %}<li class="mono">{{ c }}</li>{% endfor %}
+        </ol>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-copy="{{ codigos | join('\n') }}">{{ icono('copiar', 15) }} <span data-copy-label>{{ _('Copiar todos') }}</span></button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-descargar-codigos>{{ icono('descargar', 15) }} {{ _('Descargar .txt') }}</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-imprimir>{{ icono('imprimir', 15) }} {{ _('Imprimir') }}</button>
+            <a href="{{ url_for('auth.perfil') }}" class="btn btn-primary btn-sm ms-auto">{{ _('Ya los guardé') }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,7 +2,10 @@
 {% block title %}{{ _('Palabras clave del clasificador') }}{% endblock %}
 {% block content %}
 <div class="page-header d-flex justify-content-between align-items-center">
-    <h2>{{ _('Palabras clave del clasificador') }}</h2>
+    <div>
+        <h2>{{ _('Palabras clave del clasificador') }}</h2>
+        <span class="text-muted">{{ _('Términos y pesos que usa la primera capa del clasificador para sugerir la categoría.') }}</span>
+    </div>
     <a href="{{ url_for('palabras_clave.listar', incluir_inactivas='0' if incluir_inactivas else '1') }}"
        class="btn btn-outline-secondary btn-sm">
         {{ _('Ocultar inactivas') if incluir_inactivas else _('Mostrar inactivas') }}
@@ -31,7 +34,7 @@
     </div>
 </div>
 <div class="table-card">
-<table class="table table-hover align-middle" id="tablaPalabrasClave">
+<table class="table table-hover align-middle" id="tablaPalabrasClave" data-no-filter>
     <thead>
         <tr>
             <th>{{ _('Texto') }}</th><th>{{ _('Categoría') }}</th><th>{{ _('Peso') }}</th><th>{{ _('Estado') }}</th><th>{{ _('Acciones') }}</th>
@@ -51,7 +54,7 @@
                 {% if pc.activa %}
                 <form method="POST" action="{{ url_for('palabras_clave.desactivar', id=pc.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-outline-warning">{{ _('Desactivar') }}</button>
+                    <button class="btn btn-sm btn-outline-warning" data-confirm>{{ _('Desactivar') }}</button>
                 </form>
                 {% else %}
                 <form method="POST" action="{{ url_for('palabras_clave.reactivar', id=pc.id) }}">

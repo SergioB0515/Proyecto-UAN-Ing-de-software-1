@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<div class="error-shell">
+    <span class="error-code" aria-hidden="true">{{ codigo }}</span>
+    <h2>{{ titulo }}</h2>
+    <p>{{ mensaje }}</p>
+    <div class="d-flex gap-2 flex-wrap mt-3">
+        <a href="{{ url_for('auth.dashboard') if session.get('usuario_id') else url_for('auth.login') }}" class="btn btn-primary">{{ _('Volver al inicio') }}</a>
+        <button type="button" class="btn btn-outline-secondary" onclick="history.back()">{{ _('Página anterior') }}</button>
+    </div>
+</div>
+{% endblock %}

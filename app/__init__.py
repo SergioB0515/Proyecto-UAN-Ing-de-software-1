@@ -1,4 +1,4 @@
-from flask import Flask, session, has_request_context
+from flask import Flask, session, has_request_context, render_template
 from app.extensions import db, socketio, mail
 from flask_socketio import join_room
 from app.config import Config
@@ -9,7 +9,8 @@ from app.routes.auditoria import auditoria_bp
 from app.routes.solicitudes import solicitudes_bp
 from app.routes.apelacion import apelaciones_bp
 from flask_wtf import CSRFProtect
-from flask_babel import Babel
+from flask_babel import Babel, gettext as _
+from flask_wtf.csrf import CSRFError
 from app.services.gestor_sla import GestorSLA
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
@@ -19,6 +20,7 @@ from threading import Lock
 import os
 from app.routes.palabra_clave import palabras_clave_bp
 from app.routes.demo import demo_bp
+from app.routes.seguridad import seguridad_bp
 
 def create_app():
     app = Flask(__name__)
@@ -47,6 +49,7 @@ def create_app():
     app.jinja_env.filters["etiqueta"] = etiqueta
     app.jinja_env.globals["etiqueta"] = etiqueta
     app.jinja_env.filters["fecha"] = formato_fecha
+    app.jinja_env.globals["ahora"] = datetime.now
 
     from app.notificaciones_i18n import render as _render_notif, catalogo_cliente as _catalogo_notif
     app.jinja_env.filters["notif_msg"] = lambda n: _render_notif(n.mensaje, n.ticket_id)
@@ -60,6 +63,8 @@ def create_app():
     from app.models.notificacion import Notificacion
     from app.models.palabra_clave import PalabraClave
     from app.models.correccion_clasificacion import CorreccionClasificacion
+    from app.models.doble_factor import DobleFactor
+    from app.models.token_recuperacion import TokenRecuperacion
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(tickets_bp)
@@ -69,6 +74,7 @@ def create_app():
     app.register_blueprint(palabras_clave_bp)
     app.register_blueprint(apelaciones_bp)
     app.register_blueprint(demo_bp)
+    app.register_blueprint(seguridad_bp)
     
     if app.config.get("CLASIFICADOR_ML_ACTIVO"):
         with app.app_context():
@@ -112,6 +118,31 @@ def create_app():
             "usuario_iniciales": iniciales,
             "usuario_nombre_foto": nombre_foto,
         }
+
+    @app.context_processor
+    def inject_pendientes_menu():
+        if not has_request_context() or "usuario_id" not in session:
+            return {}
+        rol = session.get("rol")
+        try:
+            from app.services.solicitud_transferencia import ServicioSolicitudesTransferencia
+            if rol == "admin":
+                from app.services.apelacion import ServicioApelaciones
+                from app.services.tickets import ServicioTickets
+                return {"pendientes_menu": {
+                    "transferencias": len(ServicioSolicitudesTransferencia.listar_transferencias_pendientes()),
+                    "escalamientos": len(ServicioSolicitudesTransferencia.listar_escalamientos_pendientes()),
+                    "prioridad": len(ServicioSolicitudesTransferencia.listar_cambios_prioridad_pendientes()),
+                    "apelaciones": len(ServicioApelaciones.listar_pendientes()),
+                    "revision": len(ServicioTickets.listar_pendientes_revision_clasificacion()),
+                }}
+            if rol == "agente":
+                return {"pendientes_menu": {
+                    "transferencias": len(ServicioSolicitudesTransferencia.listar_pendientes_para_agente(session["usuario_id"])),
+                }}
+        except Exception:
+            db.session.rollback()
+        return {}
 
     def limpiar_intentos_login_viejos():
         with app.app_context():
@@ -189,5 +220,29 @@ def create_app():
 
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         _iniciar_scheduler()
-    
+
+    def _pagina_error(codigo, titulo, mensaje):
+        try:
+            return render_template("error.html", codigo=codigo, titulo=titulo, mensaje=mensaje), codigo
+        except Exception:
+            return f"{codigo} - {titulo}", codigo
+
+    @app.errorhandler(CSRFError)
+    def _error_csrf(error):
+        return _pagina_error(400, _("Sesión expirada"),
+                             _("El formulario expiró o no es válido. Recarga la página e inténtalo de nuevo."))
+
+    @app.errorhandler(403)
+    def _error_403(error):
+        return _pagina_error(403, _("Acceso denegado"), _("No tienes permisos para ver esta página."))
+
+    @app.errorhandler(404)
+    def _error_404(error):
+        return _pagina_error(404, _("Página no encontrada"), _("La página que buscas no existe o fue movida."))
+
+    @app.errorhandler(500)
+    def _error_500(error):
+        db.session.rollback()
+        return _pagina_error(500, _("Algo salió mal"), _("Ocurrió un error inesperado. Inténtalo de nuevo en unos instantes."))
+
     return app
