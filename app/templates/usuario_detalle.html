@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}{{ usuario.nombre }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% block content %}
+<a class="small-link mb-3 d-inline-flex align-items-center gap-1" href="{{ url_for('usuarios.listar') }}">{{ icono('flecha', 14, 'flip-x') }} {{ _('Volver a usuarios') }}</a>
+
+<div class="user-hero card mb-4">
+    <div class="card-body d-flex align-items-center gap-3 flex-wrap">
+        {% if nombre_foto %}
+        <img class="avatar-perfil" src="{{ url_for('static', filename='fotos_perfil/' ~ nombre_foto) }}" alt="">
+        {% else %}
+        <span class="avatar-iniciales">{{ (usuario.nombre.split()[:2] | map('first') | join | upper) }}</span>
+        {% endif %}
+        <div class="min-w-0 flex-grow-1">
+            <h2 class="mb-1">{{ usuario.nombre }} {% if es_yo %}<span class="badge-pill">{{ _('Tú') }}</span>{% endif %}</h2>
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <span class="text-muted">{{ usuario.email }}</span>
+                <span class="badge-pill rol-{{ usuario.rol.value }}">{{ usuario.rol.value | etiqueta }}</span>
+                {% if usuario.nivel.value == 'vip' %}<span class="badge-pill vip-tag">{{ icono('estrella', 12) }} VIP</span>{% endif %}
+                {% if not usuario.activo %}<span class="badge-pill estado-inactivo">{{ _('Desactivada') }}</span>
+                {% elif bloqueado %}<span class="badge-pill sla-proximo">{{ icono('candado', 12) }} {{ _('Bloqueada hasta %(f)s', f=(usuario.bloqueado_hasta | fecha)) }}</span>
+                {% else %}<span class="badge-pill estado-activo">{{ _('Activa') }}</span>{% endif %}
+            </div>
+        </div>
+        <div class="user-hero-stats">
+            <div><span class="meta-label">{{ _('Creados') }}</span><strong data-count>{{ estadisticas.creados }}</strong></div>
+            <div><span class="meta-label">{{ _('Asignados') }}</span><strong data-count>{{ estadisticas.asignados }}</strong></div>
+            <div><span class="meta-label">{{ _('En progreso') }}</span><strong data-count>{{ estadisticas.en_progreso }}</strong></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card mb-4">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-3">{{ _('Datos y permisos') }}</h5>
+                <form method="POST" data-rol-area>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" for="uNombre">{{ _('Nombre') }}</label>
+                            <input id="uNombre" name="nombre" class="form-control" value="{{ usuario.nombre }}" maxlength="100" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="uRol">{{ _('Rol') }}</label>
+                            <select id="uRol" name="rol" class="form-select" data-rol>
+                                {% for r in ['final', 'agente', 'admin'] %}<option value="{{ r }}" {% if usuario.rol.value == r %}selected{% endif %}>{{ r | etiqueta }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4" data-area-wrap>
+                            <label class="form-label" for="uArea">{{ _('Área de soporte') }}</label>
+                            <select id="uArea" name="area_soporte" class="form-select" data-area>
+                                <option value="">—</option>
+                                {% for c in CATEGORIAS %}<option value="{{ c }}" {% if usuario.area_soporte and usuario.area_soporte.value == c %}selected{% endif %}>{{ c | etiqueta }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="uNivel">{{ _('Nivel') }}</label>
+                            <select id="uNivel" name="nivel" class="form-select">
+                                {% for n in ['normal', 'vip'] %}<option value="{{ n }}" {% if usuario.nivel.value == n %}selected{% endif %}>{{ n | etiqueta }}</option>{% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-text mt-2">{{ _('Los usuarios VIP reciben plazos de SLA más cortos. Un agente con tickets en progreso no puede cambiar de área hasta reasignarlos.') }}</div>
+                    <button class="btn btn-primary btn-sm mt-3" type="submit">{{ icono('check', 15) }} {{ _('Guardar cambios') }}</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-3">{{ _('Actividad reciente') }}</h5>
+                {% if actividad %}
+                <ul class="activity-list">
+                    {% for log in actividad %}
+                    <li>
+                        <span class="activity-dot"></span>
+                        <div class="min-w-0">
+                            <div class="fw-medium">{{ log.accion.value | etiqueta }}</div>
+                            <div class="text-muted small text-truncate">{{ log.detalle }}</div>
+                        </div>
+                        <span class="text-muted small mono ms-auto flex-none" data-relativo="{{ log.fecha.strftime('%Y-%m-%dT%H:%M:%S') }}">{{ log.fecha | fecha }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <a class="small-link" href="{{ url_for('auditoria.mostrar_auditoria', usuario_id=usuario.id) }}">{{ _('Ver todo en el log de auditoría') }} →</a>
+                {% else %}
+                <p class="text-muted mb-0">{{ _('Sin actividad registrada.') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card mb-4">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-3">{{ _('Acceso y seguridad') }}</h5>
+                <ul class="props mb-3">
+                    <li><span class="prop-k">{{ icono('reloj', 15) }}{{ _('Último acceso') }}</span><span class="prop-v mono">{{ usuario.ultimo_acceso | fecha if usuario.ultimo_acceso else _('Nunca') }}</span></li>
+                    <li><span class="prop-k">{{ icono('escudo', 15) }}{{ _('Dos pasos') }}</span><span class="prop-v">{% if dos_pasos_activo %}<span class="sec-ok">{{ _('Activa') }}</span>{% else %}<span class="text-muted">{{ _('No configurada') }}</span>{% endif %}</span></li>
+                    <li><span class="prop-k">{{ icono('alerta', 15) }}{{ _('Intentos fallidos') }}</span><span class="prop-v mono">{{ usuario.intentos_fallidos }}</span></li>
+                </ul>
+                <div class="admin-actions">
+                    {% if bloqueado or usuario.intentos_fallidos %}
+                    <form method="POST" action="{{ url_for('usuarios.desbloquear', usuario_id=usuario.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-outline-secondary btn-sm w-100" type="submit">{{ icono('candado', 15) }} {{ _('Desbloquear cuenta') }}</button>
+                    </form>
+                    {% endif %}
+                    <form method="POST" action="{{ url_for('usuarios.enviar_recuperacion', usuario_id=usuario.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-outline-secondary btn-sm w-100" type="submit" {% if not usuario.activo %}disabled{% endif %}
+                                data-confirm="{{ _('Se enviará al usuario un enlace para crear una nueva contraseña.') }}">{{ icono('enviar', 15) }} {{ _('Enviar enlace de recuperación') }}</button>
+                    </form>
+                    {% if dos_pasos_activo %}
+                    <form method="POST" action="{{ url_for('usuarios.restablecer_2fa', usuario_id=usuario.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-outline-warning btn-sm w-100" type="submit"
+                                data-confirm="{{ _('Se eliminará su verificación en dos pasos. Úsalo solo si perdió el acceso a su app y a sus códigos de respaldo.') }}">{{ icono('escudo', 15) }} {{ _('Restablecer verificación en dos pasos') }}</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if not es_yo %}
+        <div class="card danger-zone">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-1">{{ _('Reactivar cuenta') if not usuario.activo else _('Desactivar cuenta') }}</h5>
+                <p class="text-muted small mb-3">
+                    {% if usuario.activo %}{{ _('El usuario no podrá iniciar sesión ni usar la API. Su historial se conserva y puedes reactivarlo cuando quieras.') }}
+                    {% else %}{{ _('El usuario podrá volver a iniciar sesión con su contraseña actual.') }}{% endif %}
+                </p>
+                <form method="POST" action="{{ url_for('usuarios.cambiar_activo', usuario_id=usuario.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="activo" value="{{ '0' if usuario.activo else '1' }}">
+                    {% if usuario.activo %}
+                    <button class="btn btn-outline-danger btn-sm" type="submit" data-confirm="{{ _('¿Desactivar la cuenta de %(n)s?', n=usuario.nombre) }}">{{ icono('bloqueo', 15) }} {{ _('Desactivar cuenta') }}</button>
+                    {% else %}
+                    <button class="btn btn-success btn-sm" type="submit">{{ icono('check', 15) }} {{ _('Reactivar cuenta') }}</button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

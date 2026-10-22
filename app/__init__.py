@@ -1,4 +1,4 @@
-from flask import Flask, session, has_request_context, render_template
+from flask import Flask, session, has_request_context, render_template, request, jsonify
 from app.extensions import db, socketio, mail
 from flask_socketio import join_room
 from app.config import Config
@@ -15,12 +15,18 @@ from app.services.gestor_sla import GestorSLA
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 from app.services.notificaciones import ServicioNotificaciones
-from sqlalchemy import delete
+from sqlalchemy import delete, text
 from threading import Lock
 import os
 from app.routes.palabra_clave import palabras_clave_bp
 from app.routes.demo import demo_bp
 from app.routes.seguridad import seguridad_bp
+from app.routes.usuarios import usuarios_bp
+from app.routes.conocimiento import conocimiento_bp
+from app.routes.colaboracion import colaboracion_bp
+from app.routes.analitica import analitica_bp
+from app.routes.api import api_bp
+from app.version import VERSION
 
 def create_app():
     app = Flask(__name__)
@@ -50,6 +56,13 @@ def create_app():
     app.jinja_env.globals["etiqueta"] = etiqueta
     app.jinja_env.filters["fecha"] = formato_fecha
     app.jinja_env.globals["ahora"] = datetime.now
+    app.jinja_env.globals["version_app"] = VERSION
+    from app.models.enum import Categoria as _Categoria
+    app.jinja_env.globals["CATEGORIAS"] = [c.value for c in _Categoria]
+    from app.formato import markdown_seguro
+    from app.services.adjuntos import formato_tamano
+    app.jinja_env.filters["md"] = markdown_seguro
+    app.jinja_env.filters["tamano"] = formato_tamano
 
     from app.notificaciones_i18n import render as _render_notif, catalogo_cliente as _catalogo_notif
     app.jinja_env.filters["notif_msg"] = lambda n: _render_notif(n.mensaje, n.ticket_id)
@@ -65,6 +78,8 @@ def create_app():
     from app.models.correccion_clasificacion import CorreccionClasificacion
     from app.models.doble_factor import DobleFactor
     from app.models.token_recuperacion import TokenRecuperacion
+    from app.migraciones import importar_modelos
+    importar_modelos()
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(tickets_bp)
@@ -75,6 +90,55 @@ def create_app():
     app.register_blueprint(apelaciones_bp)
     app.register_blueprint(demo_bp)
     app.register_blueprint(seguridad_bp)
+    app.register_blueprint(usuarios_bp)
+    app.register_blueprint(conocimiento_bp)
+    app.register_blueprint(colaboracion_bp)
+    app.register_blueprint(analitica_bp)
+    app.register_blueprint(api_bp)
+
+    from app.routes import api as rutas_api
+    csrf.exempt(rutas_api.crear_ticket)
+    csrf.exempt(rutas_api.comentar)
+    csrf.exempt(rutas_api.no_encontrado)
+
+    if app.config.get("MIGRAR_AL_INICIAR"):
+        with app.app_context():
+            try:
+                from app.migraciones import migrar
+                migrar(verbose=False)
+            except Exception as e:
+                db.session.rollback()
+                print(f"No se pudo verificar el esquema de la base de datos, error: {e}")
+
+    @app.after_request
+    def _cabeceras_seguridad(respuesta):
+        cabeceras = respuesta.headers
+        cabeceras.setdefault("X-Content-Type-Options", "nosniff")
+        cabeceras.setdefault("X-Frame-Options", "SAMEORIGIN")
+        cabeceras.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        cabeceras.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()")
+        cabeceras.setdefault("Cross-Origin-Opener-Policy", "same-origin")
+        if request.is_secure:
+            cabeceras.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+        if request.path.startswith("/api/v1/"):
+            cabeceras.setdefault("Cache-Control", "no-store")
+        return respuesta
+
+    @app.route("/salud")
+    def salud():
+        estado_bd = "ok"
+        try:
+            db.session.execute(text("SELECT 1"))
+        except Exception:
+            db.session.rollback()
+            estado_bd = "error"
+        cuerpo = {
+            "estado": "ok" if estado_bd == "ok" else "degradado",
+            "base_de_datos": estado_bd,
+            "version": VERSION,
+            "hora": datetime.now().isoformat(timespec="seconds"),
+        }
+        return jsonify(cuerpo), (200 if estado_bd == "ok" else 503)
     
     if app.config.get("CLASIFICADOR_ML_ACTIVO"):
         with app.app_context():
@@ -222,6 +286,8 @@ def create_app():
         _iniciar_scheduler()
 
     def _pagina_error(codigo, titulo, mensaje):
+        if request.path.startswith("/api/"):
+            return jsonify({"error": {"codigo": str(codigo), "mensaje": mensaje}}), codigo
         try:
             return render_template("error.html", codigo=codigo, titulo=titulo, mensaje=mensaje), codigo
         except Exception:
@@ -239,6 +305,11 @@ def create_app():
     @app.errorhandler(404)
     def _error_404(error):
         return _pagina_error(404, _("Página no encontrada"), _("La página que buscas no existe o fue movida."))
+
+    @app.errorhandler(413)
+    def _error_413(error):
+        return _pagina_error(413, _("Archivo demasiado grande"),
+                             _("Lo que intentaste enviar supera el tamaño permitido. Prueba con archivos más pequeños."))
 
     @app.errorhandler(500)
     def _error_500(error):

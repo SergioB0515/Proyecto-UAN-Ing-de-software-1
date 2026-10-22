@@ -18,6 +18,13 @@ from datetime import datetime, timedelta
 import csv
 import io
 from openpyxl import Workbook
+from app.services.permisos import ServicioPermisos
+from app.services.adjuntos import ServicioAdjuntos, MAX_ADJUNTOS_POR_TICKET, TAMANO_MAXIMO_BYTES, TIPOS_PERMITIDOS, formato_tamano
+from app.services.seguimiento import ServicioSeguimiento
+from app.services.encuestas import ServicioEncuestas
+from app.services.respuestas_predefinidas import ServicioRespuestasPredefinidas
+from app.services.base_conocimiento import ServicioBaseConocimiento
+from app.services.exceptions import AdjuntoInvalidoError, PermisoDenegadoError
 tickets_bp = Blueprint("tickets", __name__)
 
 
@@ -34,11 +41,18 @@ def crear():
         try:
             ticket = ServicioTickets.crear_ticket(creador=creador, texto=texto)
             flash(_("Ticket #%(id)s creado. Categoría: %(categoria)s, prioridad: %(prioridad)s",
-                    id=ticket.id, categoria=ticket.categoria.value, prioridad=ticket.prioridad.value), "success")
+                    id=ticket.id, categoria=etiqueta(ticket.categoria), prioridad=etiqueta(ticket.prioridad)), "success")
         except ErrorPersistencia:
             flash(_("No se pudo crear el ticket, intenta de nuevo"), "danger")
+            return redirect(url_for("tickets.crear"))
 
-        return redirect(url_for("tickets.crear"))
+        for archivo in [a for a in request.files.getlist("archivos") if a and a.filename]:
+            try:
+                ServicioAdjuntos.guardar(ticket.id, creador.id, archivo)
+            except (AdjuntoInvalidoError, TicketNoEncontradoError, ErrorPersistencia) as e:
+                flash(f"{archivo.filename}: {e}", "warning")
+
+        return redirect(url_for("tickets.detalle", ticket_id=ticket.id))
 
     return render_template("crear_ticket.html")
 
@@ -110,7 +124,7 @@ def listar_por_area(area):
     }
 
     agentes_del_area = db.session.execute(
-        select(Usuario).where(Usuario.area_soporte == categoria)
+        select(Usuario).where(Usuario.area_soporte == categoria, Usuario.activo.is_(True))
     ).scalars().all()
 
     vencidos, proximos = GestorSLA.verificar_vencimientos()
@@ -178,7 +192,7 @@ def cambiar_estado(ticket_id):
 
         if cierre_directo:
             try:
-                ServicioTickets.agregar_comentario(ticket_id=ticket_id, autor_id=actor_id, texto=causa)
+                ServicioTickets.agregar_comentario(ticket_id=ticket_id, autor_id=actor_id, texto=causa, notificar=False)
             except (ComentarioVacioError, ErrorPersistencia) as e:
                 flash(_("El ticket se cerró, pero no se pudo guardar el motivo: %(error)s", error=e), "warning")
 
@@ -213,29 +227,50 @@ def reasignar(ticket_id):
 @requiere_login
 def detalle(ticket_id):
     ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
-    if ticket is None:
+    usuario = db.session.get(Usuario, session["usuario_id"])
+    if ticket is None or not ServicioPermisos.puede_ver_ticket(usuario, ticket):
         flash(_("Ticket no encontrado"), "danger")
-        return redirect(url_for("tickets.crear"))
+        return redirect(url_for("auth.dashboard"))
+
+    ver_internos = ServicioPermisos.puede_ver_internos(usuario)
 
     if request.method == "POST":
-        texto = request.form["texto"]
-        autor_id = session["usuario_id"]
+        texto = request.form.get("texto", "")
+        interno = ver_internos and request.form.get("interno") == "1"
+        archivos = [a for a in request.files.getlist("archivos") if a and a.filename]
 
         try:
-            ServicioTickets.agregar_comentario(ticket_id=ticket_id, autor_id=autor_id, texto=texto)
-            flash(_("Comentario agregado"), "success")
-        except (ComentarioVacioError, TicketNoEncontradoError, ErrorPersistencia) as e:
+            comentario = None
+            if texto.strip() or not archivos:
+                comentario = ServicioTickets.agregar_comentario(
+                    ticket_id=ticket_id, autor_id=usuario.id, texto=texto, interno=interno
+                )
+                flash(_("Nota interna agregada") if interno else _("Comentario agregado"), "success")
+            for archivo in archivos:
+                try:
+                    ServicioAdjuntos.guardar(ticket_id, usuario.id, archivo,
+                                             comentario_id=comentario.id if comentario else None)
+                except AdjuntoInvalidoError as e:
+                    flash(f"{archivo.filename}: {e}", "warning")
+        except (ComentarioVacioError, TicketNoEncontradoError, PermisoDenegadoError, ErrorPersistencia) as e:
             flash(str(e), "danger")
 
-        return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
+        return redirect(url_for("tickets.detalle", ticket_id=ticket_id) + "#comentarios")
 
-    comentarios = db.session.execute(
-        select(Comentario).where(Comentario.ticket_id == ticket_id).order_by(Comentario.fecha)
-    ).scalars().all()
+    comentarios = ServicioTickets.listar_comentarios(ticket_id, incluir_internos=ver_internos)
+    adjuntos = ServicioAdjuntos.listar(ticket_id)
+    adjuntos_por_comentario = {}
+    adjuntos_sueltos = []
+    for a in adjuntos:
+        if a.comentario_id:
+            adjuntos_por_comentario.setdefault(a.comentario_id, []).append(a)
+        else:
+            adjuntos_sueltos.append(a)
 
     solicitudes = ServicioSolicitudesTransferencia.listar_por_ticket(ticket_id)
+    seguidores = ServicioSeguimiento.seguidores(ticket_id)
 
-    ids_personas = {c.autor_id for c in comentarios}
+    ids_personas = {c.autor_id for c in comentarios} | {a.usuario_id for a in adjuntos}
     ids_personas.add(ticket.creador_id)
     if ticket.agente_id:
         ids_personas.add(ticket.agente_id)
@@ -245,16 +280,18 @@ def detalle(ticket_id):
         )
     personas = db.session.execute(select(Usuario).where(Usuario.id.in_(ids_personas))).scalars().all()
     nombres_por_id = {u.id: u.nombre for u in personas}
+    personal_ids = {u.id for u in personas if u.rol != RolUsuario.FINAL}
 
     agentes_del_area = db.session.execute(
         select(Usuario).where(
             Usuario.area_soporte == ticket.categoria,
             Usuario.rol == RolUsuario.AGENTE,
+            Usuario.activo.is_(True),
         )
     ).scalars().all()
 
     rol = session.get("rol")
-    puede_gestionar = rol == RolUsuario.ADMIN or session["usuario_id"] == ticket.agente_id
+    puede_gestionar = ServicioPermisos.puede_gestionar_ticket(usuario, ticket)
 
     sugerencia_agente = None
     if ticket.agente_id is None and rol == RolUsuario.ADMIN:
@@ -268,17 +305,37 @@ def detalle(ticket_id):
                 ApelacionCierre.estado == EstadoApelacion.PENDIENTE,
             )
         ).scalar()
-        
+
+    respuestas = []
+    articulos_sugeridos = []
+    if ver_internos:
+        respuestas = ServicioRespuestasPredefinidas.listar_para(usuario.id, categoria=ticket.categoria)
+        articulos_sugeridos = [a for a, _p in ServicioBaseConocimiento.sugerir(ticket.texto, limite=3)]
+
     return render_template(
         "ticket_detalle.html",
         ticket=ticket,
         comentarios=comentarios,
         solicitudes=solicitudes,
         nombres_por_id=nombres_por_id,
+        personal_ids=personal_ids,
         agentes_del_area=agentes_del_area,
         puede_gestionar=puede_gestionar,
         apelacion_pendiente=apelacion_pendiente,
         sugerencia_agente=sugerencia_agente,
+        ver_internos=ver_internos,
+        adjuntos=adjuntos,
+        adjuntos_por_comentario=adjuntos_por_comentario,
+        adjuntos_sueltos=adjuntos_sueltos,
+        seguidores=seguidores,
+        sigo_ticket=any(sg.id == usuario.id for sg in seguidores),
+        encuesta=ServicioEncuestas.obtener_por_ticket(ticket_id),
+        puede_calificar=ServicioEncuestas.puede_responder(ticket, usuario.id),
+        respuestas=respuestas,
+        articulos_sugeridos=articulos_sugeridos,
+        limite_adjuntos=MAX_ADJUNTOS_POR_TICKET,
+        tamano_maximo=formato_tamano(TAMANO_MAXIMO_BYTES),
+        extensiones=",".join("." + e for e in sorted(TIPOS_PERMITIDOS)),
     )
     
 @tickets_bp.route("/admin/tickets")

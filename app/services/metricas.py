@@ -247,7 +247,8 @@ class ServicioMetricas:
 
         agentes = db.session.execute(
             select(Usuario).where(
-                Usuario.area_soporte == categoria, Usuario.rol == RolUsuario.AGENTE
+                Usuario.area_soporte == categoria, Usuario.rol == RolUsuario.AGENTE,
+                Usuario.activo.is_(True),
             )
         ).scalars().all()
 

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Editar artículo') if articulo else _('Nuevo artículo') }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>{{ _('Editar artículo') if articulo else _('Nuevo artículo') }}</h2>
+        <span class="text-muted">{{ _('Escribe guías claras y accionables. Los usuarios las verán al crear un ticket con un problema parecido.') }}</span>
+    </div>
+</div>
+
+<form method="POST" class="kb-editor">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="kb-editor-main">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <label class="form-label" for="kbTitulo">{{ _('Título') }}</label>
+                    <input id="kbTitulo" name="titulo" class="form-control form-control-lg" maxlength="160" required value="{{ datos.get('titulo', '') }}" placeholder="{{ _('Ej.: Cómo conectarte a la VPN desde casa') }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="kbResumen">{{ _('Resumen') }} <span class="text-muted">({{ _('opcional') }})</span></label>
+                    <input id="kbResumen" name="resumen" class="form-control" maxlength="300" value="{{ datos.get('resumen', '') }}" placeholder="{{ _('Una frase que explique qué resuelve esta guía') }}">
+                </div>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between align-items-end mb-1">
+                        <label class="form-label mb-0" for="kbContenido">{{ _('Contenido') }}</label>
+                        <div class="seg seg-sm" role="tablist" data-md-tabs data-md-url="{{ url_for('conocimiento.vista_previa') }}">
+                            <button type="button" class="is-on" data-md-tab="editar">{{ _('Escribir') }}</button>
+                            <button type="button" data-md-tab="vista">{{ _('Vista previa') }}</button>
+                        </div>
+                    </div>
+                    <div class="md-toolbar" data-md-toolbar>
+                        <button type="button" data-md="## " title="{{ _('Título') }}">H</button>
+                        <button type="button" data-md="**" title="{{ _('Negrita') }}"><strong>B</strong></button>
+                        <button type="button" data-md="*" title="{{ _('Cursiva') }}"><em>I</em></button>
+                        <button type="button" data-md="- " title="{{ _('Lista') }}">•</button>
+                        <button type="button" data-md="1. " title="{{ _('Lista numerada') }}">1.</button>
+                        <button type="button" data-md="`" title="{{ _('Código') }}">{{ icono('codigo', 14) }}</button>
+                        <button type="button" data-md="> " title="{{ _('Nota') }}">❝</button>
+                    </div>
+                    <textarea id="kbContenido" name="contenido" class="form-control mono-area" rows="16" required data-md-fuente>{{ datos.get('contenido', '') }}</textarea>
+                    <div class="kb-body md-preview" data-md-vista hidden></div>
+                    <div class="form-text">{{ _('Formato admitido: ## títulos, **negrita**, *cursiva*, listas con - o 1., `código`, > notas y [texto](https://enlace).') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <aside class="kb-editor-side">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">{{ _('Publicación') }}</h5>
+                <div class="mb-3">
+                    <label class="form-label" for="kbCategoria">{{ _('Categoría') }}</label>
+                    <select id="kbCategoria" name="categoria" class="form-select" required>
+                        {% for c in CATEGORIAS %}
+                        <option value="{{ c }}" {% if datos.get('categoria') == c %}selected{% endif %}>{{ c | etiqueta }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="kbEtiquetas">{{ _('Etiquetas') }}</label>
+                    <input id="kbEtiquetas" name="etiquetas" class="form-control" value="{{ datos.get('etiquetas', '') }}" placeholder="vpn, remoto, conexión">
+                    <div class="form-text">{{ _('Separadas por comas. Mejoran las sugerencias automáticas.') }}</div>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" role="switch" id="kbPublicado" name="publicado" value="1" {% if datos.get('publicado') %}checked{% endif %}>
+                    <label class="form-check-label" for="kbPublicado">{{ _('Visible para todos los usuarios') }}</label>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">{{ icono('check', 15) }} {{ _('Guardar') }}</button>
+                    <a class="btn btn-outline-secondary" href="{{ url_for('conocimiento.ver', articulo_id=articulo.id) if articulo else url_for('conocimiento.inicio') }}">{{ _('Cancelar') }}</a>
+                </div>
+            </div>
+        </div>
+    </aside>
+</form>
+{% endblock %}

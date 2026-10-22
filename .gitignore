@@ -7,3 +7,4 @@ instance/*.db
 test_proyecto/*.db
 .env
 correos_preview/
+instance/adjuntos/

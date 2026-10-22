@@ -10,30 +10,62 @@
             <div class="card-body p-4">
                 <h2 class="mb-1">{{ _('Reportar un problema') }}</h2>
                 <p class="text-muted mb-4">{{ _('Describe la situación con el mayor detalle posible para agilizar la atención.') }}</p>
-                <form method="POST" action="{{ url_for('tickets.crear') }}">
+                <form method="POST" action="{{ url_for('tickets.crear') }}" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
-                        <label class="form-label">{{ _('Describe el problema') }}</label>
-                        <textarea name="texto" class="form-control" rows="5" autofocus data-min-detalle="30" required></textarea>
+                        <label class="form-label" for="textoTicket">{{ _('Describe el problema') }}</label>
+                        <textarea id="textoTicket" name="texto" class="form-control" rows="5" autofocus data-min-detalle="30" maxlength="1200" required
+                                  data-sugerencias="{{ url_for('conocimiento.sugerencias') }}" data-sugerencias-destino="#kbSugerencias"></textarea>
                         <div class="form-text">{{ _('Ctrl + Enter para enviar') }}</div>
                     </div>
+
+                    <div class="kb-suggest" id="kbSugerencias" hidden aria-live="polite">
+                        <div class="kb-suggest-head">
+                            {{ icono('libro', 16) }}
+                            <span>{{ _('Quizá esto te ayude antes de enviar') }}</span>
+                        </div>
+                        <ul class="kb-suggest-list" data-lista></ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">{{ _('Adjuntos') }} <span class="text-muted">({{ _('opcional') }})</span></label>
+                        <label class="dropzone" data-dropzone>
+                            <input type="file" name="archivos" multiple accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.txt,.log,.csv,.docx,.xlsx,.zip" data-max-mb="5" data-max-archivos="10">
+                            <span class="dropzone-ico">{{ icono('clip', 18) }}</span>
+                            <span><strong>{{ _('Arrastra capturas o archivos') }}</strong> {{ _('o haz clic para elegirlos') }}</span>
+                            <span class="dropzone-hint">{{ _('Imágenes, PDF, texto, Office o ZIP · máx. 5 MB cada uno') }}</span>
+                        </label>
+                        <ul class="file-list" data-file-list></ul>
+                        <div class="form-text">{{ _('Consejo: también puedes pegar una captura con Ctrl + V en la descripción.') }}</div>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">{{ icono('enviar', 15) }} {{ _('Enviar ticket') }}</button>
                 </form>
             </div>
         </div>
     </div>
     <div class="col-lg-4">
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-body p-4">
                 <h5 class="card-title mb-3">{{ _('Consejos para un buen reporte') }}</h5>
                 <ul class="props">
                     <li><span class="prop-k">{{ icono('objetivo', 15) }}{{ _('Qué pasa y desde cuándo') }}</span></li>
                     <li><span class="prop-k">{{ icono('capas', 15) }}{{ _('Equipo, programa o servicio afectado') }}</span></li>
                     <li><span class="prop-k">{{ icono('alerta', 15) }}{{ _('Mensajes de error exactos') }}</span></li>
+                    <li><span class="prop-k">{{ icono('imagen', 15) }}{{ _('Una captura de pantalla') }}</span></li>
                 </ul>
                 <p class="form-text mt-3 mb-0">{{ _('La categoría y la prioridad se asignan automáticamente a partir de tu descripción.') }}</p>
             </div>
         </div>
+        <a class="card kb-help-card fx text-decoration-none" href="{{ url_for('conocimiento.inicio') }}">
+            <div class="card-body p-4 d-flex gap-3 align-items-start">
+                <span class="stat-ico t-info position-static">{{ icono('libro', 17) }}</span>
+                <div>
+                    <h5 class="card-title mb-1">{{ _('Centro de ayuda') }}</h5>
+                    <p class="text-muted small mb-0">{{ _('Muchas incidencias se resuelven en minutos con nuestras guías.') }}</p>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
 {% endblock %}

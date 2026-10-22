@@ -10,6 +10,17 @@
     </div>
 </div>
 
+{% if por_calificar %}
+<div class="banner-csat mb-3">
+    <span class="stat-ico t-warn position-static">{{ icono('estrella', 17) }}</span>
+    <div class="flex-grow-1 min-w-0">
+        <strong>{{ ngettext('Tienes %(num)s ticket resuelto por calificar', 'Tienes %(num)s tickets resueltos por calificar', por_calificar | length) }}</strong>
+        <div class="text-muted small">{{ _('Cuéntanos cómo fue la atención: nos ayuda a mejorar.') }}</div>
+    </div>
+    <a class="btn btn-primary btn-sm" href="{{ url_for('tickets.detalle', ticket_id=por_calificar[0].id) }}">{{ _('Calificar') }}</a>
+</div>
+{% endif %}
+
 {% if tickets %}
 {% set n_abiertos = tickets | selectattr('estado.value', 'equalto', 'abierto') | list | length %}
 {% set n_progreso = tickets | selectattr('estado.value', 'equalto', 'en_progreso') | list | length %}
@@ -79,6 +90,19 @@
 <div class="empty-state">
     <p class="mb-0">{{ _('No has creado ningún ticket todavía.') }}</p>
     <a href="{{ url_for('tickets.crear') }}" class="btn btn-primary">{{ _('Crear ticket') }}</a>
+</div>
+{% endif %}
+
+{% if articulos_populares %}
+<h4 class="section-title mt-4">{{ icono('libro', 18) }} {{ _('Guías populares') }}</h4>
+<div class="kb-grid kb-grid-sm">
+    {% for a in articulos_populares %}
+    <a class="kb-card fx" href="{{ url_for('conocimiento.ver', articulo_id=a.id) }}">
+        <span class="badge-pill categoria-tag align-self-start">{{ a.categoria.value | etiqueta }}</span>
+        <h3 class="kb-card-title">{{ a.titulo }}</h3>
+        <p class="kb-card-text">{{ a.resumen or (a.contenido | truncate(110, True)) }}</p>
+    </a>
+    {% endfor %}
 </div>
 {% endif %}
 {% endblock %}

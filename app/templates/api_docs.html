@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}{{ _('API y tokens') }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% set base = request.url_root.rstrip('/') %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="eyebrow">{{ icono('codigo', 14) }} REST · JSON · v1</div>
+        <h2>{{ _('API y tokens') }}</h2>
+        <span class="text-muted">{{ _('Integra el sistema de tickets con tus scripts, monitores o herramientas internas.') }}</span>
+    </div>
+</div>
+
+<div class="api-layout">
+<nav class="api-toc" aria-label="{{ _('Contenido') }}">
+    <a href="#tokens">{{ _('Tus tokens') }}</a>
+    <a href="#autenticacion">{{ _('Autenticación') }}</a>
+    <a href="#errores">{{ _('Errores y límites') }}</a>
+    <a href="#endpoints">{{ _('Endpoints') }}</a>
+    <a href="#ejemplos">{{ _('Ejemplos') }}</a>
+</nav>
+
+<div class="api-main">
+<section class="card mb-4" id="tokens">
+    <div class="card-body p-4">
+        <h5 class="card-title mb-1">{{ _('Tus tokens personales') }}</h5>
+        <p class="text-muted small mb-3">{{ _('Cada token actúa en tu nombre y con tus permisos. Guárdalo como una contraseña: solo se muestra una vez.') }}</p>
+
+        {% if token_nuevo %}
+        <div class="token-reveal">
+            <div class="d-flex align-items-center gap-2 mb-2">{{ icono('llave', 16) }} <strong>{{ _('Tu nuevo token') }}</strong></div>
+            <div class="token-box">
+                <code class="mono" data-token>{{ token_nuevo }}</code>
+                <button type="button" class="btn btn-primary btn-sm" data-copy="{{ token_nuevo }}">{{ icono('copiar', 14) }} <span data-copy-label>{{ _('Copiar') }}</span></button>
+            </div>
+            <div class="form-text">{{ _('Cópialo ahora. Por seguridad solo guardamos su huella y no podremos mostrártelo de nuevo.') }}</div>
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('api.crear_token') }}" class="row g-2 align-items-end mb-3">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="col-sm-6">
+                <label class="form-label" for="tkNombre">{{ _('Nombre') }}</label>
+                <input id="tkNombre" name="nombre" class="form-control" maxlength="80" minlength="3" required placeholder="{{ _('Ej.: Script de monitoreo') }}">
+            </div>
+            <div class="col-sm-3">
+                <label class="form-label" for="tkDias">{{ _('Caduca en') }}</label>
+                <select id="tkDias" name="dias" class="form-select">
+                    {% for d in duraciones %}<option value="{{ d }}" {% if d == 90 %}selected{% endif %}>{{ ngettext('%(num)s día', '%(num)s días', d) }}</option>{% endfor %}
+                    <option value="">{{ _('Nunca') }}</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-primary w-100" type="submit">{{ icono('mas', 15) }} {{ _('Crear token') }}</button>
+            </div>
+        </form>
+
+        {% if tokens %}
+        <ul class="token-list">
+            {% for t in tokens %}
+            <li class="{% if not t.vigente %}is-off{% endif %}">
+                <span class="token-ico">{{ icono('llave', 15) }}</span>
+                <div class="min-w-0">
+                    <div class="fw-medium">{{ t.nombre }} <code class="mono small text-muted">{{ t.prefijo }}…</code></div>
+                    <div class="text-muted small">
+                        {{ _('Creado') }} {{ t.fecha_creacion | fecha(false) }}
+                        · {% if t.revocado %}<span class="t-danger">{{ _('Revocado') }}</span>
+                          {% elif t.expira and not t.vigente %}<span class="t-danger">{{ _('Caducado') }}</span>
+                          {% elif t.expira %}{{ _('caduca') }} {{ t.expira | fecha(false) }}
+                          {% else %}{{ _('sin caducidad') }}{% endif %}
+                        · {% if t.ultimo_uso %}{{ _('último uso') }} <span data-relativo="{{ t.ultimo_uso.strftime('%Y-%m-%dT%H:%M:%S') }}">{{ t.ultimo_uso | fecha }}</span>{% else %}{{ _('nunca usado') }}{% endif %}
+                    </div>
+                </div>
+                {% if t.vigente %}
+                <form method="POST" action="{{ url_for('api.revocar_token', token_id=t.id) }}" class="ms-auto">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-outline-danger btn-sm" type="submit" data-confirm="{{ _('Las integraciones que usen «%(n)s» dejarán de funcionar de inmediato.', n=t.nombre) }}">{{ _('Revocar') }}</button>
+                </form>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted small mb-0">{{ _('Aún no tienes tokens. Puedes tener hasta %(n)s activos.', n=max_tokens) }}</p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="api-doc" id="autenticacion">
+    <h3>{{ _('Autenticación') }}</h3>
+    <p>{{ _('Envía el token en la cabecera Authorization de cada petición:') }}</p>
+    <pre class="code"><button type="button" class="code-copy" data-copy-code>{{ icono('copiar', 13) }}</button><code>Authorization: Bearer tk_xxxxxxxxxxxxxxxx</code></pre>
+    <p class="text-muted small">{{ _('La API respeta los mismos permisos que la web: un usuario final solo ve sus tickets, un agente los de su área y un administrador todos. Las notas internas solo llegan a agentes y administradores.') }}</p>
+</section>
+
+<section class="api-doc" id="errores">
+    <h3>{{ _('Errores y límites') }}</h3>
+    <p>{{ _('Los errores siempre devuelven el mismo formato:') }}</p>
+    <pre class="code"><code>{"error": {"codigo": "no_encontrado", "mensaje": "…"}}</code></pre>
+    <div class="table-card">
+        <table class="table table-sm mb-0">
+            <thead><tr><th>HTTP</th><th>{{ _('Código') }}</th><th>{{ _('Cuándo ocurre') }}</th></tr></thead>
+            <tbody>
+                <tr><td class="mono">400</td><td class="mono">parametro_invalido</td><td>{{ _('Un filtro tiene un valor no válido') }}</td></tr>
+                <tr><td class="mono">401</td><td class="mono">no_autorizado</td><td>{{ _('Token ausente, revocado o caducado') }}</td></tr>
+                <tr><td class="mono">403</td><td class="mono">prohibido</td><td>{{ _('Tu rol no permite la operación') }}</td></tr>
+                <tr><td class="mono">404</td><td class="mono">no_encontrado</td><td>{{ _('El recurso no existe o no tienes acceso') }}</td></tr>
+                <tr><td class="mono">422</td><td class="mono">validacion</td><td>{{ _('El cuerpo de la petición no es válido') }}</td></tr>
+                <tr><td class="mono">429</td><td class="mono">demasiadas_peticiones</td><td>{{ _('Superaste %(n)s peticiones por minuto (revisa Retry-After)', n=limite) }}</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="api-doc" id="endpoints">
+    <h3>{{ _('Endpoints') }}</h3>
+    <div class="endpoint-list">
+        {% for metodo, ruta, desc in [
+            ('GET', '/api/v1/yo', _('Tu usuario y los datos del token')),
+            ('GET', '/api/v1/tickets', _('Lista paginada. Filtros: estado, categoria, prioridad, pagina, por_pagina (máx. 100)')),
+            ('POST', '/api/v1/tickets', _('Crea un ticket. Cuerpo: {"texto": "…"}. Se clasifica automáticamente')),
+            ('GET', '/api/v1/tickets/{id}', _('Detalle con comentarios y adjuntos')),
+            ('POST', '/api/v1/tickets/{id}/comentarios', _('Comenta. Cuerpo: {"texto": "…", "interno": false}')),
+            ('GET', '/api/v1/articulos', _('Busca en la base de conocimiento. Filtros: q, categoria')),
+            ('GET', '/api/v1/articulos/{id}', _('Artículo completo')),
+            ('GET', '/api/v1/metricas', _('Indicadores del periodo (solo administradores). Filtro: dias')),
+            ('GET', '/salud', _('Estado del servicio, sin autenticación')),
+        ] %}
+        <div class="endpoint">
+            <span class="http http-{{ metodo | lower }}">{{ metodo }}</span>
+            <code class="mono">{{ ruta }}</code>
+            <span class="text-muted small">{{ desc }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="api-doc" id="ejemplos">
+    <h3>{{ _('Ejemplos') }}</h3>
+    <div class="code-tabs" data-code-tabs>
+        <div class="seg seg-sm mb-2" role="tablist">
+            <button type="button" class="is-on" data-tab="curl">cURL</button>
+            <button type="button" data-tab="python">Python</button>
+            <button type="button" data-tab="js">JavaScript</button>
+        </div>
+<pre class="code" data-panel="curl"><button type="button" class="code-copy" data-copy-code>{{ icono('copiar', 13) }}</button><code># {{ _('Listar mis tickets abiertos') }}
+curl -H "Authorization: Bearer $TOKEN" \
+     "{{ base }}/api/v1/tickets?estado=abierto"
+
+# {{ _('Crear un ticket') }}
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{"texto": "La impresora del piso 3 no imprime desde esta mañana"}' \
+     "{{ base }}/api/v1/tickets"</code></pre>
+<pre class="code" data-panel="python" hidden><button type="button" class="code-copy" data-copy-code>{{ icono('copiar', 13) }}</button><code>import requests
+
+API = "{{ base }}/api/v1"
+cabeceras = {"Authorization": "Bearer " + TOKEN}
+
+r = requests.get(f"{API}/tickets", params={"estado": "abierto"}, headers=cabeceras)
+for t in r.json()["datos"]:
+    print(t["id"], t["prioridad"], t["texto"][:60])
+
+nuevo = requests.post(f"{API}/tickets", json={"texto": "No puedo acceder a la carpeta compartida de finanzas"}, headers=cabeceras)
+print(nuevo.status_code, nuevo.json()["categoria"])</code></pre>
+<pre class="code" data-panel="js" hidden><button type="button" class="code-copy" data-copy-code>{{ icono('copiar', 13) }}</button><code>const API = "{{ base }}/api/v1";
+const cabeceras = { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" };
+
+const r = await fetch(`${API}/tickets?estado=abierto`, { headers: cabeceras });
+const { datos, paginacion } = await r.json();
+console.log(paginacion.total, datos.map(t => t.id));</code></pre>
+    </div>
+    <p class="text-muted small mt-2">{{ _('Respuesta de ejemplo de un ticket:') }}</p>
+<pre class="code"><code>{
+  "id": 42,
+  "texto": "La impresora del piso 3 no imprime…",
+  "categoria": "infraestructura",
+  "prioridad": "media",
+  "estado": "abierto",
+  "creador": {"id": 7, "nombre": "Ana Pérez"},
+  "agente": null,
+  "fecha_creacion": "2026-10-21T09:14:03",
+  "fecha_limite": "2026-10-22T09:14:03",
+  "url": "{{ base }}/tickets/42"
+}</code></pre>
+</section>
+</div>
+</div>
+{% endblock %}

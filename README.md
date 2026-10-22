@@ -32,6 +32,24 @@ arquitectura, historias de usuario, avances por sprint/versión y evidencias) vi
   tickets, métricas y auditoría.
 - **Perfil de usuario**: cambio de contraseña y nombre, foto de perfil, estadísticas
   personales.
+- **Verificación en dos pasos y recuperación de contraseña**: TOTP compatible con
+  cualquier app autenticadora, códigos de respaldo de un solo uso y enlaces de
+  recuperación con caducidad.
+- **Base de conocimiento**: artículos con categorías, etiquetas, búsqueda, votos de
+  utilidad y borradores. Al escribir un ticket se sugieren guías relacionadas y el
+  usuario puede marcar su problema como resuelto sin abrir el ticket.
+- **Colaboración en tickets**: adjuntos validados por tipo y contenido, notas internas
+  visibles solo para el equipo, respuestas rápidas con variables y seguidores que
+  reciben avisos de la actividad.
+- **Encuesta de satisfacción (CSAT)** al cerrarse cada ticket.
+- **Analítica**: volumen diario, pendientes, tiempo de primera respuesta y de
+  resolución, cumplimiento de SLA por categoría, mapa de calor por hora, ranking de
+  agentes y satisfacción, comparados con el periodo anterior y exportables a CSV.
+- **Gestión de usuarios**: búsqueda y filtros, edición de rol/área/nivel, activación y
+  desactivación de cuentas, desbloqueo, envío de enlaces de recuperación y
+  restablecimiento de la verificación en dos pasos.
+- **API REST v1** con tokens personales (guardados como hash, con caducidad, revocables
+  y con límite de peticiones) y documentación integrada en `/api/docs`.
 - **Clasificación por ML (opcional)**: clasificador basado en embeddings multilingües
   + palabras clave ponderadas + detección de casi-duplicados, con revisión manual para
   los casos de baja confianza.
@@ -86,6 +104,12 @@ Otras variables opcionales (con sus valores por defecto):
 | `SCHEDULER_ACTIVO` | `1` | Activa/desactiva el scheduler en segundo plano |
 | `CLASIFICADOR_ML_ACTIVO` | `0` | Activa el clasificador por ML en vez del de palabras clave |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | — | Credenciales del admin inicial (ver script de seed) |
+| `CARPETA_ADJUNTOS` | `instance/adjuntos` | Carpeta donde se guardan los archivos adjuntos |
+| `MAX_CONTENT_MB` | `26` | Tamaño máximo de una petición (varios adjuntos juntos) |
+| `MIGRAR_AL_INICIAR` | `1` | Al arrancar crea tablas y columnas nuevas que falten |
+| `SESSION_COOKIE_SECURE` | `0` | Ponlo en `1` en producción con HTTPS |
+| `SESION_HORAS` | `8` | Duración de la sesión iniciada |
+| `APP_BASE_URL` | `http://localhost:5000` | URL pública usada en los enlaces de los correos |
 
 ### 3. Base de datos
 
@@ -93,12 +117,17 @@ Otras variables opcionales (con sus valores por defecto):
 python init_db.py
 ```
 
+`init_db.py` también actualiza una base existente: crea las tablas nuevas y agrega las
+columnas que falten sin borrar datos (en Postgres además sincroniza los valores de los
+enums). Puede ejecutarse cuantas veces sea necesario.
+
 Datos iniciales (opcional, cada script se salta si ya existe el dato):
 
 ```bash
 python -m app.scripts.seed_admin          # admin inicial
 python -m app.scripts.seed_demo           # usuarios, agentes y tickets de ejemplo
 python -m app.scripts.seed_palabras_clave # palabras clave para el clasificador
+python -m app.scripts.seed_v3             # artículos, respuestas rápidas y encuestas de ejemplo
 ```
 
 ### 4. Correr la aplicación
@@ -107,7 +136,14 @@ python -m app.scripts.seed_palabras_clave # palabras clave para el clasificador
 python -m app.app
 ```
 
-Por defecto sirve en `http://localhost:5050`.
+Por defecto sirve en `http://localhost:5050`. El endpoint `/salud` devuelve el estado
+del servicio y de la base de datos (útil como health check en el despliegue).
+
+### Despliegue
+
+`render.yaml` define el servicio web (gunicorn con un worker y varios hilos, necesario
+para Socket.IO) y una base Postgres. En plataformas con disco efímero, los adjuntos
+deben apuntar a un disco persistente mediante `CARPETA_ADJUNTOS`.
 
 ### 5. Pruebas
 
@@ -120,13 +156,15 @@ pytest
 ```
 app/
   models/        modelos de SQLAlchemy
-  routes/        blueprints (auth, tickets, metricas, auditoria, solicitudes)
+  routes/        blueprints (auth, tickets, metricas, auditoria, solicitudes, seguridad,
+                 usuarios, conocimiento, colaboracion, analitica, api)
   services/      lógica de negocio (un servicio por dominio)
   templates/     plantillas Jinja2
   static/        CSS y archivos estáticos
   scripts/       scripts de datos (admin/demo/palabras clave/entrenamiento ML)
   translations/  catálogos de traducción (Flask-Babel)
   ml_artifacts/  modelo de clasificación entrenado
+  migraciones.py actualización de esquema sin pérdida de datos
 tests/           suite de pytest
 documentacion/   documentación del proyecto (requisitos, arquitectura, avances)
 ```
@@ -140,3 +178,23 @@ pybabel extract -F babel.cfg -o messages.pot .
 pybabel update -i messages.pot -d app/translations -l en
 pybabel compile -d app/translations -l en
 ```
+
+## API
+
+Crea un token en **Menú de usuario → API y tokens** y envíalo en cada petición:
+
+```bash
+curl -H "Authorization: Bearer tk_..." http://localhost:5050/api/v1/tickets?estado=abierto
+```
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/v1/yo` | Usuario del token |
+| GET | `/api/v1/tickets` | Lista paginada con filtros |
+| POST | `/api/v1/tickets` | Crear ticket |
+| GET | `/api/v1/tickets/{id}` | Detalle con comentarios y adjuntos |
+| POST | `/api/v1/tickets/{id}/comentarios` | Comentar |
+| GET | `/api/v1/articulos` | Buscar en la base de conocimiento |
+| GET | `/api/v1/metricas` | Indicadores (solo administradores) |
+
+Los permisos son los mismos que en la web. Ver `CHANGELOG.md` para el historial de versiones.

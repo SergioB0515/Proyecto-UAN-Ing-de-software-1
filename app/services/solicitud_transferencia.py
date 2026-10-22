@@ -44,6 +44,8 @@ class ServicioSolicitudesTransferencia:
             raise AgenteDestinoInvalidoError(_("El agente destinatario no existe"))
         if agente_destino.rol != RolUsuario.AGENTE:
             raise AgenteDestinoInvalidoError(_("El destinarario no es un agente"))
+        if not agente_destino.activo:
+            raise AgenteDestinoInvalidoError(_("El agente destinatario tiene la cuenta desactivada"))
         if agente_destino.area_soporte != ticket.categoria:
             raise AgenteDestinoInvalidoError(_("El agente no pertenece al area correcta"))
         if agente_destino.id == ticket.agente_id:

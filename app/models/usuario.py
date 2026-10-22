@@ -10,5 +10,6 @@ class Usuario(db.Model):
     area_soporte = db.Column(db.Enum(Categoria), nullable=True)
     nivel = db.Column(db.Enum(NivelUsuario), nullable=False)
     intentos_fallidos = db.Column(db.Integer, nullable=False, default = 0)
-    bloqueado_hasta = db.Column(db.DateTime, nullable=True) 
-        
+    bloqueado_hasta = db.Column(db.DateTime, nullable=True)
+    activo = db.Column(db.Boolean, nullable=False, default=True, server_default=db.true())
+    ultimo_acceso = db.Column(db.DateTime, nullable=True)

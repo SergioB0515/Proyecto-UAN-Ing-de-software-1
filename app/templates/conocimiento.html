@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Base de conocimiento') if es_personal else _('Centro de ayuda') }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% block content %}
+<section class="kb-hero">
+    <div class="kb-hero-inner">
+        <div class="eyebrow">{{ icono('libro', 14) }} {{ _('Centro de ayuda') }}</div>
+        <h2>{{ _('¿En qué podemos ayudarte?') }}</h2>
+        <p class="text-muted mb-3">{{ _('Guías paso a paso para resolver los problemas más comunes sin esperar a soporte.') }}</p>
+        <form method="GET" class="kb-search" role="search">
+            {{ icono('buscar', 18) }}
+            <input type="search" name="q" value="{{ busqueda }}" class="form-control" placeholder="{{ _('Busca: VPN, impresora, contraseña…') }}" aria-label="{{ _('Buscar artículos') }}" autocomplete="off">
+            {% if categoria_actual %}<input type="hidden" name="categoria" value="{{ categoria_actual }}">{% endif %}
+            {% if ver_borradores %}<input type="hidden" name="borradores" value="1">{% endif %}
+            <button class="btn btn-primary" type="submit">{{ _('Buscar') }}</button>
+        </form>
+    </div>
+    {% if es_personal %}
+    <div class="kb-hero-actions">
+        <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('conocimiento.inicio', borradores=('' if ver_borradores else '1'), q=busqueda or None, categoria=categoria_actual) }}">
+            {{ icono('nota', 15) }} {{ _('Ocultar borradores') if ver_borradores else _('Ver borradores') }}
+        </a>
+        <a class="btn btn-primary btn-sm" href="{{ url_for('conocimiento.nuevo') }}">{{ icono('mas', 15) }} {{ _('Nuevo artículo') }}</a>
+    </div>
+    {% endif %}
+</section>
+
+<nav class="kb-cats" aria-label="{{ _('Categorías') }}">
+    <a class="kb-cat {% if not categoria_actual %}active{% endif %}" href="{{ url_for('conocimiento.inicio', q=busqueda or None, orden=orden, borradores=('1' if ver_borradores else None)) }}">
+        {{ _('Todas') }} <span>{{ conteo.values() | sum }}</span>
+    </a>
+    {% for c in CATEGORIAS %}
+    <a class="kb-cat {% if categoria_actual == c %}active{% endif %}" href="{{ url_for('conocimiento.inicio', categoria=c, q=busqueda or None, orden=orden, borradores=('1' if ver_borradores else None)) }}">
+        {{ c | etiqueta }} <span>{{ conteo.get(c, 0) }}</span>
+    </a>
+    {% endfor %}
+</nav>
+
+<div class="kb-toolbar">
+    <span class="text-muted small">
+        {% if busqueda %}{{ ngettext('%(num)s resultado para «%(q)s»', '%(num)s resultados para «%(q)s»', articulos | length, q=busqueda) }}
+        {% else %}{{ ngettext('%(num)s artículo', '%(num)s artículos', articulos | length) }}{% endif %}
+    </span>
+    <div class="seg" role="group" aria-label="{{ _('Ordenar') }}">
+        {% for valor, texto in [('recientes', _('Recientes')), ('populares', _('Más vistos')), ('utiles', _('Más útiles'))] %}
+        <a class="{% if orden == valor %}is-on{% endif %}" href="{{ url_for('conocimiento.inicio', orden=valor, q=busqueda or None, categoria=categoria_actual, borradores=('1' if ver_borradores else None)) }}">{{ texto }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+{% if articulos %}
+<div class="kb-grid">
+    {% for a in articulos %}
+    <a class="kb-card fx" href="{{ url_for('conocimiento.ver', articulo_id=a.id) }}">
+        <div class="kb-card-top">
+            <span class="badge-pill categoria-tag">{{ a.categoria.value | etiqueta }}</span>
+            {% if not a.publicado %}<span class="badge-pill kb-borrador">{{ _('Borrador') }}</span>{% endif %}
+        </div>
+        <h3 class="kb-card-title">{{ a.titulo }}</h3>
+        <p class="kb-card-text">{{ a.resumen or (a.contenido | striptags | truncate(150, True)) }}</p>
+        <div class="kb-card-meta">
+            <span title="{{ _('Vistas') }}">{{ icono('ojo', 14) }} {{ a.vistas }}</span>
+            {% if a.utilidad is not none %}<span title="{{ _('Valoración positiva') }}">{{ icono('pulgar_arriba', 14) }} {{ (a.utilidad * 100) | round | int }}%</span>{% endif %}
+            <span class="ms-auto" data-relativo="{{ a.fecha_actualizacion.strftime('%Y-%m-%dT%H:%M:%S') }}">{{ a.fecha_actualizacion | fecha(false) }}</span>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p class="mb-1">{{ _('No encontramos artículos con esos criterios.') }}</p>
+    <p class="text-muted small mb-3">{{ _('Prueba con otras palabras o crea un ticket y te ayudamos.') }}</p>
+    <a class="btn btn-primary btn-sm" href="{{ url_for('tickets.crear') }}">{{ icono('mas', 15) }} {{ _('Crear ticket') }}</a>
+</div>
+{% endif %}
+{% endblock %}

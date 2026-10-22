@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}{{ articulo.titulo }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% block content %}
+<a class="small-link mb-3 d-inline-flex align-items-center gap-1" href="{{ url_for('conocimiento.inicio') }}">{{ icono('flecha', 14, 'flip-x') }} {{ _('Volver al centro de ayuda') }}</a>
+
+<div class="kb-layout">
+<article class="kb-article">
+    <header class="kb-article-head">
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+            <a class="badge-pill categoria-tag" href="{{ url_for('conocimiento.inicio', categoria=articulo.categoria.value) }}">{{ articulo.categoria.value | etiqueta }}</a>
+            {% if not articulo.publicado %}<span class="badge-pill kb-borrador">{{ _('Borrador') }}</span>{% endif %}
+            {% for e in articulo.lista_etiquetas %}<a class="kb-tag" href="{{ url_for('conocimiento.inicio', q=e) }}">#{{ e }}</a>{% endfor %}
+        </div>
+        <h1>{{ articulo.titulo }}</h1>
+        {% if articulo.resumen %}<p class="kb-lead">{{ articulo.resumen }}</p>{% endif %}
+        <div class="kb-byline">
+            <span>{{ icono('usuario', 14) }} {{ autor.nombre if autor else _('Equipo de soporte') }}</span>
+            <span>{{ icono('calendario', 14) }} {{ _('Actualizado') }} {{ articulo.fecha_actualizacion | fecha(false) }}</span>
+            <span>{{ icono('ojo', 14) }} {{ ngettext('%(num)s vista', '%(num)s vistas', articulo.vistas) }}</span>
+        </div>
+    </header>
+
+    <div class="kb-body">{{ articulo.contenido | md }}</div>
+
+    <section class="kb-feedback" id="valoracion">
+        <div>
+            <strong>{{ _('¿Te resultó útil este artículo?') }}</strong>
+            {% if articulo.utilidad is not none %}
+            <div class="text-muted small">{{ _('%(p)s%% de las personas lo encontró útil', p=(articulo.utilidad * 100) | round | int) }}</div>
+            {% endif %}
+        </div>
+        <div class="d-flex gap-2">
+            <form method="POST" action="{{ url_for('conocimiento.votar', articulo_id=articulo.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="util" value="1">
+                <button class="btn btn-sm {% if mi_voto == true %}btn-success{% else %}btn-outline-secondary{% endif %}" type="submit" aria-pressed="{{ 'true' if mi_voto == true else 'false' }}">{{ icono('pulgar_arriba', 15) }} {{ _('Sí') }} <span class="opacity-75">{{ articulo.votos_utiles }}</span></button>
+            </form>
+            <form method="POST" action="{{ url_for('conocimiento.votar', articulo_id=articulo.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="util" value="0">
+                <button class="btn btn-sm {% if mi_voto == false %}btn-danger{% else %}btn-outline-secondary{% endif %}" type="submit" aria-pressed="{{ 'true' if mi_voto == false else 'false' }}">{{ icono('pulgar_abajo', 15) }} {{ _('No') }} <span class="opacity-75">{{ articulo.votos_no_utiles }}</span></button>
+            </form>
+        </div>
+    </section>
+
+    {% if desde_ticket %}
+    <section class="kb-deflect">
+        <div>
+            <strong>{{ _('¿Esto resolvió tu problema?') }}</strong>
+            <div class="text-muted small">{{ _('Si es así, no hace falta abrir un ticket.') }}</div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <form method="POST" action="{{ url_for('conocimiento.resuelto', articulo_id=articulo.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-success btn-sm" type="submit">{{ icono('check', 15) }} {{ _('Sí, ya está resuelto') }}</button>
+            </form>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('tickets.crear') }}">{{ _('No, continuar con mi ticket') }}</a>
+        </div>
+    </section>
+    {% endif %}
+</article>
+
+<aside class="kb-side">
+    {% if es_personal %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title mb-3">{{ _('Gestión') }}</h5>
+            <ul class="props mb-3">
+                <li><span class="prop-k">{{ icono('ojo', 15) }}{{ _('Vistas') }}</span><span class="prop-v mono">{{ articulo.vistas }}</span></li>
+                <li><span class="prop-k">{{ icono('check', 15) }}{{ _('Tickets evitados') }}</span><span class="prop-v mono">{{ articulo.resoluciones }}</span></li>
+                <li><span class="prop-k">{{ icono('pulgar_arriba', 15) }}{{ _('Votos') }}</span><span class="prop-v mono">{{ articulo.votos_utiles }} / {{ articulo.votos_no_utiles }}</span></li>
+            </ul>
+            <div class="d-flex gap-2 flex-wrap">
+                <a class="btn btn-primary btn-sm" href="{{ url_for('conocimiento.editar', articulo_id=articulo.id) }}">{{ icono('editar', 15) }} {{ _('Editar') }}</a>
+                <form method="POST" action="{{ url_for('conocimiento.publicacion', articulo_id=articulo.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="publicado" value="{{ '0' if articulo.publicado else '1' }}">
+                    <button class="btn btn-outline-secondary btn-sm" type="submit" {% if articulo.publicado %}data-confirm="{{ _('El artículo dejará de ser visible para los usuarios.') }}"{% endif %}>
+                        {{ _('Archivar') if articulo.publicado else _('Publicar') }}
+                    </button>
+                </form>
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-copy="{{ url_for('conocimiento.ver', articulo_id=articulo.id, _external=True) }}">{{ icono('copiar', 15) }} <span data-copy-label>{{ _('Copiar enlace') }}</span></button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if relacionados %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title mb-2">{{ _('Artículos relacionados') }}</h5>
+            <ul class="kb-related">
+                {% for r in relacionados %}
+                <li><a href="{{ url_for('conocimiento.ver', articulo_id=r.id) }}">{{ icono('archivo', 15) }}<span>{{ r.titulo }}</span></a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card kb-help-card">
+        <div class="card-body">
+            <h5 class="card-title mb-1">{{ _('¿Sigues con el problema?') }}</h5>
+            <p class="text-muted small mb-3">{{ _('Nuestro equipo te ayuda. Indica qué pasos de esta guía ya probaste.') }}</p>
+            <a class="btn btn-primary btn-sm w-100" href="{{ url_for('tickets.crear') }}">{{ icono('mas', 15) }} {{ _('Crear ticket') }}</a>
+        </div>
+    </div>
+</aside>
+</div>
+{% endblock %}

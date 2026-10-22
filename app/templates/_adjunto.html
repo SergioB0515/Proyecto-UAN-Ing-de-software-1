@@ -1,0 +1,12 @@
+{% from "_iconos.html" import icono %}
+{% if a.es_imagen %}
+<a class="attach attach-img" href="{{ url_for('colaboracion.descargar_adjunto', adjunto_id=a.id) }}" target="_blank" rel="noopener" title="{{ a.nombre_original }}" data-lightbox>
+    <img src="{{ url_for('colaboracion.descargar_adjunto', adjunto_id=a.id) }}" alt="{{ a.nombre_original }}" loading="lazy">
+</a>
+{% else %}
+<a class="attach attach-file" href="{{ url_for('colaboracion.descargar_adjunto', adjunto_id=a.id) }}" target="_blank" rel="noopener">
+    <span class="attach-ext">{{ a.extension | upper }}</span>
+    <span class="attach-info"><span class="attach-name">{{ a.nombre_original }}</span><span class="attach-size">{{ a.tamano | tamano }}</span></span>
+    {{ icono('descargar', 15) }}
+</a>
+{% endif %}

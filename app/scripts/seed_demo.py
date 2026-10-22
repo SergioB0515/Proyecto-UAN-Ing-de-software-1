@@ -203,3 +203,5 @@ if __name__ == "__main__":
     app = create_app()
     with app.app_context():
         sembrar()
+        from app.scripts.seed_v3 import sembrar as sembrar_v3
+        sembrar_v3()

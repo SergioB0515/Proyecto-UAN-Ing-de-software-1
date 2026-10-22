@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: tickets-it
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python init_db.py && gunicorn -w 1 --threads 16 -b 0.0.0.0:$PORT app.app:app
+    healthCheckPath: /salud
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tickets-it-db
+          property: connectionString
+      - key: SESSION_COOKIE_SECURE
+        value: "1"
+      - key: MODO_DEMO
+        value: "0"
+      - key: CLASIFICADOR_ML_ACTIVO
+        value: "0"
+      - key: APP_BASE_URL
+        sync: false
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+
+databases:
+  - name: tickets-it-db
+    plan: free

@@ -17,6 +17,9 @@ import time
 
 
 def completar_inicio_sesion(usuario):
+    from app.services.usuarios import ServicioUsuarios
+    session.permanent = True
+    ServicioUsuarios.registrar_acceso(usuario)
     session['usuario_id'] = usuario.id
     session['rol'] = usuario.rol
     session['area_soporte'] = usuario.area_soporte.value if usuario.area_soporte is not None else None
@@ -38,6 +41,9 @@ def login():
         usuario, resultado = ServicioAutenticacion.iniciar_sesion(email, contrasena, ip)
 
         if resultado == ResultadoLogin.EXITOSO:
+            if not usuario.activo:
+                flash(_("Tu cuenta no está activa. Contacta a un administrador."), "warning")
+                return redirect(url_for('auth.login'))
             if ServicioDobleFactor.esta_activo(usuario.id):
                 session['2fa_usuario_id'] = usuario.id
                 session['2fa_desde'] = time.time()
@@ -74,11 +80,17 @@ def dashboard():
     ids_vencidos = {t.id for t in vencidos}
     ids_proximos = {t.id for t in proximos}
 
+    from app.services.encuestas import ServicioEncuestas
+    from app.services.base_conocimiento import ServicioBaseConocimiento
+
+    por_calificar = [t for t in tickets if ServicioEncuestas.puede_responder(t, usuario_id)]
     return render_template(
         "dashboard.html",
         tickets=tickets,
         ids_vencidos=ids_vencidos,
         ids_proximos=ids_proximos,
+        por_calificar=por_calificar,
+        articulos_populares=ServicioBaseConocimiento.listar(orden="populares")[:4],
         )
 
 @auth_bp.route("/logout")
@@ -130,7 +142,7 @@ def registro():
             return redirect(url_for("auth.registro"))
 
         flash(_("Usuario registrado con éxito"), "success")
-        return redirect(url_for("metricas.mostrar_metricas"))
+        return redirect(url_for("usuarios.detalle", usuario_id=usuario_creado.id))
 
     return render_template("registro.html")
 

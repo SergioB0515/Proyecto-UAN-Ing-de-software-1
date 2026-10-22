@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b0d12">
+    {% if session.get('usuario_id') %}<meta name="csrf-token" content="{{ csrf_token() }}">{% endif %}
     {% if ahora is defined %}<meta name="server-now" content="{{ ahora().strftime('%Y-%m-%dT%H:%M:%S') }}">{% endif %}
     <title>{% block title %}Sistema de Tickets{% endblock %} · Tickets IT</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b7cf8'/%3E%3Cstop offset='1' stop-color='%235b4be0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -58,11 +59,13 @@
     <nav class="sidebar-nav">
         {% if rol == 'admin' %}
             {{ enlace('metricas.mostrar_metricas', url_for('metricas.mostrar_metricas'), _('Panel'), 'panel') }}
+            {{ enlace('analitica.panel', url_for('analitica.panel'), _('Analítica'), 'pulso') }}
 
             <div class="side-section">{{ _('Tickets') }}</div>
             {{ enlace('tickets.listar_admin', url_for('tickets.listar_admin'), _('Todos los tickets'), 'tickets') }}
             {{ enlace('auth.dashboard', url_for('auth.dashboard'), _('Mis tickets'), 'bandeja') }}
             {{ enlace('tickets.crear', url_for('tickets.crear'), _('Crear ticket'), 'mas') }}
+            {{ enlace('colaboracion.respuestas', url_for('colaboracion.respuestas'), _('Respuestas rápidas'), 'respuesta') }}
 
             <div class="side-section">{{ _('Solicitudes') }}</div>
             {{ enlace('solicitudes.pendientes', url_for('solicitudes.pendientes'), _('Transferencias'), 'transferir', cuenta=pm.get('transferencias', 0)) }}
@@ -71,8 +74,11 @@
             {{ enlace('tickets.revision_clasificacion', url_for('tickets.revision_clasificacion'), _('Revisión IA'), 'ia', cuenta=pm.get('revision', 0)) }}
             {{ enlace('apelaciones.pendientes', url_for('apelaciones.pendientes'), _('Apelaciones'), 'mazo', cuenta=pm.get('apelaciones', 0)) }}
 
+            <div class="side-section">{{ _('Conocimiento') }}</div>
+            {{ enlace('conocimiento.inicio', url_for('conocimiento.inicio'), _('Base de conocimiento'), 'libro', activo=(bp == 'conocimiento')) }}
+
             <div class="side-section">{{ _('Administración') }}</div>
-            {{ enlace('auth.registro', url_for('auth.registro'), _('Registrar usuario'), 'usuario_mas') }}
+            {{ enlace('usuarios.listar', url_for('usuarios.listar'), _('Usuarios'), 'usuarios', activo=(bp == 'usuarios' or ep == 'auth.registro')) }}
             {{ enlace('auditoria.mostrar_auditoria', url_for('auditoria.mostrar_auditoria'), _('Log de auditoría'), 'historial') }}
             {{ enlace('palabras_clave.listar', url_for('palabras_clave.listar'), _('Palabras clave'), 'etiqueta') }}
             {% if config.MODO_DEMO %}
@@ -83,9 +89,14 @@
             {{ enlace('auth.dashboard', url_for('auth.dashboard'), _('Mis tickets'), 'bandeja') }}
             {{ enlace('tickets.crear', url_for('tickets.crear'), _('Crear ticket'), 'mas') }}
             {{ enlace('solicitudes.pendientes', url_for('solicitudes.pendientes'), _('Solicitudes'), 'transferir', activo=(bp == 'solicitudes'), cuenta=pm.get('transferencias', 0)) }}
+            {{ enlace('colaboracion.respuestas', url_for('colaboracion.respuestas'), _('Respuestas rápidas'), 'respuesta') }}
+
+            <div class="side-section">{{ _('Conocimiento') }}</div>
+            {{ enlace('conocimiento.inicio', url_for('conocimiento.inicio'), _('Base de conocimiento'), 'libro', activo=(bp == 'conocimiento')) }}
         {% else %}
             {{ enlace('auth.dashboard', url_for('auth.dashboard'), _('Mis tickets'), 'bandeja') }}
             {{ enlace('tickets.crear', url_for('tickets.crear'), _('Crear ticket'), 'mas') }}
+            {{ enlace('conocimiento.inicio', url_for('conocimiento.inicio'), _('Centro de ayuda'), 'libro', activo=(bp == 'conocimiento')) }}
         {% endif %}
     </nav>
 
@@ -103,7 +114,9 @@
             <span class="side-label user-caret">{{ icono('abajo', 14) }}</span>
         </button>
         <ul class="dropdown-menu">
+            <li><span class="dropdown-version">Tickets IT · v{{ version_app }}</span></li>
             <li><a class="dropdown-item {% if ep == 'auth.perfil' %}active{% endif %}" href="{{ url_for('auth.perfil') }}">{{ icono('usuario', 16) }} {{ _('Mi perfil') }}</a></li>
+            <li><a class="dropdown-item {% if ep == 'api.docs' %}active{% endif %}" href="{{ url_for('api.docs') }}">{{ icono('codigo', 16) }} {{ _('API y tokens') }}</a></li>
             <li><button type="button" class="dropdown-item" data-open-shortcuts>{{ icono('teclado', 16) }} {{ _('Atajos de teclado') }}</button></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item dropdown-item-danger" href="{{ url_for('auth.logout') }}">{{ icono('salir', 16) }} {{ _('Cerrar sesión') }}</a></li>
@@ -117,7 +130,7 @@
     <header class="topbar">
         {% if logueado %}
         <button type="button" class="icon-btn topbar-menu" data-sidebar-open aria-label="{{ _('Abrir menú de navegación') }}">{{ icono('menu') }}</button>
-        {% set secciones = {'tickets': _('Tickets'), 'solicitudes': _('Solicitudes'), 'apelaciones': _('Solicitudes'), 'auditoria': _('Administración'), 'palabras_clave': _('Administración'), 'demo': _('Administración')} %}
+        {% set secciones = {'tickets': _('Tickets'), 'solicitudes': _('Solicitudes'), 'apelaciones': _('Solicitudes'), 'auditoria': _('Administración'), 'palabras_clave': _('Administración'), 'demo': _('Administración'), 'usuarios': _('Administración'), 'conocimiento': _('Conocimiento'), 'colaboracion': _('Tickets'), 'analitica': _('Panel'), 'api': _('Cuenta'), 'seguridad': _('Cuenta')} %}
         {% if ep == 'auth.registro' %}{% set seccion = _('Administración') %}
         {% elif ep == 'tickets.revision_clasificacion' %}{% set seccion = _('Solicitudes') %}
         {% elif ep == 'auth.dashboard' %}{% set seccion = _('Tickets') %}
@@ -290,7 +303,12 @@
         {"t": _('Cambios de prioridad'), "u": url_for('solicitudes.cambios_prioridad_pendientes'), "g": "nav", "i": "bandera"},
         {"t": _('Revisión IA'), "u": url_for('tickets.revision_clasificacion'), "g": "nav", "i": "ia"},
         {"t": _('Apelaciones'), "u": url_for('apelaciones.pendientes'), "g": "nav", "i": "mazo"},
+        {"t": _('Analítica'), "u": url_for('analitica.panel'), "g": "nav", "i": "pulso"},
+        {"t": _('Usuarios'), "u": url_for('usuarios.listar'), "g": "nav", "i": "usuarios"},
         {"t": _('Registrar usuario'), "u": url_for('auth.registro'), "g": "nav", "i": "usuario_mas"},
+        {"t": _('Base de conocimiento'), "u": url_for('conocimiento.inicio'), "g": "nav", "i": "libro"},
+        {"t": _('Nuevo artículo'), "u": url_for('conocimiento.nuevo'), "g": "acc", "i": "editar"},
+        {"t": _('Respuestas rápidas'), "u": url_for('colaboracion.respuestas'), "g": "nav", "i": "respuesta"},
         {"t": _('Log de auditoría'), "u": url_for('auditoria.mostrar_auditoria'), "g": "nav", "i": "historial"},
         {"t": _('Palabras clave'), "u": url_for('palabras_clave.listar'), "g": "nav", "i": "etiqueta"},
         {"t": _('Vencidos actualmente'), "u": url_for('tickets.listar_admin', vista='vencidos_actuales'), "g": "nav", "i": "alerta"},
@@ -302,17 +320,22 @@
         {"t": _('Mi área'), "u": url_for('tickets.listar_por_area', area=session.get('area_soporte')), "g": "nav", "i": "capas"},
         {"t": _('Mis tickets'), "u": url_for('auth.dashboard'), "g": "nav", "i": "bandeja"},
         {"t": _('Crear ticket'), "u": url_for('tickets.crear'), "g": "nav", "i": "mas"},
-        {"t": _('Solicitudes'), "u": url_for('solicitudes.pendientes'), "g": "nav", "i": "transferir"}
+        {"t": _('Solicitudes'), "u": url_for('solicitudes.pendientes'), "g": "nav", "i": "transferir"},
+        {"t": _('Respuestas rápidas'), "u": url_for('colaboracion.respuestas'), "g": "nav", "i": "respuesta"},
+        {"t": _('Base de conocimiento'), "u": url_for('conocimiento.inicio'), "g": "nav", "i": "libro"},
+        {"t": _('Nuevo artículo'), "u": url_for('conocimiento.nuevo'), "g": "acc", "i": "editar"}
     ]) %}
 {% elif logueado %}
     {% set _a = items_paleta.extend([
         {"t": _('Mis tickets'), "u": url_for('auth.dashboard'), "g": "nav", "i": "bandeja"},
-        {"t": _('Crear ticket'), "u": url_for('tickets.crear'), "g": "nav", "i": "mas"}
+        {"t": _('Crear ticket'), "u": url_for('tickets.crear'), "g": "nav", "i": "mas"},
+        {"t": _('Centro de ayuda'), "u": url_for('conocimiento.inicio'), "g": "nav", "i": "libro"}
     ]) %}
 {% endif %}
 {% if logueado %}
 {% set _c = items_paleta.extend([
     {"t": _('Mi perfil'), "u": url_for('auth.perfil'), "g": "acc", "i": "usuario"},
+    {"t": _('API y tokens'), "u": url_for('api.docs'), "g": "acc", "i": "codigo"},
     {"t": _('Cambiar tema claro / oscuro'), "a": "tema", "g": "acc", "i": "luna"},
     {"t": "English", "u": url_for('auth.cambiar_idioma', codigo='en'), "g": "acc", "i": "idioma"},
     {"t": "Español", "u": url_for('auth.cambiar_idioma', codigo='es'), "g": "acc", "i": "idioma"},
@@ -326,7 +349,7 @@
     "grupos": {"nav": _('Navegación'), "acc": _('Acciones'), "tk": _('Tickets'), "rec": _('Recientes')}
 } | tojson }}</script>
 <template id="paleta-iconos">
-    <span data-i="panel">{{ icono('panel', 16) }}</span><span data-i="tickets">{{ icono('tickets', 16) }}</span><span data-i="bandeja">{{ icono('bandeja', 16) }}</span><span data-i="mas">{{ icono('mas', 16) }}</span><span data-i="transferir">{{ icono('transferir', 16) }}</span><span data-i="escalar">{{ icono('escalar', 16) }}</span><span data-i="bandera">{{ icono('bandera', 16) }}</span><span data-i="ia">{{ icono('ia', 16) }}</span><span data-i="mazo">{{ icono('mazo', 16) }}</span><span data-i="usuario_mas">{{ icono('usuario_mas', 16) }}</span><span data-i="historial">{{ icono('historial', 16) }}</span><span data-i="etiqueta">{{ icono('etiqueta', 16) }}</span><span data-i="rayo">{{ icono('rayo', 16) }}</span><span data-i="capas">{{ icono('capas', 16) }}</span><span data-i="alerta">{{ icono('alerta', 16) }}</span><span data-i="reloj">{{ icono('reloj', 16) }}</span><span data-i="usuario">{{ icono('usuario', 16) }}</span><span data-i="luna">{{ icono('luna', 16) }}</span><span data-i="idioma">{{ icono('idioma', 16) }}</span><span data-i="teclado">{{ icono('teclado', 16) }}</span><span data-i="salir">{{ icono('salir', 16) }}</span><span data-i="flecha">{{ icono('flecha', 16) }}</span><span data-i="reciente">{{ icono('historial', 16) }}</span>
+    <span data-i="panel">{{ icono('panel', 16) }}</span><span data-i="tickets">{{ icono('tickets', 16) }}</span><span data-i="bandeja">{{ icono('bandeja', 16) }}</span><span data-i="mas">{{ icono('mas', 16) }}</span><span data-i="transferir">{{ icono('transferir', 16) }}</span><span data-i="escalar">{{ icono('escalar', 16) }}</span><span data-i="bandera">{{ icono('bandera', 16) }}</span><span data-i="ia">{{ icono('ia', 16) }}</span><span data-i="mazo">{{ icono('mazo', 16) }}</span><span data-i="usuario_mas">{{ icono('usuario_mas', 16) }}</span><span data-i="historial">{{ icono('historial', 16) }}</span><span data-i="etiqueta">{{ icono('etiqueta', 16) }}</span><span data-i="rayo">{{ icono('rayo', 16) }}</span><span data-i="capas">{{ icono('capas', 16) }}</span><span data-i="alerta">{{ icono('alerta', 16) }}</span><span data-i="reloj">{{ icono('reloj', 16) }}</span><span data-i="usuario">{{ icono('usuario', 16) }}</span><span data-i="luna">{{ icono('luna', 16) }}</span><span data-i="idioma">{{ icono('idioma', 16) }}</span><span data-i="teclado">{{ icono('teclado', 16) }}</span><span data-i="salir">{{ icono('salir', 16) }}</span><span data-i="flecha">{{ icono('flecha', 16) }}</span><span data-i="reciente">{{ icono('historial', 16) }}</span><span data-i="libro">{{ icono('libro', 16) }}</span><span data-i="pulso">{{ icono('pulso', 16) }}</span><span data-i="usuarios">{{ icono('usuarios', 16) }}</span><span data-i="respuesta">{{ icono('respuesta', 16) }}</span><span data-i="editar">{{ icono('editar', 16) }}</span><span data-i="codigo">{{ icono('codigo', 16) }}</span>
 </template>
 {% endif %}
 {% endif %}

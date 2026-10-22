@@ -138,3 +138,46 @@ Calidad y cierre para la entrega:
 - Corrección de `requirements.txt` (estaba en codificación UTF-16 por un `pip freeze >` hecho
   desde PowerShell, y le faltaba declarar `pytest`/`openpyxl`/`Flask-WTF`/`APScheduler`/
   `Pillow` pese a ya usarse en el código).
+
+## Rediseño, verificación en dos pasos y recuperación de contraseña — completado
+
+- Nueva estructura de la interfaz (menú lateral, barra superior, paleta de comandos con
+  Ctrl + K, atajos de teclado, tema claro/oscuro) y mejoras de usabilidad.
+- Verificación en dos pasos TOTP (RFC 6238) con códigos de respaldo de un solo uso
+  guardados como hash, protección contra reutilización de códigos y bloqueo temporal tras
+  5 intentos fallidos.
+- Recuperación de contraseña por correo: enlace de un solo uso, válido 30 minutos, máximo
+  3 solicitudes por hora y mensaje genérico para no revelar qué correos existen.
+
+## Versión 3.0 — completado
+
+Autoservicio, colaboración y gestión:
+
+- **Base de conocimiento** con artículos, categorías, etiquetas, borradores, votos de
+  utilidad y artículos relacionados. Al escribir un ticket se sugieren guías con un
+  algoritmo de reglas: se normalizan los textos (minúsculas, sin tildes, sin palabras
+  vacías, raíz simple) y se puntúa la coincidencia de términos con pesos distintos para
+  título (3), etiquetas (2.5), resumen (1.5) y contenido (0.5), más una bonificación si el
+  artículo es de la categoría que estima `ClasificadorTickets`. Si una guía resuelve el
+  problema se registra como ticket evitado.
+- **Adjuntos** validados por extensión, firma del contenido, tamaño (5 MB) y cantidad
+  (10 por ticket), guardados fuera de la carpeta pública y descargables solo por quien
+  puede ver el ticket.
+- **Notas internas**, **respuestas rápidas** con variables y **seguidores** de tickets.
+  El solicitante recibe aviso cuando soporte responde, y el agente cuando el solicitante
+  contesta.
+- **Encuesta de satisfacción** de 1 a 5 al cierre del ticket.
+- **Analítica** por periodo (7, 30, 90 o 180 días) con variación contra el periodo
+  anterior, mapa de calor, ranking de agentes y exportación a CSV.
+- **Gestión de usuarios** para el administrador, incluyendo activación y desactivación
+  de cuentas (una cuenta desactivada pierde la sesión y el acceso a la API de inmediato).
+- **API REST v1** con tokens personales, límite de 120 peticiones por minuto y
+  documentación dentro de la aplicación.
+- **Seguridad:** se corrigió que cualquier usuario autenticado pudiera abrir y comentar
+  cualquier ticket conociendo su número; ahora el acceso lo decide `ServicioPermisos`.
+  Se agregaron cabeceras de seguridad, cookies `HttpOnly`/`SameSite`, caducidad de sesión
+  y límite de tamaño de petición.
+- **Despliegue:** endpoint `/salud`, `render.yaml` y actualización de esquema sin pérdida
+  de datos al ejecutar `init_db.py` (sin herramienta de migraciones externa).
+- Pruebas: 8 archivos nuevos de pytest (usuarios, base de conocimiento, adjuntos,
+  colaboración, encuestas, analítica, API y migraciones).

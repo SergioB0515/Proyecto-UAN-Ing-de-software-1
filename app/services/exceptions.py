@@ -50,3 +50,23 @@ class DobleFactorBloqueadoError(Exception):
     pass
 class TokenRecuperacionInvalidoError(Exception):
     pass
+class PermisoDenegadoError(Exception):
+    pass
+class UsuarioNoEncontradoError(Exception):
+    pass
+class OperacionNoPermitidaError(Exception):
+    pass
+class ArticuloNoEncontradoError(Exception):
+    pass
+class AdjuntoInvalidoError(Exception):
+    pass
+class AdjuntoNoEncontradoError(Exception):
+    pass
+class RespuestaNoEncontradaError(Exception):
+    pass
+class EncuestaNoDisponibleError(Exception):
+    pass
+class EncuestaYaRespondidaError(Exception):
+    pass
+class TokenApiInvalidoError(Exception):
+    pass

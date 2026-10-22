@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Respuestas rápidas') }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% macro formulario(r=None) %}
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div class="mb-2">
+    <label class="form-label">{{ _('Título') }}</label>
+    <input name="titulo" class="form-control" maxlength="120" required value="{{ r.titulo if r else '' }}" placeholder="{{ _('Ej.: Solicitar captura del error') }}">
+</div>
+<div class="mb-2">
+    <label class="form-label">{{ _('Texto') }}</label>
+    <textarea name="contenido" class="form-control" rows="5" required placeholder="{{ _('Hola {nombre}, para avanzar con el ticket {ticket}…') }}">{{ r.contenido if r else '' }}</textarea>
+    <div class="form-text">{{ _('Variables disponibles:') }} <code>{nombre}</code> <code>{ticket}</code> <code>{agente}</code> <code>{categoria}</code></div>
+</div>
+<div class="row g-2 align-items-end">
+    <div class="col-sm-6">
+        <label class="form-label">{{ _('Categoría') }}</label>
+        <select name="categoria" class="form-select">
+            <option value="">{{ _('Todas') }}</option>
+            {% for c in CATEGORIAS %}<option value="{{ c }}" {% if r and r.categoria and r.categoria.value == c %}selected{% endif %}>{{ c | etiqueta }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" role="switch" name="compartida" value="1" id="comp{{ r.id if r else 'nueva' }}" {% if not r or r.compartida %}checked{% endif %}>
+            <label class="form-check-label" for="comp{{ r.id if r else 'nueva' }}">{{ _('Compartir con el equipo') }}</label>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>{{ _('Respuestas rápidas') }}</h2>
+        <span class="text-muted">{{ _('Plantillas reutilizables para responder tickets en segundos. Insértalas desde la conversación de cualquier ticket.') }}</span>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        {% if respuestas %}
+        <div class="table-tools mb-2">
+            <input type="search" class="form-control form-control-sm table-search" placeholder="{{ _('Filtrar respuestas…') }}" data-filtro-tarjetas=".resp-card">
+        </div>
+        <div class="resp-list">
+            {% for r in respuestas %}
+            {% set mia = r.autor_id == usuario_actual.id or usuario_actual.rol.value == 'admin' %}
+            <article class="resp-card card" id="r{{ r.id }}">
+                <div class="card-body">
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="min-w-0 flex-grow-1">
+                            <h3 class="resp-title">{{ r.titulo }}</h3>
+                            <div class="d-flex flex-wrap gap-2 align-items-center small text-muted mb-2">
+                                {% if r.categoria %}<span class="badge-pill categoria-tag">{{ r.categoria.value | etiqueta }}</span>{% else %}<span class="badge-pill">{{ _('Todas las áreas') }}</span>{% endif %}
+                                {% if not r.compartida %}<span class="badge-pill nota-tag">{{ icono('candado', 12) }} {{ _('Privada') }}</span>{% endif %}
+                                <span>{{ nombres_por_id.get(r.autor_id, '—') }}</span>
+                                <span>· {{ ngettext('%(num)s uso', '%(num)s usos', r.usos) }}</span>
+                            </div>
+                        </div>
+                        <button type="button" class="icon-btn icon-btn-sm" data-copy="{{ r.contenido }}" title="{{ _('Copiar') }}">{{ icono('copiar', 14) }}</button>
+                        {% if mia %}
+                        <a class="icon-btn icon-btn-sm" href="{{ url_for('colaboracion.respuestas', editar=r.id) }}#r{{ r.id }}" title="{{ _('Editar') }}">{{ icono('editar', 14) }}</a>
+                        <form method="POST" action="{{ url_for('colaboracion.eliminar_respuesta', respuesta_id=r.id) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="icon-btn icon-btn-sm" type="submit" title="{{ _('Eliminar') }}" data-confirm="{{ _('Se eliminará la respuesta «%(t)s».', t=r.titulo) }}">{{ icono('papelera', 14) }}</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% if editar_id == r.id and mia %}
+                    <form method="POST" action="{{ url_for('colaboracion.editar_respuesta', respuesta_id=r.id) }}" class="mt-2">
+                        {{ formulario(r) }}
+                        <div class="d-flex gap-2 mt-3">
+                            <button class="btn btn-primary btn-sm" type="submit">{{ _('Guardar') }}</button>
+                            <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('colaboracion.respuestas') }}">{{ _('Cancelar') }}</a>
+                        </div>
+                    </form>
+                    {% else %}
+                    <p class="resp-text mb-0">{{ r.contenido }}</p>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p class="mb-0">{{ _('Todavía no hay respuestas rápidas. Crea la primera con el formulario.') }}</p>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-lg-4">
+        <div class="card sticky-side">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-3">{{ _('Nueva respuesta') }}</h5>
+                <form method="POST">
+                    {{ formulario() }}
+                    <button class="btn btn-primary btn-sm mt-3 w-100" type="submit">{{ icono('mas', 15) }} {{ _('Crear respuesta') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

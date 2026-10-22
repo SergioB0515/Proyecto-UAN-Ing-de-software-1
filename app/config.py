@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -38,3 +39,10 @@ class Config:
     MAIL_DEFAULT_SENDER = os.environ.get("MAIL_USERNAME")
     MAIL_SUPPRESS_SEND = os.environ.get("TESTING", "").lower() == "true"
     BASE_URL = os.environ.get("APP_BASE_URL", "http://localhost:5000").rstrip("/")
+    MAX_CONTENT_LENGTH = int(os.environ.get("MAX_CONTENT_MB", "26")) * 1024 * 1024
+    CARPETA_ADJUNTOS = os.environ.get("CARPETA_ADJUNTOS") or None
+    MIGRAR_AL_INICIAR = _bool_env("MIGRAR_AL_INICIAR", "1")
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SECURE = _bool_env("SESSION_COOKIE_SECURE", "0")
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=int(os.environ.get("SESION_HORAS", "8")))

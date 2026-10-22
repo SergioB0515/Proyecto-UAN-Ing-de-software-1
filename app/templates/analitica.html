@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Analítica') }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% macro delta(valor, mejor_si_baja=false) -%}
+{% if valor is not none %}
+{% set bueno = (valor < 0) if mejor_si_baja else (valor > 0) %}
+<span class="delta {% if valor == 0 %}is-flat{% elif bueno %}is-good{% else %}is-bad{% endif %}" title="{{ _('Respecto al periodo anterior') }}">
+    {{ icono('arriba' if valor > 0 else 'abajo', 12) if valor != 0 else '' }}{{ '%+.0f' | format(valor) }}%
+</span>
+{% endif %}
+{%- endmacro %}
+{% macro valor(v, sufijo='') -%}{% if v is none %}<span class="text-muted">—</span>{% else %}{{ v }}{{ sufijo }}{% endif %}{%- endmacro %}
+{% block content %}
+{% set k = datos.kpis %}
+{% set v = datos.variaciones %}
+<div class="page-header">
+    <div>
+        <h2>{{ _('Analítica') }}</h2>
+        <span class="text-muted">{{ _('Del %(d)s al %(h)s, comparado con el periodo anterior de igual duración.', d=(datos.desde | fecha(false)), h=(datos.hasta | fecha(false))) }}</span>
+    </div>
+    <form method="GET" class="analytics-filters">
+        <div class="seg" role="group" aria-label="{{ _('Periodo') }}">
+            {% for p in periodos %}
+            <a class="{% if datos.dias == p %}is-on{% endif %}" href="{{ url_for('analitica.panel', dias=p, categoria=datos.categoria) }}">{{ p }}d</a>
+            {% endfor %}
+        </div>
+        <input type="hidden" name="dias" value="{{ datos.dias }}">
+        <select name="categoria" class="form-select form-select-sm" aria-label="{{ _('Categoría') }}" onchange="this.form.requestSubmit()">
+            <option value="">{{ _('Todas las categorías') }}</option>
+            {% for c in CATEGORIAS %}<option value="{{ c }}" {% if datos.categoria == c %}selected{% endif %}>{{ c | etiqueta }}</option>{% endfor %}
+        </select>
+        <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('analitica.exportar', dias=datos.dias, categoria=datos.categoria) }}">{{ icono('descargar', 15) }} CSV</a>
+    </form>
+</div>
+
+<div class="kpi-grid">
+    <div class="card stat-card"><div class="card-body">
+        <span class="stat-ico t-info">{{ icono('bandeja', 17) }}</span>
+        <h6 class="card-title">{{ _('Creados') }}</h6>
+        <p class="kpi-num"><span data-count>{{ k.creados }}</span> {{ delta(v.creados) }}</p>
+    </div></div>
+    <div class="card stat-card"><div class="card-body">
+        <span class="stat-ico t-ok">{{ icono('check', 17) }}</span>
+        <h6 class="card-title">{{ _('Cerrados') }}</h6>
+        <p class="kpi-num"><span data-count>{{ k.cerrados }}</span> {{ delta(v.cerrados) }}</p>
+    </div></div>
+    <div class="card stat-card"><div class="card-body">
+        <span class="stat-ico t-warn">{{ icono('capas', 17) }}</span>
+        <h6 class="card-title">{{ _('Pendientes ahora') }}</h6>
+        <p class="kpi-num"><span data-count>{{ datos.backlog }}</span></p>
+        <span class="kpi-sub {% if datos.vencidos %}t-danger{% endif %}">{{ ngettext('%(num)s vencido', '%(num)s vencidos', datos.vencidos) }}</span>
+    </div></div>
+    <div class="card stat-card"><div class="card-body">
+        <span class="stat-ico t-info">{{ icono('reloj', 17) }}</span>
+        <h6 class="card-title">{{ _('Resolución media') }}</h6>
+        <p class="kpi-num">{{ valor(k.mttr_horas, ' h') }} {{ delta(v.mttr_horas, true) }}</p>
+        <span class="kpi-sub">{{ _('Mediana') }}: {{ valor(k.mediana_horas, ' h') }}</span>
+    </div></div>
+    <div class="card stat-card"><div class="card-body">
+        <span class="stat-ico t-info">{{ icono('mensaje', 17) }}</span>
+        <h6 class="card-title">{{ _('Primera respuesta') }}</h6>
+        <p class="kpi-num">{{ valor(k.primera_respuesta_horas, ' h') }} {{ delta(v.primera_respuesta_horas, true) }}</p>
+        <span class="kpi-sub">{{ _('Mediana · %(p)s respondidos', p=(valor(k.con_respuesta_pct, '%'))) }}</span>
+    </div></div>
+    <div class="card stat-card"><div class="card-body">
+        <span class="stat-ico t-ok">{{ icono('objetivo', 17) }}</span>
+        <h6 class="card-title">{{ _('Cumplimiento SLA') }}</h6>
+        <p class="kpi-num">{{ valor(k.sla_pct, '%') }} {{ delta(v.sla_pct) }}</p>
+    </div></div>
+    <div class="card stat-card kpi-wide"><div class="card-body">
+        <span class="stat-ico t-warn">{{ icono('estrella', 17) }}</span>
+        <h6 class="card-title">{{ _('Satisfacción (CSAT)') }}</h6>
+        <p class="kpi-num">{{ valor(datos.csat.csat, '%') }}</p>
+        <span class="kpi-sub">{% if datos.csat.total %}{{ _('%(p)s/5 · %(n)s encuestas', p=datos.csat.promedio, n=datos.csat.total) }}{% else %}{{ _('Sin encuestas') }}{% endif %}</span>
+    </div></div>
+</div>
+
+<div class="analytics-row">
+    <div class="card chart-card">
+        <div class="card-body">
+            <div class="chart-head">
+                <div>
+                    <h5 class="card-title mb-0">{{ _('Volumen diario') }}</h5>
+                    <span class="text-muted small">{{ _('Tickets creados y cerrados por día') }}</span>
+                </div>
+                <div class="chart-legend">
+                    <span><i class="sw sw-1"></i>{{ _('Creados') }}</span>
+                    <span><i class="sw sw-2"></i>{{ _('Cerrados') }}</span>
+                </div>
+            </div>
+            <div class="chart-box"><canvas id="graficoVolumen" aria-label="{{ _('Tickets creados y cerrados por día') }}" role="img"></canvas></div>
+        </div>
+    </div>
+    <div class="card chart-card">
+        <div class="card-body">
+            <div class="chart-head">
+                <div>
+                    <h5 class="card-title mb-0">{{ _('Pendientes al cierre del día') }}</h5>
+                    <span class="text-muted small">{{ _('Tickets abiertos o en progreso acumulados') }}</span>
+                </div>
+            </div>
+            <div class="chart-box chart-box-sm"><canvas id="graficoBacklog" aria-label="{{ _('Pendientes al cierre del día') }}" role="img"></canvas></div>
+        </div>
+    </div>
+</div>
+<details class="chart-table mb-4">
+    <summary>{{ _('Ver los datos en tabla') }}</summary>
+    <div class="table-card mt-2">
+        <table class="table table-sm">
+            <thead><tr><th>{{ _('Día') }}</th><th>{{ _('Creados') }}</th><th>{{ _('Cerrados') }}</th><th>{{ _('Pendientes') }}</th></tr></thead>
+            <tbody>
+                {% for i in range(datos.serie.etiquetas | length) | reverse %}
+                <tr><td class="mono">{{ datos.serie.etiquetas[i] }}</td><td>{{ datos.serie.creados[i] }}</td><td>{{ datos.serie.cerrados[i] }}</td><td>{{ datos.serie.backlog[i] }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</details>
+
+<div class="analytics-row">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-3">{{ _('Por categoría') }}</h5>
+            {% if datos.por_categoria %}
+            {% set max_cat = datos.por_categoria | map(attribute='creados') | max %}
+            <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0 cat-table">
+                <thead><tr><th>{{ _('Categoría') }}</th><th>{{ _('Creados') }}</th><th class="text-end">{{ _('Pendientes') }}</th><th class="text-end">{{ _('MTTR') }}</th><th class="text-end">SLA</th></tr></thead>
+                <tbody>
+                    {% for f in datos.por_categoria %}
+                    <tr>
+                        <td><a href="{{ url_for('analitica.panel', dias=datos.dias, categoria=f.categoria) }}">{{ f.categoria | etiqueta }}</a></td>
+                        <td class="bar-cell"><span class="hbar" style="--p: {{ ((f.creados / max_cat * 100) if max_cat else 0) | round(1) }}"></span><span class="mono">{{ f.creados }}</span></td>
+                        <td class="text-end mono">{{ f.abiertos }}</td>
+                        <td class="text-end mono">{{ valor(f.mttr_horas, ' h') }}</td>
+                        <td class="text-end">{% if f.sla_pct is not none %}<span class="sla-pct {% if f.sla_pct >= 80 %}t-ok{% elif f.sla_pct >= 50 %}t-warn{% else %}t-danger{% endif %}">{{ f.sla_pct | round | int }}%</span>{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">{{ _('Sin datos en este periodo.') }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-1">{{ _('¿Cuándo llegan los tickets?') }}</h5>
+            <span class="text-muted small d-block mb-3">{{ _('Tickets creados por día de la semana y hora') }}</span>
+            {% set mc = datos.mapa_calor %}
+            {% set dias_semana = [_('Lun'), _('Mar'), _('Mié'), _('Jue'), _('Vie'), _('Sáb'), _('Dom')] %}
+            <div class="heatmap" role="table" aria-label="{{ _('Tickets creados por día de la semana y hora') }}">
+                {% for fila in mc.matriz %}
+                <div class="hm-row" role="row">
+                    <span class="hm-label" role="rowheader">{{ dias_semana[loop.index0] }}</span>
+                    {% set dia = dias_semana[loop.index0] %}
+                    {% for n in fila %}
+                    <span class="hm-cell" role="cell" style="--v: {{ ((n / mc.maximo) if mc.maximo else 0) | round(3) }}" data-tip="{{ dia }} {{ '%02d' | format(loop.index0) }}:00 · {{ ngettext('%(num)s ticket', '%(num)s tickets', n) }}" aria-label="{{ dia }} {{ loop.index0 }}h: {{ n }}"></span>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                <div class="hm-row hm-axis" aria-hidden="true"><span class="hm-label"></span>{% for h in range(24) %}<span>{{ h if h % 6 == 0 else '' }}</span>{% endfor %}</div>
+            </div>
+            <div class="hm-scale" aria-hidden="true"><span>{{ _('Menos') }}</span><i style="--v:.08"></i><i style="--v:.3"></i><i style="--v:.55"></i><i style="--v:.8"></i><i style="--v:1"></i><span>{{ _('Más') }}</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title mb-3 d-flex align-items-center gap-2">{{ icono('trofeo', 16) }} {{ _('Rendimiento de agentes') }}</h5>
+        {% if datos.agentes %}
+        <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+            <thead><tr>
+                <th>{{ _('Agente') }}</th><th>{{ _('Área') }}</th><th class="text-end">{{ _('Cerrados') }}</th><th class="text-end">{{ _('En progreso') }}</th>
+                <th class="text-end">{{ _('MTTR') }}</th><th class="text-end">SLA</th><th class="text-end">CSAT</th>
+            </tr></thead>
+            <tbody>
+                {% for a in datos.agentes %}
+                <tr class="{% if not a.activo %}row-muted{% endif %}">
+                    <td><a href="{{ url_for('usuarios.detalle', usuario_id=a.id) }}" class="fw-medium">{% if loop.index <= 3 and a.cerrados %}<span class="rank rank-{{ loop.index }}">{{ loop.index }}</span>{% endif %}{{ a.nombre }}</a></td>
+                    <td>{% if a.area %}<span class="badge-pill categoria-tag">{{ a.area | etiqueta }}</span>{% endif %}</td>
+                    <td class="text-end mono">{{ a.cerrados }}</td>
+                    <td class="text-end mono">{{ a.carga }}</td>
+                    <td class="text-end mono">{{ valor(a.mttr_horas, ' h') }}</td>
+                    <td class="text-end">{% if a.sla_pct is not none %}<span class="sla-pct {% if a.sla_pct >= 80 %}t-ok{% elif a.sla_pct >= 50 %}t-warn{% else %}t-danger{% endif %}">{{ a.sla_pct | round | int }}%</span>{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                    <td class="text-end">{% if a.csat is not none %}<span class="csat-mini">{{ icono('estrella', 13) }} {{ '%.1f' | format(a.csat) }}</span> <span class="text-muted small">({{ a.encuestas }})</span>{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">{{ _('No hay agentes en este filtro.') }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="analytics-row">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-3 d-flex align-items-center gap-2">{{ icono('sonrisa', 16) }} {{ _('Satisfacción') }}</h5>
+            {% set cs = datos.csat %}
+            {% if cs.total %}
+            <div class="csat-summary">
+                <div class="csat-big">{{ '%.1f' | format(cs.promedio) }}<span>/5</span></div>
+                <div class="csat-dist">
+                    {% set max_d = cs.distribucion.values() | max %}
+                    {% for i in range(5, 0, -1) %}
+                    <div class="csat-dist-row">
+                        <span class="mono">{{ i }}{{ icono('estrella', 11) }}</span>
+                        <span class="csat-track"><span style="--p: {{ ((cs.distribucion[i] / max_d * 100) if max_d else 0) | round(1) }}"></span></span>
+                        <span class="mono text-muted">{{ cs.distribucion[i] }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% if datos.comentarios_csat %}
+            <ul class="csat-quotes">
+                {% for e in datos.comentarios_csat %}
+                <li><span class="csat-mini">{{ icono('estrella', 12) }} {{ e.puntuacion }}</span> <span>“{{ e.comentario }}”</span> <a class="mono small" href="{{ url_for('tickets.detalle', ticket_id=e.ticket_id) }}">#{{ e.ticket_id }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% else %}
+            <p class="text-muted mb-0">{{ _('Aún no hay encuestas respondidas en este periodo. Los usuarios califican la atención al cerrarse sus tickets.') }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-3 d-flex align-items-center gap-2">{{ icono('libro', 16) }} {{ _('Base de conocimiento') }}</h5>
+            {% set kb = datos.base_conocimiento %}
+            <div class="mini-stats mb-3">
+                <div><span class="meta-label">{{ _('Artículos') }}</span><strong>{{ kb.publicados }}</strong></div>
+                <div><span class="meta-label">{{ _('Vistas') }}</span><strong>{{ kb.vistas }}</strong></div>
+                <div><span class="meta-label">{{ _('Tickets evitados') }}</span><strong>{{ kb.resoluciones }}</strong></div>
+                <div><span class="meta-label">{{ _('Utilidad') }}</span><strong>{{ valor(kb.utilidad_pct, '%') }}</strong></div>
+            </div>
+            {% if kb.top %}
+            <ol class="kb-top">
+                {% for a in kb.top %}
+                <li><a href="{{ url_for('conocimiento.ver', articulo_id=a.id) }}">{{ a.titulo }}</a><span class="text-muted small mono">{{ icono('ojo', 12) }} {{ a.vistas }}</span></li>
+                {% endfor %}
+            </ol>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script type="application/json" id="datos-analitica">{{ datos.serie | tojson }}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+(function () {
+    const serie = JSON.parse(document.getElementById('datos-analitica').textContent);
+    const lang = document.documentElement.getAttribute('lang') || 'es';
+    const fmt = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short' });
+    const etiquetas = serie.etiquetas.map(function (d) { const p = d.split('-'); return fmt.format(new Date(+p[0], +p[1] - 1, +p[2])); });
+    const T = { creados: "{{ _('Creados') }}", cerrados: "{{ _('Cerrados') }}", pendientes: "{{ _('Pendientes') }}" };
+
+    function css(nombre) { return getComputedStyle(document.documentElement).getPropertyValue(nombre).trim(); }
+    function alfa(hex, a) {
+        const h = hex.replace('#', '');
+        if (h.length !== 6) return hex;
+        return 'rgba(' + parseInt(h.slice(0, 2), 16) + ',' + parseInt(h.slice(2, 4), 16) + ',' + parseInt(h.slice(4, 6), 16) + ',' + a + ')';
+    }
+    function degradado(color) {
+        return function (ctx) {
+            const area = ctx.chart.chartArea;
+            if (!area) return alfa(color, 0.12);
+            const g = ctx.chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
+            g.addColorStop(0, alfa(color, 0.22));
+            g.addColorStop(1, alfa(color, 0));
+            return g;
+        };
+    }
+    function opciones(maxTicks) {
+        return {
+            maintainAspectRatio: false,
+            animation: { duration: 500 },
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                x: { grid: { display: false }, border: { display: false }, ticks: { maxTicksLimit: maxTicks, maxRotation: 0 } },
+                y: { beginAtZero: true, border: { display: false }, ticks: { precision: 0, maxTicksLimit: 5 } },
+            },
+            plugins: { legend: { display: false } },
+            elements: { point: { radius: 0, hoverRadius: 5, hoverBorderWidth: 2 }, line: { borderWidth: 2, tension: 0.3 } },
+        };
+    }
+    function pintar(graficos) {
+        const texto = css('--ink-soft'), rejilla = css('--line'), sup = css('--surface');
+        graficos.forEach(function (g) {
+            g.options.scales.x.ticks.color = texto;
+            g.options.scales.y.ticks.color = texto;
+            g.options.scales.y.grid.color = rejilla;
+            g.options.plugins.tooltip = {
+                backgroundColor: sup, titleColor: css('--ink'), bodyColor: texto, borderColor: css('--line-strong'),
+                borderWidth: 1, padding: 10, cornerRadius: 8, boxPadding: 4, usePointStyle: true,
+            };
+            g.data.datasets.forEach(function (ds) {
+                const color = css(ds._var);
+                ds.borderColor = color;
+                ds.backgroundColor = ds._relleno ? degradado(color) : color;
+                ds.pointBackgroundColor = color;
+                ds.pointHoverBorderColor = sup;
+            });
+            g.update('none');
+        });
+    }
+    Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+    Chart.defaults.font.size = 11.5;
+
+    const volumen = new Chart(document.getElementById('graficoVolumen'), {
+        type: 'line',
+        data: { labels: etiquetas, datasets: [
+            { label: T.creados, data: serie.creados, _var: '--serie-1', _relleno: true, fill: true },
+            { label: T.cerrados, data: serie.cerrados, _var: '--serie-2', _relleno: false, fill: false },
+        ] },
+        options: opciones(8),
+    });
+    const backlog = new Chart(document.getElementById('graficoBacklog'), {
+        type: 'line',
+        data: { labels: etiquetas, datasets: [
+            { label: T.pendientes, data: serie.backlog, _var: '--serie-3', _relleno: true, fill: true, stepped: false },
+        ] },
+        options: opciones(5),
+    });
+    pintar([volumen, backlog]);
+    document.addEventListener('themechange', function () { pintar([volumen, backlog]); });
+})();
+</script>
+{% endblock %}

@@ -89,6 +89,17 @@
             </div>
         </div>
 
+        <a class="card mb-4 fx text-decoration-none" href="{{ url_for('api.docs') }}">
+            <div class="card-body d-flex align-items-center gap-3">
+                <span class="stat-ico t-info position-static">{{ icono('codigo', 17) }}</span>
+                <div class="flex-grow-1 min-w-0">
+                    <h5 class="card-title mb-1">{{ _('API y tokens') }}</h5>
+                    <p class="text-muted small mb-0">{{ _('Crea tokens personales para integrar tus scripts y herramientas.') }}</p>
+                </div>
+                {{ icono('flecha', 16) }}
+            </div>
+        </a>
+
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title mb-3">{{ _('Cambiar contraseña') }}</h5>

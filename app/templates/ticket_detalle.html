@@ -15,6 +15,14 @@
         <h2>{{ ticket.texto | truncate(90, True) }}</h2>
     </div>
     <div class="ticket-actions">
+        {% if ver_internos %}
+        <form method="POST" action="{{ url_for('colaboracion.seguir', ticket_id=ticket.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-sm {% if sigo_ticket %}btn-primary{% else %}btn-outline-secondary{% endif %}" aria-pressed="{{ 'true' if sigo_ticket else 'false' }}">
+                {{ icono('campana', 15) }} {{ _('Siguiendo') if sigo_ticket else _('Seguir') }}
+            </button>
+        </form>
+        {% endif %}
         <button type="button" class="btn btn-outline-secondary btn-sm" data-imprimir>{{ icono('imprimir', 15) }} {{ _('Imprimir') }}</button>
         <button type="button" class="btn btn-outline-secondary btn-sm" data-copy>
             {{ icono('copiar', 15) }} <span data-copy-label>{{ _('Copiar enlace') }}</span>
@@ -29,8 +37,50 @@
     <div class="card-body p-4">
         <div class="card-title mb-2">{{ _('Descripción') }}</div>
         <p class="ticket-desc">{{ ticket.texto }}</p>
+        {% if adjuntos_sueltos %}
+        <div class="attach-grid mt-3">
+            {% for a in adjuntos_sueltos %}{% include "_adjunto.html" %}{% endfor %}
+        </div>
+        {% endif %}
     </div>
 </div>
+
+{% if puede_calificar %}
+<div class="card mt-3 csat-card">
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('colaboracion.responder_encuesta', ticket_id=ticket.id) }}" class="csat-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="csat-intro">
+                <span class="stat-ico t-ok position-static">{{ icono('sonrisa', 17) }}</span>
+                <div>
+                    <h6 class="card-title mb-1">{{ _('¿Cómo fue la atención?') }}</h6>
+                    <p class="text-muted small mb-0">{{ _('Tu calificación ayuda al equipo a mejorar. Solo toma un segundo.') }}</p>
+                </div>
+            </div>
+            <fieldset class="csat-stars" aria-label="{{ _('Calificación') }}">
+                {% for i in range(5, 0, -1) %}
+                <input type="radio" id="csat{{ i }}" name="puntuacion" value="{{ i }}" required>
+                <label for="csat{{ i }}" title="{{ [_('Muy mala'), _('Mala'), _('Regular'), _('Buena'), _('Excelente')][i - 1] }}">{{ icono('estrella', 26) }}</label>
+                {% endfor %}
+            </fieldset>
+            <textarea name="comentario" class="form-control form-control-sm" rows="2" maxlength="500" placeholder="{{ _('¿Algo que quieras contarnos? (opcional)') }}"></textarea>
+            <button type="submit" class="btn btn-primary btn-sm">{{ _('Enviar calificación') }}</button>
+        </form>
+    </div>
+</div>
+{% elif encuesta and (ver_internos or usuario_actual.id == ticket.creador_id) %}
+<div class="card mt-3 csat-card is-done">
+    <div class="card-body d-flex align-items-center gap-3 flex-wrap">
+        <span class="csat-result" aria-label="{{ _('Calificación: %(n)s de 5', n=encuesta.puntuacion) }}">
+            {% for i in range(1, 6) %}<span class="{% if i <= encuesta.puntuacion %}on{% endif %}">{{ icono('estrella', 18) }}</span>{% endfor %}
+        </span>
+        <div class="min-w-0">
+            <strong>{{ _('Atención calificada con %(n)s/5', n=encuesta.puntuacion) }}</strong>
+            {% if encuesta.comentario %}<div class="text-muted small">“{{ encuesta.comentario }}”</div>{% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% if sugerencia_agente %}
 <div class="card mt-3 suggestion-card">
@@ -235,16 +285,26 @@
 </div>
 {% endif %}
 
-<h4 class="section-title">{{ icono('mensaje', 18) }} {{ _('Comentarios') }} <span class="count">{{ comentarios | length }}</span></h4>
+<h4 class="section-title" id="comentarios">{{ icono('mensaje', 18) }} {{ _('Conversación') }} <span class="count">{{ comentarios | length }}</span></h4>
 {% if comentarios %}
 <ol class="timeline">
     {% for c in comentarios %}
     {% set autor = nombres_por_id.get(c.autor_id, _('Usuario desconocido')) %}
-    <li class="tl-item">
+    <li class="tl-item {% if c.interno %}is-internal{% endif %} {% if c.autor_id in personal_ids %}is-staff{% endif %}" id="c{{ c.id }}">
         <span class="tl-av" aria-hidden="true">{{ iniciales(autor) }}</span>
         <div class="tl-body">
-            <div class="tl-meta"><strong>{{ autor }}</strong><span>{{ c.fecha | fecha }}</span></div>
-            <p class="tl-text">{{ c.texto }}</p>
+            <div class="tl-meta">
+                <strong>{{ autor }}</strong>
+                {% if c.interno %}<span class="badge-pill nota-tag">{{ icono('candado', 12) }} {{ _('Nota interna') }}</span>
+                {% elif c.autor_id in personal_ids and c.autor_id != ticket.creador_id %}<span class="badge-pill staff-tag">{{ _('Soporte') }}</span>{% endif %}
+                <a class="tl-time" href="#c{{ c.id }}" data-relativo="{{ c.fecha.strftime('%Y-%m-%dT%H:%M:%S') }}">{{ c.fecha | fecha }}</a>
+            </div>
+            <div class="tl-text">{{ c.texto }}</div>
+            {% if adjuntos_por_comentario.get(c.id) %}
+            <div class="attach-grid mt-2">
+                {% for a in adjuntos_por_comentario[c.id] %}{% include "_adjunto.html" %}{% endfor %}
+            </div>
+            {% endif %}
         </div>
     </li>
     {% endfor %}
@@ -255,13 +315,45 @@
 </div>
 {% endif %}
 
-<form method="POST" class="composer mt-2">
+<form method="POST" class="composer mt-2" enctype="multipart/form-data" data-composer>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% if ver_internos %}
+    <input type="hidden" name="interno" value="0" data-interno>
+    <div class="composer-tabs" role="tablist">
+        <button type="button" class="is-on" role="tab" aria-selected="true" data-modo="publico">{{ icono('mensaje', 14) }} {{ _('Responder') }}</button>
+        <button type="button" role="tab" aria-selected="false" data-modo="interno">{{ icono('candado', 14) }} {{ _('Nota interna') }}</button>
+        {% if respuestas %}
+        <div class="dropdown ms-auto">
+            <button type="button" class="composer-tool" data-bs-toggle="dropdown" aria-expanded="false" title="{{ _('Respuestas rápidas') }}">{{ icono('respuesta', 14) }} <span class="d-none d-sm-inline">{{ _('Respuestas rápidas') }}</span></button>
+            <div class="dropdown-menu dropdown-menu-end respuestas-menu">
+                <input type="search" class="form-control form-control-sm mb-1" placeholder="{{ _('Buscar respuesta…') }}" data-respuestas-filtro>
+                {% for r in respuestas %}
+                <button type="button" class="dropdown-item" data-respuesta="{{ r.contenido }}" data-respuesta-uso="{{ url_for('colaboracion.usar_respuesta', respuesta_id=r.id) }}">
+                    <span class="d-block fw-medium">{{ r.titulo }}</span>
+                    <span class="d-block text-muted small text-truncate">{{ r.contenido | truncate(70, True) }}</span>
+                </button>
+                {% endfor %}
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item small" href="{{ url_for('colaboracion.respuestas') }}">{{ icono('editar', 14) }} {{ _('Gestionar respuestas') }}</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
     <label for="nuevoComentario" class="visually-hidden">{{ _('Escribe un comentario...') }}</label>
-    <textarea id="nuevoComentario" name="texto" class="form-control" rows="3" placeholder="{{ _('Escribe un comentario...') }}" required></textarea>
+    <textarea id="nuevoComentario" name="texto" class="form-control" rows="3"
+              placeholder="{{ _('Escribe un comentario...') }}"
+              data-placeholder-publico="{{ _('Escribe un comentario...') }}"
+              data-placeholder-interno="{{ _('Solo visible para agentes y administradores…') }}"
+              data-vars='{{ {"nombre": nombre_creador.split()[0] if nombre_creador else "", "ticket": ticket.id, "agente": (usuario_actual.nombre if usuario_actual else ""), "categoria": (ticket.categoria.value | etiqueta)} | tojson }}'></textarea>
+    <ul class="file-list" data-file-list></ul>
     <div class="composer-foot">
-        <span class="form-text m-0">{{ _('Ctrl + Enter para enviar') }}</span>
-        <button type="submit" class="btn btn-primary btn-sm">{{ icono('enviar', 15) }} {{ _('Comentar') }}</button>
+        <label class="composer-tool" title="{{ _('Adjuntar archivos') }}">
+            {{ icono('clip', 15) }} <span>{{ _('Adjuntar') }}</span>
+            <input type="file" name="archivos" multiple hidden accept="{{ extensiones }}" data-max-mb="5" data-max-archivos="{{ limite_adjuntos }}">
+        </label>
+        <span class="form-text m-0 ms-2 d-none d-md-inline">{{ _('Ctrl + Enter para enviar') }}</span>
+        <button type="submit" class="btn btn-primary btn-sm ms-auto" data-enviar>{{ icono('enviar', 15) }} <span data-enviar-texto data-publico="{{ _('Comentar') }}" data-interno="{{ _('Guardar nota') }}">{{ _('Comentar') }}</span></button>
     </div>
 </form>
 
@@ -386,6 +478,75 @@
             {% endif %}
         </div>
     </div>
+
+    <div class="card" id="adjuntos">
+        <div class="card-body">
+            <h5 class="card-title mb-3 d-flex align-items-center gap-2">{{ icono('clip', 16) }} {{ _('Archivos') }} <span class="count-pill">{{ adjuntos | length }}</span></h5>
+            {% if adjuntos %}
+            <ul class="file-side">
+                {% for a in adjuntos %}
+                <li>
+                    <a href="{{ url_for('colaboracion.descargar_adjunto', adjunto_id=a.id) }}" target="_blank" rel="noopener" class="file-side-name">
+                        {{ icono('imagen' if a.es_imagen else 'archivo', 15) }}<span class="text-truncate">{{ a.nombre_original }}</span>
+                    </a>
+                    <span class="file-side-meta">{{ a.tamano | tamano }}</span>
+                    {% if usuario_actual and (usuario_actual.id == a.usuario_id or usuario_actual.rol.value == 'admin') %}
+                    <form method="POST" action="{{ url_for('colaboracion.eliminar_adjunto', adjunto_id=a.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="icon-btn icon-btn-sm" title="{{ _('Eliminar') }}" data-confirm="{{ _('El archivo se eliminará de forma permanente.') }}">{{ icono('papelera', 14) }}</button>
+                    </form>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted small mb-2">{{ _('Sin archivos adjuntos.') }}</p>
+            {% endif %}
+            {% if adjuntos | length < limite_adjuntos %}
+            <form method="POST" action="{{ url_for('colaboracion.subir_adjuntos', ticket_id=ticket.id) }}" enctype="multipart/form-data" class="mt-2" data-autosubir>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label class="btn btn-outline-secondary btn-sm w-100">
+                    {{ icono('mas', 14) }} {{ _('Subir archivos') }}
+                    <input type="file" name="archivos" multiple hidden accept="{{ extensiones }}" data-max-mb="5">
+                </label>
+                <div class="form-text">{{ _('Máx. %(t)s por archivo · %(n)s archivos por ticket', t=tamano_maximo, n=limite_adjuntos) }}</div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if ver_internos %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-3 d-flex align-items-center gap-2">{{ icono('campana', 16) }} {{ _('Seguidores') }} <span class="count-pill">{{ seguidores | length }}</span></h5>
+            {% if seguidores %}
+            <div class="avatar-stack">
+                {% for sg in seguidores %}<span class="person-av" title="{{ sg.nombre }}">{{ iniciales(sg.nombre) }}</span>{% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted small mb-0">{{ _('Nadie sigue este ticket. Síguelo para recibir avisos de su actividad.') }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if articulos_sugeridos %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-1 d-flex align-items-center gap-2">{{ icono('libro', 16) }} {{ _('Artículos relacionados') }}</h5>
+            <p class="text-muted small mb-2">{{ _('Comparte una guía con el usuario en tu respuesta.') }}</p>
+            <ul class="kb-related">
+                {% for a in articulos_sugeridos %}
+                <li>
+                    <a href="{{ url_for('conocimiento.ver', articulo_id=a.id) }}" target="_blank" rel="noopener">{{ icono('archivo', 15) }}<span>{{ a.titulo }}</span></a>
+                    <button type="button" class="icon-btn icon-btn-sm" title="{{ _('Insertar enlace en la respuesta') }}"
+                            data-insertar="{{ a.titulo }}: {{ url_for('conocimiento.ver', articulo_id=a.id, _external=True) }}">{{ icono('mas', 14) }}</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
 </aside>
 </div>
 {% endblock %}

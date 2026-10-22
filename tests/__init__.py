@@ -42,6 +42,14 @@ def create_app():
     from app.models.correccion_clasificacion import CorreccionClasificacion
     from app.models.doble_factor import DobleFactor
     from app.models.token_recuperacion import TokenRecuperacion
+    from app.migraciones import importar_modelos
+    importar_modelos()
+
+    import tempfile
+    app.config["CARPETA_ADJUNTOS"] = tempfile.mkdtemp(prefix="adjuntos_test_")
+    app.config["SECRET_KEY"] = "clave-de-pruebas"
+    from app.formato import markdown_seguro
+    app.jinja_env.filters["md"] = markdown_seguro
 
     with app.app_context():
         db.drop_all()

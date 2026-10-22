@@ -7,3 +7,4 @@ class Comentario(db.Model):
     autor_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
     texto = db.Column(db.String, nullable=False)
     fecha = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    interno = db.Column(db.Boolean, nullable=False, default=False, server_default=db.false())

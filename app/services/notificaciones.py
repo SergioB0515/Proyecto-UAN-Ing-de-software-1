@@ -21,6 +21,7 @@ class ServicioNotificaciones:
         notif.CERRADO, notif.CERRADO_SIN_ATENDER,
         notif.SLA_PROXIMO_CREADOR, notif.SLA_PROXIMO_AGENTE,
         notif.SLA_VENCIDO_CREADOR, notif.SLA_VENCIDO_AGENTE,
+        notif.COMENTARIO_NUEVO_CREADOR,
      })
 
     _ACENTOS_POR_PLANTILLA = {

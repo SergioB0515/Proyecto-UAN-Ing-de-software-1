@@ -15,6 +15,8 @@
 | Exportación de datos | openpyxl + módulo `csv` estándar | Generación de reportes en Excel y CSV desde tickets, métricas y auditoría. |
 | Pruebas | pytest | Suite de pruebas automatizadas con fixtures, reemplazando los scripts manuales iniciales. |
 | Integración continua | GitHub Actions | Ejecuta la suite de pytest automáticamente en cada push/PR hacia `main`. |
+| API REST | Blueprint de Flask con respuestas JSON y tokens personales | Permite integrar el sistema con scripts y herramientas externas reutilizando los mismos servicios y permisos que la interfaz web. |
+| Gráficas | Chart.js (CDN) | Visualización del volumen diario y de pendientes en la página de analítica. |
 
 ## Modelo de datos
 
@@ -26,6 +28,19 @@
 | **LogAuditoria** | id, usuario_id, accion (enum `AccionAuditoria`), detalle, fecha |
 | **IntentoLoginFallido** | id, ip, email_intentado, fecha — registra cada fallo de login (exista o no ese usuario), fuente para la detección de bloqueo por IP |
 | **IPBloqueada** | id, ip (único), bloqueada_hasta — bloqueo activo de una IP, generado cuando 5 emails distintos fallan desde la misma IP en 1 hora |
+| **DobleFactor** | id, usuario_id (único), secreto, activo, codigos_respaldo (hash), ultimo_paso, intentos_fallidos, bloqueado_hasta — configuración de la verificación en dos pasos |
+| **TokenRecuperacion** | id, usuario_id, token_hash (único), fecha_creacion, expira, usado — enlaces de recuperación de contraseña |
+| **Articulo** | id, titulo, resumen, contenido, categoria, etiquetas, publicado, autor_id, fechas, vistas, votos_utiles, votos_no_utiles, resoluciones — base de conocimiento |
+| **VotoArticulo** | id, articulo_id, usuario_id, util — un voto por usuario y artículo |
+| **Adjunto** | id, ticket_id, comentario_id, usuario_id, nombre_original, nombre_guardado (único), tipo_mime, tamano, fecha |
+| **RespuestaPredefinida** | id, titulo, contenido, categoria, compartida, autor_id, usos, fecha_creacion |
+| **SeguidorTicket** | id, ticket_id, usuario_id (pareja única) |
+| **EncuestaSatisfaccion** | id, ticket_id (único), usuario_id, agente_id, puntuacion (1–5), comentario, fecha |
+| **TokenApi** | id, usuario_id, nombre, prefijo, token_hash (único), fecha_creacion, expira, ultimo_uso, revocado |
+
+En la versión 3.0 `Usuario` incorpora `activo` y `ultimo_acceso`, y `Comentario` incorpora
+`interno`. `init_db.py` agrega estas columnas a una base existente sin perder datos
+(`app/migraciones.py`).
 
 **Nota:** el campo `radicado` que existía en versiones anteriores del modelo `Ticket` se
 eliminó en la versión 1.2 — ver `07_avances.md`.
@@ -44,6 +59,15 @@ entidades de datos en clases de servicio independientes:
 | `GestorSLA` | Calcula la fecha límite de atención según la prioridad final **y el nivel del usuario**, ajusta la prioridad por nivel VIP, y verifica qué tickets están vencidos o próximos a vencer — opcionalmente filtrado por creador. |
 | `ServicioAuditoria` | Registra cada acción crítica en `LogAuditoria`, con un reintento automático si el primer guardado falla, y permite consultarlo con filtros y paginación (`listar_logs`). |
 | `ServicioMetricas` | Calcula los conteos agregados que alimenta el panel del administrador (tickets por estado/categoría/prioridad, vencidos, próximos a vencer, vencidos últimos 30 días, cantidad de agentes). |
+| `ServicioPermisos` | Decide quién puede ver un ticket, ver notas internas y gestionarlo. Lo usan las rutas web, las descargas de adjuntos y la API. |
+| `ServicioUsuarios` | Gestión administrativa de cuentas: listado con filtros, edición de rol/área/nivel, activación y desactivación, desbloqueo, envío de recuperación y restablecimiento de la verificación en dos pasos, con salvaguardas (no quitarse el propio rol, conservar un administrador activo, no mover agentes con tickets en curso). |
+| `ServicioBaseConocimiento` | Artículos de ayuda: creación, edición, publicación, búsqueda, votos y sugerencias por reglas (coincidencia de términos normalizados en título, etiquetas, resumen y contenido, con bonificación por la categoría que estima `ClasificadorTickets`). |
+| `ServicioAdjuntos` | Valida y guarda archivos (lista blanca de extensiones, firma del contenido, tamaño y cantidad máximos) fuera de la carpeta pública. |
+| `ServicioSeguimiento` | Seguidores de tickets; reciben notificaciones de comentarios y cambios de estado. |
+| `ServicioRespuestasPredefinidas` | Plantillas de respuesta privadas o compartidas, con variables y contador de usos. |
+| `ServicioEncuestas` | Encuesta de satisfacción al cierre (una por ticket, solo el creador, 14 días de plazo) y resúmenes de CSAT. |
+| `ServicioAnalitica` | Indicadores por periodo y su variación contra el periodo anterior: volumen diario, pendientes, primera respuesta, tiempo de resolución, cumplimiento de SLA por categoría, mapa de calor por día y hora, ranking de agentes y uso de la base de conocimiento. |
+| `ServicioTokensApi` | Tokens personales de la API (guardados como hash SHA-256, con caducidad y revocación) y límite de peticiones por minuto. |
 
 ## Diagrama de clases
 
@@ -213,3 +237,8 @@ flowchart TD
 - [x] Rediseño visual completo de la interfaz.
 - [x] Suite de pruebas migrada a `pytest` con fixtures (`tests/conftest.py`), corriendo
       automáticamente en cada push/PR vía GitHub Actions (`.github/workflows/tests.yml`).
+- [x] Verificación en dos pasos (TOTP) y recuperación de contraseña por correo.
+- [x] Versión 3.0: base de conocimiento con sugerencias al crear tickets, adjuntos, notas
+      internas, respuestas rápidas, seguidores, encuesta de satisfacción, analítica,
+      gestión de usuarios, API REST con tokens, control de acceso por ticket y
+      actualización de esquema sin pérdida de datos.

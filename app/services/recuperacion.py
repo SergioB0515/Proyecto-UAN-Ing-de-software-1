@@ -38,7 +38,7 @@ class ServicioRecuperacion:
     def solicitar(email, enviar_correo=True):
         email = (email or "").strip()
         usuario = db.session.execute(select(Usuario).where(Usuario.email == email)).scalar_one_or_none()
-        if usuario is None:
+        if usuario is None or not usuario.activo:
             return None
 
         hace_una_hora = datetime.now() - timedelta(hours=1)

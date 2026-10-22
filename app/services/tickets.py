@@ -6,7 +6,7 @@ from app.models.usuario import Usuario
 from app.models.comentario import Comentario
 from app.services.clasificador import ClasificadorTickets
 from app.services.gestor_sla import GestorSLA
-from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError,ErrorPersistencia,ClasificacionYaConfirmadaError
+from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError,ErrorPersistencia,ClasificacionYaConfirmadaError,PermisoDenegadoError
 from app.extensions import db
 from datetime import datetime,timedelta
 from app.services.auditoria import ServicioAuditoria
@@ -149,6 +149,10 @@ class ServicioTickets:
             else:
                 plantilla = notif.CERRADO
             ServicioNotificaciones.crear(usuario_id=ticket.creador_id, mensaje=plantilla, ticket_id=ticket.id)
+
+        from app.services.seguimiento import ServicioSeguimiento
+        for seguidor_id in ServicioSeguimiento.ids_seguidores(ticket.id) - {actor_id, ticket.creador_id}:
+            ServicioNotificaciones.crear(usuario_id=seguidor_id, mensaje=notif.ACTIVIDAD_SEGUIDOR, ticket_id=ticket.id)
         
         return ticket.estado
 
@@ -183,17 +187,22 @@ class ServicioTickets:
         )
         return ticket.agente_id
     @staticmethod
-    def agregar_comentario(ticket_id,autor_id,texto):
+    def agregar_comentario(ticket_id, autor_id, texto, interno=False, notificar=True):
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar()
         if not ticket:
             raise TicketNoEncontradoError(_("El ticket no a sido encontrado"))
         
-        if not texto.strip():
+        if not texto or not texto.strip():
             raise ComentarioVacioError(_("El comentario no puede estar vacio"))
+        if interno:
+            autor = db.session.get(Usuario, autor_id)
+            if autor is None or autor.rol not in (RolUsuario.AGENTE, RolUsuario.ADMIN):
+                raise PermisoDenegadoError(_("Solo agentes y administradores pueden agregar notas internas"))
         nuevo_comentario = Comentario(
             ticket_id = ticket_id,
             autor_id = autor_id,
-            texto=texto
+            texto=texto,
+            interno=bool(interno),
         )
         try:
             db.session.add(nuevo_comentario)
@@ -206,10 +215,40 @@ class ServicioTickets:
         print(f"El comentario agregado correctamente")
         ServicioAuditoria.registrar(
             usuario_id=autor_id,
-            accion=AccionAuditoria.AGREGAR_COMENTARIO,
-            detalle=_("Se agrego un comentario al ticket #%(p1)s", p1=ticket_id),
+            accion=AccionAuditoria.AGREGAR_NOTA_INTERNA if interno else AccionAuditoria.AGREGAR_COMENTARIO,
+            detalle=(_("Se agrego una nota interna al ticket #%(p1)s", p1=ticket_id) if interno
+                     else _("Se agrego un comentario al ticket #%(p1)s", p1=ticket_id)),
         )
+        if notificar:
+            ServicioTickets._notificar_comentario(ticket, autor_id, bool(interno))
         return nuevo_comentario
+
+    @staticmethod
+    def _notificar_comentario(ticket, autor_id, interno):
+        from app.services.seguimiento import ServicioSeguimiento
+
+        avisados = {autor_id}
+        if interno:
+            if ticket.agente_id and ticket.agente_id not in avisados:
+                ServicioNotificaciones.crear(usuario_id=ticket.agente_id, mensaje=notif.NOTA_INTERNA_NUEVA, ticket_id=ticket.id)
+                avisados.add(ticket.agente_id)
+        else:
+            if autor_id != ticket.creador_id:
+                ServicioNotificaciones.crear(usuario_id=ticket.creador_id, mensaje=notif.COMENTARIO_NUEVO_CREADOR, ticket_id=ticket.id)
+                avisados.add(ticket.creador_id)
+            elif ticket.agente_id:
+                ServicioNotificaciones.crear(usuario_id=ticket.agente_id, mensaje=notif.COMENTARIO_NUEVO_AGENTE, ticket_id=ticket.id)
+                avisados.add(ticket.agente_id)
+        for seguidor_id in ServicioSeguimiento.ids_seguidores(ticket.id) - avisados:
+            ServicioNotificaciones.crear(usuario_id=seguidor_id, mensaje=notif.ACTIVIDAD_SEGUIDOR, ticket_id=ticket.id)
+
+    @staticmethod
+    def listar_comentarios(ticket_id, incluir_internos=False):
+        query = select(Comentario).where(Comentario.ticket_id == ticket_id)
+        if not incluir_internos:
+            query = query.where(Comentario.interno.is_(False))
+        return db.session.execute(query.order_by(Comentario.fecha, Comentario.id)).scalars().all()
+
     @staticmethod
     def listar_tickets_por_creador(usuario_id):
         tickets_del_usuario = Ticket.query.filter_by(creador_id=usuario_id).all()
