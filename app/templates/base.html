@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 {% from "_iconos.html" import icono %}
-<html lang="{{ session.get('idioma', 'es') }}" data-bs-theme="dark">
+<html lang="{{ session.get('idioma', 'es') }}" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0b0d12">
+    <meta name="theme-color" content="#13222a">
     {% if session.get('usuario_id') %}<meta name="csrf-token" content="{{ csrf_token() }}">{% endif %}
     {% if ahora is defined %}<meta name="server-now" content="{{ ahora().strftime('%Y-%m-%dT%H:%M:%S') }}">{% endif %}
     <title>{% block title %}Sistema de Tickets{% endblock %} · Tickets IT</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b7cf8'/%3E%3Cstop offset='1' stop-color='%235b4be0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2313222a'/%3E%3Cpath d='M6 9h20v5a2 2 0 0 0 0 4v5H6v-5a2 2 0 0 0 0-4z' fill='%23f4c20d'/%3E%3Cpath d='M12 10v12' stroke='%2313222a' stroke-width='1.6' stroke-dasharray='2 2'/%3E%3C/svg%3E">
     <script>
         (function () {
             var d = document.documentElement, tema, menu;
             try { tema = localStorage.getItem('tema'); menu = localStorage.getItem('menu'); } catch (e) {}
-            if (tema === 'sistema') tema = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-            d.setAttribute('data-bs-theme', tema === 'light' ? 'light' : 'dark');
+            if (tema === 'sistema') tema = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            d.setAttribute('data-bs-theme', tema === 'dark' ? 'dark' : 'light');
             if (menu === 'colapsado') d.setAttribute('data-sidebar', 'colapsado');
             try { if (localStorage.getItem('densidad') === '"compacta"') d.setAttribute('data-densidad', 'compacta'); } catch (e) {}
         })();
@@ -22,7 +22,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Barlow+Semi+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 {% set rol = session.get('rol') %}
@@ -32,123 +32,99 @@
 {% set home_url = url_for('metricas.mostrar_metricas') if rol == 'admin'
         else (url_for('tickets.listar_por_area', area=session.get('area_soporte')) if rol == 'agente'
         else url_for('auth.dashboard')) %}
-<body class="{% if logueado %}con-menu{% else %}sin-menu{% endif %}">
+<body class="{% if logueado %}con-menu{% else %}sin-menu{% endif %}" data-pagina="{{ ep }}">
 
 <div class="nav-progress" aria-hidden="true"></div>
 <a class="skip-link" href="#contenido">{{ _('Saltar al contenido') }}</a>
 
 {% set pm = pendientes_menu or {} %}
-{% macro enlace(endpoint, url, texto, ico, activo=None, cuenta=0) -%}
-<a class="side-link {% if (activo if activo is not none else ep == endpoint) %}active{% endif %}" href="{{ url }}" data-label="{{ texto }}" data-ico="{{ ico }}"{% if endpoint == 'tickets.crear' %} data-shortcut="nuevo"{% endif %}>
-    {{ icono(ico) }}<span class="side-label">{{ texto }}</span>
-    {% if cuenta %}<span class="side-count">{{ cuenta if cuenta < 100 else '99+' }}</span>{% endif %}
+{% set n_solicitudes = pm.get('transferencias', 0) + pm.get('escalamientos', 0) + pm.get('prioridad', 0) + pm.get('apelaciones', 0) %}
+{% if rol == 'admin' %}
+{% set modulos = [
+    {'id': 'panel', 'texto': _('Panel'), 'ico': 'panel', 'bps': ['metricas', 'analitica'], 'items': [
+        {'ep': 'metricas.mostrar_metricas', 'url': url_for('metricas.mostrar_metricas'), 'texto': _('Resumen'), 'ico': 'panel'},
+        {'ep': 'analitica.panel', 'url': url_for('analitica.panel'), 'texto': _('Analítica'), 'ico': 'pulso'}]},
+    {'id': 'tickets', 'texto': _('Tickets'), 'ico': 'tickets', 'bps': ['tickets', 'colaboracion'], 'eps': ['auth.dashboard'], 'cuenta': pm.get('revision', 0), 'items': [
+        {'ep': 'tickets.listar_admin', 'url': url_for('tickets.listar_admin'), 'texto': _('Todos los tickets'), 'ico': 'tickets'},
+        {'ep': 'auth.dashboard', 'url': url_for('auth.dashboard'), 'texto': _('Mis tickets'), 'ico': 'bandeja'},
+        {'ep': 'tickets.crear', 'url': url_for('tickets.crear'), 'texto': _('Crear ticket'), 'ico': 'mas'},
+        {'ep': 'tickets.revision_clasificacion', 'url': url_for('tickets.revision_clasificacion'), 'texto': _('Revisión IA'), 'ico': 'ia', 'cuenta': pm.get('revision', 0)},
+        {'ep': 'colaboracion.respuestas', 'url': url_for('colaboracion.respuestas'), 'texto': _('Respuestas rápidas'), 'ico': 'respuesta'}]},
+    {'id': 'solicitudes', 'texto': _('Solicitudes'), 'ico': 'transferir', 'bps': ['solicitudes', 'apelaciones'], 'cuenta': n_solicitudes, 'items': [
+        {'ep': 'solicitudes.pendientes', 'url': url_for('solicitudes.pendientes'), 'texto': _('Transferencias'), 'ico': 'transferir', 'cuenta': pm.get('transferencias', 0)},
+        {'ep': 'solicitudes.escalamientos_pendientes', 'url': url_for('solicitudes.escalamientos_pendientes'), 'texto': _('Escalamientos'), 'ico': 'escalar', 'cuenta': pm.get('escalamientos', 0)},
+        {'ep': 'solicitudes.cambios_prioridad_pendientes', 'url': url_for('solicitudes.cambios_prioridad_pendientes'), 'texto': _('Cambios de prioridad'), 'ico': 'bandera', 'cuenta': pm.get('prioridad', 0)},
+        {'ep': 'apelaciones.pendientes', 'url': url_for('apelaciones.pendientes'), 'texto': _('Apelaciones'), 'ico': 'mazo', 'cuenta': pm.get('apelaciones', 0)}]},
+    {'id': 'conocimiento', 'texto': _('Conocimiento'), 'ico': 'libro', 'bps': ['conocimiento'], 'items': [
+        {'ep': 'conocimiento.inicio', 'url': url_for('conocimiento.inicio'), 'texto': _('Artículos'), 'ico': 'libro'},
+        {'ep': 'conocimiento.nuevo', 'url': url_for('conocimiento.nuevo'), 'texto': _('Nuevo artículo'), 'ico': 'editar'}]},
+    {'id': 'admin', 'texto': _('Administración'), 'ico': 'usuarios', 'bps': ['usuarios', 'auditoria', 'palabras_clave', 'demo'], 'eps': ['auth.registro'], 'items': [
+        {'ep': 'usuarios.listar', 'url': url_for('usuarios.listar'), 'texto': _('Usuarios'), 'ico': 'usuarios', 'eps': ['usuarios.detalle', 'auth.registro']},
+        {'ep': 'auditoria.mostrar_auditoria', 'url': url_for('auditoria.mostrar_auditoria'), 'texto': _('Log de auditoría'), 'ico': 'historial'},
+        {'ep': 'palabras_clave.listar', 'url': url_for('palabras_clave.listar'), 'texto': _('Palabras clave'), 'ico': 'etiqueta'}] + ([
+        {'ep': 'demo.panel', 'url': url_for('demo.panel'), 'texto': _('Modo demo'), 'ico': 'rayo'}] if config.MODO_DEMO else [])}
+] %}
+{% elif rol == 'agente' %}
+{% set modulos = [
+    {'id': 'area', 'texto': _('Mi área'), 'ico': 'capas', 'bps': [], 'eps': ['tickets.listar_por_area'], 'items': [
+        {'ep': 'tickets.listar_por_area', 'url': url_for('tickets.listar_por_area', area=session.get('area_soporte')), 'texto': _('Mi área'), 'ico': 'capas'}]},
+    {'id': 'tickets', 'texto': _('Tickets'), 'ico': 'bandeja', 'bps': ['tickets', 'colaboracion'], 'eps': ['auth.dashboard'], 'items': [
+        {'ep': 'auth.dashboard', 'url': url_for('auth.dashboard'), 'texto': _('Mis tickets'), 'ico': 'bandeja'},
+        {'ep': 'tickets.crear', 'url': url_for('tickets.crear'), 'texto': _('Crear ticket'), 'ico': 'mas'},
+        {'ep': 'colaboracion.respuestas', 'url': url_for('colaboracion.respuestas'), 'texto': _('Respuestas rápidas'), 'ico': 'respuesta'}]},
+    {'id': 'solicitudes', 'texto': _('Solicitudes'), 'ico': 'transferir', 'bps': ['solicitudes'], 'cuenta': pm.get('transferencias', 0), 'items': [
+        {'ep': 'solicitudes.pendientes', 'url': url_for('solicitudes.pendientes'), 'texto': _('Solicitudes'), 'ico': 'transferir', 'cuenta': pm.get('transferencias', 0)}]},
+    {'id': 'conocimiento', 'texto': _('Conocimiento'), 'ico': 'libro', 'bps': ['conocimiento'], 'items': [
+        {'ep': 'conocimiento.inicio', 'url': url_for('conocimiento.inicio'), 'texto': _('Artículos'), 'ico': 'libro'},
+        {'ep': 'conocimiento.nuevo', 'url': url_for('conocimiento.nuevo'), 'texto': _('Nuevo artículo'), 'ico': 'editar'}]}
+] %}
+{% else %}
+{% set modulos = [
+    {'id': 'tickets', 'texto': _('Mis tickets'), 'ico': 'bandeja', 'bps': ['tickets', 'colaboracion'], 'eps': ['auth.dashboard'], 'items': [
+        {'ep': 'auth.dashboard', 'url': url_for('auth.dashboard'), 'texto': _('Mis tickets'), 'ico': 'bandeja'},
+        {'ep': 'tickets.crear', 'url': url_for('tickets.crear'), 'texto': _('Crear ticket'), 'ico': 'mas'}]},
+    {'id': 'conocimiento', 'texto': _('Centro de ayuda'), 'ico': 'libro', 'bps': ['conocimiento'], 'items': [
+        {'ep': 'conocimiento.inicio', 'url': url_for('conocimiento.inicio'), 'texto': _('Centro de ayuda'), 'ico': 'libro'}]}
+] %}
+{% endif %}
+{% set ns = namespace(activo=None) %}
+{% for m in modulos %}
+    {% if ns.activo is none and (bp in m.bps or ep in m.get('eps', []) or ep in (m['items'] | map(attribute='ep') | list)) %}{% set ns.activo = m %}{% endif %}
+{% endfor %}
+{% macro enlace(it, clase='') -%}
+{%- set es_activo = ep == it.ep or ep in it.get('eps', []) -%}
+<a class="{{ clase }} side-link {% if es_activo %}active{% endif %}" href="{{ it.url }}" data-label="{{ it.texto }}" data-ico="{{ it.ico }}"{% if it.ep == 'tickets.crear' %} data-shortcut="nuevo"{% endif %}{% if es_activo %} aria-current="page"{% endif %}>
+    {{ icono(it.ico, 16) }}<span>{{ it.texto }}</span>{% if it.get('cuenta') %}<span class="nav-count">{{ it.cuenta if it.cuenta < 100 else '99+' }}</span>{% endif %}
 </a>
 {%- endmacro %}
 
-{% if logueado %}
-<aside class="sidebar" id="sidebar" aria-label="{{ _('Abrir menú de navegación') }}">
-    <div class="sidebar-head">
-        <a class="brand" href="{{ home_url }}">
-            <span class="brand-mark" aria-hidden="true"></span>
-            <span class="brand-text">Tickets <span class="brand-accent">IT</span></span>
-        </a>
-        <button type="button" class="icon-btn sidebar-toggle" data-sidebar-toggle
-                aria-label="{{ _('Contraer menú') }}" title="{{ _('Contraer menú') }} ([)">{{ icono('colapsar') }}</button>
-    </div>
-
-    <nav class="sidebar-nav">
-        {% if rol == 'admin' %}
-            {{ enlace('metricas.mostrar_metricas', url_for('metricas.mostrar_metricas'), _('Panel'), 'panel') }}
-            {{ enlace('analitica.panel', url_for('analitica.panel'), _('Analítica'), 'pulso') }}
-
-            <div class="side-section">{{ _('Tickets') }}</div>
-            {{ enlace('tickets.listar_admin', url_for('tickets.listar_admin'), _('Todos los tickets'), 'tickets') }}
-            {{ enlace('auth.dashboard', url_for('auth.dashboard'), _('Mis tickets'), 'bandeja') }}
-            {{ enlace('tickets.crear', url_for('tickets.crear'), _('Crear ticket'), 'mas') }}
-            {{ enlace('colaboracion.respuestas', url_for('colaboracion.respuestas'), _('Respuestas rápidas'), 'respuesta') }}
-
-            <div class="side-section">{{ _('Solicitudes') }}</div>
-            {{ enlace('solicitudes.pendientes', url_for('solicitudes.pendientes'), _('Transferencias'), 'transferir', cuenta=pm.get('transferencias', 0)) }}
-            {{ enlace('solicitudes.escalamientos_pendientes', url_for('solicitudes.escalamientos_pendientes'), _('Escalamientos'), 'escalar', cuenta=pm.get('escalamientos', 0)) }}
-            {{ enlace('solicitudes.cambios_prioridad_pendientes', url_for('solicitudes.cambios_prioridad_pendientes'), _('Cambios de prioridad'), 'bandera', cuenta=pm.get('prioridad', 0)) }}
-            {{ enlace('tickets.revision_clasificacion', url_for('tickets.revision_clasificacion'), _('Revisión IA'), 'ia', cuenta=pm.get('revision', 0)) }}
-            {{ enlace('apelaciones.pendientes', url_for('apelaciones.pendientes'), _('Apelaciones'), 'mazo', cuenta=pm.get('apelaciones', 0)) }}
-
-            <div class="side-section">{{ _('Conocimiento') }}</div>
-            {{ enlace('conocimiento.inicio', url_for('conocimiento.inicio'), _('Base de conocimiento'), 'libro', activo=(bp == 'conocimiento')) }}
-
-            <div class="side-section">{{ _('Administración') }}</div>
-            {{ enlace('usuarios.listar', url_for('usuarios.listar'), _('Usuarios'), 'usuarios', activo=(bp == 'usuarios' or ep == 'auth.registro')) }}
-            {{ enlace('auditoria.mostrar_auditoria', url_for('auditoria.mostrar_auditoria'), _('Log de auditoría'), 'historial') }}
-            {{ enlace('palabras_clave.listar', url_for('palabras_clave.listar'), _('Palabras clave'), 'etiqueta') }}
-            {% if config.MODO_DEMO %}
-            {{ enlace('demo.panel', url_for('demo.panel'), _('Modo demo'), 'rayo') }}
-            {% endif %}
-        {% elif rol == 'agente' %}
-            {{ enlace('tickets.listar_por_area', url_for('tickets.listar_por_area', area=session.get('area_soporte')), _('Mi área'), 'capas') }}
-            {{ enlace('auth.dashboard', url_for('auth.dashboard'), _('Mis tickets'), 'bandeja') }}
-            {{ enlace('tickets.crear', url_for('tickets.crear'), _('Crear ticket'), 'mas') }}
-            {{ enlace('solicitudes.pendientes', url_for('solicitudes.pendientes'), _('Solicitudes'), 'transferir', activo=(bp == 'solicitudes'), cuenta=pm.get('transferencias', 0)) }}
-            {{ enlace('colaboracion.respuestas', url_for('colaboracion.respuestas'), _('Respuestas rápidas'), 'respuesta') }}
-
-            <div class="side-section">{{ _('Conocimiento') }}</div>
-            {{ enlace('conocimiento.inicio', url_for('conocimiento.inicio'), _('Base de conocimiento'), 'libro', activo=(bp == 'conocimiento')) }}
-        {% else %}
-            {{ enlace('auth.dashboard', url_for('auth.dashboard'), _('Mis tickets'), 'bandeja') }}
-            {{ enlace('tickets.crear', url_for('tickets.crear'), _('Crear ticket'), 'mas') }}
-            {{ enlace('conocimiento.inicio', url_for('conocimiento.inicio'), _('Centro de ayuda'), 'libro', activo=(bp == 'conocimiento')) }}
-        {% endif %}
-    </nav>
-
-    <div class="sidebar-foot dropup">
-        <button class="user-card" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            {% if usuario_nombre_foto %}
-            <img class="user-avatar user-avatar-img" src="{{ url_for('static', filename='fotos_perfil/' ~ usuario_nombre_foto) }}" alt="{{ _('Foto de perfil') }}">
-            {% else %}
-            <span class="user-avatar">{{ usuario_iniciales | default('?', true) }}</span>
-            {% endif %}
-            <span class="user-meta side-label">
-                <span class="user-name">{{ usuario_actual.nombre if usuario_actual else _('Cuenta') }}</span>
-                <span class="user-role">{{ rol | etiqueta }}</span>
-            </span>
-            <span class="side-label user-caret">{{ icono('abajo', 14) }}</span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><span class="dropdown-version">Tickets IT · v{{ version_app }}</span></li>
-            <li><a class="dropdown-item {% if ep == 'auth.perfil' %}active{% endif %}" href="{{ url_for('auth.perfil') }}">{{ icono('usuario', 16) }} {{ _('Mi perfil') }}</a></li>
-            <li><a class="dropdown-item {% if ep == 'api.docs' %}active{% endif %}" href="{{ url_for('api.docs') }}">{{ icono('codigo', 16) }} {{ _('API y tokens') }}</a></li>
-            <li><button type="button" class="dropdown-item" data-open-shortcuts>{{ icono('teclado', 16) }} {{ _('Atajos de teclado') }}</button></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item dropdown-item-danger" href="{{ url_for('auth.logout') }}">{{ icono('salir', 16) }} {{ _('Cerrar sesión') }}</a></li>
-        </ul>
-    </div>
-</aside>
-<div class="sidebar-backdrop" data-sidebar-close></div>
-{% endif %}
-
-<div class="shell">
-    <header class="topbar">
+<header class="hq{% if not logueado %} hq-publico{% endif %}">
+    <div class="hq-bar">
         {% if logueado %}
-        <button type="button" class="icon-btn topbar-menu" data-sidebar-open aria-label="{{ _('Abrir menú de navegación') }}">{{ icono('menu') }}</button>
-        {% set secciones = {'tickets': _('Tickets'), 'solicitudes': _('Solicitudes'), 'apelaciones': _('Solicitudes'), 'auditoria': _('Administración'), 'palabras_clave': _('Administración'), 'demo': _('Administración'), 'usuarios': _('Administración'), 'conocimiento': _('Conocimiento'), 'colaboracion': _('Tickets'), 'analitica': _('Panel'), 'api': _('Cuenta'), 'seguridad': _('Cuenta')} %}
-        {% if ep == 'auth.registro' %}{% set seccion = _('Administración') %}
-        {% elif ep == 'tickets.revision_clasificacion' %}{% set seccion = _('Solicitudes') %}
-        {% elif ep == 'auth.dashboard' %}{% set seccion = _('Tickets') %}
-        {% else %}{% set seccion = secciones.get(bp) %}{% endif %}
-        <div class="topbar-title">{% if seccion %}<span class="crumb">{{ seccion }}</span><span class="crumb-sep" aria-hidden="true">/</span>{% endif %}<span>{{ self.title() }}</span></div>
-        <button type="button" class="search-trigger" data-palette-open>
-            {{ icono('buscar', 16) }}<span class="search-label">{{ _('Buscar o ir a…') }}</span><kbd>Ctrl K</kbd>
-        </button>
-        {% else %}
-        <a class="brand" href="{{ url_for('auth.login') }}">
+        <button type="button" class="hq-btn hq-menu" data-sidebar-open aria-label="{{ _('Abrir menú de navegación') }}">{{ icono('menu', 18) }}</button>
+        {% endif %}
+        <a class="brand" href="{{ home_url if logueado else url_for('auth.login') }}">
             <span class="brand-mark" aria-hidden="true"></span>
-            <span class="brand-text">Tickets <span class="brand-accent">IT</span></span>
+            <span class="brand-text">Tickets IT</span>
         </a>
+
+        {% if logueado %}
+        <nav class="hq-modulos" aria-label="{{ _('Módulos') }}">
+            {% for m in modulos %}
+            <a class="hq-mod {% if ns.activo and ns.activo.id == m.id %}active{% endif %}" href="{{ m['items'][0].url }}"{% if ns.activo and ns.activo.id == m.id %} aria-current="true"{% endif %}>
+                {{ m.texto }}{% if m.get('cuenta') %}<span class="nav-count">{{ m.cuenta if m.cuenta < 100 else '99+' }}</span>{% endif %}
+            </a>
+            {% endfor %}
+        </nav>
+
+        <button type="button" class="search-trigger" data-palette-open>
+            {{ icono('buscar', 15) }}<span class="search-label">{{ _('Buscar o ir a…') }}</span><kbd>Ctrl K</kbd>
+        </button>
         {% endif %}
 
         <div class="topbar-actions">
             {% if logueado and ep != 'tickets.crear' %}
-            <a href="{{ url_for('tickets.crear') }}" class="btn btn-primary btn-sm btn-new">{{ icono('mas', 16) }}<span>{{ _('Nuevo ticket') }}</span></a>
+            <a href="{{ url_for('tickets.crear') }}" class="btn btn-primary btn-sm btn-new">{{ icono('mas', 15) }}<span>{{ _('Nuevo ticket') }}</span></a>
             {% endif %}
 
             <div class="lang-switch" role="group" aria-label="{{ _('Idioma') }}">
@@ -156,14 +132,14 @@
                 <a href="{{ url_for('auth.cambiar_idioma', codigo='en') }}" class="{% if session.get('idioma') == 'en' %}is-active{% endif %}">EN</a>
             </div>
 
-            <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-pressed="false"
+            <button type="button" class="hq-btn theme-toggle" data-theme-toggle aria-pressed="false"
                     aria-label="{{ _('Cambiar tema') }}" title="{{ _('Cambiar tema') }} (t)">
                 {{ icono('luna', 17, 'icon-moon') }}{{ icono('sol', 17, 'icon-sun') }}
             </button>
 
             {% if logueado %}
             <div class="dropdown notif-dropdown">
-                <button class="icon-btn position-relative" id="notifBtn" type="button"
+                <button class="hq-btn position-relative" id="notifBtn" type="button"
                         data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false"
                         aria-label="{{ _('Notificaciones') }}">
                     {{ icono('campana', 17, 'notif-bell') }}
@@ -203,9 +179,59 @@
                     </div>
                 </div>
             </div>
+
+            <div class="dropdown">
+                <button class="hq-user" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ _('Mi cuenta') }}">
+                    {% if usuario_nombre_foto %}
+                    <img class="user-avatar user-avatar-img" src="{{ url_for('static', filename='fotos_perfil/' ~ usuario_nombre_foto) }}" alt="">
+                    {% else %}
+                    <span class="user-avatar">{{ usuario_iniciales | default('?', true) }}</span>
+                    {% endif %}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end user-menu">
+                    <li class="user-menu-head">
+                        <span class="user-name">{{ usuario_actual.nombre if usuario_actual else _('Cuenta') }}</span>
+                        <span class="user-role">{{ rol | etiqueta }}{% if session.get('area_soporte') %} · {{ session.get('area_soporte') | etiqueta }}{% endif %}</span>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item {% if ep == 'auth.perfil' %}active{% endif %}" href="{{ url_for('auth.perfil') }}">{{ icono('usuario', 16) }} {{ _('Mi perfil') }}</a></li>
+                    <li><a class="dropdown-item {% if ep == 'api.docs' %}active{% endif %}" href="{{ url_for('api.docs') }}">{{ icono('codigo', 16) }} {{ _('API y tokens') }}</a></li>
+                    <li><button type="button" class="dropdown-item" data-open-shortcuts>{{ icono('teclado', 16) }} {{ _('Atajos de teclado') }}</button></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item dropdown-item-danger" href="{{ url_for('auth.logout') }}">{{ icono('salir', 16) }} {{ _('Cerrar sesión') }}</a></li>
+                    <li><span class="dropdown-version">Tickets IT {{ version_app }}</span></li>
+                </ul>
+            </div>
             {% endif %}
         </div>
-    </header>
+    </div>
+
+    {% if logueado and ns.activo and ns.activo['items'] | length > 1 %}
+    <nav class="hq-sub" aria-label="{{ ns.activo.texto }}">
+        <div class="hq-sub-inner">
+            {% for it in ns.activo['items'] %}{{ enlace(it, 'hq-sublink') }}{% endfor %}
+        </div>
+    </nav>
+    {% endif %}
+</header>
+
+{% if logueado %}
+<aside class="nav-sheet" aria-label="{{ _('Navegación') }}">
+    <div class="nav-sheet-head">
+        <span class="brand"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text">Tickets IT</span></span>
+        <button type="button" class="hq-btn" data-sidebar-close aria-label="{{ _('Cerrar') }}">×</button>
+    </div>
+    {% for m in modulos %}
+    <div class="nav-sheet-group">
+        {% if m['items'] | length > 1 %}<div class="nav-sheet-title">{{ m.texto }}</div>{% endif %}
+        {% for it in m['items'] %}{{ enlace(it, 'nav-sheet-link') }}{% endfor %}
+    </div>
+    {% endfor %}
+</aside>
+<div class="sidebar-backdrop" data-sidebar-close></div>
+{% endif %}
+
+<div class="shell">
 
     <main class="app-main" id="contenido" tabindex="-1">
         {% block content %}{% endblock %}
@@ -265,7 +291,6 @@
                     <li><span>{{ _('Ir a la lista de tickets') }}</span><span><kbd>g</kbd> <kbd>t</kbd></span></li>
                     <li><span>{{ _('Ir a mis tickets') }}</span><span><kbd>g</kbd> <kbd>m</kbd></span></li>
                     <li><span>{{ _('Cambiar tema claro / oscuro') }}</span><kbd>t</kbd></li>
-                    <li><span>{{ _('Contraer menú') }}</span><kbd>[</kbd></li>
                     <li><span>{{ _('Moverse entre filas de la tabla') }}</span><span><kbd>j</kbd> / <kbd>k</kbd></span></li>
                     <li><span>{{ _('Abrir la fila seleccionada') }}</span><kbd>Enter</kbd></li>
                     <li><span>{{ _('Escribir un comentario (en un ticket)') }}</span><kbd>c</kbd></li>

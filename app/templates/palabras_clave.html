@@ -44,7 +44,7 @@
         {% for pc in palabras_clave %}
         <tr data-texto="{{ pc.texto | lower }}" data-categoria="{{ pc.categoria.value }}">
             <td>{{ pc.texto }}</td>
-            <td><span class="badge-pill categoria-tag">{{ pc.categoria.value | etiqueta }}</span></td>
+            <td><span class="badge-pill categoria-tag cat-{{ pc.categoria.value }}">{{ pc.categoria.value | etiqueta }}</span></td>
             <td class="mono">{{ pc.peso }}</td>
             <td><span class="badge-pill {{ 'estado-abierto' if pc.activa else 'estado-cerrado' }}">
                 {{ _('Activa') if pc.activa else _('Inactiva') }}

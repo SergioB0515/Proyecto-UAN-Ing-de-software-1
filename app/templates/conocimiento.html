@@ -4,7 +4,6 @@
 {% block content %}
 <section class="kb-hero">
     <div class="kb-hero-inner">
-        <div class="eyebrow">{{ icono('libro', 14) }} {{ _('Centro de ayuda') }}</div>
         <h2>{{ _('¿En qué podemos ayudarte?') }}</h2>
         <p class="text-muted mb-3">{{ _('Guías paso a paso para resolver los problemas más comunes sin esperar a soporte.') }}</p>
         <form method="GET" class="kb-search" role="search">
@@ -53,7 +52,7 @@
     {% for a in articulos %}
     <a class="kb-card fx" href="{{ url_for('conocimiento.ver', articulo_id=a.id) }}">
         <div class="kb-card-top">
-            <span class="badge-pill categoria-tag">{{ a.categoria.value | etiqueta }}</span>
+            <span class="badge-pill categoria-tag cat-{{ a.categoria.value }}">{{ a.categoria.value | etiqueta }}</span>
             {% if not a.publicado %}<span class="badge-pill kb-borrador">{{ _('Borrador') }}</span>{% endif %}
         </div>
         <h3 class="kb-card-title">{{ a.titulo }}</h3>

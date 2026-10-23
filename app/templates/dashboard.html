@@ -65,10 +65,10 @@
     </thead>
     <tbody>
         {% for t in tickets %}
-        <tr class="{% if t.id in ids_vencidos %}table-danger{% elif t.id in ids_proximos %}table-warning{% endif %}">
+        <tr data-cat class="cat-{{ t.categoria.value }} {% if t.id in ids_vencidos %}table-danger{% elif t.id in ids_proximos %}table-warning{% endif %}">
             <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
-            <td><span class="badge-pill categoria-tag">{{ t.categoria.value | etiqueta }}</span></td>
+            <td><span class="badge-pill categoria-tag cat-{{ t.categoria.value }}">{{ t.categoria.value | etiqueta }}</span></td>
             <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value | etiqueta }}</span></td>
             <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value | etiqueta }}</span></td>
             <td class="mono text-soft-mono">{{ t.fecha_creacion | fecha }}</td>
@@ -98,7 +98,7 @@
 <div class="kb-grid kb-grid-sm">
     {% for a in articulos_populares %}
     <a class="kb-card fx" href="{{ url_for('conocimiento.ver', articulo_id=a.id) }}">
-        <span class="badge-pill categoria-tag align-self-start">{{ a.categoria.value | etiqueta }}</span>
+        <span class="badge-pill categoria-tag align-self-start cat-{{ a.categoria.value }}">{{ a.categoria.value | etiqueta }}</span>
         <h3 class="kb-card-title">{{ a.titulo }}</h3>
         <p class="kb-card-text">{{ a.resumen or (a.contenido | truncate(110, True)) }}</p>
     </a>

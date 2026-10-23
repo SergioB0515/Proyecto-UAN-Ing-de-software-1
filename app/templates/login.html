@@ -4,39 +4,16 @@
 {% block title %}{{ _('Iniciar sesión') }}{% endblock %}
 
 {% block content %}
-<div class="auth-wrap">
-    <section class="auth-aside" aria-hidden="true">
-        <span class="orb orb-1"></span><span class="orb orb-2"></span>
-        <div class="preview-stack">
-            <div class="preview-card preview-back"></div>
-            <div class="preview-card">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="mono preview-id">#128</span>
-                    <span class="badge-pill prioridad-alta">{{ _('Alta') }}</span>
-                    <span class="badge-pill estado-en_progreso">{{ _('En progreso') }}</span>
-                </div>
-                <div class="preview-title">{{ _('La VPN no conecta desde casa') }}</div>
-                <div class="preview-foot">
-                    <span class="person"><span class="person-av">LG</span>Laura G.</span>
-                    <span class="preview-sla">{{ icono('reloj', 14) }} SLA 2h 15m</span>
-                </div>
-                <div class="preview-bar"><span></span></div>
+<div class="acceso">
+    <div class="acceso-stub">
+        <div class="acceso-head">
+            <h1>{{ _('Iniciar sesión') }}</h1>
+            <p>{{ _('Reporta incidencias y sigue su atención hasta el cierre.') }}</p>
+            <div class="acceso-cats" aria-hidden="true">
+                {% for c in CATEGORIAS %}<span class="cat-{{ c }}"></span>{% endfor %}
             </div>
         </div>
-        <h1>{{ _('Soporte IT, sin fricción.') }}</h1>
-        <p>{{ _('Gestiona incidencias con SLA, clasificación automática y trazabilidad completa en un solo lugar.') }}</p>
-        <ul class="auth-features">
-            <li><span class="feat-ico">{{ icono('ia', 17) }}</span>{{ _('Clasificación automática de tickets') }}</li>
-            <li><span class="feat-ico">{{ icono('reloj', 17) }}</span>{{ _('Alertas de SLA en tiempo real') }}</li>
-            <li><span class="feat-ico">{{ icono('escudo', 17) }}</span>{{ _('Auditoría de cada acción') }}</li>
-        </ul>
-    </section>
-
-    <section class="auth-main">
-        <div class="auth-form">
-            <div class="auth-badge">{{ icono('candado', 20) }}</div>
-            <h2>{{ _('Iniciar sesión') }}</h2>
-            <p class="auth-subtitle">{{ _('Accede con tus credenciales para gestionar tickets.') }}</p>
+        <div class="acceso-body">
             <form method="POST" action="{{ url_for('auth.login') }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="mb-3">
@@ -56,7 +33,8 @@
                 </div>
                 <button type="submit" class="btn btn-primary w-100 py-2">{{ _('Entrar') }}</button>
             </form>
+            <p class="acceso-foot mb-0">{{ _('Las cuentas las crea el área de soporte. Si no tienes una, pídela a un administrador.') }}</p>
         </div>
-    </section>
+    </div>
 </div>
 {% endblock %}

@@ -19,7 +19,7 @@
         root.setAttribute('data-bs-theme', tema);
         guardar('tema', comoGuardar || tema);
         var meta = qs('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', tema === 'dark' ? '#0b0d12' : '#f5f6f9');
+        if (meta) meta.setAttribute('content', tema === 'dark' ? '#0a1317' : '#13222a');
         qsa('[data-theme-toggle]').forEach(function (b) {
             b.setAttribute('aria-pressed', tema === 'dark' ? 'true' : 'false');
         });

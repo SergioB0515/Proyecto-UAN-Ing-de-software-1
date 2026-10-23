@@ -4951,6 +4951,26 @@ msgstr "No users match the filters."
 msgid "Limpiar filtros"
 msgstr "Clear filters"
 
+#: app/templates/base.html:112
+msgid "Módulos"
+msgstr "Modules"
+
+#: app/templates/base.html:184
+msgid "Mi cuenta"
+msgstr "My account"
+
+#: app/templates/login.html:11
+msgid "Reporta incidencias y sigue su atención hasta el cierre."
+msgstr "Report incidents and follow them until they are closed."
+
+#: app/templates/login.html:36
+msgid ""
+"Las cuentas las crea el área de soporte. Si no tienes una, pídela a un "
+"administrador."
+msgstr ""
+"Accounts are created by the support team. If you don't have one, ask an "
+"administrator."
+
 #~ msgid "Métricas"
 #~ msgstr "Metrics"
 

@@ -51,7 +51,7 @@
                         <div class="min-w-0 flex-grow-1">
                             <h3 class="resp-title">{{ r.titulo }}</h3>
                             <div class="d-flex flex-wrap gap-2 align-items-center small text-muted mb-2">
-                                {% if r.categoria %}<span class="badge-pill categoria-tag">{{ r.categoria.value | etiqueta }}</span>{% else %}<span class="badge-pill">{{ _('Todas las áreas') }}</span>{% endif %}
+                                {% if r.categoria %}<span class="badge-pill categoria-tag cat-{{ r.categoria.value }}">{{ r.categoria.value | etiqueta }}</span>{% else %}<span class="badge-pill">{{ _('Todas las áreas') }}</span>{% endif %}
                                 {% if not r.compartida %}<span class="badge-pill nota-tag">{{ icono('candado', 12) }} {{ _('Privada') }}</span>{% endif %}
                                 <span>{{ nombres_por_id.get(r.autor_id, '—') }}</span>
                                 <span>· {{ ngettext('%(num)s uso', '%(num)s usos', r.usos) }}</span>

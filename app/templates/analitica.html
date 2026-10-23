@@ -182,7 +182,7 @@
                 {% for a in datos.agentes %}
                 <tr class="{% if not a.activo %}row-muted{% endif %}">
                     <td><a href="{{ url_for('usuarios.detalle', usuario_id=a.id) }}" class="fw-medium">{% if loop.index <= 3 and a.cerrados %}<span class="rank rank-{{ loop.index }}">{{ loop.index }}</span>{% endif %}{{ a.nombre }}</a></td>
-                    <td>{% if a.area %}<span class="badge-pill categoria-tag">{{ a.area | etiqueta }}</span>{% endif %}</td>
+                    <td>{% if a.area %}<span class="badge-pill categoria-tag cat-{{ a.area }}">{{ a.area | etiqueta }}</span>{% endif %}</td>
                     <td class="text-end mono">{{ a.cerrados }}</td>
                     <td class="text-end mono">{{ a.carga }}</td>
                     <td class="text-end mono">{{ valor(a.mttr_horas, ' h') }}</td>
@@ -288,7 +288,7 @@
                 y: { beginAtZero: true, border: { display: false }, ticks: { precision: 0, maxTicksLimit: 5 } },
             },
             plugins: { legend: { display: false } },
-            elements: { point: { radius: 0, hoverRadius: 5, hoverBorderWidth: 2 }, line: { borderWidth: 2, tension: 0.3 } },
+            elements: { point: { radius: 0, hoverRadius: 5, hoverBorderWidth: 2 }, line: { borderWidth: 2, tension: 0 } },
         };
     }
     function pintar(graficos) {

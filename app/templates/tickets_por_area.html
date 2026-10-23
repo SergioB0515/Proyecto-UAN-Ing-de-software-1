@@ -60,7 +60,7 @@
     </thead>
     <tbody>
         {% for t in tickets %}
-        <tr class="{% if t.id in ids_vencidos %}table-danger{% elif t.id in ids_proximos %}table-warning{% endif %}">
+        <tr data-cat class="cat-{{ t.categoria.value }} {% if t.id in ids_vencidos %}table-danger{% elif t.id in ids_proximos %}table-warning{% endif %}">
             <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
             <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value | etiqueta }}</span></td>

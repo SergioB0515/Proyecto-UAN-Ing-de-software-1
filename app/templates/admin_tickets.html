@@ -75,10 +75,10 @@
     <tbody>
         {% for t in tickets %}
         {% set tiene_sugerencia = filtros_actuales.vista in ("vencidos_actuales", "proximos_actuales") and not t.agente_id and sugerencias_agente.get(t.categoria) %}
-        <tr class="{% if tiene_sugerencia %}table-suggested-agent{% endif %}">
+        <tr data-cat class="cat-{{ t.categoria.value }} {% if tiene_sugerencia %}table-suggested-agent{% endif %}">
             <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
             <td>{{ t.texto }}</td>
-            <td><span class="badge-pill categoria-tag">{{ t.categoria.value | etiqueta }}</span></td>
+            <td><span class="badge-pill categoria-tag cat-{{ t.categoria.value }}">{{ t.categoria.value | etiqueta }}</span></td>
             <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value | etiqueta }}</span></td>
             <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value | etiqueta }}</span></td>
             <td class="mono text-soft-mono">{{ t.fecha_limite | fecha }}</td>

@@ -8,7 +8,7 @@
 <article class="kb-article">
     <header class="kb-article-head">
         <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
-            <a class="badge-pill categoria-tag" href="{{ url_for('conocimiento.inicio', categoria=articulo.categoria.value) }}">{{ articulo.categoria.value | etiqueta }}</a>
+            <a class="badge-pill categoria-tag cat-{{ articulo.categoria.value }}" href="{{ url_for('conocimiento.inicio', categoria=articulo.categoria.value) }}">{{ articulo.categoria.value | etiqueta }}</a>
             {% if not articulo.publicado %}<span class="badge-pill kb-borrador">{{ _('Borrador') }}</span>{% endif %}
             {% for e in articulo.lista_etiquetas %}<a class="kb-tag" href="{{ url_for('conocimiento.inicio', q=e) }}">#{{ e }}</a>{% endfor %}
         </div>

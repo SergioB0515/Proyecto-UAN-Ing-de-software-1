@@ -24,7 +24,7 @@
             <div class="req-head">
                 <a class="mono ticket-id-tag ms-0" href="{{ url_for('tickets.detalle', ticket_id=s.ticket_id) }}">#{{ s.ticket_id }}</a>
                 <span class="solicitud-arrow">&rarr;</span>
-                <span class="badge-pill categoria-tag">{{ s.area_destino.value | etiqueta }}</span>
+                <span class="badge-pill categoria-tag cat-{{ s.area_destino.value }}">{{ s.area_destino.value | etiqueta }}</span>
             </div>
             <div class="req-meta">{{ icono('reloj', 13) }} {{ _('Solicitado el %(fecha)s', fecha=s.fecha_solicitud.strftime('%d/%m/%Y %H:%M')) }}</div>
             {% if s.motivo %}<p class="req-text">{{ s.motivo }}</p>{% endif %}

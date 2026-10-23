@@ -70,7 +70,7 @@
                 </a>
             </td>
             <td><span class="badge-pill rol-{{ u.rol.value }}">{{ u.rol.value | etiqueta }}</span></td>
-            <td>{% if u.area_soporte %}<span class="badge-pill categoria-tag">{{ u.area_soporte.value | etiqueta }}</span>{% if abiertos.get(u.id) %} <span class="text-muted small">· {{ ngettext('%(num)s abierto', '%(num)s abiertos', abiertos[u.id]) }}</span>{% endif %}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+            <td>{% if u.area_soporte %}<span class="badge-pill categoria-tag cat-{{ u.area_soporte.value }}">{{ u.area_soporte.value | etiqueta }}</span>{% if abiertos.get(u.id) %} <span class="text-muted small">· {{ ngettext('%(num)s abierto', '%(num)s abiertos', abiertos[u.id]) }}</span>{% endif %}{% else %}<span class="text-muted">—</span>{% endif %}</td>
             <td>{% if u.nivel.value == 'vip' %}<span class="badge-pill vip-tag">{{ icono('estrella', 12) }} VIP</span>{% else %}<span class="text-muted small">{{ u.nivel.value | etiqueta }}</span>{% endif %}</td>
             <td>
                 {% if u.id in con_2fa %}<span class="sec-ok" title="{{ _('Verificación en dos pasos activa') }}">{{ icono('escudo', 15) }} 2FA</span>

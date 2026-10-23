@@ -135,7 +135,7 @@ class ServicioNotificaciones:
                     "email/ticket_notificacion.html",
                     titulo=texto,
                     ticket=contexto_ticket,
-                    url_ticket=f"{current_app.config['BASE_URL']}/tickets/{contexto_ticket['id']}",
+                    url_ticket=f"{current_app.config.get('BASE_URL', '')}/tickets/{contexto_ticket['id']}",
                     color_1=color_1,
                     color_2=color_2,
                     idioma=locale,

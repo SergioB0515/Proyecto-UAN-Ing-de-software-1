@@ -23,7 +23,7 @@
         <div class="req-body">
             <div class="req-head">
                 <a class="mono ticket-id-tag ms-0" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a>
-                <span class="badge-pill categoria-tag">{{ t.categoria.value | etiqueta }}</span>
+                <span class="badge-pill categoria-tag cat-{{ t.categoria.value }}">{{ t.categoria.value | etiqueta }}</span>
             </div>
             <div class="req-meta">{{ icono('reloj', 13) }} {{ t.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</div>
             <p class="req-text">{{ t.texto }}</p>

@@ -5,10 +5,15 @@
 {% macro iniciales(nombre) -%}{{ (nombre.split()[:2] | map('first') | join | upper) if nombre else '?' }}{%- endmacro %}
 {% set nombre_creador = nombres_por_id.get(ticket.creador_id, _('Usuario desconocido')) %}
 {% set nombre_agente = nombres_por_id.get(ticket.agente_id) if ticket.agente_id else None %}
-<div class="page-header" data-ticket-reciente data-id="{{ ticket.id }}" data-titulo="{{ ticket.texto | truncate(60, True) }}">
+<div class="stub cat-{{ ticket.categoria.value }}" data-ticket-reciente data-id="{{ ticket.id }}" data-titulo="{{ ticket.texto | truncate(60, True) }}">
+    <div class="stub-num">
+        <span class="stub-label">{{ _('Ticket') }}</span>
+        <button type="button" class="stub-id" data-copy="#{{ ticket.id }}" title="{{ _('Copiar') }}">#{{ ticket.id }}</button>
+        <span class="stub-cat">{{ ticket.categoria.value | etiqueta }}</span>
+    </div>
+    <div class="stub-body">
     <div class="min-w-0">
-        <div class="d-flex align-items-center gap-2 mb-2">
-            <button type="button" class="mono ticket-id-tag ms-0 tag-copy" data-copy="#{{ ticket.id }}">#{{ ticket.id }}</button>
+        <div class="stub-meta">
             <span class="badge-pill estado-{{ ticket.estado.value }}">{{ ticket.estado.value | etiqueta }}</span>
             <span class="badge-pill prioridad-{{ ticket.prioridad.value }}">{{ ticket.prioridad.value | etiqueta }}</span>
         </div>
@@ -28,6 +33,7 @@
             {{ icono('copiar', 15) }} <span data-copy-label>{{ _('Copiar enlace') }}</span>
         </button>
     </div>
+</div>
 </div>
 
 <div class="ticket-layout">
@@ -215,7 +221,7 @@
                         {% if s.tipo.value == 'escalamiento' %}
                             <span class="badge-pill categoria-tag">{{ _('Escalamiento') }}</span>
                             <span class="solicitud-arrow">&rarr;</span>
-                            <span class="badge-pill categoria-tag">{{ s.area_destino.value | etiqueta }}</span>
+                            <span class="badge-pill categoria-tag cat-{{ s.area_destino.value }}">{{ s.area_destino.value | etiqueta }}</span>
                         {% elif s.tipo.value == 'cambio_prioridad' %}
                             <span class="badge-pill categoria-tag">{{ _('Cambio de prioridad') }}</span>
                             <span class="solicitud-arrow">&rarr;</span>
@@ -461,7 +467,7 @@
             <ul class="props">
                 <li><span class="prop-k">{{ icono('circulo', 15) }}{{ _('Estado') }}</span><span class="badge-pill estado-{{ ticket.estado.value }}">{{ ticket.estado.value | etiqueta }}</span></li>
                 <li><span class="prop-k">{{ icono('bandera', 15) }}{{ _('Prioridad') }}</span><span class="badge-pill prioridad-{{ ticket.prioridad.value }}">{{ ticket.prioridad.value | etiqueta }}</span></li>
-                <li><span class="prop-k">{{ icono('etiqueta', 15) }}{{ _('Categoría') }}</span><span class="badge-pill categoria-tag">{{ ticket.categoria.value | etiqueta }}</span></li>
+                <li><span class="prop-k">{{ icono('etiqueta', 15) }}{{ _('Categoría') }}</span><span class="badge-pill categoria-tag cat-{{ ticket.categoria.value }}">{{ ticket.categoria.value | etiqueta }}</span></li>
                 <li><span class="prop-k">{{ icono('usuario', 15) }}{{ _('Creado por') }}</span><span class="prop-v person"><span class="person-av">{{ iniciales(nombre_creador) }}</span>{{ nombre_creador }}</span></li>
                 <li><span class="prop-k">{{ icono('usuarios', 15) }}{{ _('Agente') }}</span><span class="prop-v">{% if nombre_agente %}<span class="person"><span class="person-av">{{ iniciales(nombre_agente) }}</span>{{ nombre_agente }}</span>{% else %}<span class="text-muted">—</span>{% endif %}</span></li>
                 <li><span class="prop-k">{{ icono('calendario', 15) }}{{ _('Fecha creación') }}</span><span class="prop-v mono">{{ ticket.fecha_creacion | fecha }}</span></li>
