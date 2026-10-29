@@ -18,7 +18,9 @@ services:
       - key: SESSION_COOKIE_SECURE
         value: "1"
       - key: MODO_DEMO
-        value: "0"
+        value: "1"
+      - key: SEMBRAR_AL_INICIAR
+        value: "1"
       - key: CLASIFICADOR_ML_ACTIVO
         value: "0"
       - key: APP_BASE_URL
