@@ -9,12 +9,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder=os.path.join(BASE_DIR, "app", "templates"))
 
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test_proyecto.db"
     app.config["LANGUAGES"] = ["es", "en"]
     app.config["MAIL_SUPPRESS_SEND"] = True
     app.config["MAIL_DEFAULT_SENDER"] = "pruebas@empresa.com"
+    app.config["BASE_URL"] = "http://localhost:5000"
     db.init_app(app)
     mail.init_app(app)
 
