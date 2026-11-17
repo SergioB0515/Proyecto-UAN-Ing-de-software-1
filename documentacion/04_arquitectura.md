@@ -22,8 +22,8 @@
 
 | Entidad | Campos principales |
 |---|---|
-| **Usuario** | id, nombre, email, contrasena_hash, rol (final/agente/admin), area_soporte (solo aplica si es agente; se guarda como `Categoria`), nivel (normal/VIP), intentos_fallidos, bloqueado_hasta |
-| **Ticket** | id, texto, categoria, prioridad, estado, creador_id, agente_id, fecha_creacion, fecha_limite, fecha_cierre |
+| **Usuario** | id, nombre, email, contrasena_hash, rol (final/agente/admin), area_soporte (solo aplica si es agente; se guarda como `Categoria`), nivel (normal/VIP), intentos_fallidos, bloqueado_hasta, activo, ultimo_acceso, ausente_desde, ausente_hasta, motivo_ausencia |
+| **Ticket** | id, texto, categoria, prioridad, estado, creador_id, agente_id, fecha_asignacion, fecha_creacion, fecha_limite, fecha_cierre, notificado_proximo_vencer, notificado_vencido, notificado_sin_asignar, clasificacion_baja_confianza |
 | **Comentario** | id, ticket_id, autor_id, texto, fecha |
 | **LogAuditoria** | id, usuario_id, accion (enum `AccionAuditoria`), detalle, fecha |
 | **IntentoLoginFallido** | id, ip, email_intentado, fecha — registra cada fallo de login (exista o no ese usuario), fuente para la detección de bloqueo por IP |
@@ -56,7 +56,7 @@ entidades de datos en clases de servicio independientes:
 | `ServicioAutenticacion` | Registro de usuarios (`registrar`, requiere `rol` y `admin_id`), verificación de credenciales (`iniciar_sesion`), generación/verificación de hash de contraseña, control de bloqueo por intentos fallidos por usuario y por IP (`ip_esta_bloqueada`, `registrar_intento_fallido_ip`), política de contraseñas (`validar_politica_contrasena`), y autoservicio de perfil (`cambiar_contrasena`, `cambiar_nombre`, `subir_foto_perfil`). Única clase autorizada a manejar contraseñas en texto plano. |
 | `ClasificadorTickets` | Determina únicamente la **categoría** de un ticket a partir de su texto, por coincidencia de palabras clave. No calcula prioridad. |
 | `ServicioTickets` | Orquesta el ciclo de vida completo del ticket: crear (aplica clasificación, prioridad base, ajuste VIP y SLA), listar por área con filtros, listar por creador, listar globalmente para el administrador con filtros y vistas especiales de SLA (`listar_admin`), cambiar estado (valida transiciones), reasignar agente, agregar comentarios y calcular estadísticas personales de un usuario (`obtener_estadisticas_personales`). |
-| `GestorSLA` | Calcula la fecha límite de atención según la prioridad final **y el nivel del usuario**, ajusta la prioridad por nivel VIP, y verifica qué tickets están vencidos o próximos a vencer — opcionalmente filtrado por creador. |
+| `GestorSLA` | Calcula la fecha límite de atención según la prioridad final **y el nivel del usuario**, ajusta la prioridad por nivel VIP, y verifica qué tickets están vencidos o próximos a vencer — opcionalmente filtrado por creador. Mide el consumo de SLA de un ticket (`consumo_sla`), ordena la cola por riesgo (`clave_riesgo`), reparte el aviso de un ticket sin dueño entre los agentes disponibles del área o lo escala al administrador si el área no tiene cobertura (`_avisar_area`), y escala al administrador los tickets que envejecen sin asignar (`escalar_tickets_sin_asignar`). |
 | `ServicioAuditoria` | Registra cada acción crítica en `LogAuditoria`, con un reintento automático si el primer guardado falla, y permite consultarlo con filtros y paginación (`listar_logs`). |
 | `ServicioMetricas` | Calcula los conteos agregados que alimenta el panel del administrador (tickets por estado/categoría/prioridad, vencidos, próximos a vencer, vencidos últimos 30 días, cantidad de agentes). |
 | `ServicioPermisos` | Decide quién puede ver un ticket, ver notas internas y gestionarlo. Lo usan las rutas web, las descargas de adjuntos y la API. |
@@ -68,6 +68,7 @@ entidades de datos en clases de servicio independientes:
 | `ServicioEncuestas` | Encuesta de satisfacción al cierre (una por ticket, solo el creador, 14 días de plazo) y resúmenes de CSAT. |
 | `ServicioAnalitica` | Indicadores por periodo y su variación contra el periodo anterior: volumen diario, pendientes, primera respuesta, tiempo de resolución, cumplimiento de SLA por categoría, mapa de calor por día y hora, ranking de agentes y uso de la base de conocimiento. |
 | `ServicioTokensApi` | Tokens personales de la API (guardados como hash SHA-256, con caducidad y revocación) y límite de peticiones por minuto. |
+| `ServicioDisponibilidad` | Disponibilidad declarada de los agentes. Guarda la ausencia como una ventana de fechas en el propio usuario (`ausente_desde` / `ausente_hasta`) y deriva de ella la disponibilidad, tanto en Python (`esta_disponible`) como en SQL (`filtro_disponible`), para no tener dos fuentes de verdad. Expone además los agentes disponibles de un área, los conteos de cobertura y la lista de ausentes. |
 
 ## Diagrama de clases
 
@@ -204,6 +205,45 @@ flowchart TD
   R --> S([Fin])
 ```
 
+
+## Responsabilidad de área y modelo de autoservicio (v3.1)
+
+El sistema no asigna tickets automáticamente: un ticket nuevo queda sin agente y
+es un agente del área quien lo toma (modelo *pull*). La asignación automática se
+descartó porque puede sobrecargar a un agente o asignarle trabajo a alguien que
+no está. El riesgo de ese modelo es el contrario: que nadie tome el ticket y el
+plazo se consuma sin que nadie se entere. Esta versión agrega los controles que
+cierran ese hueco sin quitarle al agente la decisión de qué atender:
+
+1. **Disponibilidad declarada.** La ausencia es una ventana de fechas en el
+   usuario. Un agente ausente sale de las sugerencias, de los destinos de
+   transferencia y del conteo de cobertura del área. Sus tickets ya asignados no
+   se tocan: reasignarlos es una decisión del administrador, no del sistema.
+2. **El aviso de SLA tiene dueño.** Si el ticket no tiene agente, el aviso de
+   "próximo a vencer" o "vencido" va a los agentes activos y disponibles del
+   área. Si el área se quedó sin nadie disponible, sube al administrador. Antes
+   ese aviso solo llegaba al agente asignado, así que un ticket sin dueño no le
+   llegaba a nadie del equipo de soporte.
+3. **La cola no esconde lo urgente.** La vista del área se ordena por porcentaje
+   de SLA consumido, no solo por prioridad. Un ticket de prioridad media que
+   vence en diez minutos aparece antes que uno alto que acaba de entrar. El
+   agente sigue eligiendo.
+4. **Edad sin asignar como métrica.** Al pasar `UMBRAL_SIN_ASIGNAR` (50 %) del
+   plazo sin agente, el ticket se escala una sola vez al administrador. Ahí sí
+   hace falta intervención humana.
+5. **Vista de huecos.** `/admin/cobertura` muestra los tickets sin asignar
+   ordenados por riesgo y la cobertura de cada área.
+
+La deduplicación de los avisos usa banderas en el ticket, igual que las dos que
+ya existían: `notificado_sin_asignar` se marca al escalar y se rearma cuando el
+ticket vuelve a tener agente (o cuando un escalamiento de área aprobado lo deja
+otra vez sin dueño).
+
+El escalamiento automático no deja registro en `LogAuditoria` porque
+`LogAuditoria.usuario_id` es obligatorio y un trabajo del *scheduler* no tiene un
+actor humano al que atribuirlo; la notificación al administrador es el registro.
+Marcar y levantar una ausencia sí se auditan (`marcar_ausente`,
+`marcar_disponible`), porque son acciones de una persona.
 
 ## Estado actual de la implementación
 

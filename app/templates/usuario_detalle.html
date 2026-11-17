@@ -20,6 +20,9 @@
                 {% if not usuario.activo %}<span class="badge-pill estado-inactivo">{{ _('Desactivada') }}</span>
                 {% elif bloqueado %}<span class="badge-pill sla-proximo">{{ icono('candado', 12) }} {{ _('Bloqueada hasta %(f)s', f=(usuario.bloqueado_hasta | fecha)) }}</span>
                 {% else %}<span class="badge-pill estado-activo">{{ _('Activa') }}</span>{% endif %}
+                {% if usuario.rol.value == 'agente' and not esta_disponible %}
+                <span class="badge-pill sla-proximo">{{ icono('calendario', 12) }} {{ _('Ausente') }}</span>
+                {% endif %}
             </div>
         </div>
         <div class="user-hero-stats">
@@ -123,6 +126,54 @@
                 </div>
             </div>
         </div>
+
+        {% if usuario.rol.value == 'agente' and usuario.activo %}
+        <div class="card mb-4">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-1">{{ _('Disponibilidad') }}</h5>
+                <p class="text-muted small mb-3">
+                    {{ _('Un agente ausente no aparece en las sugerencias de asignación, ni como destino de transferencias, ni cuenta para la cobertura de su área. Los tickets que ya tiene asignados no se tocan: reasignarlos sigue siendo tu decisión.') }}
+                </p>
+
+                {% if not esta_disponible %}
+                <p class="mb-3 small">
+                    <span class="meta-label">{{ _('Ausente desde') }}</span> {{ usuario.ausente_desde | fecha }}
+                    &middot;
+                    <span class="meta-label">{{ _('hasta') }}</span>
+                    {% if usuario.ausente_hasta %}{{ usuario.ausente_hasta | fecha }}{% else %}{{ _('nuevo aviso') }}{% endif %}
+                    {% if usuario.motivo_ausencia %}<br><span class="text-muted">{{ usuario.motivo_ausencia }}</span>{% endif %}
+                </p>
+                <form method="POST" action="{{ url_for('usuarios.cambiar_disponibilidad', usuario_id=usuario.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="accion" value="disponible">
+                    <button class="btn btn-success btn-sm" type="submit">{{ icono('check', 15) }} {{ _('Marcar como disponible') }}</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{{ url_for('usuarios.cambiar_disponibilidad', usuario_id=usuario.id) }}" class="row g-2">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="accion" value="ausente">
+                    <div class="col-sm-6">
+                        <label class="form-label small">{{ _('Desde') }}</label>
+                        <input type="datetime-local" name="desde" class="form-control form-control-sm">
+                        <div class="form-text">{{ _('Vacío = desde ahora.') }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label small">{{ _('Hasta') }}</label>
+                        <input type="datetime-local" name="hasta" class="form-control form-control-sm">
+                        <div class="form-text">{{ _('Vacío = hasta nuevo aviso.') }}</div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label small">{{ _('Motivo (opcional)') }}</label>
+                        <input type="text" name="motivo" maxlength="120" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-outline-secondary btn-sm" type="submit">{{ icono('calendario', 15) }} {{ _('Marcar como ausente') }}</button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
 
         {% if not es_yo %}
         <div class="card danger-zone">

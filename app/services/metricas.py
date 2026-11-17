@@ -6,6 +6,7 @@ from app.models.ticket import Ticket
 from app.models.usuario import Usuario
 from app.models.enum import RolUsuario,EstadoTicket
 from app.services.gestor_sla import GestorSLA
+from app.services.disponibilidad import ServicioDisponibilidad
 from app.models.correccion_clasificacion import CorreccionClasificacion
 import os, json
 
@@ -245,10 +246,13 @@ class ServicioMetricas:
     @staticmethod
     def _panorama_area(categoria):
 
+        # Solo agentes disponibles: sugerir a alguien que esta de vacaciones es
+        # peor que no sugerir nada, porque el ticket parece atendido y no lo esta.
         agentes = db.session.execute(
             select(Usuario).where(
                 Usuario.area_soporte == categoria, Usuario.rol == RolUsuario.AGENTE,
                 Usuario.activo.is_(True),
+                ServicioDisponibilidad.filtro_disponible(),
             )
         ).scalars().all()
 

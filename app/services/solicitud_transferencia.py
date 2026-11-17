@@ -8,6 +8,7 @@ from app.services.notificaciones import ServicioNotificaciones
 from app.models.transferencia import SolicitudTransferencia
 from app.models.enum import EstadoTicket, EstadoSolicitudTransferencia, RolUsuario, AccionAuditoria, TipoSolicitud
 from app.services.auditoria import ServicioAuditoria
+from app.services.disponibilidad import ServicioDisponibilidad
 from app import notificaciones_i18n as notif
 from app.services.gestor_sla import GestorSLA
 from app.services.exceptions import (
@@ -48,6 +49,8 @@ class ServicioSolicitudesTransferencia:
             raise AgenteDestinoInvalidoError(_("El agente destinatario tiene la cuenta desactivada"))
         if agente_destino.area_soporte != ticket.categoria:
             raise AgenteDestinoInvalidoError(_("El agente no pertenece al area correcta"))
+        if ServicioDisponibilidad.esta_ausente(agente_destino):
+            raise AgenteDestinoInvalidoError(_("El agente destinatario está marcado como ausente"))
         if agente_destino.id == ticket.agente_id:
             raise AgenteDestinoInvalidoError(_("El agente destinatario no puede ser el mismo"))
         
@@ -282,6 +285,7 @@ class ServicioSolicitudesTransferencia:
         ticket.agente_id = None
         ticket.fecha_asignacion = None
         ticket.estado = EstadoTicket.ABIERTO
+        ticket.notificado_sin_asignar = False
         
         solicitud.estado = EstadoSolicitudTransferencia.ACEPTADA
         solicitud.fecha_resolucion = datetime.now()

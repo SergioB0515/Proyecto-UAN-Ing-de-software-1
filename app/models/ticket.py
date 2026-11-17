@@ -18,3 +18,4 @@ class Ticket(db.Model):
     notificado_proximo_vencer = db.Column(db.Boolean, nullable=False, default=False)
     notificado_vencido = db.Column(db.Boolean, nullable=False, default=False)
     clasificacion_baja_confianza = db.Column(db.Boolean, nullable=False, default=False)
+    notificado_sin_asignar = db.Column(db.Boolean, nullable=False, default=False)

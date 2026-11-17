@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, abort, flash, redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
 from sqlalchemy import select, func
@@ -8,8 +10,14 @@ from app.models.log_auditoria import LogAuditoria
 from app.models.ticket import Ticket
 from app.routes.decoradores import requiere_admin
 from app.services.doble_factor import ServicioDobleFactor
-from app.services.exceptions import ErrorPersistencia, OperacionNoPermitidaError, UsuarioNoEncontradoError
+from app.services.exceptions import (
+    AusenciaInvalidaError,
+    ErrorPersistencia,
+    OperacionNoPermitidaError,
+    UsuarioNoEncontradoError,
+)
 from app.services.usuarios import ServicioUsuarios, FILTROS_ESTADO
+from app.services.disponibilidad import ServicioDisponibilidad
 from app.services.autenticacion import ServicioAutenticacion
 
 usuarios_bp = Blueprint("usuarios", __name__)
@@ -46,6 +54,7 @@ def listar():
             select(Ticket.agente_id, func.count(Ticket.id))
             .where(Ticket.agente_id.in_(ids), Ticket.fecha_cierre.is_(None)).group_by(Ticket.agente_id)
         ).all())
+    ausentes = {u.id for u in paginado.items if ServicioDisponibilidad.esta_ausente(u)}
     return render_template(
         "usuarios.html",
         paginado=paginado,
@@ -53,6 +62,7 @@ def listar():
         resumen=ServicioUsuarios.resumen(),
         con_2fa=con_2fa,
         abiertos=abiertos,
+        ausentes=ausentes,
         filtros={"q": busqueda, "rol": rol.value if rol else "", "area": area.value if area else "", "estado": estado or ""},
     )
 
@@ -97,6 +107,7 @@ def detalle(usuario_id):
         bloqueado=ServicioAutenticacion.esta_bloqueado(usuario),
         es_yo=usuario.id == session["usuario_id"],
         nombre_foto=ServicioAutenticacion.obtener_nombre_archivo_foto(usuario),
+        esta_disponible=ServicioDisponibilidad.esta_disponible(usuario),
     )
 
 
@@ -104,7 +115,7 @@ def _accion(usuario_id, funcion, mensaje_ok):
     try:
         funcion()
         flash(mensaje_ok, "success")
-    except (OperacionNoPermitidaError, UsuarioNoEncontradoError, ErrorPersistencia) as e:
+    except (AusenciaInvalidaError, OperacionNoPermitidaError, UsuarioNoEncontradoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
     destino = request.form.get("volver")
     if destino == "lista":
@@ -142,3 +153,46 @@ def restablecer_2fa(usuario_id):
 def enviar_recuperacion(usuario_id):
     return _accion(usuario_id, lambda: ServicioUsuarios.enviar_recuperacion(session["usuario_id"], usuario_id),
                    _("Enlace de recuperación enviado al correo del usuario"))
+
+
+def _fecha_hora(valor):
+    """Lee un <input type="datetime-local"> (formato 2026-11-20T08:00)."""
+    if not valor:
+        return None
+    try:
+        return datetime.strptime(valor, "%Y-%m-%dT%H:%M")
+    except ValueError:
+        raise AusenciaInvalidaError(_("La fecha indicada no es válida"))
+
+
+@usuarios_bp.route("/admin/usuarios/<int:usuario_id>/disponibilidad", methods=["POST"])
+@requiere_admin
+def cambiar_disponibilidad(usuario_id):
+    """Marca o levanta la ausencia de un agente.
+
+    No toca los tickets que ya tenia asignados: la ausencia solo lo saca de las
+    sugerencias, de los destinos de transferencia y del conteo de cobertura del
+    area. Reasignar lo que ya tiene sigue siendo decision del administrador.
+    """
+    if request.form.get("accion") == "disponible":
+        return _accion(
+            usuario_id,
+            lambda: ServicioDisponibilidad.marcar_disponible(session["usuario_id"], usuario_id),
+            _("Agente marcado como disponible"),
+        )
+
+    try:
+        desde = _fecha_hora(request.form.get("desde"))
+        hasta = _fecha_hora(request.form.get("hasta"))
+    except AusenciaInvalidaError as e:
+        flash(str(e), "danger")
+        return redirect(url_for("usuarios.detalle", usuario_id=usuario_id))
+
+    return _accion(
+        usuario_id,
+        lambda: ServicioDisponibilidad.marcar_ausente(
+            session["usuario_id"], usuario_id, desde=desde, hasta=hasta,
+            motivo=request.form.get("motivo"),
+        ),
+        _("Ausencia registrada"),
+    )

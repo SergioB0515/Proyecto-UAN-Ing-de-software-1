@@ -135,22 +135,26 @@ def test_verificar_y_notificar_vencimientos_crea_notificacion_una_sola_vez(usuar
     ).delete()
     db.session.commit()
 
+    def notificaciones_del_creador():
+        return (
+            db.session.query(Notificacion)
+            .filter(Notificacion.ticket_id == ticket.id, Notificacion.usuario_id == usuario_normal.id)
+            .all()
+        )
+
     GestorSLA.verificar_y_notificar_vencimientos()
 
-    notificaciones = (
-        db.session.query(Notificacion)
-        .filter(Notificacion.ticket_id == ticket.id)
-        .all()
-    )
-    assert len(notificaciones) == 1, "deberia crearse exactamente una notificacion de vencido"
-    assert "vencido" in notificaciones[0].mensaje.lower()
+    # El ticket no tiene agente, asi que ademas del creador reciben aviso los
+    # agentes disponibles del area (o el admin si no hay ninguno). Lo que este
+    # test cuida es la deduplicacion: al creador le llega una sola vez.
+    todas = db.session.query(Notificacion).filter(Notificacion.ticket_id == ticket.id).all()
+    del_creador = notificaciones_del_creador()
+    assert len(del_creador) == 1, "al creador debe llegarle exactamente una notificacion de vencido"
+    assert "vencido" in del_creador[0].mensaje.lower()
     assert ticket.notificado_vencido is True
 
     GestorSLA.verificar_y_notificar_vencimientos()
 
-    notificaciones = (
-        db.session.query(Notificacion)
-        .filter(Notificacion.ticket_id == ticket.id)
-        .all()
-    )
-    assert len(notificaciones) == 1, "no debe duplicar la notificacion en pasadas siguientes"
+    assert len(notificaciones_del_creador()) == 1, "no debe duplicar la notificacion en pasadas siguientes"
+    assert len(db.session.query(Notificacion).filter(Notificacion.ticket_id == ticket.id).all()) == len(todas), \
+        "la segunda pasada no debe generar notificaciones nuevas para nadie"

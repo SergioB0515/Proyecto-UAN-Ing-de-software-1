@@ -14,7 +14,7 @@ from app.services.exceptions import (
     UsuarioNoEncontradoError,
 )
 
-FILTROS_ESTADO = ("activos", "inactivos", "bloqueados")
+FILTROS_ESTADO = ("activos", "inactivos", "bloqueados", "ausentes")
 
 
 class ServicioUsuarios:
@@ -51,6 +51,9 @@ class ServicioUsuarios:
             query = query.where(Usuario.activo.is_(False))
         elif estado == "bloqueados":
             query = query.where(Usuario.bloqueado_hasta.isnot(None), Usuario.bloqueado_hasta > datetime.now())
+        elif estado == "ausentes":
+            from app.services.disponibilidad import ServicioDisponibilidad
+            query = query.where(Usuario.activo.is_(True), ~ServicioDisponibilidad.filtro_disponible())
         query = query.order_by(Usuario.activo.desc(), Usuario.nombre)
         return db.paginate(query, page=pagina, per_page=por_pagina, error_out=False)
 
@@ -63,10 +66,19 @@ class ServicioUsuarios:
             select(func.count(Usuario.id)).where(Usuario.bloqueado_hasta.isnot(None), Usuario.bloqueado_hasta > ahora)
         ).scalar()
         por_rol = dict(db.session.execute(select(Usuario.rol, func.count(Usuario.id)).group_by(Usuario.rol)).all())
+        from app.services.disponibilidad import ServicioDisponibilidad
+        ausentes = db.session.execute(
+            select(func.count(Usuario.id)).where(
+                Usuario.rol == RolUsuario.AGENTE,
+                Usuario.activo.is_(True),
+                ~ServicioDisponibilidad.filtro_disponible(ahora),
+            )
+        ).scalar()
         return {
             "total": total,
             "inactivos": inactivos,
             "bloqueados": bloqueados,
+            "ausentes": ausentes,
             "admins": por_rol.get(RolUsuario.ADMIN, 0),
             "agentes": por_rol.get(RolUsuario.AGENTE, 0),
             "finales": por_rol.get(RolUsuario.FINAL, 0),

@@ -70,3 +70,5 @@ class EncuestaYaRespondidaError(Exception):
     pass
 class TokenApiInvalidoError(Exception):
     pass
+class AusenciaInvalidaError(Exception):
+    pass

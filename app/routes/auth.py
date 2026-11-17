@@ -1,10 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
 from flask_babel import gettext as _
 from app.services.autenticacion import ServicioAutenticacion, ResultadoLogin
-from app.services.exceptions import ErrorPersistencia
+from app.services.exceptions import (
+    AusenciaInvalidaError,
+    ErrorPersistencia,
+    OperacionNoPermitidaError,
+    UsuarioNoEncontradoError,
+)
 from app.routes.decoradores import requiere_login, requiere_admin
 from sqlalchemy import select
 from app.services.metricas import ServicioMetricas
+from app.services.disponibilidad import ServicioDisponibilidad
 from app.models.usuario import Usuario
 from app.services.tickets import ServicioTickets
 from app.services.gestor_sla import GestorSLA
@@ -13,6 +19,7 @@ from app.extensions import db
 auth_bp = Blueprint("auth", __name__)
 from app.models.enum import RolUsuario, NivelUsuario, Categoria
 from app.services.doble_factor import ServicioDobleFactor
+from datetime import datetime
 import time
 
 
@@ -181,7 +188,44 @@ def perfil():
         nombre_foto=nombre_foto,
         metricas_agente=metricas_agente,
         comparativa_area=comparativa_area,
+        esta_disponible=ServicioDisponibilidad.esta_disponible(usuario),
+        cobertura_area=(ServicioDisponibilidad.cobertura_area(usuario.area_soporte)
+                        if usuario.rol == RolUsuario.AGENTE and usuario.area_soporte is not None else None),
     )
+
+
+def _fecha_hora(valor):
+    """Lee un <input type="datetime-local"> (formato 2026-11-20T08:00)."""
+    if not valor:
+        return None
+    try:
+        return datetime.strptime(valor, "%Y-%m-%dT%H:%M")
+    except ValueError:
+        raise AusenciaInvalidaError(_("La fecha indicada no es válida"))
+
+
+@auth_bp.route("/perfil/disponibilidad", methods=["POST"])
+@requiere_login
+def cambiar_disponibilidad():
+    usuario_id = session["usuario_id"]
+
+    try:
+        if request.form.get("accion") == "disponible":
+            ServicioDisponibilidad.marcar_disponible(usuario_id, usuario_id)
+            flash(_("Quedaste marcado como disponible"), "success")
+        else:
+            desde = _fecha_hora(request.form.get("desde"))
+            hasta = _fecha_hora(request.form.get("hasta"))
+            ServicioDisponibilidad.marcar_ausente(
+                usuario_id, usuario_id, desde=desde, hasta=hasta,
+                motivo=request.form.get("motivo"),
+            )
+            flash(_("Quedaste marcado como ausente. No apareceras en sugerencias ni "
+                    "como destino de transferencias mientras dure la ausencia."), "success")
+    except (AusenciaInvalidaError, OperacionNoPermitidaError, UsuarioNoEncontradoError, ErrorPersistencia) as e:
+        flash(str(e), "danger")
+
+    return redirect(url_for("auth.perfil"))
 
 @auth_bp.route("/perfil/cambiar-contrasena", methods=["POST"])
 @requiere_login

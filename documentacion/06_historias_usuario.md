@@ -25,6 +25,12 @@
 23. Como administrador, quiero gestionar las cuentas (rol, área, nivel, activación, desbloqueo, recuperación, verificación en dos pasos) desde una sola pantalla.
 24. Como usuario, quiero integrar el sistema con mis scripts mediante una API con tokens personales que pueda revocar.
 25. Como usuario final, quiero que nadie fuera de mi ticket (salvo el personal autorizado) pueda leerlo.
+26. Como agente, quiero declararme ausente con un rango de fechas, para que el sistema deje de proponerme y de transferirme tickets mientras no estoy.
+27. Como agente, quiero que los avisos de vencimiento de los tickets de mi área que nadie ha tomado me lleguen a mí y no solo al solicitante, para poder reaccionar antes de que venzan.
+28. Como administrador, quiero que los avisos de un área que se quedó sin agentes disponibles lleguen a mí, para que ningún ticket espere a alguien que no está.
+29. Como agente, quiero ver la cola de mi área ordenada por cercanía al vencimiento y no solo por prioridad, para no dejar pasar un ticket medio que vence antes que uno alto recién creado.
+30. Como administrador, quiero que el sistema me escale un ticket que lleva demasiado tiempo sin que nadie lo tome, para decidir yo a quién asignarlo.
+31. Como administrador, quiero una vista de los tickets sin asignar y de la cobertura de cada área, para ver dónde se está cayendo el modelo de autoservicio.
 
 ## Casos de uso principales
 
@@ -33,7 +39,7 @@
 | CU-01 | Usuario final | Crear un nuevo ticket describiendo una incidencia. | Implementado |
 | CU-02 | Sistema | Clasificar, enrutar y priorizar automáticamente el ticket recién creado. | Implementado |
 | CU-03 | Sistema | Calcular el SLA y emitir recordatorios de vencimiento, visibles tanto para el agente como para el creador del ticket. | Implementado |
-| CU-04 | Agente | Consultar los tickets de su área, ordenados por prioridad, con filtros por estado/prioridad/fecha. | Implementado |
+| CU-04 | Agente | Consultar los tickets de su área, ordenados por cercanía al vencimiento o por prioridad, con filtros por estado/prioridad/fecha. | Implementado |
 | CU-05 | Agente | Actualizar el estado de un ticket y agregar comentarios. | Implementado |
 | CU-06 | Administrador | Consultar el registro de auditoría de accesos y acciones, con filtros y paginación. | Implementado |
 | CU-07 | Administrador | Consultar el panel de métricas del sistema, con drill-down a la lista de tickets detrás de cada número. | Implementado |
@@ -48,3 +54,7 @@
 | CU-16 | Administrador | Consultar la analítica del servicio y exportarla a CSV. | Implementado |
 | CU-17 | Administrador | Gestionar las cuentas de usuario. | Implementado |
 | CU-18 | Cualquier usuario autenticado | Crear y revocar tokens personales y consumir la API REST. | Implementado |
+| CU-19 | Agente / Administrador | Declarar la ausencia de un agente con una ventana de fechas y un motivo, y levantarla. | Implementado |
+| CU-20 | Sistema | Avisar del vencimiento de un ticket sin dueño a los agentes disponibles del área, y al administrador si el área no tiene cobertura. | Implementado |
+| CU-21 | Sistema | Escalar al administrador un ticket que consume más del 50 % de su plazo sin agente asignado. | Implementado |
+| CU-22 | Administrador | Consultar los tickets sin asignar ordenados por riesgo y la cobertura de agentes por área. | Implementado |

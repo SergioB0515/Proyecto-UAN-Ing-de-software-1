@@ -1,5 +1,27 @@
 # Changelog
 
+## 3.1.0
+
+### Nuevo
+- **Disponibilidad del agente**: cada agente puede declararse ausente con una ventana de fechas (desde / hasta, o hasta nuevo aviso) y un motivo opcional, desde su propio perfil o desde la ficha del agente en `/admin/usuarios`. La disponibilidad se deriva siempre de esa ventana, no de una bandera aparte. Un agente ausente deja de aparecer en las sugerencias de asignación, deja de ser destino válido de una transferencia y deja de contar para la cobertura de su área; los tickets que ya tenía asignados no se tocan.
+- **Alertas de SLA al área**: cuando un ticket próximo a vencer o vencido no tiene agente asignado, el aviso va a los agentes activos y disponibles de su área. Si el área se quedó sin nadie disponible, el aviso sube al administrador. Antes, un ticket sin dueño solo avisaba a su creador y el equipo de soporte no se enteraba.
+- **Cola priorizada por riesgo**: la vista de tickets del área se ordena por defecto por cercanía al vencimiento (porcentaje de SLA consumido) en vez de solo por prioridad, con el orden anterior disponible en el selector *Orden*. La tabla muestra el SLA consumido de cada ticket. El agente sigue eligiendo qué tomar; el sistema solo deja de esconder lo urgente.
+- **Escalamiento por edad sin asignar**: un ticket que consume más del 50 % de su plazo sin agente se escala una sola vez al administrador (`UMBRAL_SIN_ASIGNAR` en `app/services/gestor_sla.py`).
+- **Vista de cobertura** (`/admin/cobertura`): tickets sin asignar ordenados por SLA consumido, cobertura de cada área (agentes activos, disponibles, ausentes y trabajo pendiente) y lista de agentes ausentes.
+- Filtro **Agentes ausentes** en `/admin/usuarios` y distintivo de ausencia en el listado y en la ficha del agente.
+
+### Cambios
+- `app/services/disponibilidad.py`: servicio nuevo con la regla de disponibilidad, el filtro SQL equivalente y los conteos de cobertura.
+- `ServicioMetricas.sugerir_agente` y `detalle_sugerencia_agente` ya no proponen agentes ausentes.
+- `ServicioTickets.listar_tickets_por_area` acepta `orden="prioridad"` (comportamiento histórico, por defecto en el servicio) u `orden="riesgo"`.
+- Columnas nuevas: `usuarios.ausente_desde`, `usuarios.ausente_hasta`, `usuarios.motivo_ausencia` y `tickets.notificado_sin_asignar`. Las añade `python init_db.py` sin pérdida de datos.
+- Acciones de auditoría nuevas: `marcar_ausente` y `marcar_disponible`.
+- 30 pruebas nuevas en `tests/test_disponibilidad.py`.
+
+### Pendiente
+- `messages.pot` no se regeneró: las 64 cadenas nuevas se anexaron traducidas a `app/translations/en/LC_MESSAGES/messages.po`. Conviene correr `pybabel extract -F babel.cfg -o messages.pot .` al cerrar la versión.
+- El caso de un ticket **ya asignado** a un agente que después se marca ausente sigue avisando solo a ese agente. Es el mismo hueco que esta versión cerró para los tickets sin dueño, pero no estaba en el alcance acordado.
+
 ## 3.0.0
 
 ### Nuevo

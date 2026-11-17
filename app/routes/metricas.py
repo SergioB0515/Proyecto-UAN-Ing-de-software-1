@@ -2,6 +2,13 @@ from flask import Blueprint, render_template, Response, request
 from flask_babel import gettext as _
 from app.traducciones import etiqueta
 from app.services.metricas import ServicioMetricas
+from app.services.disponibilidad import ServicioDisponibilidad
+from app.services.gestor_sla import GestorSLA, UMBRAL_SIN_ASIGNAR
+from app.models.ticket import Ticket
+from app.models.enum import EstadoTicket
+from app.extensions import db
+from sqlalchemy import select
+from datetime import datetime
 from app.models.enum import Categoria
 from app.routes.decoradores import requiere_admin
 import csv
@@ -104,3 +111,42 @@ def exportar_metricas():
             headers={"Content-Disposition": "attachment; filename=metricas.csv"}
         )
         
+
+
+@metricas_bp.route("/admin/cobertura")
+@requiere_admin
+def cobertura():
+    """Donde se esta cayendo el modelo pull: tickets sin dueño y areas sin gente.
+
+    Dos listas: los tickets abiertos que nadie ha tomado, ordenados por cuanto
+    de su SLA ya se consumieron, y la cobertura de cada area (agentes activos,
+    disponibles y ausentes).
+    """
+    ahora = datetime.now()
+
+    sin_asignar = db.session.execute(
+        select(Ticket).where(
+            Ticket.estado != EstadoTicket.CERRADO,
+            Ticket.agente_id.is_(None),
+        )
+    ).scalars().all()
+    sin_asignar = sorted(sin_asignar, key=lambda t: GestorSLA.clave_riesgo(t, ahora))
+
+    consumo_por_ticket = {t.id: GestorSLA.consumo_sla(t, ahora) for t in sin_asignar}
+
+    cobertura_areas = ServicioDisponibilidad.cobertura_todas_las_areas(ahora)
+    # Un area sin nadie disponible solo es un problema si tiene trabajo esperando.
+    pendientes_por_area = {}
+    for ticket in sin_asignar:
+        pendientes_por_area[ticket.categoria] = pendientes_por_area.get(ticket.categoria, 0) + 1
+    for fila in cobertura_areas:
+        fila["sin_asignar"] = pendientes_por_area.get(fila["area"], 0)
+
+    return render_template(
+        "cobertura.html",
+        sin_asignar=sin_asignar,
+        consumo_por_ticket=consumo_por_ticket,
+        cobertura_areas=cobertura_areas,
+        ausentes=ServicioDisponibilidad.ausentes(ahora),
+        umbral_sin_asignar=UMBRAL_SIN_ASIGNAR,
+    )

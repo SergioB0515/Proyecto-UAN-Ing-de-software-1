@@ -43,7 +43,8 @@
 {% set modulos = [
     {'id': 'panel', 'texto': _('Panel'), 'ico': 'panel', 'bps': ['metricas', 'analitica'], 'items': [
         {'ep': 'metricas.mostrar_metricas', 'url': url_for('metricas.mostrar_metricas'), 'texto': _('Resumen'), 'ico': 'panel'},
-        {'ep': 'analitica.panel', 'url': url_for('analitica.panel'), 'texto': _('Analítica'), 'ico': 'pulso'}]},
+        {'ep': 'analitica.panel', 'url': url_for('analitica.panel'), 'texto': _('Analítica'), 'ico': 'pulso'},
+        {'ep': 'metricas.cobertura', 'url': url_for('metricas.cobertura'), 'texto': _('Cobertura'), 'ico': 'alerta'}]},
     {'id': 'tickets', 'texto': _('Tickets'), 'ico': 'tickets', 'bps': ['tickets', 'colaboracion'], 'eps': ['auth.dashboard'], 'cuenta': pm.get('revision', 0), 'items': [
         {'ep': 'tickets.listar_admin', 'url': url_for('tickets.listar_admin'), 'texto': _('Todos los tickets'), 'ico': 'tickets'},
         {'ep': 'auth.dashboard', 'url': url_for('auth.dashboard'), 'texto': _('Mis tickets'), 'ico': 'bandeja'},
@@ -337,12 +338,14 @@
         {"t": _('Log de auditoría'), "u": url_for('auditoria.mostrar_auditoria'), "g": "nav", "i": "historial"},
         {"t": _('Palabras clave'), "u": url_for('palabras_clave.listar'), "g": "nav", "i": "etiqueta"},
         {"t": _('Vencidos actualmente'), "u": url_for('tickets.listar_admin', vista='vencidos_actuales'), "g": "nav", "i": "alerta"},
-        {"t": _('Próximos a vencer'), "u": url_for('tickets.listar_admin', vista='proximos_actuales'), "g": "nav", "i": "reloj"}
+        {"t": _('Próximos a vencer'), "u": url_for('tickets.listar_admin', vista='proximos_actuales'), "g": "nav", "i": "reloj"},
+        {"t": _('Cobertura y tickets sin asignar'), "u": url_for('metricas.cobertura'), "g": "nav", "i": "alerta"}
     ]) %}
     {% if config.MODO_DEMO %}{% set _b = items_paleta.append({"t": _('Modo demo'), "u": url_for('demo.panel'), "g": "nav", "i": "rayo"}) %}{% endif %}
 {% elif rol == 'agente' %}
     {% set _a = items_paleta.extend([
         {"t": _('Mi área'), "u": url_for('tickets.listar_por_area', area=session.get('area_soporte')), "g": "nav", "i": "capas"},
+        {"t": _('Mi disponibilidad'), "u": url_for('auth.perfil') + '#disponibilidad', "g": "acc", "i": "calendario"},
         {"t": _('Mis tickets'), "u": url_for('auth.dashboard'), "g": "nav", "i": "bandeja"},
         {"t": _('Crear ticket'), "u": url_for('tickets.crear'), "g": "nav", "i": "mas"},
         {"t": _('Solicitudes'), "u": url_for('solicitudes.pendientes'), "g": "nav", "i": "transferir"},

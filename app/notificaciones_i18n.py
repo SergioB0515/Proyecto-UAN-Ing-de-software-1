@@ -31,6 +31,10 @@ COMENTARIO_NUEVO_AGENTE = "El solicitante respondió en el ticket #%(id)s"
 ACTIVIDAD_SEGUIDOR = "Nueva actividad en el ticket #%(id)s que sigues"
 NOTA_INTERNA_NUEVA = "Nueva nota interna en el ticket #%(id)s"
 ENCUESTA_RECIBIDA = "Recibiste una calificación de satisfacción en el ticket #%(id)s"
+SLA_PROXIMO_AREA = "El ticket #%(id)s de tu área está próximo a vencer y nadie lo ha tomado"
+SLA_VENCIDO_AREA = "El ticket #%(id)s de tu área está vencido y nadie lo ha tomado"
+AREA_SIN_COBERTURA = "El ticket #%(id)s está por vencer y su área no tiene agentes disponibles"
+SIN_ASIGNAR_ENVEJECIDO = "El ticket #%(id)s lleva demasiado tiempo sin agente asignado"
 
 
 def _catalogo_traducido():
@@ -64,6 +68,10 @@ def _catalogo_traducido():
         ACTIVIDAD_SEGUIDOR: _("Nueva actividad en el ticket #%(id)s que sigues", id=m),
         NOTA_INTERNA_NUEVA: _("Nueva nota interna en el ticket #%(id)s", id=m),
         ENCUESTA_RECIBIDA: _("Recibiste una calificación de satisfacción en el ticket #%(id)s", id=m),
+        SLA_PROXIMO_AREA: _("El ticket #%(id)s de tu área está próximo a vencer y nadie lo ha tomado", id=m),
+        SLA_VENCIDO_AREA: _("El ticket #%(id)s de tu área está vencido y nadie lo ha tomado", id=m),
+        AREA_SIN_COBERTURA: _("El ticket #%(id)s está por vencer y su área no tiene agentes disponibles", id=m),
+        SIN_ASIGNAR_ENVEJECIDO: _("El ticket #%(id)s lleva demasiado tiempo sin agente asignado", id=m),
     }
 
 

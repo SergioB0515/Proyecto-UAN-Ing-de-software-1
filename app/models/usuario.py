@@ -13,3 +13,6 @@ class Usuario(db.Model):
     bloqueado_hasta = db.Column(db.DateTime, nullable=True)
     activo = db.Column(db.Boolean, nullable=False, default=True, server_default=db.true())
     ultimo_acceso = db.Column(db.DateTime, nullable=True)
+    ausente_desde = db.Column(db.DateTime, nullable=True)
+    ausente_hasta = db.Column(db.DateTime, nullable=True)
+    motivo_ausencia = db.Column(db.String(120), nullable=True)

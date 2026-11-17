@@ -25,6 +25,10 @@ PRIORIDAD_BASE_POR_CATEGORIA={
     Categoria.SOFTWARE : Prioridad.BAJA,
     Categoria.OTROS : Prioridad.BAJA
 }
+ORDEN_POR_PRIORIDAD = "prioridad"
+ORDEN_POR_RIESGO = "riesgo"
+ORDENES_VALIDOS = (ORDEN_POR_PRIORIDAD, ORDEN_POR_RIESGO)
+
 ORDEN_PRIORIDAD={
     Prioridad.ALTA : 0,
     Prioridad.MEDIA : 1,
@@ -78,7 +82,16 @@ class ServicioTickets:
         return nuevo_ticket
     
     @staticmethod
-    def listar_tickets_por_area(area, estado=None, prioridad=None, fecha_desde=None, fecha_hasta=None, agente_id_propio=None):
+    def listar_tickets_por_area(area, estado=None, prioridad=None, fecha_desde=None, fecha_hasta=None,
+                                agente_id_propio=None, orden=ORDEN_POR_PRIORIDAD):
+        """Tickets de un area, ordenados por prioridad o por riesgo de vencimiento.
+
+        orden=ORDEN_POR_PRIORIDAD mantiene el orden historico (alta, media, baja).
+        orden=ORDEN_POR_RIESGO pone primero lo que esta mas cerca de vencer, que es
+        lo que el agente necesita ver cuando trabaja la cola: la prioridad sola
+        esconde un ticket medio que vence en diez minutos detras de uno alto que
+        acaba de entrar.
+        """
         query = select(Ticket).where(Ticket.categoria == area)
 
         if estado is not None:
@@ -97,6 +110,10 @@ class ServicioTickets:
             query = query.where(or_(Ticket.agente_id.is_(None), Ticket.agente_id == agente_id_propio))
 
         tickets_del_area = db.session.execute(query).scalars().all()
+
+        if orden == ORDEN_POR_RIESGO:
+            ahora = datetime.now()
+            return sorted(tickets_del_area, key=lambda ticket: GestorSLA.clave_riesgo(ticket, ahora))
 
         return sorted(tickets_del_area, key=lambda ticket: ORDEN_PRIORIDAD[ticket.prioridad])
         
@@ -120,6 +137,7 @@ class ServicioTickets:
             if agente_id is not None:
                 ticket.agente_id = agente_id
                 ticket.fecha_asignacion = datetime.now()
+                ticket.notificado_sin_asignar = False
         
         estado_anterior=ticket.estado
         ticket.estado = nuevo_estado
@@ -171,6 +189,7 @@ class ServicioTickets:
         agente_anterior=ticket.agente_id
         ticket.agente_id = nuevo_agente_id
         ticket.fecha_asignacion = datetime.now()
+        ticket.notificado_sin_asignar = False
         try:
             db.session.add(ticket)
             db.session.commit()

@@ -3,7 +3,7 @@ from flask_babel import gettext as _
 from app.traducciones import etiqueta
 from sqlalchemy import select,or_,and_
 from app.extensions import db
-from app.services.tickets import ServicioTickets, TRANSICIONES_VALIDAS
+from app.services.tickets import ServicioTickets, TRANSICIONES_VALIDAS, ORDEN_POR_PRIORIDAD, ORDEN_POR_RIESGO, ORDENES_VALIDOS
 from app.services.solicitud_transferencia import ServicioSolicitudesTransferencia
 from app.services.exceptions import TransicionInvalidaError, AgenteYaAsignadoError, ComentarioVacioError, TicketNoEncontradoError, TicketNoEnProgresoError, ErrorPersistencia, ClasificacionYaConfirmadaError
 from app.services.metricas import ServicioMetricas
@@ -19,6 +19,7 @@ import csv
 import io
 from openpyxl import Workbook
 from app.services.permisos import ServicioPermisos
+from app.services.disponibilidad import ServicioDisponibilidad
 from app.services.adjuntos import ServicioAdjuntos, MAX_ADJUNTOS_POR_TICKET, TAMANO_MAXIMO_BYTES, TIPOS_PERMITIDOS, formato_tamano
 from app.services.seguimiento import ServicioSeguimiento
 from app.services.encuestas import ServicioEncuestas
@@ -110,6 +111,12 @@ def listar_por_area(area):
         except ValueError:
             fecha_hasta = None
 
+    # La cola del agente se ordena por riesgo de vencimiento por defecto; el
+    # orden historico por prioridad sigue disponible con ?orden=prioridad.
+    orden = request.args.get("orden")
+    if orden not in ORDENES_VALIDOS:
+        orden = ORDEN_POR_RIESGO
+
     tickets = ServicioTickets.listar_tickets_por_area(
         categoria,
         estado=estado,
@@ -117,15 +124,16 @@ def listar_por_area(area):
         fecha_desde=fecha_desde,
         fecha_hasta=fecha_hasta,
         agente_id_propio=None if rol == RolUsuario.ADMIN else session["usuario_id"],
+        orden=orden,
     )
 
     transiciones_por_ticket = {
         t.id: [e.value for e in TRANSICIONES_VALIDAS[t.estado]] for t in tickets
     }
 
-    agentes_del_area = db.session.execute(
-        select(Usuario).where(Usuario.area_soporte == categoria, Usuario.activo.is_(True))
-    ).scalars().all()
+    # Para asignar y reasignar solo se ofrecen los agentes disponibles hoy.
+    agentes_disponibles = ServicioDisponibilidad.agentes_disponibles(categoria)
+    cobertura = ServicioDisponibilidad.cobertura_area(categoria)
 
     vencidos, proximos = GestorSLA.verificar_vencimientos()
     ids_vencidos = {t.id for t in vencidos}
@@ -137,14 +145,20 @@ def listar_por_area(area):
     "estado": estado_raw,
     "fecha_desde": fecha_desde_raw,
     "fecha_hasta": fecha_hasta_raw,
+    "orden": orden,
 }
+
+    ahora = datetime.now()
+    consumo_por_ticket = {t.id: GestorSLA.consumo_sla(t, ahora) for t in tickets}
 
     return render_template(
         "tickets_por_area.html",
         tickets=tickets,
         area=area,
         transiciones_por_ticket=transiciones_por_ticket,
-        agentes_del_area=agentes_del_area,
+        agentes_disponibles=agentes_disponibles,
+        cobertura=cobertura,
+        consumo_por_ticket=consumo_por_ticket,
         ids_vencidos=ids_vencidos,
         ids_proximos=ids_proximos,
         filtros_actuales=filtros_actuales,
@@ -282,13 +296,7 @@ def detalle(ticket_id):
     nombres_por_id = {u.id: u.nombre for u in personas}
     personal_ids = {u.id for u in personas if u.rol != RolUsuario.FINAL}
 
-    agentes_del_area = db.session.execute(
-        select(Usuario).where(
-            Usuario.area_soporte == ticket.categoria,
-            Usuario.rol == RolUsuario.AGENTE,
-            Usuario.activo.is_(True),
-        )
-    ).scalars().all()
+    agentes_del_area = ServicioDisponibilidad.agentes_disponibles(ticket.categoria)
 
     rol = session.get("rol")
     puede_gestionar = ServicioPermisos.puede_gestionar_ticket(usuario, ticket)

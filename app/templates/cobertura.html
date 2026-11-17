@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Cobertura y tickets sin asignar') }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>{{ _('Cobertura') }}</h2>
+        <p class="text-muted mb-0">
+            {{ _('Los tickets que nadie ha tomado y las áreas que se quedaron sin agentes disponibles.') }}
+        </p>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="meta-label">{{ _('Tickets sin asignar') }}</div>
+                <div class="display-6 mb-0">{{ sin_asignar | length }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="meta-label">{{ _('Áreas sin cobertura con trabajo pendiente') }}</div>
+                <div class="display-6 mb-0">
+                    {{ cobertura_areas | selectattr('sin_cobertura') | selectattr('sin_asignar') | list | length }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="meta-label">{{ _('Agentes ausentes hoy') }}</div>
+                <div class="display-6 mb-0">{{ ausentes | length }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5 class="mb-2">{{ _('Sin asignar, por cercanía al vencimiento') }}</h5>
+<p class="text-muted small">
+    {{ _('Al pasar el %(pct)s%% de su plazo sin agente, el ticket se escala al administrador una sola vez.',
+          pct=(umbral_sin_asignar * 100) | round(0) | int) }}
+</p>
+
+{% if not sin_asignar %}
+<div class="empty-state mb-4">
+    <p class="mb-0">{{ _('Todos los tickets abiertos tienen un agente asignado.') }}</p>
+</div>
+{% else %}
+<div class="table-card mb-4">
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>{{ _('ID') }}</th>
+            <th>{{ _('Texto') }}</th>
+            <th>{{ _('Área') }}</th>
+            <th>{{ _('Prioridad') }}</th>
+            <th>{{ _('SLA consumido') }}</th>
+            <th>{{ _('Fecha límite') }}</th>
+            <th>{{ _('Escalado') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in sin_asignar %}
+        {% set consumo = consumo_por_ticket.get(t.id) %}
+        {% set pct = ((consumo * 100) | round(0) | int) if consumo is not none else none %}
+        <tr data-cat class="cat-{{ t.categoria.value }} {% if pct is not none and pct >= 100 %}table-danger{% elif pct is not none and pct >= 80 %}table-warning{% endif %}">
+            <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
+            <td>{{ t.texto }}</td>
+            <td>{{ t.categoria.value | etiqueta }}</td>
+            <td><span class="badge-pill prioridad-{{ t.prioridad.value }}">{{ t.prioridad.value | etiqueta }}</span></td>
+            <td>
+                {% if pct is none %}
+                <span class="text-muted">{{ _('sin datos') }}</span>
+                {% else %}
+                <span class="{% if pct >= 100 %}text-danger{% elif pct >= 80 %}text-warning{% else %}text-muted{% endif %} fw-semibold">{{ pct }}%</span>
+                {% endif %}
+            </td>
+            <td class="mono text-soft-mono">{{ t.fecha_limite | fecha }}</td>
+            <td>
+                {% if t.notificado_sin_asignar %}
+                <span class="badge-pill estado-en_progreso">{{ _('Sí') }}</span>
+                {% else %}
+                <span class="text-muted">—</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+<h5 class="mb-2">{{ _('Cobertura por área') }}</h5>
+<div class="table-card mb-4">
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>{{ _('Área') }}</th>
+            <th>{{ _('Agentes activos') }}</th>
+            <th>{{ _('Disponibles') }}</th>
+            <th>{{ _('Ausentes') }}</th>
+            <th>{{ _('Sin asignar') }}</th>
+            <th>{{ _('Estado') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for fila in cobertura_areas %}
+        <tr class="{% if fila.sin_cobertura and fila.sin_asignar %}table-danger{% elif fila.sin_cobertura %}table-warning{% endif %}">
+            <td>
+                <a href="{{ url_for('tickets.listar_por_area', area=fila.area.value) }}">{{ fila.area.value | etiqueta }}</a>
+            </td>
+            <td class="mono">{{ fila.activos }}</td>
+            <td class="mono">{{ fila.disponibles }}</td>
+            <td class="mono">{{ fila.ausentes }}</td>
+            <td class="mono">{{ fila.sin_asignar }}</td>
+            <td>
+                {% if fila.activos == 0 %}
+                <span class="badge-pill estado-en_progreso">{{ _('Sin agentes asignados al área') }}</span>
+                {% elif fila.sin_cobertura and fila.sin_asignar %}
+                <span class="badge-pill prioridad-alta">{{ _('Sin cobertura con trabajo pendiente') }}</span>
+                {% elif fila.sin_cobertura %}
+                <span class="badge-pill prioridad-media">{{ _('Sin cobertura') }}</span>
+                {% else %}
+                <span class="badge-pill estado-abierto">{{ _('Cubierta') }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<h5 class="mb-2">{{ _('Agentes ausentes') }}</h5>
+{% if not ausentes %}
+<div class="empty-state">
+    <p class="mb-0">{{ _('Ningún agente está marcado como ausente.') }}</p>
+</div>
+{% else %}
+<div class="table-card">
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>{{ _('Agente') }}</th>
+            <th>{{ _('Área') }}</th>
+            <th>{{ _('Desde') }}</th>
+            <th>{{ _('Hasta') }}</th>
+            <th>{{ _('Motivo') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in ausentes %}
+        <tr>
+            <td><a href="{{ url_for('usuarios.detalle', usuario_id=a.id) }}">{{ a.nombre }}</a></td>
+            <td>{{ a.area_soporte.value | etiqueta if a.area_soporte else '—' }}</td>
+            <td class="mono text-soft-mono">{{ a.ausente_desde | fecha }}</td>
+            <td class="mono text-soft-mono">
+                {% if a.ausente_hasta %}{{ a.ausente_hasta | fecha }}{% else %}{{ _('nuevo aviso') }}{% endif %}
+            </td>
+            <td>{{ a.motivo_ausencia or '—' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

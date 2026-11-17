@@ -8,8 +8,10 @@ def test_detecta_y_agrega_columnas_faltantes(tmp_path):
     with motor.begin() as c:
         c.execute(text("CREATE TABLE usuarios (id INTEGER PRIMARY KEY, nombre VARCHAR(100))"))
         c.execute(text("CREATE TABLE comentarios (id INTEGER PRIMARY KEY, texto VARCHAR)"))
+        c.execute(text("CREATE TABLE tickets (id INTEGER PRIMARY KEY, texto VARCHAR)"))
         c.execute(text("INSERT INTO usuarios (nombre) VALUES ('Ana')"))
         c.execute(text("INSERT INTO comentarios (texto) VALUES ('hola')"))
+        c.execute(text("INSERT INTO tickets (texto) VALUES ('no hay red')"))
 
     faltantes = columnas_faltantes(motor)
     assert {(t, col) for t, col, _ in faltantes} == {(t, col) for t, col, _ in COLUMNAS_NUEVAS}
@@ -22,4 +24,5 @@ def test_detecta_y_agrega_columnas_faltantes(tmp_path):
     with motor.connect() as c:
         assert c.execute(text("SELECT activo FROM usuarios")).scalar() == 1
         assert c.execute(text("SELECT interno FROM comentarios")).scalar() == 0
+        assert c.execute(text("SELECT notificado_sin_asignar FROM tickets")).scalar() == 0
     assert "ultimo_acceso" in {col["name"] for col in inspect(motor).get_columns("usuarios")}

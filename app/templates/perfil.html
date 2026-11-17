@@ -42,6 +42,69 @@
             </div>
         </div>
 
+        {% if usuario.rol.value == "agente" %}
+        <div class="card mb-4" id="disponibilidad">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <h5 class="card-title mb-1">{{ _('Mi disponibilidad') }}</h5>
+                        <p class="text-muted small mb-0">
+                            {{ _('Mientras estés ausente no apareces en las sugerencias de asignación, ni como destino de transferencias, ni cuentas para la cobertura de tu área.') }}
+                        </p>
+                    </div>
+                    <span class="badge-pill {% if esta_disponible %}estado-abierto{% else %}estado-en_progreso{% endif %}">
+                        {% if esta_disponible %}{{ _('Disponible') }}{% else %}{{ _('Ausente') }}{% endif %}
+                    </span>
+                </div>
+
+                {% if not esta_disponible %}
+                <p class="mb-2 small">
+                    <span class="meta-label">{{ _('Desde') }}</span> {{ usuario.ausente_desde | fecha }}
+                    &middot;
+                    <span class="meta-label">{{ _('Hasta') }}</span>
+                    {% if usuario.ausente_hasta %}{{ usuario.ausente_hasta | fecha }}{% else %}{{ _('nuevo aviso') }}{% endif %}
+                </p>
+                {% if usuario.motivo_ausencia %}
+                <p class="mb-3 small text-muted">{{ usuario.motivo_ausencia }}</p>
+                {% endif %}
+                <form method="POST" action="{{ url_for('auth.cambiar_disponibilidad') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="accion" value="disponible">
+                    <button type="submit" class="btn btn-primary btn-sm">{{ _('Ya volví, marcarme disponible') }}</button>
+                </form>
+                {% else %}
+                {% if cobertura_area and cobertura_area.disponibles == 1 %}
+                <div class="alert alert-warning py-2 small mb-3 mt-2">
+                    {{ _('Eres el único agente disponible en tu área. Si te marcas ausente, las alertas de SLA de tu área pasarán al administrador.') }}
+                </div>
+                {% endif %}
+                <form method="POST" action="{{ url_for('auth.cambiar_disponibilidad') }}" class="row g-2 mt-2">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="accion" value="ausente">
+                    <div class="col-sm-6">
+                        <label class="form-label small">{{ _('Desde') }}</label>
+                        <input type="datetime-local" name="desde" class="form-control form-control-sm">
+                        <div class="form-text">{{ _('Si lo dejas vacío, cuenta desde ahora.') }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label small">{{ _('Hasta') }}</label>
+                        <input type="datetime-local" name="hasta" class="form-control form-control-sm">
+                        <div class="form-text">{{ _('Vacío = hasta nuevo aviso.') }}</div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label small">{{ _('Motivo (opcional)') }}</label>
+                        <input type="text" name="motivo" maxlength="120" class="form-control form-control-sm"
+                               placeholder="{{ _('vacaciones, capacitación, incapacidad...') }}">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">{{ _('Marcarme ausente') }}</button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title mb-3">{{ _('Cambiar nombre') }}</h5>

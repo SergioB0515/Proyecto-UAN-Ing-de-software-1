@@ -6,6 +6,10 @@ COLUMNAS_NUEVAS = [
     ("usuarios", "activo", {"sqlite": "BOOLEAN NOT NULL DEFAULT 1", "default": "BOOLEAN NOT NULL DEFAULT TRUE"}),
     ("usuarios", "ultimo_acceso", {"sqlite": "DATETIME", "default": "TIMESTAMP"}),
     ("comentarios", "interno", {"sqlite": "BOOLEAN NOT NULL DEFAULT 0", "default": "BOOLEAN NOT NULL DEFAULT FALSE"}),
+    ("usuarios", "ausente_desde", {"sqlite": "DATETIME", "default": "TIMESTAMP"}),
+    ("usuarios", "ausente_hasta", {"sqlite": "DATETIME", "default": "TIMESTAMP"}),
+    ("usuarios", "motivo_ausencia", {"sqlite": "VARCHAR(120)", "default": "VARCHAR(120)"}),
+    ("tickets", "notificado_sin_asignar", {"sqlite": "BOOLEAN NOT NULL DEFAULT 0", "default": "BOOLEAN NOT NULL DEFAULT FALSE"}),
 ]
 
 

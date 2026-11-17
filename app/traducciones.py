@@ -64,6 +64,8 @@ def _mapa_etiquetas():
         "responder_encuesta": _("Responder encuesta"),
         "crear_token_api": _("Crear token de API"),
         "revocar_token_api": _("Revocar token de API"),
+        "marcar_ausente": _("Marcar agente como ausente"),
+        "marcar_disponible": _("Marcar agente como disponible"),
         "cambio_nombre": _("Cambio de nombre"),
         "solicitar_transferencia": _("Solicitar transferencia"),
         "aceptar_transferencia": _("Aceptar transferencia"),

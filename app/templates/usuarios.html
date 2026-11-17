@@ -46,6 +46,7 @@
         <option value="activos" {% if filtros.estado == 'activos' %}selected{% endif %}>{{ _('Activas') }}</option>
         <option value="bloqueados" {% if filtros.estado == 'bloqueados' %}selected{% endif %}>{{ _('Bloqueadas') }}</option>
         <option value="inactivos" {% if filtros.estado == 'inactivos' %}selected{% endif %}>{{ _('Desactivadas') }}</option>
+        <option value="ausentes" {% if filtros.estado == 'ausentes' %}selected{% endif %}>{{ _('Agentes ausentes') }}</option>
     </select>
     <button class="btn btn-outline-secondary" type="submit">{{ _('Filtrar') }}</button>
 </form>
@@ -80,6 +81,7 @@
             <td class="text-end">
                 {% if not u.activo %}<span class="badge-pill estado-inactivo">{{ _('Desactivada') }}</span>
                 {% elif bloqueado %}<span class="badge-pill sla-proximo">{{ icono('candado', 12) }} {{ _('Bloqueada') }}</span>
+                {% elif u.id in ausentes %}<span class="badge-pill sla-proximo">{{ icono('calendario', 12) }} {{ _('Ausente') }}</span>
                 {% else %}<span class="badge-pill estado-activo">{{ _('Activa') }}</span>{% endif %}
             </td>
         </tr>

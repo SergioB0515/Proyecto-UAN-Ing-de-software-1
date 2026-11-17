@@ -5000,3 +5000,195 @@ msgstr ""
 #~ msgid "Sistema de Tickets"
 #~ msgstr "Ticket requests"
 
+# Disponibilidad de agentes y cobertura de area (v3.1)
+msgid "Al pasar el %(pct)s%% de su plazo sin agente, el ticket se escala al administrador una sola vez."
+msgstr "Once a ticket passes %(pct)s%% of its deadline without an agent, it is escalated to the administrator once."
+
+msgid "Eres el único agente disponible en tu área. Si te marcas ausente, las alertas de SLA de tu área pasarán al administrador."
+msgstr "You are the only available agent in your area. If you mark yourself away, your area's SLA alerts will go to the administrator."
+
+msgid "Los tickets que nadie ha tomado y las áreas que se quedaron sin agentes disponibles."
+msgstr "Tickets nobody has picked up and areas left without available agents."
+
+msgid "Mientras estés ausente no apareces en las sugerencias de asignación, ni como destino de transferencias, ni cuentas para la cobertura de tu área."
+msgstr "While you are away you do not appear in assignment suggestions or as a transfer destination, and you do not count towards your area's coverage."
+
+msgid "Ninguno de los %(n)s agentes de esta área está disponible hoy. Las alertas de SLA de los tickets sin asignar se están enviando al administrador."
+msgstr "None of this area's %(n)s agents is available today. SLA alerts for unassigned tickets are being sent to the administrator."
+
+msgid "Quedaste marcado como ausente. No apareceras en sugerencias ni como destino de transferencias mientras dure la ausencia."
+msgstr "You are now marked as away. You will not appear in suggestions or as a transfer destination while the absence lasts."
+
+msgid "Un agente ausente no aparece en las sugerencias de asignación, ni como destino de transferencias, ni cuenta para la cobertura de su área. Los tickets que ya tiene asignados no se tocan: reasignarlos sigue siendo tu decisión."
+msgstr "An away agent does not appear in assignment suggestions or as a transfer destination, and does not count towards the area's coverage. Tickets already assigned to them are left untouched: reassigning those is still your call."
+
+msgid "%(disp)s de %(tot)s agentes disponibles en el área (%(aus)s ausentes)."
+msgstr "%(disp)s of %(tot)s agents available in the area (%(aus)s away)."
+
+msgid "Agente %(p1)s ausente del %(p2)s al %(p3)s"
+msgstr "Agent %(p1)s away from %(p2)s to %(p3)s"
+
+msgid "Agente %(p1)s ausente desde %(p2)s hasta nuevo aviso"
+msgstr "Agent %(p1)s away from %(p2)s until further notice"
+
+msgid "Agente %(p1)s marcado como disponible"
+msgstr "Agent %(p1)s marked as available"
+
+msgid "Agente marcado como disponible"
+msgstr "Agent marked as available"
+
+msgid "Agentes activos"
+msgstr "Active agents"
+
+msgid "Agentes ausentes hoy"
+msgstr "Agents away today"
+
+msgid "Agentes ausentes"
+msgstr "Agents away"
+
+msgid "Ausencia registrada"
+msgstr "Absence recorded"
+
+msgid "Ausente desde"
+msgstr "Away since"
+
+msgid "Ausente"
+msgstr "Away"
+
+msgid "Ausentes"
+msgstr "Away"
+
+msgid "Cobertura por área"
+msgstr "Coverage by area"
+
+msgid "Cobertura y tickets sin asignar"
+msgstr "Coverage and unassigned tickets"
+
+msgid "Cobertura"
+msgstr "Coverage"
+
+msgid "Cubierta"
+msgstr "Covered"
+
+msgid "Disponibilidad"
+msgstr "Availability"
+
+msgid "Disponible"
+msgstr "Available"
+
+msgid "Disponibles"
+msgstr "Available"
+
+msgid "El agente destinatario está marcado como ausente"
+msgstr "The destination agent is marked as away"
+
+msgid "El motivo no puede superar los %(n)s caracteres"
+msgstr "The reason cannot exceed %(n)s characters"
+
+msgid "El ticket #%(id)s de tu área está próximo a vencer y nadie lo ha tomado"
+msgstr "Ticket #%(id)s in your area is close to breaching its SLA and nobody has picked it up"
+
+msgid "El ticket #%(id)s de tu área está vencido y nadie lo ha tomado"
+msgstr "Ticket #%(id)s in your area has breached its SLA and nobody has picked it up"
+
+msgid "El ticket #%(id)s está por vencer y su área no tiene agentes disponibles"
+msgstr "Ticket #%(id)s is about to breach its SLA and its area has no available agents"
+
+msgid "El ticket #%(id)s lleva demasiado tiempo sin agente asignado"
+msgstr "Ticket #%(id)s has gone too long without an assigned agent"
+
+msgid "Escalado"
+msgstr "Escalated"
+
+msgid "La fecha de regreso debe ser posterior a la de salida"
+msgstr "The return date must be later than the start date"
+
+msgid "La fecha indicada no es válida"
+msgstr "The date given is not valid"
+
+msgid "Marcar agente como ausente"
+msgstr "Mark agent as away"
+
+msgid "Marcar agente como disponible"
+msgstr "Mark agent as available"
+
+msgid "Marcar como ausente"
+msgstr "Mark as away"
+
+msgid "Marcar como disponible"
+msgstr "Mark as available"
+
+msgid "Marcarme ausente"
+msgstr "Mark me away"
+
+msgid "Mi disponibilidad"
+msgstr "My availability"
+
+msgid "Ningún agente está marcado como ausente."
+msgstr "No agent is marked as away."
+
+msgid "No se pudo registrar el regreso"
+msgstr "The return could not be recorded"
+
+msgid "No se pudo registrar la ausencia"
+msgstr "The absence could not be recorded"
+
+msgid "Orden"
+msgstr "Sort"
+
+msgid "Por vencer primero"
+msgstr "Closest to breach first"
+
+msgid "Quedaste marcado como disponible"
+msgstr "You are now marked as available"
+
+msgid "SLA consumido"
+msgstr "SLA used"
+
+msgid "Si lo dejas vacío, cuenta desde ahora."
+msgstr "If you leave it empty, it counts from now."
+
+msgid "Sin agentes asignados al área"
+msgstr "No agents assigned to the area"
+
+msgid "Sin asignar"
+msgstr "Unassigned"
+
+msgid "Sin asignar, por cercanía al vencimiento"
+msgstr "Unassigned, by closeness to breach"
+
+msgid "Sin cobertura con trabajo pendiente"
+msgstr "No coverage with work pending"
+
+msgid "Sin cobertura"
+msgstr "No coverage"
+
+msgid "Solo los agentes tienen estado de disponibilidad"
+msgstr "Only agents have an availability status"
+
+msgid "Tickets sin asignar"
+msgstr "Unassigned tickets"
+
+msgid "Todos los tickets abiertos tienen un agente asignado."
+msgstr "Every open ticket has an agent assigned."
+
+msgid "Vacío = desde ahora."
+msgstr "Empty = from now."
+
+msgid "Vacío = hasta nuevo aviso."
+msgstr "Empty = until further notice."
+
+msgid "Ya volví, marcarme disponible"
+msgstr "I'm back, mark me available"
+
+msgid "hasta"
+msgstr "until"
+
+msgid "nuevo aviso"
+msgstr "further notice"
+
+msgid "vacaciones, capacitación, incapacidad..."
+msgstr "holiday, training, sick leave..."
+
+msgid "Áreas sin cobertura con trabajo pendiente"
+msgstr "Areas with no coverage and work pending"

@@ -83,6 +83,8 @@ class AccionAuditoria(str, Enum):
     RESPONDER_ENCUESTA = "responder_encuesta"
     CREAR_TOKEN_API = "crear_token_api"
     REVOCAR_TOKEN_API = "revocar_token_api"
+    MARCAR_AUSENTE = "marcar_ausente"
+    MARCAR_DISPONIBLE = "marcar_disponible"
     
 class EstadoSolicitudTransferencia(str, Enum):
     PENDIENTE = "pendiente"
