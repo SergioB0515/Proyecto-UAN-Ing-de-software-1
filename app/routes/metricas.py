@@ -4,7 +4,9 @@ from app.traducciones import etiqueta
 from app.services.metricas import ServicioMetricas
 from app.services.disponibilidad import ServicioDisponibilidad
 from app.services.gestor_sla import GestorSLA, UMBRAL_SIN_ASIGNAR
+from app.services.tickets import ServicioTickets
 from app.models.ticket import Ticket
+from app.models.usuario import Usuario
 from app.models.enum import EstadoTicket
 from app.extensions import db
 from sqlalchemy import select
@@ -142,9 +144,26 @@ def cobertura():
     for fila in cobertura_areas:
         fila["sin_asignar"] = pendientes_por_area.get(fila["area"], 0)
 
+    pendientes_cobertura = ServicioTickets.listar_pendientes_cobertura()
+    for ticket in pendientes_cobertura:
+        consumo_por_ticket.setdefault(ticket.id, GestorSLA.consumo_sla(ticket, ahora))
+    agentes_por_area = {
+        categoria: ServicioDisponibilidad.agentes_disponibles(categoria, ahora)
+        for categoria in {t.categoria for t in pendientes_cobertura}
+    }
+    nombres_por_id = {
+        u.id: u.nombre
+        for u in db.session.execute(select(Usuario).where(
+            Usuario.id.in_({t.agente_id for t in pendientes_cobertura if t.agente_id} or {0})
+        )).scalars().all()
+    }
+
     return render_template(
         "cobertura.html",
         sin_asignar=sin_asignar,
+        pendientes_cobertura=pendientes_cobertura,
+        agentes_por_area=agentes_por_area,
+        nombres_por_id=nombres_por_id,
         consumo_por_ticket=consumo_por_ticket,
         cobertura_areas=cobertura_areas,
         ausentes=ServicioDisponibilidad.ausentes(ahora),

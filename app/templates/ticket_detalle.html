@@ -133,6 +133,66 @@
 </div>
 {% endif %}
 
+{% if ticket.estado.value == "en_espera" %}
+<div class="alert alert-info mt-3 mb-0">
+    <p class="mb-2">
+        {{ icono('reloj', 15) }}
+        {{ _('Este ticket está en espera del solicitante: su SLA está detenido y la fecha límite se corre lo que dure la espera.') }}
+    </p>
+    {% if usuario_actual and usuario_actual.id == ticket.creador_id %}
+    <p class="small mb-0">{{ _('En cuanto respondas en la conversación, el ticket vuelve a atención automáticamente.') }}</p>
+    {% elif puede_gestionar %}
+    <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=ticket.id) }}" class="d-flex gap-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="nuevo_estado" value="en_progreso">
+        <input type="hidden" name="origen" value="detalle">
+        <button type="submit" class="btn btn-sm btn-primary">{{ _('Reanudar atención') }}</button>
+    </form>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if ticket.requiere_cobertura %}
+<div class="alert alert-warning mt-3 mb-0">
+    <p class="mb-2">
+        {{ icono('alerta', 15) }}
+        {{ _('El agente asignado a este ticket está ausente. Alguien del área tiene que cubrirlo para que no se venza sin dueño real.') }}
+    </p>
+    {% if puede_cubrir %}
+    <form method="POST" action="{{ url_for('tickets.tomar_cobertura', ticket_id=ticket.id) }}" class="d-flex gap-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="origen" value="detalle">
+        {% if session.get('rol') == 'admin' %}
+        <select name="agente_id" class="form-select form-select-sm" style="max-width: 240px;" required>
+            <option value="">{{ _('-- agente --') }}</option>
+            {% for a in agentes_del_area %}<option value="{{ a.id }}">{{ a.nombre }}</option>{% endfor %}
+        </select>
+        {% endif %}
+        <button type="submit" class="btn btn-sm btn-warning">{{ _('Tomar cobertura') }}</button>
+    </form>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if puede_gestionar and ticket.estado.value == "en_progreso" %}
+<div class="card mt-3">
+    <div class="card-body">
+        <h6 class="card-title mb-1">{{ _('¿Estás esperando algo del solicitante?') }}</h6>
+        <p class="text-muted small mb-2">
+            {{ _('Al dejarlo en espera, el reloj del SLA se detiene y el solicitante recibe aviso por correo. Vuelve a atención en cuanto responda.') }}
+        </p>
+        <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=ticket.id) }}" class="d-flex gap-2 flex-wrap">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="nuevo_estado" value="en_espera">
+            <input type="hidden" name="origen" value="detalle">
+            <input type="text" name="motivo" class="form-control form-control-sm" style="max-width: 420px;" required
+                   placeholder="{{ _('Qué necesitas de quien lo reportó') }}">
+            <button type="submit" class="btn btn-sm btn-outline-primary">{{ _('Poner en espera') }}</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
 {% if ticket.clasificacion_baja_confianza %}
 <div class="alert alert-warning mt-3 mb-0">
     <p class="mb-2">{{ _('La categoría de este ticket fue asignada automáticamente con baja confianza y está pendiente de revisión.') }}</p>
@@ -472,8 +532,18 @@
                 <li><span class="prop-k">{{ icono('usuarios', 15) }}{{ _('Agente') }}</span><span class="prop-v">{% if nombre_agente %}<span class="person"><span class="person-av">{{ iniciales(nombre_agente) }}</span>{{ nombre_agente }}</span>{% else %}<span class="text-muted">—</span>{% endif %}</span></li>
                 <li><span class="prop-k">{{ icono('calendario', 15) }}{{ _('Fecha creación') }}</span><span class="prop-v mono">{{ ticket.fecha_creacion | fecha }}</span></li>
                 <li><span class="prop-k">{{ icono('reloj', 15) }}{{ _('Fecha límite') }}</span><span class="prop-v mono">{{ ticket.fecha_limite | fecha }}</span></li>
+                {% if ticket.sla_segundos_pausados %}
+                <li><span class="prop-k">{{ icono('progreso', 15) }}{{ _('Tiempo en espera') }}</span><span class="prop-v mono">{{ (ticket.sla_segundos_pausados / 3600) | round(1) }} h</span></li>
+                {% endif %}
             </ul>
-            {% if ticket.fecha_limite and ticket.estado.value != 'cerrado' %}
+            {% if ticket.estado.value == 'en_espera' %}
+            <div class="sla-box">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <span class="sla-label">SLA</span>
+                    <span class="sla-value">{{ _('en pausa') }}</span>
+                </div>
+            </div>
+            {% elif ticket.fecha_limite and ticket.estado.value != 'cerrado' %}
             <div class="sla-box" data-sla data-inicio="{{ (ticket.fecha_asignacion or ticket.fecha_creacion).strftime('%Y-%m-%dT%H:%M:%S') }}" data-limite="{{ ticket.fecha_limite.strftime('%Y-%m-%dT%H:%M:%S') }}">
                 <div class="d-flex justify-content-between align-items-baseline mb-2">
                     <span class="sla-label">SLA</span>

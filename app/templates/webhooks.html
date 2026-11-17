@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Webhooks') }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>{{ _('Webhooks') }}</h2>
+        <p class="text-muted mb-0">
+            {{ _('Avisa a otro sistema cuando pasa algo con un ticket. Cada envío es un POST con el cuerpo en JSON, firmado con HMAC-SHA256.') }}
+        </p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        {% if not webhooks %}
+        <div class="empty-state">
+            <p class="mb-0">{{ _('Todavía no hay webhooks registrados.') }}</p>
+        </div>
+        {% else %}
+        <div class="table-card">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>{{ _('Nombre') }}</th>
+                    <th>{{ _('Destino') }}</th>
+                    <th>{{ _('Eventos') }}</th>
+                    <th>{{ _('Último intento') }}</th>
+                    <th>{{ _('Estado') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in webhooks %}
+                <tr class="{% if not w.activo %}table-warning{% endif %}">
+                    <td><a href="{{ url_for('webhooks.detalle', webhook_id=w.id) }}">{{ w.nombre }}</a></td>
+                    <td class="mono text-soft-mono text-truncate" style="max-width: 260px;">{{ w.url }}</td>
+                    <td class="mono">{{ w.lista_eventos | length }}</td>
+                    <td class="mono text-soft-mono">
+                        {% if w.ultimo_intento %}{{ w.ultimo_intento | fecha }}
+                        {% if w.ultimo_codigo %}<span class="text-muted">· {{ w.ultimo_codigo }}</span>{% endif %}
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if w.activo %}
+                        <span class="badge-pill estado-abierto">{{ _('Activo') }}</span>
+                        {% else %}
+                        <span class="badge-pill estado-cerrado">{{ _('Inactivo') }}</span>
+                        {% endif %}
+                        {% if w.fallos_consecutivos %}
+                        <span class="badge-pill prioridad-alta">{{ _('%(n)s fallos', n=w.fallos_consecutivos) }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {% endif %}
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">{{ icono('escudo', 16) }} {{ _('Cómo valida el destino que el aviso es nuestro') }}</h6>
+                <p class="text-muted small">
+                    {{ _('Cada petición lleva la cabecera X-Tickets-Signature con el formato t=<marca de tiempo>,v1=<firma>. La firma es el HMAC-SHA256 de «marca.cuerpo» con el secreto del webhook. La marca de tiempo va dentro de la firma para que una copia capturada no se pueda reenviar después.') }}
+                </p>
+<pre class="mono small mb-0"><code>import hmac, hashlib, time
+
+def valido(cuerpo_crudo, cabecera, secreto, tolerancia=300):
+    partes = dict(p.split("=", 1) for p in cabecera.split(","))
+    base = f"{partes['t']}.{cuerpo_crudo}".encode()
+    esperada = hmac.new(secreto.encode(), base, hashlib.sha256).hexdigest()
+    reciente = abs(time.time() - int(partes["t"])) &lt; tolerancia
+    return reciente and hmac.compare_digest(esperada, partes["v1"])</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">{{ _('Registrar un webhook') }}</h6>
+                <form method="POST" action="{{ url_for('webhooks.listar') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-2">
+                        <label class="form-label">{{ _('Nombre') }}</label>
+                        <input name="nombre" class="form-control" maxlength="80" required
+                               placeholder="{{ _('Ej.: Canal de guardia') }}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">{{ _('URL de destino') }}</label>
+                        <input name="url" type="url" class="form-control" maxlength="500" required
+                               placeholder="https://ejemplo.com/hooks/tickets">
+                        <div class="form-text">{{ _('Solo http:// o https://. Los destinos de la red interna están bloqueados.') }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ _('Eventos') }}</label>
+                        {% for clave, descripcion in eventos.items() %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="eventos" value="{{ clave }}" id="ev-{{ loop.index }}">
+                            <label class="form-check-label" for="ev-{{ loop.index }}">
+                                <code class="mono">{{ clave }}</code>
+                                <span class="text-muted d-block small">{{ descripcion }}</span>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">{{ _('Registrar') }}</button>
+                    <div class="form-text mt-2">
+                        {{ _('Máximo %(n)s webhooks. Uno que falle %(f)s veces seguidas se desactiva solo.',
+                              n=max_webhooks, f=max_fallos) }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

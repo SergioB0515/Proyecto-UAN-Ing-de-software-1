@@ -5192,3 +5192,335 @@ msgstr "holiday, training, sick leave..."
 
 msgid "Áreas sin cobertura con trabajo pendiente"
 msgstr "Areas with no coverage and work pending"
+
+# Cadenas nuevas de la version 3.5
+
+msgid "Tu ticket #%(id)s quedó en espera de tu respuesta"
+msgstr "Your ticket #%(id)s is waiting for your reply"
+
+msgid "El solicitante respondió el ticket #%(id)s y volvió a atención"
+msgstr "The requester replied to ticket #%(id)s and it is back in progress"
+
+msgid "El ticket #%(id)s se quedó sin agente disponible y necesita cobertura"
+msgstr "Ticket #%(id)s has no available agent and needs coverage"
+
+msgid "Otro agente tomó la cobertura del ticket #%(id)s que tenías asignado"
+msgstr "Another agent took over ticket #%(id)s that was assigned to you"
+
+msgid "En espera"
+msgstr "On hold"
+
+msgid "Poner en espera"
+msgstr "Put on hold"
+
+msgid "Reanudar atención"
+msgstr "Resume work"
+
+msgid "Tomar cobertura"
+msgstr "Take over"
+
+msgid "Crear webhook"
+msgstr "Create webhook"
+
+msgid "Editar webhook"
+msgstr "Edit webhook"
+
+msgid "Eliminar webhook"
+msgstr "Delete webhook"
+
+msgid "Probar webhook"
+msgstr "Test webhook"
+
+msgid "Ticket #%(id)s en espera del solicitante. Su SLA queda detenido hasta que responda."
+msgstr "Ticket #%(id)s is on hold waiting for the requester. Its SLA clock is stopped until they reply."
+
+msgid "El ticket quedó en espera, pero no se pudo guardar el mensaje: %(error)s"
+msgstr "The ticket was put on hold, but the message could not be saved: %(error)s"
+
+msgid "Elige el agente que se queda con el ticket"
+msgstr "Choose the agent who takes the ticket"
+
+msgid "Ticket #%(id)s cubierto correctamente"
+msgstr "Ticket #%(id)s covered successfully"
+
+msgid "Webhook «%(nombre)s» registrado. Copia el secreto ahora para configurarlo en el destino."
+msgstr "Webhook «%(nombre)s» registered. Copy the secret now to set it up on the receiving end."
+
+msgid "Webhook activado"
+msgstr "Webhook enabled"
+
+msgid "Webhook desactivado"
+msgstr "Webhook disabled"
+
+msgid "Prueba entregada (HTTP %(codigo)s)"
+msgstr "Test delivered (HTTP %(codigo)s)"
+
+msgid "La prueba falló: %(error)s"
+msgstr "The test failed: %(error)s"
+
+msgid "sin respuesta"
+msgstr "no response"
+
+msgid "Webhook eliminado"
+msgstr "Webhook deleted"
+
+msgid "Debes indicar qué se le está pidiendo al solicitante"
+msgstr "You must state what is being asked of the requester"
+
+msgid "Este ticket no necesita cobertura"
+msgstr "This ticket does not need coverage"
+
+msgid "El agente destino no es válido"
+msgstr "The target agent is not valid"
+
+msgid "El agente destino no pertenece al área del ticket"
+msgstr "The target agent does not belong to the ticket's area"
+
+msgid "El agente destino está ausente"
+msgstr "The target agent is away"
+
+msgid "No se pudo tomar la cobertura del ticket"
+msgstr "The ticket coverage could not be taken"
+
+msgid "Ticket #%(p1)s: cobertura tomada por %(p2)s (agente anterior %(p3)s)"
+msgstr "Ticket #%(p1)s: coverage taken by %(p2)s (previous agent %(p3)s)"
+
+msgid "El webhook no existe"
+msgstr "The webhook does not exist"
+
+msgid "La URL es obligatoria"
+msgstr "The URL is required"
+
+msgid "La URL es demasiado larga"
+msgstr "The URL is too long"
+
+msgid "La URL debe empezar por http:// o https://"
+msgstr "The URL must start with http:// or https://"
+
+msgid "No se permiten destinos locales"
+msgstr "Local destinations are not allowed"
+
+msgid "No se permiten destinos de la red interna"
+msgstr "Internal network destinations are not allowed"
+
+msgid "Elige al menos un evento válido"
+msgstr "Choose at least one valid event"
+
+msgid "El nombre es obligatorio"
+msgstr "The name is required"
+
+msgid "El nombre no puede superar los 80 caracteres"
+msgstr "The name cannot be longer than 80 characters"
+
+msgid "No puedes tener más de %(n)s webhooks registrados"
+msgstr "You cannot have more than %(n)s webhooks registered"
+
+msgid "No se pudo registrar el webhook"
+msgstr "The webhook could not be registered"
+
+msgid "Webhook %(p1)s creado hacia %(p2)s (%(p3)s)"
+msgstr "Webhook %(p1)s created towards %(p2)s (%(p3)s)"
+
+msgid "No se pudo actualizar el webhook"
+msgstr "The webhook could not be updated"
+
+msgid "Webhook %(p1)s %(p2)s"
+msgstr "Webhook %(p1)s %(p2)s"
+
+msgid "activado"
+msgstr "enabled"
+
+msgid "desactivado"
+msgstr "disabled"
+
+msgid "No se pudo eliminar el webhook"
+msgstr "The webhook could not be deleted"
+
+msgid "Webhook %(p1)s eliminado"
+msgstr "Webhook %(p1)s deleted"
+
+msgid "Webhook %(p1)s desactivado automáticamente tras %(p2)s fallos seguidos"
+msgstr "Webhook %(p1)s disabled automatically after %(p2)s failures in a row"
+
+msgid "Prueba enviada al webhook %(p1)s: %(p2)s"
+msgstr "Test sent to webhook %(p1)s: %(p2)s"
+
+msgid "Webhooks"
+msgstr "Webhooks"
+
+msgid "Búsqueda avanzada"
+msgstr "Advanced search"
+
+msgid "Tickets, artículos de la base de conocimiento y, si eres administrador, cuentas."
+msgstr "Tickets, knowledge base articles and, if you are an administrator, accounts."
+
+msgid "Número de ticket, palabra del texto, título de artículo, nombre o correo"
+msgstr "Ticket number, a word from the text, article title, name or email"
+
+msgid "Escribe al menos %(n)s caracteres."
+msgstr "Type at least %(n)s characters."
+
+msgid "Escribe algo para buscar."
+msgstr "Type something to search."
+
+msgid "Nada coincide con «%(q)s»."
+msgstr "Nothing matches «%(q)s»."
+
+msgid "Correo"
+msgstr "Email"
+
+msgid "Tickets por cubrir"
+msgstr "Tickets to cover"
+
+msgid "Tickets de agentes ausentes"
+msgstr "Tickets of agents who are away"
+
+msgid "Siguen asignados a alguien que no está trabajando. El sistema no los reparte solo: elige quién los cubre."
+msgstr "They are still assigned to someone who is not working. The system does not hand them out by itself: choose who covers them."
+
+msgid "Ningún ticket quedó en manos de un agente ausente."
+msgstr "No ticket was left in the hands of an agent who is away."
+
+msgid "Agente ausente"
+msgstr "Agent away"
+
+msgid "Cubrir con"
+msgstr "Cover with"
+
+msgid "Cubrir"
+msgstr "Cover"
+
+msgid "El área no tiene agentes disponibles"
+msgstr "The area has no available agents"
+
+msgid "Este ticket está en espera del solicitante: su SLA está detenido y la fecha límite se corre lo que dure la espera."
+msgstr "This ticket is on hold waiting for the requester: its SLA clock is stopped and the due date moves forward by however long the wait lasts."
+
+msgid "En cuanto respondas en la conversación, el ticket vuelve a atención automáticamente."
+msgstr "As soon as you reply in the conversation, the ticket goes back in progress automatically."
+
+msgid "El agente asignado a este ticket está ausente. Alguien del área tiene que cubrirlo para que no se venza sin dueño real."
+msgstr "The agent assigned to this ticket is away. Someone from the area has to cover it so it does not breach its SLA without a real owner."
+
+msgid "¿Estás esperando algo del solicitante?"
+msgstr "Are you waiting on the requester?"
+
+msgid "Al dejarlo en espera, el reloj del SLA se detiene y el solicitante recibe aviso por correo. Vuelve a atención en cuanto responda."
+msgstr "Putting it on hold stops the SLA clock and emails the requester. It goes back in progress as soon as they reply."
+
+msgid "Qué necesitas de quien lo reportó"
+msgstr "What you need from whoever reported it"
+
+msgid "Tiempo en espera"
+msgstr "Time on hold"
+
+msgid "en pausa"
+msgstr "paused"
+
+msgid "%(n)s ticket(s) de esta área siguen asignados a un agente ausente y necesitan cobertura:"
+msgstr "%(n)s ticket(s) in this area are still assigned to an agent who is away and need coverage:"
+
+msgid "Qué esperas del solicitante"
+msgstr "What you expect from the requester"
+
+msgid "Reanudar"
+msgstr "Resume"
+
+msgid "Enviar prueba"
+msgstr "Send test"
+
+msgid "Configuración"
+msgstr "Settings"
+
+msgid "Activo"
+msgstr "Active"
+
+msgid "Inactivo"
+msgstr "Inactive"
+
+msgid "Último intento"
+msgstr "Last attempt"
+
+msgid "Fallos seguidos"
+msgstr "Failures in a row"
+
+msgid "Eventos suscritos"
+msgstr "Subscribed events"
+
+msgid "Secreto de firma"
+msgstr "Signing secret"
+
+msgid "Configúralo en el destino para validar la cabecera X-Tickets-Signature. Si se filtra, elimina el webhook y vuelve a crearlo: se genera un secreto nuevo."
+msgstr "Set it up on the receiving end to validate the X-Tickets-Signature header. If it leaks, delete the webhook and create it again: a new secret is generated."
+
+msgid "Últimas entregas"
+msgstr "Latest deliveries"
+
+msgid "Este webhook todavía no ha recibido ningún evento."
+msgstr "This webhook has not received any event yet."
+
+msgid "Evento"
+msgstr "Event"
+
+msgid "Resultado"
+msgstr "Result"
+
+msgid "Intentos"
+msgstr "Attempts"
+
+msgid "Duración"
+msgstr "Duration"
+
+msgid "Avisa a otro sistema cuando pasa algo con un ticket. Cada envío es un POST con el cuerpo en JSON, firmado con HMAC-SHA256."
+msgstr "Notify another system when something happens to a ticket. Each delivery is a POST with a JSON body, signed with HMAC-SHA256."
+
+msgid "Todavía no hay webhooks registrados."
+msgstr "No webhooks registered yet."
+
+msgid "Destino"
+msgstr "Destination"
+
+msgid "Eventos"
+msgstr "Events"
+
+msgid "%(n)s fallos"
+msgstr "%(n)s failures"
+
+msgid "Cómo valida el destino que el aviso es nuestro"
+msgstr "How the receiving end checks the notification is ours"
+
+msgid "Cada petición lleva la cabecera X-Tickets-Signature con el formato t=<marca de tiempo>,v1=<firma>. La firma es el HMAC-SHA256 de «marca.cuerpo» con el secreto del webhook. La marca de tiempo va dentro de la firma para que una copia capturada no se pueda reenviar después."
+msgstr "Every request carries the X-Tickets-Signature header in the form t=<timestamp>,v1=<signature>. The signature is the HMAC-SHA256 of «timestamp.body» using the webhook secret. The timestamp is part of the signature so a captured copy cannot be replayed later."
+
+msgid "Registrar un webhook"
+msgstr "Register a webhook"
+
+msgid "Ej.: Canal de guardia"
+msgstr "E.g.: On-call channel"
+
+msgid "URL de destino"
+msgstr "Destination URL"
+
+msgid "Solo http:// o https://. Los destinos de la red interna están bloqueados."
+msgstr "Only http:// or https://. Internal network destinations are blocked."
+
+msgid "Máximo %(n)s webhooks. Uno que falle %(f)s veces seguidas se desactiva solo."
+msgstr "Up to %(n)s webhooks. One that fails %(f)s times in a row is disabled automatically."
+
+msgid "Se registró un ticket nuevo"
+msgstr "A new ticket was created"
+
+msgid "Un ticket cambió de agente"
+msgstr "A ticket changed agent"
+
+msgid "Un ticket cambió de estado"
+msgstr "A ticket changed status"
+
+msgid "Un ticket se cerró"
+msgstr "A ticket was closed"
+
+msgid "Un ticket pasó su fecha límite"
+msgstr "A ticket passed its due date"
+
+msgid "Un ticket quedó sin agente disponible"
+msgstr "A ticket was left without an available agent"

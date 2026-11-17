@@ -6,7 +6,7 @@ from app.models.usuario import Usuario
 from app.models.comentario import Comentario
 from app.services.clasificador import ClasificadorTickets
 from app.services.gestor_sla import GestorSLA
-from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError,ErrorPersistencia,ClasificacionYaConfirmadaError,PermisoDenegadoError
+from app.services.exceptions import TransicionInvalidaError,AgenteYaAsignadoError,TicketNoEncontradoError,TicketNoEnProgresoError,ComentarioVacioError,ErrorPersistencia,ClasificacionYaConfirmadaError,PermisoDenegadoError,MotivoRequeridoError,CoberturaNoRequeridaError,AgenteDestinoInvalidoError
 from app.extensions import db
 from datetime import datetime,timedelta
 from app.services.auditoria import ServicioAuditoria
@@ -36,9 +36,14 @@ ORDEN_PRIORIDAD={
 }
 TRANSICIONES_VALIDAS={
     EstadoTicket.ABIERTO : [EstadoTicket.EN_PROGRESO,EstadoTicket.CERRADO],  
-    EstadoTicket.EN_PROGRESO : [EstadoTicket.CERRADO],
+    EstadoTicket.EN_PROGRESO : [EstadoTicket.EN_ESPERA,EstadoTicket.CERRADO],
+    EstadoTicket.EN_ESPERA : [EstadoTicket.EN_PROGRESO,EstadoTicket.CERRADO],
     EstadoTicket.CERRADO : [EstadoTicket.EN_PROGRESO]
 }
+
+# Estados en los que el ticket sigue vivo para soporte. Se usa para saber que
+# tickets hay que cubrir cuando su agente se declara ausente.
+ESTADOS_ABIERTOS = (EstadoTicket.ABIERTO, EstadoTicket.EN_PROGRESO, EstadoTicket.EN_ESPERA)
 class ServicioTickets:
     @staticmethod
     def crear_ticket(creador, texto):
@@ -74,6 +79,8 @@ class ServicioTickets:
                 )
                 
         print(f"El ticket se ha resgistrado con exito")
+        from app.services.webhooks import ServicioWebhooks
+        ServicioWebhooks.emitir(ServicioWebhooks.EVENTO_CREADO, nuevo_ticket)
         ServicioAuditoria.registrar(
             usuario_id=creador.id,
             accion=AccionAuditoria.CREAR_TICKET,
@@ -118,7 +125,7 @@ class ServicioTickets:
         return sorted(tickets_del_area, key=lambda ticket: ORDEN_PRIORIDAD[ticket.prioridad])
         
     @staticmethod
-    def cambiar_estado(ticket_id, nuevo_estado, actor_id, agente_id=None):
+    def cambiar_estado(ticket_id, nuevo_estado, actor_id, agente_id=None, motivo=None):
         
         ticket =db.session.execute(select(Ticket).where(Ticket.id ==ticket_id)).scalar() 
        
@@ -127,7 +134,15 @@ class ServicioTickets:
         
         if nuevo_estado not in TRANSICIONES_VALIDAS[ticket.estado]:
             raise TransicionInvalidaError(_("La transicion no es valida"))
-       
+
+        motivo = (motivo or "").strip()
+
+        # Dejar un ticket en espera para el solicitante congela su SLA, asi que
+        # tiene que quedar escrito por que: sin motivo seria una forma facil de
+        # esconder un ticket que se esta venciendo.
+        if nuevo_estado == EstadoTicket.EN_ESPERA and not motivo:
+            raise MotivoRequeridoError(_("Debes indicar qué se le está pidiendo al solicitante"))
+
         if nuevo_estado == EstadoTicket.EN_PROGRESO:
        
 
@@ -138,9 +153,19 @@ class ServicioTickets:
                 ticket.agente_id = agente_id
                 ticket.fecha_asignacion = datetime.now()
                 ticket.notificado_sin_asignar = False
+                ticket.requiere_cobertura = False
         
         estado_anterior=ticket.estado
         ticket.estado = nuevo_estado
+
+        # El reloj de SLA se detiene al entrar en espera y se reanuda al salir,
+        # sin importar si el ticket se reanuda o se cierra: asi fecha_limite
+        # refleja siempre solo el tiempo que estuvo en manos de soporte.
+        if nuevo_estado == EstadoTicket.EN_ESPERA:
+            GestorSLA.pausar_reloj(ticket)
+        elif estado_anterior == EstadoTicket.EN_ESPERA:
+            GestorSLA.reanudar_reloj(ticket)
+
         if estado_anterior ==   EstadoTicket.CERRADO and nuevo_estado == EstadoTicket.EN_PROGRESO:
             ticket.fecha_cierre = None
         if nuevo_estado == EstadoTicket.CERRADO:
@@ -155,11 +180,29 @@ class ServicioTickets:
             raise ErrorPersistencia(_("No se pudo cambiar el estado del ticket")) from e
 
         print(f"El estado del Ticket a sido cambiado con exito")
-        ServicioAuditoria.registrar(
-            usuario_id=actor_id,
-            accion=AccionAuditoria.CAMBIAR_ESTADO,
-            detalle=_("Ticket #%(p1)s: %(p2)s -> %(p3)s", p1=ticket.id, p2=etiqueta(estado_anterior), p3=etiqueta(nuevo_estado)),
-        )
+        detalle = _("Ticket #%(p1)s: %(p2)s -> %(p3)s", p1=ticket.id, p2=etiqueta(estado_anterior), p3=etiqueta(nuevo_estado))
+        if motivo:
+            detalle = f"{detalle} ({motivo})"
+        if nuevo_estado == EstadoTicket.EN_ESPERA:
+            accion = AccionAuditoria.PAUSAR_SLA
+        elif estado_anterior == EstadoTicket.EN_ESPERA and nuevo_estado == EstadoTicket.EN_PROGRESO:
+            accion = AccionAuditoria.REANUDAR_SLA
+        else:
+            accion = AccionAuditoria.CAMBIAR_ESTADO
+        ServicioAuditoria.registrar(usuario_id=actor_id, accion=accion, detalle=detalle)
+
+        if nuevo_estado == EstadoTicket.EN_ESPERA:
+            ServicioNotificaciones.crear(
+                usuario_id=ticket.creador_id, mensaje=notif.EN_ESPERA_CREADOR, ticket_id=ticket.id
+            )
+
+        from app.services.webhooks import ServicioWebhooks
+        ServicioWebhooks.emitir(ServicioWebhooks.EVENTO_ESTADO, ticket, {
+            "estado_anterior": estado_anterior.value,
+            "motivo": motivo or None,
+        })
+        if nuevo_estado == EstadoTicket.CERRADO:
+            ServicioWebhooks.emitir(ServicioWebhooks.EVENTO_CERRADO, ticket)
         
         if nuevo_estado == EstadoTicket.CERRADO:
             if estado_anterior == EstadoTicket.ABIERTO:
@@ -190,6 +233,7 @@ class ServicioTickets:
         ticket.agente_id = nuevo_agente_id
         ticket.fecha_asignacion = datetime.now()
         ticket.notificado_sin_asignar = False
+        ticket.requiere_cobertura = False
         try:
             db.session.add(ticket)
             db.session.commit()
@@ -204,6 +248,8 @@ class ServicioTickets:
             accion=AccionAuditoria.REASIGNAR_AGENTE,
             detalle=_("Ticket #%(p1)s: agente %(p2)s -> %(p3)s", p1=ticket.id, p2=agente_anterior, p3=nuevo_agente_id),
         )
+        from app.services.webhooks import ServicioWebhooks
+        ServicioWebhooks.emitir(ServicioWebhooks.EVENTO_ASIGNADO, ticket, {"agente_anterior_id": agente_anterior})
         return ticket.agente_id
     @staticmethod
     def agregar_comentario(ticket_id, autor_id, texto, interno=False, notificar=True):
@@ -240,7 +286,133 @@ class ServicioTickets:
         )
         if notificar:
             ServicioTickets._notificar_comentario(ticket, autor_id, bool(interno))
+
+        # Un ticket en espera vuelve a atencion solo que el solicitante
+        # responda: si hubiera que reanudarlo a mano, el reloj seguiria
+        # detenido mientras la respuesta ya esta ahi esperando al agente.
+        if (ticket.estado == EstadoTicket.EN_ESPERA
+                and not interno
+                and autor_id == ticket.creador_id):
+            ServicioTickets.reanudar_por_respuesta(ticket.id, autor_id)
+
         return nuevo_comentario
+
+    @staticmethod
+    def reanudar_por_respuesta(ticket_id, actor_id):
+        """Saca de la espera un ticket cuyo solicitante acaba de responder.
+
+        Reusa cambiar_estado para no tener dos caminos que muevan el reloj de
+        SLA. Si la reanudacion falla, el comentario ya quedo guardado: se
+        registra el fallo y el ticket se queda en espera, nunca se pierde el
+        comentario por esto.
+        """
+        try:
+            ServicioTickets.cambiar_estado(
+                ticket_id=ticket_id,
+                nuevo_estado=EstadoTicket.EN_PROGRESO,
+                actor_id=actor_id,
+            )
+        except (TransicionInvalidaError, TicketNoEncontradoError, ErrorPersistencia) as e:
+            print(f"No se pudo reanudar el ticket #{ticket_id} tras la respuesta del solicitante: {e}")
+            return None
+
+        ticket = db.session.get(Ticket, ticket_id)
+        if ticket is not None and ticket.agente_id is not None and ticket.agente_id != actor_id:
+            ServicioNotificaciones.crear(
+                usuario_id=ticket.agente_id,
+                mensaje=notif.ESPERA_REANUDADA_AGENTE,
+                ticket_id=ticket.id,
+            )
+        return ticket
+
+    @staticmethod
+    def listar_pendientes_cobertura(area=None):
+        """Tickets vivos marcados como pendientes de cobertura.
+
+        Son los que quedaron en manos de un agente ausente o inactivo. Se
+        ordenan por riesgo de vencimiento, que es el criterio con el que hay
+        que repartirlos.
+        """
+        query = select(Ticket).where(
+            Ticket.requiere_cobertura.is_(True),
+            Ticket.estado.in_(ESTADOS_ABIERTOS),
+        )
+        if area is not None:
+            query = query.where(Ticket.categoria == area)
+        tickets = db.session.execute(query).scalars().all()
+        ahora = datetime.now()
+        return sorted(tickets, key=lambda t: GestorSLA.clave_riesgo(t, ahora))
+
+    @staticmethod
+    def tomar_cobertura(ticket_id, agente_id, actor_id=None):
+        """Un agente se queda con un ticket que su dueño dejo sin cubrir.
+
+        Es la contraparte del modelo pull para las ausencias: el sistema no
+        reparte solo los tickets del agente ausente, pero cualquier agente
+        disponible del area (o un administrador) puede tomarlos desde
+        /admin/cobertura sin pasar por una solicitud de transferencia, que
+        requeriria que el agente ausente la aceptara.
+        """
+        from app.services.disponibilidad import ServicioDisponibilidad
+
+        actor_id = actor_id if actor_id is not None else agente_id
+        ticket = db.session.get(Ticket, ticket_id)
+        if ticket is None:
+            raise TicketNoEncontradoError(_("El ticket no ha sido encontrado"))
+        if not ticket.requiere_cobertura or ticket.estado not in ESTADOS_ABIERTOS:
+            raise CoberturaNoRequeridaError(_("Este ticket no necesita cobertura"))
+
+        nuevo = db.session.get(Usuario, agente_id)
+        if nuevo is None or not nuevo.activo:
+            raise AgenteDestinoInvalidoError(_("El agente destino no es válido"))
+        if nuevo.rol not in (RolUsuario.AGENTE, RolUsuario.ADMIN):
+            raise AgenteDestinoInvalidoError(_("El agente destino no es válido"))
+        if nuevo.rol == RolUsuario.AGENTE:
+            if nuevo.area_soporte != ticket.categoria:
+                raise AgenteDestinoInvalidoError(_("El agente destino no pertenece al área del ticket"))
+            if not ServicioDisponibilidad.esta_disponible(nuevo):
+                raise AgenteDestinoInvalidoError(_("El agente destino está ausente"))
+        if nuevo.id == ticket.agente_id:
+            raise AgenteYaAsignadoError(_("Este ticket ya tiene asignado a este mismo agente"))
+
+        agente_anterior = ticket.agente_id
+        ticket.agente_id = nuevo.id
+        ticket.fecha_asignacion = datetime.now()
+        ticket.requiere_cobertura = False
+        ticket.notificado_sin_asignar = False
+        if ticket.estado == EstadoTicket.ABIERTO:
+            ticket.estado = EstadoTicket.EN_PROGRESO
+
+        try:
+            db.session.add(ticket)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            try:
+                db.session.refresh(ticket)
+            except Exception:
+                pass
+            print(f"No se pudo tomar la cobertura del ticket, error: {e}")
+            raise ErrorPersistencia(_("No se pudo tomar la cobertura del ticket")) from e
+
+        ServicioAuditoria.registrar(
+            usuario_id=actor_id,
+            accion=AccionAuditoria.TOMAR_COBERTURA,
+            detalle=_("Ticket #%(p1)s: cobertura tomada por %(p2)s (agente anterior %(p3)s)",
+                      p1=ticket.id, p2=nuevo.email, p3=agente_anterior),
+        )
+
+        if agente_anterior is not None and agente_anterior != nuevo.id:
+            ServicioNotificaciones.crear(
+                usuario_id=agente_anterior, mensaje=notif.COBERTURA_TOMADA, ticket_id=ticket.id
+            )
+
+        from app.services.webhooks import ServicioWebhooks
+        ServicioWebhooks.emitir(ServicioWebhooks.EVENTO_ASIGNADO, ticket, {
+            "agente_anterior_id": agente_anterior,
+            "motivo": "cobertura",
+        })
+        return ticket
 
     @staticmethod
     def _notificar_comentario(ticket, autor_id, interno):

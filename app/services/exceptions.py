@@ -72,3 +72,9 @@ class TokenApiInvalidoError(Exception):
     pass
 class AusenciaInvalidaError(Exception):
     pass
+class WebhookInvalidoError(Exception):
+    pass
+class WebhookNoEncontradoError(Exception):
+    pass
+class CoberturaNoRequeridaError(Exception):
+    pass

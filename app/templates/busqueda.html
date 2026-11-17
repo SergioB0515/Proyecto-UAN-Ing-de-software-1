@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Buscar') }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>{{ _('Buscar') }}</h2>
+        <p class="text-muted mb-0">{{ _('Tickets, artículos de la base de conocimiento y, si eres administrador, cuentas.') }}</p>
+    </div>
+</div>
+
+<form method="GET" action="{{ url_for('busqueda.buscar') }}" class="mb-4">
+    <div class="input-group">
+        <input type="search" name="q" class="form-control" value="{{ termino }}" autofocus
+               placeholder="{{ _('Número de ticket, palabra del texto, título de artículo, nombre o correo') }}">
+        <button class="btn btn-primary" type="submit">{{ icono('buscar', 15) }} {{ _('Buscar') }}</button>
+    </div>
+</form>
+
+{% if resultado.termino_corto %}
+<div class="empty-state">
+    <p class="mb-0">{{ _('Escribe al menos %(n)s caracteres.', n=min_termino) }}</p>
+</div>
+{% elif not termino %}
+<div class="empty-state">
+    <p class="mb-0">{{ _('Escribe algo para buscar.') }}</p>
+</div>
+{% elif resultado.total == 0 %}
+<div class="empty-state">
+    <p class="mb-0">{{ _('Nada coincide con «%(q)s».', q=termino) }}</p>
+</div>
+{% else %}
+
+{% if resultado.tickets %}
+<h5 class="mb-2">{{ _('Tickets') }} <span class="text-muted">({{ resultado.tickets | length }})</span></h5>
+<div class="table-card mb-4">
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>{{ _('ID') }}</th>
+            <th>{{ _('Texto') }}</th>
+            <th>{{ _('Área') }}</th>
+            <th>{{ _('Estado') }}</th>
+            <th>{{ _('Creado') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in resultado.tickets %}
+        <tr data-cat class="cat-{{ t.categoria.value }}">
+            <td><a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a></td>
+            <td>{{ t.texto }}</td>
+            <td>{{ t.categoria.value | etiqueta }}</td>
+            <td><span class="badge-pill estado-{{ t.estado.value }}">{{ t.estado.value | etiqueta }}</span></td>
+            <td class="mono text-soft-mono">{{ t.fecha_creacion | fecha }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if resultado.articulos %}
+<h5 class="mb-2">{{ _('Base de conocimiento') }} <span class="text-muted">({{ resultado.articulos | length }})</span></h5>
+<div class="row g-3 mb-4">
+    {% for a in resultado.articulos %}
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="card-title mb-1">
+                    <a href="{{ url_for('conocimiento.ver', articulo_id=a.id) }}">{{ a.titulo }}</a>
+                    {% if not a.publicado %}<span class="badge-pill estado-en_progreso">{{ _('Borrador') }}</span>{% endif %}
+                </h6>
+                <p class="text-muted small mb-2">{{ a.resumen or '' }}</p>
+                <span class="badge-pill categoria-tag cat-{{ a.categoria.value }}">{{ a.categoria.value | etiqueta }}</span>
+                {% for e in a.lista_etiquetas %}<span class="badge-pill categoria-tag">{{ e }}</span>{% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if resultado.usuarios %}
+<h5 class="mb-2">{{ _('Usuarios') }} <span class="text-muted">({{ resultado.usuarios | length }})</span></h5>
+<div class="table-card">
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>{{ _('Nombre') }}</th>
+            <th>{{ _('Correo') }}</th>
+            <th>{{ _('Rol') }}</th>
+            <th>{{ _('Área') }}</th>
+            <th>{{ _('Estado') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in resultado.usuarios %}
+        <tr>
+            <td><a href="{{ url_for('usuarios.detalle', usuario_id=u.id) }}">{{ u.nombre }}</a></td>
+            <td class="mono text-soft-mono">{{ u.email }}</td>
+            <td>{{ u.rol.value | etiqueta }}</td>
+            <td>{{ u.area_soporte.value | etiqueta if u.area_soporte else '—' }}</td>
+            <td>
+                {% if u.activo %}
+                <span class="badge-pill estado-abierto">{{ _('Activa') }}</span>
+                {% else %}
+                <span class="badge-pill estado-cerrado">{{ _('Inactiva') }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

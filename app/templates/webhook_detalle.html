@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}{{ webhook.nombre }}{% endblock %}
+{% from "_iconos.html" import icono %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h2>{{ webhook.nombre }}</h2>
+        <p class="text-muted mb-0 mono">{{ webhook.url }}</p>
+    </div>
+    <div class="d-flex gap-2">
+        <form method="POST" action="{{ url_for('webhooks.probar', webhook_id=webhook.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-sm btn-outline-primary">{{ icono('enviar', 15) }} {{ _('Enviar prueba') }}</button>
+        </form>
+        <form method="POST" action="{{ url_for('webhooks.cambiar_activo', webhook_id=webhook.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="activo" value="{{ '0' if webhook.activo else '1' }}">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">
+                {{ _('Desactivar') if webhook.activo else _('Activar') }}
+            </button>
+        </form>
+        <form method="POST" action="{{ url_for('webhooks.eliminar', webhook_id=webhook.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm>{{ _('Eliminar') }}</button>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="card-title">{{ _('Configuración') }}</h6>
+                <ul class="prop-list mb-0">
+                    <li><span class="prop-k">{{ _('Estado') }}</span>
+                        {% if webhook.activo %}
+                        <span class="badge-pill estado-abierto">{{ _('Activo') }}</span>
+                        {% else %}
+                        <span class="badge-pill estado-cerrado">{{ _('Inactivo') }}</span>
+                        {% endif %}
+                    </li>
+                    <li><span class="prop-k">{{ _('Creado') }}</span><span class="mono">{{ webhook.fecha_creacion | fecha }}</span></li>
+                    <li><span class="prop-k">{{ _('Último intento') }}</span>
+                        <span class="mono">{% if webhook.ultimo_intento %}{{ webhook.ultimo_intento | fecha }}{% else %}—{% endif %}</span>
+                    </li>
+                    <li><span class="prop-k">{{ _('Fallos seguidos') }}</span>
+                        <span class="mono">{{ webhook.fallos_consecutivos }} / {{ max_fallos }}</span>
+                    </li>
+                </ul>
+                <div class="mt-3">
+                    <span class="meta-label d-block">{{ _('Eventos suscritos') }}</span>
+                    {% for e in webhook.lista_eventos %}
+                    <span class="badge-pill categoria-tag mono">{{ e }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="card-title">{{ icono('llave', 16) }} {{ _('Secreto de firma') }}</h6>
+                <p class="text-muted small">
+                    {{ _('Configúralo en el destino para validar la cabecera X-Tickets-Signature. Si se filtra, elimina el webhook y vuelve a crearlo: se genera un secreto nuevo.') }}
+                </p>
+                <code class="mono d-block text-break">{{ webhook.secreto }}</code>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5 class="mb-2">{{ _('Últimas entregas') }}</h5>
+{% if not entregas %}
+<div class="empty-state">
+    <p class="mb-0">{{ _('Este webhook todavía no ha recibido ningún evento.') }}</p>
+</div>
+{% else %}
+<div class="table-card">
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>{{ _('Fecha') }}</th>
+            <th>{{ _('Evento') }}</th>
+            <th>{{ _('Ticket') }}</th>
+            <th>{{ _('Resultado') }}</th>
+            <th>{{ _('Intentos') }}</th>
+            <th>{{ _('Duración') }}</th>
+            <th>{{ _('Detalle') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for e in entregas %}
+        <tr class="{% if not e.exito %}table-danger{% endif %}">
+            <td class="mono text-soft-mono">{{ e.fecha | fecha }}</td>
+            <td class="mono">{{ e.evento }}</td>
+            <td class="mono">
+                {% if e.ticket_id %}<a href="{{ url_for('tickets.detalle', ticket_id=e.ticket_id) }}">#{{ e.ticket_id }}</a>{% else %}—{% endif %}
+            </td>
+            <td>
+                {% if e.exito %}
+                <span class="badge-pill estado-abierto">HTTP {{ e.codigo_http }}</span>
+                {% else %}
+                <span class="badge-pill prioridad-alta">{{ e.codigo_http or _('sin respuesta') }}</span>
+                {% endif %}
+            </td>
+            <td class="mono">{{ e.intentos }}</td>
+            <td class="mono">{{ e.duracion_ms }} ms</td>
+            <td class="small text-muted">{{ e.error or '—' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

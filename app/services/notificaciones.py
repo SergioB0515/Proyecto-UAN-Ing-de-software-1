@@ -22,6 +22,7 @@ class ServicioNotificaciones:
         notif.SLA_PROXIMO_CREADOR, notif.SLA_PROXIMO_AGENTE,
         notif.SLA_VENCIDO_CREADOR, notif.SLA_VENCIDO_AGENTE,
         notif.COMENTARIO_NUEVO_CREADOR,
+        notif.EN_ESPERA_CREADOR,
      })
 
     _ACENTOS_POR_PLANTILLA = {
@@ -31,12 +32,14 @@ class ServicioNotificaciones:
         notif.SLA_PROXIMO_AGENTE: ("#96660f", "#c4962f"),
         notif.SLA_VENCIDO_CREADOR: ("#9b2f2a", "#c4584f"),
         notif.SLA_VENCIDO_AGENTE: ("#9b2f2a", "#c4584f"),
+        notif.EN_ESPERA_CREADOR: ("#4a5568", "#718096"),
     }
     _ACENTO_POR_DEFECTO = ("#4f46e5", "#818cf8")
 
     _COLORES_ESTADO = {
         "abierto": ("#e4ebf4", "#2e4d70"),
         "en_progreso": ("#f6ebd3", "#7a520b"),
+        "en_espera": ("#ece9f6", "#453a7a"),
         "cerrado": ("#dcebe2", "#245a3d"),
     }
     _COLORES_PRIORIDAD = {

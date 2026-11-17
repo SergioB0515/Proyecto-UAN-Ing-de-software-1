@@ -26,6 +26,7 @@ class Prioridad(str, Enum):
 class EstadoTicket(str, Enum):
     ABIERTO = "abierto"
     EN_PROGRESO = "en_progreso"
+    EN_ESPERA = "en_espera"
     CERRADO = "cerrado"
     
     
@@ -85,6 +86,13 @@ class AccionAuditoria(str, Enum):
     REVOCAR_TOKEN_API = "revocar_token_api"
     MARCAR_AUSENTE = "marcar_ausente"
     MARCAR_DISPONIBLE = "marcar_disponible"
+    PAUSAR_SLA = "pausar_sla"
+    REANUDAR_SLA = "reanudar_sla"
+    TOMAR_COBERTURA = "tomar_cobertura"
+    CREAR_WEBHOOK = "crear_webhook"
+    EDITAR_WEBHOOK = "editar_webhook"
+    ELIMINAR_WEBHOOK = "eliminar_webhook"
+    PROBAR_WEBHOOK = "probar_webhook"
     
 class EstadoSolicitudTransferencia(str, Enum):
     PENDIENTE = "pendiente"

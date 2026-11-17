@@ -64,6 +64,7 @@
     --warn: #c96a06;
     --danger: #cc3127;
     --info: #1f6fd1;
+    --espera: #6b5bd2;
 
     --shadow-pop: 0 18px 48px rgba(19, 34, 42, 0.18), 0 0 0 1px rgba(19, 34, 42, 0.08);
     --shadow-card: none;
@@ -115,6 +116,7 @@
     --warn: #f0a038;
     --danger: #ef5a50;
     --info: #4a93ec;
+    --espera: #9b8ff0;
 
     --shadow-pop: 0 18px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
     --shadow-card: none;
@@ -1036,6 +1038,7 @@ a:focus-visible,
 
 .badge-pill.estado-abierto     { --c: var(--info); }
 .badge-pill.estado-en_progreso { --c: var(--warn); }
+.badge-pill.estado-en_espera   { --c: var(--espera); }
 .badge-pill.estado-cerrado     { --c: var(--ok); }
 
 .badge-pill.prioridad-alta  { --c: var(--danger); }

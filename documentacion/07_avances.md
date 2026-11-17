@@ -181,3 +181,46 @@ Autoservicio, colaboración y gestión:
   de datos al ejecutar `init_db.py` (sin herramienta de migraciones externa).
 - Pruebas: 8 archivos nuevos de pytest (usuarios, base de conocimiento, adjuntos,
   colaboración, encuestas, analítica, API y migraciones).
+
+## Versión 3.1 — completado
+
+Responsabilidad de área sobre el modelo de autoservicio:
+
+- **Disponibilidad declarada del agente** como ventana de fechas en el propio usuario
+  (`ausente_desde`, `ausente_hasta`, `motivo_ausencia`), sin bandera booleana aparte para
+  que no existan dos fuentes de verdad. Un agente ausente sale de las sugerencias, de los
+  destinos de transferencia y del conteo de cobertura del área.
+- **Avisos de SLA con dueño:** un ticket sin agente avisa a los agentes activos y
+  disponibles de su área y, si el área se quedó sin nadie, al administrador.
+- **Cola priorizada por riesgo:** la vista del área se ordena por porcentaje de SLA
+  consumido, con el orden histórico por prioridad disponible en el selector.
+- **Escalamiento por edad sin asignar** al pasar el 50 % del plazo (`UMBRAL_SIN_ASIGNAR`),
+  una sola vez por ticket.
+- **Vista de cobertura** (`/admin/cobertura`) con los tickets sin asignar ordenados por
+  riesgo, la cobertura de cada área y la lista de agentes ausentes.
+- Pruebas: 30 nuevas en `tests/test_disponibilidad.py`.
+
+## Versión 3.5 — completado
+
+Continuidad del servicio e integración con el exterior:
+
+- **Pausa de SLA (`EstadoTicket.EN_ESPERA`)**: `sla_pausado_desde` y
+  `sla_segundos_pausados` en el ticket, `GestorSLA.pausar_reloj` / `reanudar_reloj` /
+  `segundos_en_pausa`, `consumo_sla` descontando las pausas y los tickets en espera fuera
+  del cálculo de vencimientos. La espera exige motivo (queda como comentario público) y la
+  reanudación es automática cuando el solicitante responde.
+- **Cobertura de ausencias** (`tickets.requiere_cobertura`): marcado y aviso al área al
+  activarse una ausencia, aviso de SLA consciente de la ausencia del agente asignado,
+  `ServicioTickets.tomar_cobertura` y limpieza al volver el agente. Cierra el pendiente
+  que la 3.1 dejó documentado.
+- **Webhooks salientes firmados** (`app/services/webhooks.py`, `/admin/webhooks`): seis
+  eventos de ticket, firma HMAC-SHA256 con marca de tiempo dentro de la firma
+  (anti-replay), bitácora de entregas, reintentos solo de fallos transitorios,
+  auto-desactivación tras 10 fallos y validación de URL contra destinos internos (SSRF).
+- **Búsqueda global** (`app/services/busqueda.py`, `/buscar`) sobre tickets, artículos y
+  cuentas, con el mismo control de acceso que las páginas correspondientes y escape de
+  comodines.
+- Pruebas: 66 nuevas en cuatro archivos (`test_espera_sla.py`, `test_cobertura.py`,
+  `test_webhooks.py`, `test_busqueda.py`); 385 en total.
+- Internacionalización: `messages.pot` regenerado y las 104 cadenas nuevas traducidas al
+  inglés, que era el pendiente de la 3.1.

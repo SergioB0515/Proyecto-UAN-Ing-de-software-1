@@ -19,3 +19,11 @@ class Ticket(db.Model):
     notificado_vencido = db.Column(db.Boolean, nullable=False, default=False)
     clasificacion_baja_confianza = db.Column(db.Boolean, nullable=False, default=False)
     notificado_sin_asignar = db.Column(db.Boolean, nullable=False, default=False)
+    # Reloj de SLA detenido: sla_pausado_desde marca el inicio de la pausa en
+    # curso y sla_segundos_pausados acumula las pausas ya aplicadas a
+    # fecha_limite. Se derivan siempre juntas, nunca hay un booleano aparte.
+    sla_pausado_desde = db.Column(db.DateTime, nullable=True)
+    sla_segundos_pausados = db.Column(db.Integer, nullable=False, default=0)
+    # El agente asignado se declaro ausente y el ticket necesita que alguien
+    # mas lo cubra. Se limpia en cuanto cambia de agente o el agente vuelve.
+    requiere_cobertura = db.Column(db.Boolean, nullable=False, default=False)

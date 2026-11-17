@@ -43,12 +43,17 @@ def create_app():
     from app.models.correccion_clasificacion import CorreccionClasificacion
     from app.models.doble_factor import DobleFactor
     from app.models.token_recuperacion import TokenRecuperacion
+    from app.models.webhook import Webhook, EntregaWebhook
     from app.migraciones import importar_modelos
     importar_modelos()
 
     import tempfile
     app.config["CARPETA_ADJUNTOS"] = tempfile.mkdtemp(prefix="adjuntos_test_")
     app.config["SECRET_KEY"] = "clave-de-pruebas"
+    # Los webhooks se entregan en el momento: un hilo con su propia sesion de
+    # SQLAlchemy sobre el SQLite de pruebas haria las pruebas no deterministas.
+    app.config["WEBHOOKS_EN_HILO"] = False
+    app.config["WEBHOOKS_PERMITIR_DESTINOS_LOCALES"] = False
     from app.formato import markdown_seguro
     app.jinja_env.filters["md"] = markdown_seguro
 

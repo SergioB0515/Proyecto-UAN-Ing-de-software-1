@@ -50,6 +50,17 @@ arquitectura, historias de usuario, avances por sprint/versión y evidencias) vi
   restablecimiento de la verificación en dos pasos.
 - **API REST v1** con tokens personales (guardados como hash, con caducidad, revocables
   y con límite de peticiones) y documentación integrada en `/api/docs`.
+- **Pausa de SLA**: un ticket puede quedar «en espera» del solicitante con el motivo de la
+  espera; mientras tanto el reloj del SLA se detiene y la fecha límite se corre lo que dure
+  la espera. Vuelve a atención automáticamente en cuanto el solicitante responde.
+- **Cobertura de ausencias**: los tickets de un agente que se declara ausente quedan
+  marcados y el aviso llega a los agentes disponibles del área (o al administrador si no
+  hay ninguno), para que cualquiera pueda tomarlos sin esperar al agente ausente.
+- **Webhooks salientes**: avisos POST en JSON a sistemas externos por cada evento de
+  ticket, firmados con HMAC-SHA256 y marca de tiempo (anti-replay), con bitácora de
+  entregas, reintentos y auto-desactivación de destinos caídos.
+- **Búsqueda global**: un solo buscador para tickets, artículos y cuentas, filtrado por los
+  mismos permisos que las páginas correspondientes.
 - **Clasificación por ML (opcional)**: clasificador basado en embeddings multilingües
   + palabras clave ponderadas + detección de casi-duplicados, con revisión manual para
   los casos de baja confianza.
@@ -110,6 +121,8 @@ Otras variables opcionales (con sus valores por defecto):
 | `SESSION_COOKIE_SECURE` | `0` | Ponlo en `1` en producción con HTTPS |
 | `SESION_HORAS` | `8` | Duración de la sesión iniciada |
 | `APP_BASE_URL` | `http://localhost:5000` | URL pública usada en los enlaces de los correos |
+| `WEBHOOKS_EN_HILO` | `1` | Entrega los webhooks en un hilo aparte; en `0` los entrega en el momento |
+| `WEBHOOKS_PERMITIR_DESTINOS_LOCALES` | `0` | En `1` permite registrar webhooks hacia `localhost` o la red interna (solo para pruebas) |
 
 ### 3. Base de datos
 

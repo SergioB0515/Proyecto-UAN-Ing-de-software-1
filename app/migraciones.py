@@ -10,6 +10,9 @@ COLUMNAS_NUEVAS = [
     ("usuarios", "ausente_hasta", {"sqlite": "DATETIME", "default": "TIMESTAMP"}),
     ("usuarios", "motivo_ausencia", {"sqlite": "VARCHAR(120)", "default": "VARCHAR(120)"}),
     ("tickets", "notificado_sin_asignar", {"sqlite": "BOOLEAN NOT NULL DEFAULT 0", "default": "BOOLEAN NOT NULL DEFAULT FALSE"}),
+    ("tickets", "sla_pausado_desde", {"sqlite": "DATETIME", "default": "TIMESTAMP"}),
+    ("tickets", "sla_segundos_pausados", {"sqlite": "INTEGER NOT NULL DEFAULT 0", "default": "INTEGER NOT NULL DEFAULT 0"}),
+    ("tickets", "requiere_cobertura", {"sqlite": "BOOLEAN NOT NULL DEFAULT 0", "default": "BOOLEAN NOT NULL DEFAULT FALSE"}),
 ]
 
 
@@ -18,7 +21,7 @@ def importar_modelos():
         usuario, ticket, comentario, log_auditoria, intento_login_fallido, ip_bloqueada,
         notificacion, transferencia, apelacion, palabra_clave, correccion_clasificacion,
         doble_factor, token_recuperacion, articulo, adjunto, respuesta_predefinida,
-        seguidor_ticket, encuesta_satisfaccion, token_api,
+        seguidor_ticket, encuesta_satisfaccion, token_api, webhook,
     )
 
 

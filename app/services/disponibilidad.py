@@ -159,6 +159,99 @@ class ServicioDisponibilidad:
         return usuario
 
     @staticmethod
+    def _tickets_vivos_del_agente(usuario_id):
+        from app.models.ticket import Ticket
+        from app.services.tickets import ESTADOS_ABIERTOS
+
+        return db.session.execute(
+            select(Ticket).where(
+                Ticket.agente_id == usuario_id,
+                Ticket.estado.in_(ESTADOS_ABIERTOS),
+            )
+        ).scalars().all()
+
+    @staticmethod
+    def marcar_tickets_para_cobertura(usuario):
+        """Marca los tickets vivos de un agente ausente y avisa a su area.
+
+        En la 3.1 la ausencia solo sacaba al agente de las sugerencias: los
+        tickets que ya tenia asignados se quedaban en su nombre y nadie se
+        enteraba hasta que vencian. Aqui se marcan como pendientes de cobertura
+        y el aviso va a los agentes disponibles del area del ticket; si el area
+        se quedo sin nadie, sube al administrador.
+
+        No reasigna: quien toma el ticket sigue siendo una decision de una
+        persona (ServicioTickets.tomar_cobertura), igual que en el resto del
+        modelo pull.
+
+        Devuelve la lista de tickets marcados en esta pasada.
+        """
+        from app.notificaciones_i18n import COBERTURA_REQUERIDA
+        from app.services.notificaciones import ServicioNotificaciones
+
+        marcados = []
+        for ticket in ServicioDisponibilidad._tickets_vivos_del_agente(usuario.id):
+            if ticket.requiere_cobertura:
+                continue
+            ticket.requiere_cobertura = True
+            db.session.add(ticket)
+            marcados.append(ticket)
+
+        if not marcados:
+            return []
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"No se pudieron marcar los tickets para cobertura, error: {e}")
+            return []
+
+        for ticket in marcados:
+            destinatarios = [
+                a for a in ServicioDisponibilidad.agentes_disponibles(ticket.categoria)
+                if a.id != usuario.id
+            ]
+            if not destinatarios:
+                destinatarios = ServicioDisponibilidad.admins_activos()
+            for destinatario in destinatarios:
+                ServicioNotificaciones.crear(
+                    usuario_id=destinatario.id,
+                    mensaje=COBERTURA_REQUERIDA,
+                    ticket_id=ticket.id,
+                )
+
+            from app.services.webhooks import ServicioWebhooks
+            ServicioWebhooks.emitir(ServicioWebhooks.EVENTO_COBERTURA, ticket, {
+                "agente_ausente_id": usuario.id,
+            })
+
+        return marcados
+
+    @staticmethod
+    def limpiar_cobertura_del_agente(usuario):
+        """Quita la marca de cobertura de los tickets que el agente retoma."""
+        limpiados = []
+        for ticket in ServicioDisponibilidad._tickets_vivos_del_agente(usuario.id):
+            if not ticket.requiere_cobertura:
+                continue
+            ticket.requiere_cobertura = False
+            db.session.add(ticket)
+            limpiados.append(ticket)
+
+        if not limpiados:
+            return []
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"No se pudo limpiar la marca de cobertura, error: {e}")
+            return []
+
+        return limpiados
+
+    @staticmethod
     def marcar_ausente(actor_id, usuario_id, desde=None, hasta=None, motivo=None):
         """Abre una ventana de ausencia para un agente.
 
@@ -205,6 +298,12 @@ class ServicioDisponibilidad:
             accion=AccionAuditoria.MARCAR_AUSENTE,
             detalle=detalle,
         )
+
+        # Una ausencia programada para mañana no deja huerfano nada hoy: los
+        # tickets se marcan solo cuando la ventana ya esta activa.
+        if ServicioDisponibilidad.esta_ausente(usuario):
+            ServicioDisponibilidad.marcar_tickets_para_cobertura(usuario)
+
         return usuario
 
     @staticmethod
@@ -228,4 +327,7 @@ class ServicioDisponibilidad:
             accion=AccionAuditoria.MARCAR_DISPONIBLE,
             detalle=_("Agente %(p1)s marcado como disponible", p1=usuario.email),
         )
+
+        ServicioDisponibilidad.limpiar_cobertura_del_agente(usuario)
+
         return usuario

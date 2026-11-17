@@ -31,6 +31,13 @@
 29. Como agente, quiero ver la cola de mi área ordenada por cercanía al vencimiento y no solo por prioridad, para no dejar pasar un ticket medio que vence antes que uno alto recién creado.
 30. Como administrador, quiero que el sistema me escale un ticket que lleva demasiado tiempo sin que nadie lo tome, para decidir yo a quién asignarlo.
 31. Como administrador, quiero una vista de los tickets sin asignar y de la cobertura de cada área, para ver dónde se está cayendo el modelo de autoservicio.
+32. Como agente, quiero poder dejar un ticket en espera del solicitante indicando qué le falta, para que el plazo de atención no corra mientras la respuesta depende de él.
+33. Como usuario final, quiero que mi ticket vuelva a atención en cuanto yo responda, sin tener que pedirle a nadie que lo reactive.
+34. Como agente, quiero recuperar el tiempo que un ticket estuvo esperando al solicitante, para que mi cumplimiento de SLA refleje el tiempo que realmente estuvo en mis manos.
+35. Como agente, quiero enterarme de los tickets que quedaron en manos de un compañero ausente, para poder tomarlos antes de que venzan.
+36. Como administrador, quiero decidir quién cubre los tickets de un agente ausente sin esperar a que ese agente acepte una transferencia.
+37. Como administrador, quiero que otro sistema (un canal de guardia, un inventario, un monitor) reciba un aviso verificable cuando pasa algo con un ticket, para integrar el soporte con el resto de las herramientas.
+38. Como cualquier usuario, quiero un solo buscador para tickets, guías y cuentas, que solo me muestre lo que tengo permiso de abrir.
 
 ## Casos de uso principales
 

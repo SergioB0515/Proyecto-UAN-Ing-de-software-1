@@ -35,6 +35,10 @@ SLA_PROXIMO_AREA = "El ticket #%(id)s de tu área está próximo a vencer y nadi
 SLA_VENCIDO_AREA = "El ticket #%(id)s de tu área está vencido y nadie lo ha tomado"
 AREA_SIN_COBERTURA = "El ticket #%(id)s está por vencer y su área no tiene agentes disponibles"
 SIN_ASIGNAR_ENVEJECIDO = "El ticket #%(id)s lleva demasiado tiempo sin agente asignado"
+EN_ESPERA_CREADOR = "Tu ticket #%(id)s quedó en espera de tu respuesta"
+ESPERA_REANUDADA_AGENTE = "El solicitante respondió el ticket #%(id)s y volvió a atención"
+COBERTURA_REQUERIDA = "El ticket #%(id)s se quedó sin agente disponible y necesita cobertura"
+COBERTURA_TOMADA = "Otro agente tomó la cobertura del ticket #%(id)s que tenías asignado"
 
 
 def _catalogo_traducido():
@@ -72,6 +76,10 @@ def _catalogo_traducido():
         SLA_VENCIDO_AREA: _("El ticket #%(id)s de tu área está vencido y nadie lo ha tomado", id=m),
         AREA_SIN_COBERTURA: _("El ticket #%(id)s está por vencer y su área no tiene agentes disponibles", id=m),
         SIN_ASIGNAR_ENVEJECIDO: _("El ticket #%(id)s lleva demasiado tiempo sin agente asignado", id=m),
+        EN_ESPERA_CREADOR: _("Tu ticket #%(id)s quedó en espera de tu respuesta", id=m),
+        ESPERA_REANUDADA_AGENTE: _("El solicitante respondió el ticket #%(id)s y volvió a atención", id=m),
+        COBERTURA_REQUERIDA: _("El ticket #%(id)s se quedó sin agente disponible y necesita cobertura", id=m),
+        COBERTURA_TOMADA: _("Otro agente tomó la cobertura del ticket #%(id)s que tenías asignado", id=m),
     }
 
 

@@ -1,6 +1,7 @@
 from flask_babel import gettext as _
 from app.models.enum import Prioridad,NivelUsuario,EstadoTicket
 from app.models.ticket import Ticket
+from app.models.usuario import Usuario
 from app.services.exceptions import NoHayTickets
 from app.extensions import db
 from sqlalchemy import select
@@ -46,7 +47,12 @@ class GestorSLA:
         tickets_vencidos = []
         tickets_proximos_a_vencer = []
 
-        query = select(Ticket).where(Ticket.estado != EstadoTicket.CERRADO)
+        # Un ticket en espera tiene el reloj detenido: no vence mientras la
+        # pelota este del lado del solicitante, asi que queda fuera de las dos
+        # listas en vez de acumular tiempo que no es responsabilidad de soporte.
+        query = select(Ticket).where(
+            Ticket.estado.notin_([EstadoTicket.CERRADO, EstadoTicket.EN_ESPERA])
+        )
 
         if creador_id is not None:
             query = query.where(Ticket.creador_id == creador_id)
@@ -80,22 +86,85 @@ class GestorSLA:
         return tickets_vencidos, tickets_proximos_a_vencer
     
     @staticmethod
+    def segundos_en_pausa(ticket, ahora=None):
+        """Segundos que el reloj de SLA de este ticket ha estado detenido.
+
+        Suma las pausas ya cerradas (sla_segundos_pausados, que es tambien lo
+        que se le sumo a fecha_limite) mas la pausa en curso si la hay.
+        """
+        acumulados = ticket.sla_segundos_pausados or 0
+        if ticket.sla_pausado_desde is None:
+            return float(acumulados)
+        ahora = ahora or datetime.now()
+        en_curso = (ahora - ticket.sla_pausado_desde).total_seconds()
+        return float(acumulados) + max(0.0, en_curso)
+
+    @staticmethod
     def consumo_sla(ticket, ahora=None):
         """Fraccion del plazo de SLA ya consumida por el ticket.
 
         0.0 recien creado, 1.0 justo al vencer, mayor que 1.0 si ya vencio.
         Devuelve None si al ticket le faltan fechas con que calcularlo.
+
+        Las pausas no cuentan ni arriba ni abajo de la fraccion: del plazo
+        total se descuentan las pausas que ya se le sumaron a fecha_limite, y
+        del tiempo transcurrido se descuenta todo el tiempo en pausa. El
+        resultado es que el porcentaje se congela mientras el ticket espera.
         """
         if ticket.fecha_limite is None or ticket.fecha_creacion is None:
             return None
 
         ahora = ahora or datetime.now()
-        segundos_totales = (ticket.fecha_limite - ticket.fecha_creacion).total_seconds()
+        acumulados = float(ticket.sla_segundos_pausados or 0)
+        segundos_totales = (ticket.fecha_limite - ticket.fecha_creacion).total_seconds() - acumulados
 
         if segundos_totales <= 0:
             return 1.0
 
-        return (ahora - ticket.fecha_creacion).total_seconds() / segundos_totales
+        transcurrido = (ahora - ticket.fecha_creacion).total_seconds()
+        transcurrido -= GestorSLA.segundos_en_pausa(ticket, ahora)
+        return max(0.0, transcurrido) / segundos_totales
+
+    @staticmethod
+    def pausar_reloj(ticket, ahora=None):
+        """Detiene el reloj de SLA. No hace commit: lo hace quien la llama.
+
+        Idempotente: si ya estaba pausado no mueve la marca, para que dos
+        pausas seguidas no borren el inicio real de la espera.
+        """
+        if ticket.sla_pausado_desde is not None:
+            return 0.0
+        ticket.sla_pausado_desde = ahora or datetime.now()
+        return 0.0
+
+    @staticmethod
+    def reanudar_reloj(ticket, ahora=None):
+        """Vuelve a poner en marcha el reloj y corre fecha_limite.
+
+        El plazo se desplaza exactamente lo que duro la espera, de modo que el
+        agente recupera el tiempo que estuvo esperando al solicitante y no
+        hereda un ticket que vencio mientras no dependia de el. Devuelve los
+        segundos que duro la pausa. No hace commit.
+        """
+        if ticket.sla_pausado_desde is None:
+            return 0.0
+
+        ahora = ahora or datetime.now()
+        pausa = max(0.0, (ahora - ticket.sla_pausado_desde).total_seconds())
+        ticket.sla_segundos_pausados = int((ticket.sla_segundos_pausados or 0) + pausa)
+        if ticket.fecha_limite is not None:
+            ticket.fecha_limite = ticket.fecha_limite + timedelta(seconds=pausa)
+        ticket.sla_pausado_desde = None
+
+        # El plazo se movio, asi que los avisos de SLA vuelven a armarse: si no,
+        # un ticket que ya habia avisado de vencido nunca volveria a avisar.
+        if ticket.fecha_limite is not None and ticket.fecha_limite > ahora:
+            ticket.notificado_vencido = False
+            consumo = GestorSLA.consumo_sla(ticket, ahora)
+            if consumo is not None and consumo <= 0.80:
+                ticket.notificado_proximo_vencer = False
+
+        return pausa
 
     @staticmethod
     def clave_riesgo(ticket, ahora=None):
@@ -145,6 +214,30 @@ class GestorSLA:
         return 0
 
     @staticmethod
+    def _avisar_agente_o_area(ticket, plantilla_agente, plantilla_area):
+        """Avisa al agente asignado, o al area si ese agente esta ausente.
+
+        Cierra el hueco que quedo abierto en la 3.1: un ticket ya asignado a un
+        agente que despues se declaro ausente seguia avisandole solo a el, que
+        por definicion no esta leyendo. Ahora el aviso tambien llega al area y
+        el ticket queda marcado como pendiente de cobertura.
+        """
+        agente = db.session.get(Usuario, ticket.agente_id) if ticket.agente_id else None
+
+        if agente is not None:
+            ServicioNotificaciones.crear(
+                usuario_id=agente.id,
+                mensaje=plantilla_agente,
+                ticket_id=ticket.id,
+            )
+            if ServicioDisponibilidad.esta_disponible(agente) and agente.activo:
+                return
+            ticket.requiere_cobertura = True
+            db.session.add(ticket)
+
+        GestorSLA._avisar_area(ticket, plantilla_area)
+
+    @staticmethod
     def verificar_y_notificar_vencimientos():
         vencidos, proximos = GestorSLA.verificar_vencimientos()
 
@@ -156,10 +249,8 @@ class GestorSLA:
                     ticket_id=ticket.id,
                 )
                 if ticket.agente_id is not None:
-                    ServicioNotificaciones.crear(
-                        usuario_id=ticket.agente_id,
-                        mensaje=notif.SLA_PROXIMO_AGENTE,
-                        ticket_id=ticket.id,
+                    GestorSLA._avisar_agente_o_area(
+                        ticket, notif.SLA_PROXIMO_AGENTE, notif.SLA_PROXIMO_AREA
                     )
                 else:
                     GestorSLA._avisar_area(ticket, notif.SLA_PROXIMO_AREA)
@@ -174,15 +265,15 @@ class GestorSLA:
                     ticket_id=ticket.id,
                 )
                 if ticket.agente_id is not None:
-                    ServicioNotificaciones.crear(
-                        usuario_id=ticket.agente_id,
-                        mensaje=notif.SLA_VENCIDO_AGENTE,
-                        ticket_id=ticket.id,
+                    GestorSLA._avisar_agente_o_area(
+                        ticket, notif.SLA_VENCIDO_AGENTE, notif.SLA_VENCIDO_AREA
                     )
                 else:
                     GestorSLA._avisar_area(ticket, notif.SLA_VENCIDO_AREA)
                 ticket.notificado_vencido = True
                 db.session.add(ticket)
+                from app.services.webhooks import ServicioWebhooks
+                ServicioWebhooks.emitir(ServicioWebhooks.EVENTO_SLA_VENCIDO, ticket)
 
         try:
             db.session.commit()
@@ -209,7 +300,7 @@ class GestorSLA:
 
         candidatos = db.session.execute(
             select(Ticket).where(
-                Ticket.estado != EstadoTicket.CERRADO,
+                Ticket.estado.notin_([EstadoTicket.CERRADO, EstadoTicket.EN_ESPERA]),
                 Ticket.agente_id.is_(None),
                 Ticket.notificado_sin_asignar.is_(False),
             )

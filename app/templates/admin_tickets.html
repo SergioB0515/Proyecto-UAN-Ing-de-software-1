@@ -19,6 +19,7 @@
         <select name="estado" class="form-select form-select-sm">
             <option value="">{{ _('-- Todos --') }}</option>
             <option value="abierto" {% if filtros_actuales.estado == "abierto" %}selected{% endif %}>{{ _('Abierto') }}</option>
+            <option value="en_espera" {% if filtros_actuales.estado == "en_espera" %}selected{% endif %}>{{ _('En espera') }}</option>
             <option value="en_progreso" {% if filtros_actuales.estado == "en_progreso" %}selected{% endif %}>{{ _('En progreso') }}</option>
             <option value="cerrado" {% if filtros_actuales.estado == "cerrado" %}selected{% endif %}>{{ _('Cerrado') }}</option>
         </select>

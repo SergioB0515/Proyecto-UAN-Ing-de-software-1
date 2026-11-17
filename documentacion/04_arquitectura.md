@@ -245,6 +245,113 @@ actor humano al que atribuirlo; la notificación al administrador es el registro
 Marcar y levantar una ausencia sí se auditan (`marcar_ausente`,
 `marcar_disponible`), porque son acciones de una persona.
 
+## Pausa de SLA, cobertura de ausencias y webhooks (v3.5)
+
+Esta versión ataca tres huecos distintos: el tiempo que soporte no controla, el
+trabajo que queda en manos de alguien que no está, y la falta de salida hacia
+otros sistemas.
+
+### El reloj de SLA se puede detener
+
+Hasta la 3.1 el plazo de un ticket corría desde que se creó hasta su fecha
+límite, sin importar de quién dependiera avanzar. Eso castiga al agente por un
+tiempo que no es suyo: si falta un dato del solicitante, el ticket se vence
+mientras nadie en soporte puede hacer nada.
+
+El estado `EN_ESPERA` resuelve eso con dos campos en el ticket y ningún booleano
+aparte:
+
+- `sla_pausado_desde`: inicio de la pausa en curso (nulo si el reloj corre).
+- `sla_segundos_pausados`: suma de las pausas ya aplicadas a `fecha_limite`.
+
+Al entrar en espera solo se marca el inicio. Al salir —hacia `EN_PROGRESO` o
+hacia `CERRADO`— se acumula la duración, se corre `fecha_limite` ese mismo
+tiempo y se vuelven a armar las banderas de aviso de SLA, porque el plazo se
+movió y de lo contrario un ticket que ya había avisado de vencido no volvería a
+avisar nunca.
+
+`consumo_sla` descuenta del plazo total las pausas ya aplicadas y del tiempo
+transcurrido todas las pausas, incluida la que esté en curso. El resultado es
+que el porcentaje consumido se **congela** durante la espera, que es lo que hace
+que la cola ordenada por riesgo no mienta. `verificar_vencimientos` excluye los
+tickets en espera: un ticket pausado no vence.
+
+Dos reglas de producto sostienen el diseño:
+
+1. **La espera exige motivo** (`MotivoRequeridoError`). Pausar el reloj sin
+   escribir qué se está esperando sería la forma más fácil de esconder un ticket
+   que se está venciendo. El motivo se guarda además como comentario público.
+2. **La reanudación no es manual.** Cuando el solicitante responde en la
+   conversación, `agregar_comentario` reanuda el ticket
+   (`ServicioTickets.reanudar_por_respuesta`). Si hubiera que reanudarlo a mano,
+   el reloj seguiría detenido mientras la respuesta ya está esperando al agente.
+   Una nota interna o un comentario del propio agente no reanudan nada.
+
+### Los tickets de un agente ausente tienen a quién avisarle
+
+La 3.1 sacó al agente ausente de las sugerencias, pero dejó documentado el hueco
+contrario: los tickets que **ya** tenía asignados seguían avisándole solo a él.
+La 3.5 lo cierra con la columna `tickets.requiere_cobertura`:
+
+- `ServicioDisponibilidad.marcar_tickets_para_cobertura` marca los tickets vivos
+  del agente al activarse la ausencia (una ausencia programada a futuro no marca
+  nada todavía) y avisa a los agentes disponibles del área del ticket, o al
+  administrador si el área se quedó sin nadie.
+- `GestorSLA._avisar_agente_o_area` avisa al agente asignado y, si ese agente
+  está ausente o inactivo, avisa también al área y marca el ticket. Así el caso
+  queda cubierto incluso cuando la ausencia se activa por fecha y nadie llamó a
+  `marcar_ausente` en ese momento.
+- `ServicioTickets.tomar_cobertura` permite que un agente disponible del área, o
+  el administrador, se quede con el ticket sin pasar por una solicitud de
+  transferencia, que requeriría la aceptación del agente ausente.
+- Al volver el agente, `limpiar_cobertura_del_agente` quita la marca.
+
+El sistema sigue sin reasignar por su cuenta: marca, avisa y deja que una
+persona decida, igual que el resto del modelo *pull*.
+
+### Webhooks: el problema no es enviar, es que el receptor pueda creer
+
+Un webhook apunta a una URL normalmente pública: cualquiera podría enviarle un
+POST diciendo que un ticket crítico se cerró. Por eso cada envío va firmado:
+
+    X-Tickets-Signature: t=<marca de tiempo>,v1=<HMAC-SHA256 de "marca.cuerpo">
+
+La marca de tiempo va **dentro** de la firma, no al lado, para que una copia
+capturada no se pueda reenviar más tarde (*replay*); el receptor la valida con
+una tolerancia de 5 minutos. El secreto se guarda en claro a propósito: a
+diferencia de una contraseña o de un token de API, aquí el sistema necesita el
+valor original para poder firmar.
+
+Otras decisiones:
+
+- **La emisión no interrumpe el dominio.** `emitir` empieza por la consulta más
+  barata posible y, si no hay ningún webhook suscrito a ese evento, no construye
+  payload ni lanza hilo. En una instalación sin webhooks el costo es una
+  consulta.
+- **Reintentos solo de lo transitorio.** Sin respuesta o 5xx se reintenta (hasta
+  3 veces); un 4xx significa que el receptor rechazó el mensaje y repetirlo no lo
+  cambia.
+- **Auto-desactivación.** Tras 10 fallos seguidos el webhook se apaga solo, para
+  no gastar hilos y timeouts en una URL que ya no existe. Queda en auditoría.
+- **Validación de destino (SSRF).** Un webhook es una petición que hace el
+  servidor a donde le digan. Sin validar, quien pueda crear uno usaría el
+  servidor para alcanzar servicios de la red interna que desde fuera no son
+  visibles. Se aceptan solo `http`/`https` y se rechazan `localhost`, las
+  direcciones de bucle y los rangos privados, salvo que la instalación habilite
+  `WEBHOOKS_PERMITIR_DESTINOS_LOCALES`.
+- **La bitácora no crece sin fin:** se conservan las últimas 50 entregas por
+  webhook.
+
+### Búsqueda global
+
+`ServicioBusqueda` busca en tickets, artículos y usuarios. El criterio de diseño
+es el acceso: los tickets se filtran con `ServicioPermisos.puede_ver_ticket`, los
+borradores de la base de conocimiento solo los ve el personal y las cuentas solo
+el administrador. Un título visible en los resultados ya es información
+filtrada, aunque el enlace diera 403. Los comodines `%` y `_` que escriba el
+usuario se escapan para que no traigan la tabla completa, y un número suelto se
+acepta como búsqueda por número de ticket.
+
 ## Estado actual de la implementación
 
 - [x] Modelos de datos (`Usuario`, `Ticket`, `Comentario`, `LogAuditoria`) implementados y

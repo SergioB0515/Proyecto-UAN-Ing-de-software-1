@@ -1,5 +1,28 @@
 # Changelog
 
+## 3.5.0
+
+### Nuevo
+- **Pausa de SLA (estado «En espera»)**: un agente puede dejar un ticket en espera del solicitante indicando qué le hace falta. Mientras el ticket está en espera el reloj del SLA se detiene, el ticket no entra en los listados de vencidos ni de próximos a vencer, y al reanudarse la fecha límite se corre exactamente lo que duró la espera. El solicitante recibe aviso en la aplicación y por correo, y el ticket vuelve a atención **solo** que él responda en la conversación: el agente no tiene que reanudarlo a mano. El motivo de la espera queda como comentario público y la auditoría distingue `pausar_sla` de `reanudar_sla`.
+- **Cobertura de los tickets de un agente ausente**: al declararse ausente un agente, sus tickets vivos quedan marcados como pendientes de cobertura y el aviso va a los agentes disponibles de su área (al administrador si el área se quedó sin nadie). Cualquier agente disponible del área, o el administrador, puede tomar la cobertura desde `/admin/cobertura`, desde la cola del área o desde el propio ticket, sin pasar por una solicitud de transferencia que el agente ausente tendría que aceptar. Al volver el agente, la marca se limpia. Esto cierra el pendiente que la 3.1 dejó documentado: un ticket ya asignado a un agente que luego se ausentaba seguía avisándole solo a él.
+- **Aviso de SLA consciente de la ausencia**: si el ticket vencido o próximo a vencer tiene agente pero ese agente está ausente o inactivo, el aviso también va al área y el ticket se marca para cobertura.
+- **Webhooks salientes firmados** (`/admin/webhooks`): hasta 10 destinos HTTP suscritos a los eventos `ticket.creado`, `ticket.asignado`, `ticket.estado_cambiado`, `ticket.cerrado`, `sla.vencido` y `ticket.cobertura_requerida`. Cada envío es un POST con el cuerpo en JSON y la cabecera `X-Tickets-Signature: t=<marca>,v1=<HMAC-SHA256 de «marca.cuerpo»>`, con la marca de tiempo dentro de la firma para que una copia capturada no se pueda reenviar. Incluye bitácora de entregas (código HTTP, intentos, duración, error), reintentos solo de los fallos transitorios (sin respuesta o 5xx), auto-desactivación tras 10 fallos seguidos, envío de prueba y la validación de URL que bloquea destinos de la red interna (SSRF).
+- **Búsqueda global** (`/buscar`): tickets por número o por texto, artículos de la base de conocimiento y, para el administrador, cuentas. Cada resultado pasa por el mismo control de acceso que su página, así que la búsqueda no revela tickets que el usuario no puede abrir. Complementa la paleta de comandos (Ctrl + K), que solo navega entre páginas.
+
+### Cambios
+- `EstadoTicket.EN_ESPERA` y transiciones nuevas: `EN_PROGRESO → EN_ESPERA` (exige motivo) y `EN_ESPERA → EN_PROGRESO | CERRADO`. Los filtros de estado del área y del panel admin incluyen el estado nuevo, y la celda de acciones de la cola del área ahora se decide por estado y no por número de transiciones.
+- `GestorSLA`: métodos nuevos `pausar_reloj`, `reanudar_reloj` y `segundos_en_pausa`; `consumo_sla` descuenta las pausas, de modo que el porcentaje se congela mientras el ticket espera.
+- Columnas nuevas: `tickets.sla_pausado_desde`, `tickets.sla_segundos_pausados` y `tickets.requiere_cobertura`; tablas nuevas `webhooks` y `entregas_webhook`. Las añade `python init_db.py` sin pérdida de datos.
+- Acciones de auditoría nuevas: `pausar_sla`, `reanudar_sla`, `tomar_cobertura`, `crear_webhook`, `editar_webhook`, `eliminar_webhook` y `probar_webhook`.
+- Servicios nuevos: `app/services/webhooks.py` y `app/services/busqueda.py`. Métodos nuevos en `ServicioTickets`: `reanudar_por_respuesta`, `listar_pendientes_cobertura` y `tomar_cobertura`.
+- Variables de entorno nuevas: `WEBHOOKS_EN_HILO` (por defecto 1) y `WEBHOOKS_PERMITIR_DESTINOS_LOCALES` (por defecto 0).
+- 66 pruebas nuevas (`tests/test_espera_sla.py`, `tests/test_cobertura.py`, `tests/test_webhooks.py`, `tests/test_busqueda.py`): 385 en total.
+- Se regeneró `messages.pot` y se completaron las 104 cadenas nuevas en inglés, que era el pendiente de la 3.1.
+
+### Pendiente
+- Los webhooks se entregan en un hilo con un máximo de 3 intentos seguidos; no hay cola persistente, así que un destino caído durante toda la ventana de reintentos pierde ese evento (queda registrado en la bitácora como fallo).
+- La pausa de SLA no tiene tope: un ticket puede quedarse en espera indefinidamente si el solicitante nunca responde. Un cierre automático por falta de respuesta sería la continuación natural.
+
 ## 3.1.0
 
 ### Nuevo
@@ -19,8 +42,8 @@
 - 30 pruebas nuevas en `tests/test_disponibilidad.py`.
 
 ### Pendiente
-- `messages.pot` no se regeneró: las 64 cadenas nuevas se anexaron traducidas a `app/translations/en/LC_MESSAGES/messages.po`. Conviene correr `pybabel extract -F babel.cfg -o messages.pot .` al cerrar la versión.
-- El caso de un ticket **ya asignado** a un agente que después se marca ausente sigue avisando solo a ese agente. Es el mismo hueco que esta versión cerró para los tickets sin dueño, pero no estaba en el alcance acordado.
+- ~~`messages.pot` no se regeneró: las 64 cadenas nuevas se anexaron traducidas a `app/translations/en/LC_MESSAGES/messages.po`.~~ Resuelto en 3.5.0.
+- ~~El caso de un ticket **ya asignado** a un agente que después se marca ausente sigue avisando solo a ese agente.~~ Resuelto en 3.5.0 (cobertura de ausencias).
 
 ## 3.0.0
 

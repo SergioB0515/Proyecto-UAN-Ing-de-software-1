@@ -19,6 +19,15 @@
 </div>
 {% endif %}
 
+{% if pendientes_cobertura %}
+<div class="alert alert-warning py-2">
+    {{ _('%(n)s ticket(s) de esta área siguen asignados a un agente ausente y necesitan cobertura:', n=pendientes_cobertura|length) }}
+    {% for t in pendientes_cobertura %}
+    <a class="mono" href="{{ url_for('tickets.detalle', ticket_id=t.id) }}">#{{ t.id }}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
 <form method="GET" action="{{ url_for('tickets.listar_por_area', area=area) }}" class="row g-2 align-items-end mb-3">
     <div class="col-md-2">
         <label class="form-label">{{ _('Orden') }}</label>
@@ -33,6 +42,7 @@
             <option value="">{{ _('-- Todos --') }}</option>
             <option value="abierto" {% if filtros_actuales.estado == "abierto" %}selected{% endif %}>{{ _('Abierto') }}</option>
             <option value="en_progreso" {% if filtros_actuales.estado == "en_progreso" %}selected{% endif %}>{{ _('En progreso') }}</option>
+            <option value="en_espera" {% if filtros_actuales.estado == "en_espera" %}selected{% endif %}>{{ _('En espera') }}</option>
             <option value="cerrado" {% if filtros_actuales.estado == "cerrado" %}selected{% endif %}>{{ _('Cerrado') }}</option>
         </select>
     </div>
@@ -94,8 +104,11 @@
             </td>
             <td class="mono text-soft-mono">{{ t.fecha_limite | fecha }}</td>
 <td>
-    {% set opciones = transiciones_por_ticket[t.id] %}
-    {% if opciones|length > 1 %}
+    {# El bloque de acciones se decide por el estado del ticket y no por cuantas
+       transiciones tiene: con la espera en medio, "dos opciones" ya no
+       significa "recien llegado". #}
+    {% set estado = t.estado.value %}
+    {% if estado == "abierto" %}
     <div class="d-flex flex-column gap-1">
         <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=t.id) }}" class="d-flex gap-1">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -120,28 +133,56 @@
             <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm>{{ _('Cerrar') }}</button>
         </form>
     </div>
-    {% elif opciones|length == 1 %}
+    {% elif estado == "en_progreso" %}
+    <div class="d-flex flex-column gap-1">
+        <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=t.id) }}" class="d-flex gap-1">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="nuevo_estado" value="en_espera">
+            <input type="text" name="motivo" class="form-control form-control-sm" placeholder="{{ _('Qué esperas del solicitante') }}" required>
+            <button type="submit" class="btn btn-sm btn-outline-secondary">{{ _('En espera') }}</button>
+        </form>
+        <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=t.id) }}" class="d-flex gap-1">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="nuevo_estado" value="cerrado">
+            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm>{{ _('Cerrar') }}</button>
+        </form>
+    </div>
+    {% elif estado == "en_espera" %}
+    <div class="d-flex flex-column gap-1">
+        <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=t.id) }}" class="d-flex gap-1">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="nuevo_estado" value="en_progreso">
+            <button type="submit" class="btn btn-sm btn-primary">{{ _('Reanudar') }}</button>
+        </form>
+        <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=t.id) }}" class="d-flex gap-1">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="nuevo_estado" value="cerrado">
+            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm>{{ _('Cerrar') }}</button>
+        </form>
+    </div>
+    {% else %}
     <form method="POST" action="{{ url_for('tickets.cambiar_estado', ticket_id=t.id) }}" class="d-flex gap-1">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input type="hidden" name="nuevo_estado" value="{{ opciones[0] }}">
-        {% if opciones[0] == "en_progreso" %}
-            {% if session.get('rol') == 'admin' %}
-            <select name="agente_id" class="form-select form-select-sm">
-                <option value="">{{ _('-- agente --') }}</option>
-                {% for ag in agentes_disponibles %}
-                <option value="{{ ag.id }}" {% if t.agente_id == ag.id %}selected{% endif %}>{{ ag.nombre }}</option>
-                {% endfor %}
-            </select>
-            {% else %}
-            <input type="hidden" name="agente_id" value="{{ session.get('usuario_id') }}">
-            {% endif %}
+        <input type="hidden" name="nuevo_estado" value="en_progreso">
+        {% if session.get('rol') == 'admin' %}
+        <select name="agente_id" class="form-select form-select-sm">
+            <option value="">{{ _('-- agente --') }}</option>
+            {% for ag in agentes_disponibles %}
+            <option value="{{ ag.id }}" {% if t.agente_id == ag.id %}selected{% endif %}>{{ ag.nombre }}</option>
+            {% endfor %}
+        </select>
+        {% else %}
+        <input type="hidden" name="agente_id" value="{{ session.get('usuario_id') }}">
         {% endif %}
-        <button type="submit" class="btn btn-sm {% if opciones[0] == 'cerrado' %}btn-outline-danger{% else %}btn-primary{% endif %}"{% if opciones[0] == 'cerrado' %} data-confirm{% endif %}>
-            {% if opciones[0] == "cerrado" %}{{ _('Cerrar') }}{% else %}{{ _('Reabrir') }}{% endif %}
-        </button>
+        <button type="submit" class="btn btn-sm btn-primary">{{ _('Reabrir') }}</button>
     </form>
-    {% else %}
-    <span class="text-muted">{{ _('Sin transiciones') }}</span>
+    {% endif %}
+
+    {% if t.requiere_cobertura and session.get('rol') != 'admin' %}
+    <form method="POST" action="{{ url_for('tickets.tomar_cobertura', ticket_id=t.id) }}" class="mt-1">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-sm btn-warning w-100">{{ _('Tomar cobertura') }}</button>
+    </form>
     {% endif %}
 
     {% if t.estado.value == "en_progreso" and session.get('rol') == 'admin' %}

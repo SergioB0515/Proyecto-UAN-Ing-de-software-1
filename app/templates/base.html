@@ -62,7 +62,8 @@
     {'id': 'admin', 'texto': _('Administración'), 'ico': 'usuarios', 'bps': ['usuarios', 'auditoria', 'palabras_clave', 'demo'], 'eps': ['auth.registro'], 'items': [
         {'ep': 'usuarios.listar', 'url': url_for('usuarios.listar'), 'texto': _('Usuarios'), 'ico': 'usuarios', 'eps': ['usuarios.detalle', 'auth.registro']},
         {'ep': 'auditoria.mostrar_auditoria', 'url': url_for('auditoria.mostrar_auditoria'), 'texto': _('Log de auditoría'), 'ico': 'historial'},
-        {'ep': 'palabras_clave.listar', 'url': url_for('palabras_clave.listar'), 'texto': _('Palabras clave'), 'ico': 'etiqueta'}] + ([
+        {'ep': 'palabras_clave.listar', 'url': url_for('palabras_clave.listar'), 'texto': _('Palabras clave'), 'ico': 'etiqueta'},
+        {'ep': 'webhooks.listar', 'url': url_for('webhooks.listar'), 'texto': _('Webhooks'), 'ico': 'enviar', 'eps': ['webhooks.detalle']}] + ([
         {'ep': 'demo.panel', 'url': url_for('demo.panel'), 'texto': _('Modo demo'), 'ico': 'rayo'}] if config.MODO_DEMO else [])}
 ] %}
 {% elif rol == 'agente' %}
@@ -339,7 +340,9 @@
         {"t": _('Palabras clave'), "u": url_for('palabras_clave.listar'), "g": "nav", "i": "etiqueta"},
         {"t": _('Vencidos actualmente'), "u": url_for('tickets.listar_admin', vista='vencidos_actuales'), "g": "nav", "i": "alerta"},
         {"t": _('Próximos a vencer'), "u": url_for('tickets.listar_admin', vista='proximos_actuales'), "g": "nav", "i": "reloj"},
-        {"t": _('Cobertura y tickets sin asignar'), "u": url_for('metricas.cobertura'), "g": "nav", "i": "alerta"}
+        {"t": _('Cobertura y tickets sin asignar'), "u": url_for('metricas.cobertura'), "g": "nav", "i": "alerta"},
+        {"t": _('Webhooks'), "u": url_for('webhooks.listar'), "g": "nav", "i": "enviar"},
+        {"t": _('Búsqueda avanzada'), "u": url_for('busqueda.buscar'), "g": "nav", "i": "buscar"}
     ]) %}
     {% if config.MODO_DEMO %}{% set _b = items_paleta.append({"t": _('Modo demo'), "u": url_for('demo.panel'), "g": "nav", "i": "rayo"}) %}{% endif %}
 {% elif rol == 'agente' %}
@@ -351,13 +354,15 @@
         {"t": _('Solicitudes'), "u": url_for('solicitudes.pendientes'), "g": "nav", "i": "transferir"},
         {"t": _('Respuestas rápidas'), "u": url_for('colaboracion.respuestas'), "g": "nav", "i": "respuesta"},
         {"t": _('Base de conocimiento'), "u": url_for('conocimiento.inicio'), "g": "nav", "i": "libro"},
-        {"t": _('Nuevo artículo'), "u": url_for('conocimiento.nuevo'), "g": "acc", "i": "editar"}
+        {"t": _('Nuevo artículo'), "u": url_for('conocimiento.nuevo'), "g": "acc", "i": "editar"},
+        {"t": _('Búsqueda avanzada'), "u": url_for('busqueda.buscar'), "g": "nav", "i": "buscar"}
     ]) %}
 {% elif logueado %}
     {% set _a = items_paleta.extend([
         {"t": _('Mis tickets'), "u": url_for('auth.dashboard'), "g": "nav", "i": "bandeja"},
         {"t": _('Crear ticket'), "u": url_for('tickets.crear'), "g": "nav", "i": "mas"},
-        {"t": _('Centro de ayuda'), "u": url_for('conocimiento.inicio'), "g": "nav", "i": "libro"}
+        {"t": _('Centro de ayuda'), "u": url_for('conocimiento.inicio'), "g": "nav", "i": "libro"},
+        {"t": _('Búsqueda avanzada'), "u": url_for('busqueda.buscar'), "g": "nav", "i": "buscar"}
     ]) %}
 {% endif %}
 {% if logueado %}

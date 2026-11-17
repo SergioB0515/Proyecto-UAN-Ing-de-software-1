@@ -42,6 +42,12 @@ class Config:
     MAX_CONTENT_LENGTH = int(os.environ.get("MAX_CONTENT_MB", "26")) * 1024 * 1024
     CARPETA_ADJUNTOS = os.environ.get("CARPETA_ADJUNTOS") or None
     MIGRAR_AL_INICIAR = _bool_env("MIGRAR_AL_INICIAR", "1")
+    # Los webhooks se entregan en un hilo aparte para no retrasar la operacion
+    # que los dispara; en pruebas conviene entregarlos en el momento.
+    WEBHOOKS_EN_HILO = _bool_env("WEBHOOKS_EN_HILO", "1")
+    # Apagado por defecto: un webhook apuntando a la red interna convierte al
+    # servidor en un puente hacia servicios que no deberian ser alcanzables.
+    WEBHOOKS_PERMITIR_DESTINOS_LOCALES = _bool_env("WEBHOOKS_PERMITIR_DESTINOS_LOCALES", "0")
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = _bool_env("SESSION_COOKIE_SECURE", "0")

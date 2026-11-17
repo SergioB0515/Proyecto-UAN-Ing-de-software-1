@@ -26,6 +26,8 @@ from app.routes.conocimiento import conocimiento_bp
 from app.routes.colaboracion import colaboracion_bp
 from app.routes.analitica import analitica_bp
 from app.routes.api import api_bp
+from app.routes.webhooks import webhooks_bp
+from app.routes.busqueda import busqueda_bp
 from app.version import VERSION
 
 def create_app():
@@ -78,6 +80,7 @@ def create_app():
     from app.models.correccion_clasificacion import CorreccionClasificacion
     from app.models.doble_factor import DobleFactor
     from app.models.token_recuperacion import TokenRecuperacion
+    from app.models.webhook import Webhook, EntregaWebhook
     from app.migraciones import importar_modelos
     importar_modelos()
 
@@ -95,6 +98,8 @@ def create_app():
     app.register_blueprint(colaboracion_bp)
     app.register_blueprint(analitica_bp)
     app.register_blueprint(api_bp)
+    app.register_blueprint(webhooks_bp)
+    app.register_blueprint(busqueda_bp)
 
     from app.routes import api as rutas_api
     csrf.exempt(rutas_api.crear_ticket)

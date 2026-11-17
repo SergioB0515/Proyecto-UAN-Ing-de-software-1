@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-29 16:12-0500\n"
+"POT-Creation-Date: 2026-11-17 12:14-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,143 +17,267 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: app/notificaciones_i18n.py:37
+#: app/__init__.py:303
+msgid "Sesión expirada"
+msgstr ""
+
+#: app/__init__.py:304
+msgid ""
+"El formulario expiró o no es válido. Recarga la página e inténtalo de "
+"nuevo."
+msgstr ""
+
+#: app/__init__.py:308
+msgid "Acceso denegado"
+msgstr ""
+
+#: app/__init__.py:308
+msgid "No tienes permisos para ver esta página."
+msgstr ""
+
+#: app/__init__.py:312
+msgid "Página no encontrada"
+msgstr ""
+
+#: app/__init__.py:312
+msgid "La página que buscas no existe o fue movida."
+msgstr ""
+
+#: app/__init__.py:316
+msgid "Archivo demasiado grande"
+msgstr ""
+
+#: app/__init__.py:317
+msgid ""
+"Lo que intentaste enviar supera el tamaño permitido. Prueba con archivos "
+"más pequeños."
+msgstr ""
+
+#: app/__init__.py:322
+msgid "Algo salió mal"
+msgstr ""
+
+#: app/__init__.py:322
+msgid "Ocurrió un error inesperado. Inténtalo de nuevo en unos instantes."
+msgstr ""
+
+#: app/notificaciones_i18n.py:50
 #, python-format
 msgid ""
 "Tu ticket #%(id)s fue cerrado directamente sin haber sido atendido — "
 "revisa los comentarios para ver el motivo"
 msgstr ""
 
-#: app/notificaciones_i18n.py:39
+#: app/notificaciones_i18n.py:52
 #, python-format
 msgid "Tu ticket #%(id)s fue cerrado"
 msgstr ""
 
-#: app/notificaciones_i18n.py:40
+#: app/notificaciones_i18n.py:53
 #, python-format
 msgid "Nueva solicitud de transferencia para el ticket #%(id)s"
 msgstr ""
 
-#: app/notificaciones_i18n.py:41
+#: app/notificaciones_i18n.py:54
 #, python-format
 msgid "Tu solicitud de transferencia del ticket #%(id)s fue aceptada"
 msgstr ""
 
-#: app/notificaciones_i18n.py:42
+#: app/notificaciones_i18n.py:55
 #, python-format
 msgid "Tu solicitud de transferencia del ticket #%(id)s fue rechazada"
 msgstr ""
 
-#: app/notificaciones_i18n.py:43
+#: app/notificaciones_i18n.py:56
 #, python-format
 msgid "Nuevo escalamiento pendiente de aprobar: ticket #%(id)s"
 msgstr ""
 
-#: app/notificaciones_i18n.py:44
+#: app/notificaciones_i18n.py:57
 #, python-format
 msgid "Tu escalamiento del ticket #%(id)s fue aprobado"
 msgstr ""
 
-#: app/notificaciones_i18n.py:45
+#: app/notificaciones_i18n.py:58
 #, python-format
 msgid "Tu escalamiento del ticket #%(id)s fue rechazado"
 msgstr ""
 
-#: app/notificaciones_i18n.py:46
+#: app/notificaciones_i18n.py:59
 #, python-format
 msgid "Nuevo cambio de prioridad pendiente de aprobar: ticket #%(id)s"
 msgstr ""
 
-#: app/notificaciones_i18n.py:47
+#: app/notificaciones_i18n.py:60
 #, python-format
 msgid "Tu cambio de prioridad del ticket #%(id)s fue aprobado"
 msgstr ""
 
-#: app/notificaciones_i18n.py:48
+#: app/notificaciones_i18n.py:61
 #, python-format
 msgid "Tu cambio de prioridad del ticket #%(id)s fue rechazado"
 msgstr ""
 
-#: app/notificaciones_i18n.py:49
+#: app/notificaciones_i18n.py:62
 #, python-format
 msgid "Tu ticket #%(id)s está próximo a vencer"
 msgstr ""
 
-#: app/notificaciones_i18n.py:50
+#: app/notificaciones_i18n.py:63
 #, python-format
 msgid "El ticket #%(id)s que tienes asignado está próximo a vencer"
 msgstr ""
 
-#: app/notificaciones_i18n.py:51
+#: app/notificaciones_i18n.py:64
 #, python-format
 msgid "Tu ticket #%(id)s está vencido"
 msgstr ""
 
-#: app/notificaciones_i18n.py:52
+#: app/notificaciones_i18n.py:65
 #, python-format
 msgid "El ticket #%(id)s que tienes asignado está vencido"
 msgstr ""
 
-#: app/notificaciones_i18n.py:53
+#: app/notificaciones_i18n.py:66
 #, python-format
 msgid "El ticket #%(id)s necesita revision de categoria"
 msgstr ""
 
-#: app/templates/admin_tickets.html:27 app/templates/palabras_clave.html:23
-#: app/templates/palabras_clave.html:82 app/templates/palabras_clave.html:120
-#: app/templates/registro.html:50 app/templates/revision_clasificacion.html:24
-#: app/templates/ticket_detalle.html:83 app/templates/ticket_detalle.html:293
+#: app/notificaciones_i18n.py:67
+#, python-format
+msgid "Nueva apelación pendiente de revisar: ticket #%(id)s"
+msgstr ""
+
+#: app/notificaciones_i18n.py:68
+#, python-format
+msgid "Tu apelación del ticket #%(id)s fue aceptada, el ticket se reabrió"
+msgstr ""
+
+#: app/notificaciones_i18n.py:69
+#, python-format
+msgid "Tu apelación del ticket #%(id)s fue rechazada"
+msgstr ""
+
+#: app/notificaciones_i18n.py:70
+#, python-format
+msgid "Hay una nueva respuesta en tu ticket #%(id)s"
+msgstr ""
+
+#: app/notificaciones_i18n.py:71
+#, python-format
+msgid "El solicitante respondió en el ticket #%(id)s"
+msgstr ""
+
+#: app/notificaciones_i18n.py:72
+#, python-format
+msgid "Nueva actividad en el ticket #%(id)s que sigues"
+msgstr ""
+
+#: app/notificaciones_i18n.py:73
+#, python-format
+msgid "Nueva nota interna en el ticket #%(id)s"
+msgstr ""
+
+#: app/notificaciones_i18n.py:74
+#, python-format
+msgid "Recibiste una calificación de satisfacción en el ticket #%(id)s"
+msgstr ""
+
+#: app/notificaciones_i18n.py:75
+#, python-format
+msgid "El ticket #%(id)s de tu área está próximo a vencer y nadie lo ha tomado"
+msgstr ""
+
+#: app/notificaciones_i18n.py:76
+#, python-format
+msgid "El ticket #%(id)s de tu área está vencido y nadie lo ha tomado"
+msgstr ""
+
+#: app/notificaciones_i18n.py:77
+#, python-format
+msgid "El ticket #%(id)s está por vencer y su área no tiene agentes disponibles"
+msgstr ""
+
+#: app/notificaciones_i18n.py:78
+#, python-format
+msgid "El ticket #%(id)s lleva demasiado tiempo sin agente asignado"
+msgstr ""
+
+#: app/notificaciones_i18n.py:79
+#, python-format
+msgid "Tu ticket #%(id)s quedó en espera de tu respuesta"
+msgstr ""
+
+#: app/notificaciones_i18n.py:80
+#, python-format
+msgid "El solicitante respondió el ticket #%(id)s y volvió a atención"
+msgstr ""
+
+#: app/notificaciones_i18n.py:81
+#, python-format
+msgid "El ticket #%(id)s se quedó sin agente disponible y necesita cobertura"
+msgstr ""
+
+#: app/notificaciones_i18n.py:82
+#, python-format
+msgid "Otro agente tomó la cobertura del ticket #%(id)s que tenías asignado"
+msgstr ""
+
+#: app/templates/admin_tickets.html:32 app/templates/palabras_clave.html:26
+#: app/templates/palabras_clave.html:85 app/templates/palabras_clave.html:123
+#: app/templates/registro.html:50 app/templates/revision_clasificacion.html:35
+#: app/templates/ticket_detalle.html:205 app/templates/ticket_detalle.html:467
 #: app/traducciones.py:8
 msgid "Infraestructura"
 msgstr ""
 
-#: app/templates/admin_tickets.html:28 app/templates/demo.html:122
-#: app/templates/palabras_clave.html:24 app/templates/palabras_clave.html:83
-#: app/templates/palabras_clave.html:121 app/templates/registro.html:51
-#: app/templates/revision_clasificacion.html:25
-#: app/templates/ticket_detalle.html:84 app/templates/ticket_detalle.html:294
+#: app/templates/admin_tickets.html:33 app/templates/demo.html:118
+#: app/templates/palabras_clave.html:27 app/templates/palabras_clave.html:86
+#: app/templates/palabras_clave.html:124 app/templates/registro.html:51
+#: app/templates/revision_clasificacion.html:35
+#: app/templates/ticket_detalle.html:206 app/templates/ticket_detalle.html:468
 #: app/traducciones.py:9
 msgid "Redes"
 msgstr ""
 
-#: app/templates/admin_tickets.html:29 app/templates/palabras_clave.html:25
-#: app/templates/palabras_clave.html:84 app/templates/palabras_clave.html:122
-#: app/templates/registro.html:52 app/templates/revision_clasificacion.html:26
-#: app/templates/ticket_detalle.html:85 app/templates/ticket_detalle.html:295
+#: app/templates/admin_tickets.html:34 app/templates/palabras_clave.html:28
+#: app/templates/palabras_clave.html:87 app/templates/palabras_clave.html:125
+#: app/templates/registro.html:52 app/templates/revision_clasificacion.html:35
+#: app/templates/ticket_detalle.html:207 app/templates/ticket_detalle.html:469
 #: app/traducciones.py:10
 msgid "Permisos"
 msgstr ""
 
-#: app/templates/admin_tickets.html:30 app/templates/demo.html:123
-#: app/templates/palabras_clave.html:26 app/templates/palabras_clave.html:85
-#: app/templates/palabras_clave.html:123 app/templates/registro.html:53
-#: app/templates/revision_clasificacion.html:27
-#: app/templates/ticket_detalle.html:86 app/templates/ticket_detalle.html:296
+#: app/templates/admin_tickets.html:35 app/templates/demo.html:119
+#: app/templates/palabras_clave.html:29 app/templates/palabras_clave.html:88
+#: app/templates/palabras_clave.html:126 app/templates/registro.html:53
+#: app/templates/revision_clasificacion.html:35
+#: app/templates/ticket_detalle.html:208 app/templates/ticket_detalle.html:470
 #: app/traducciones.py:11
 msgid "Cuentas y contraseñas"
 msgstr ""
 
-#: app/templates/admin_tickets.html:31 app/templates/demo.html:124
-#: app/templates/palabras_clave.html:27 app/templates/palabras_clave.html:86
-#: app/templates/palabras_clave.html:124 app/templates/registro.html:54
-#: app/templates/revision_clasificacion.html:28
-#: app/templates/ticket_detalle.html:87 app/templates/ticket_detalle.html:297
-#: app/traducciones.py:12
+#: app/templates/admin_tickets.html:36 app/templates/demo.html:120
+#: app/templates/palabras_clave.html:30 app/templates/palabras_clave.html:89
+#: app/templates/palabras_clave.html:127 app/templates/registro.html:54
+#: app/templates/revision_clasificacion.html:35
+#: app/templates/ticket_detalle.html:209 app/templates/ticket_detalle.html:471
+#: app/templates/usuarios.html:60 app/traducciones.py:12
 msgid "Seguridad"
 msgstr ""
 
-#: app/templates/admin_tickets.html:32 app/templates/palabras_clave.html:28
-#: app/templates/palabras_clave.html:87 app/templates/palabras_clave.html:125
-#: app/templates/registro.html:55 app/templates/revision_clasificacion.html:29
-#: app/templates/ticket_detalle.html:88 app/templates/ticket_detalle.html:298
+#: app/templates/admin_tickets.html:37 app/templates/palabras_clave.html:31
+#: app/templates/palabras_clave.html:90 app/templates/palabras_clave.html:128
+#: app/templates/registro.html:55 app/templates/revision_clasificacion.html:35
+#: app/templates/ticket_detalle.html:210 app/templates/ticket_detalle.html:472
 #: app/traducciones.py:13
 msgid "Software"
 msgstr ""
 
-#: app/templates/admin_tickets.html:33 app/templates/palabras_clave.html:29
-#: app/templates/palabras_clave.html:88 app/templates/palabras_clave.html:126
-#: app/templates/registro.html:56 app/templates/revision_clasificacion.html:30
-#: app/templates/ticket_detalle.html:89 app/templates/ticket_detalle.html:299
+#: app/templates/admin_tickets.html:38 app/templates/palabras_clave.html:32
+#: app/templates/palabras_clave.html:91 app/templates/palabras_clave.html:129
+#: app/templates/registro.html:56 app/templates/revision_clasificacion.html:35
+#: app/templates/ticket_detalle.html:211 app/templates/ticket_detalle.html:473
 #: app/traducciones.py:14
 msgid "Otros"
 msgstr ""
@@ -162,9 +286,11 @@ msgstr ""
 msgid "Usuario final"
 msgstr ""
 
+#: app/routes/analitica.py:63 app/templates/analitica.html:178
+#: app/templates/cobertura.html:217
 #: app/templates/email/ticket_notificacion.html:87
-#: app/templates/panel_metricas.html:214 app/templates/registro.html:34
-#: app/templates/ticket_detalle.html:20 app/traducciones.py:16
+#: app/templates/panel_metricas.html:226 app/templates/registro.html:34
+#: app/templates/ticket_detalle.html:532 app/traducciones.py:16
 msgid "Agente"
 msgstr ""
 
@@ -176,156 +302,401 @@ msgstr ""
 msgid "Normal"
 msgstr ""
 
-#: app/templates/admin_tickets.html:41 app/templates/ticket_detalle.html:327
-#: app/templates/tickets_por_area.html:23 app/traducciones.py:20
+#: app/templates/admin_tickets.html:46 app/templates/ticket_detalle.html:501
+#: app/templates/tickets_por_area.html:54 app/traducciones.py:20
 msgid "Alta"
 msgstr ""
 
-#: app/templates/admin_tickets.html:42 app/templates/ticket_detalle.html:327
-#: app/templates/tickets_por_area.html:24 app/traducciones.py:21
+#: app/templates/admin_tickets.html:47 app/templates/ticket_detalle.html:501
+#: app/templates/tickets_por_area.html:55 app/traducciones.py:21
 msgid "Media"
 msgstr ""
 
-#: app/templates/admin_tickets.html:43 app/templates/ticket_detalle.html:327
-#: app/templates/tickets_por_area.html:25 app/traducciones.py:22
+#: app/templates/admin_tickets.html:48 app/templates/ticket_detalle.html:501
+#: app/templates/tickets_por_area.html:56 app/traducciones.py:22
 msgid "Baja"
 msgstr ""
 
-#: app/templates/admin_tickets.html:17 app/templates/tickets_por_area.html:13
+#: app/templates/admin_tickets.html:21 app/templates/tickets_por_area.html:43
 #: app/traducciones.py:23
 msgid "Abierto"
 msgstr ""
 
-#: app/templates/admin_tickets.html:18 app/templates/tickets_por_area.html:14
-#: app/traducciones.py:24
+#: app/templates/admin_tickets.html:23 app/templates/analitica.html:178
+#: app/templates/dashboard.html:39 app/templates/tickets_por_area.html:44
+#: app/templates/usuario_detalle.html:31 app/traducciones.py:24
 msgid "En progreso"
 msgstr ""
 
-#: app/templates/admin_tickets.html:19 app/templates/tickets_por_area.html:15
-#: app/traducciones.py:25
+#: app/templates/admin_tickets.html:22 app/templates/tickets_por_area.html:45
+#: app/templates/tickets_por_area.html:142 app/traducciones.py:25
+msgid "En espera"
+msgstr ""
+
+#: app/templates/admin_tickets.html:24 app/templates/tickets_por_area.html:46
+#: app/traducciones.py:26
 msgid "Cerrado"
 msgstr ""
 
-#: app/traducciones.py:26
+#: app/traducciones.py:27
 msgid "Pendiente"
 msgstr ""
 
-#: app/traducciones.py:27
+#: app/traducciones.py:28
 msgid "Aceptada"
 msgstr ""
 
-#: app/traducciones.py:28
+#: app/traducciones.py:29
 msgid "Rechazada"
 msgstr ""
 
-#: app/traducciones.py:29
+#: app/traducciones.py:30
 msgid "Cancelada"
 msgstr ""
 
-#: app/traducciones.py:30
+#: app/traducciones.py:31
 msgid "Reasignación"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:160 app/traducciones.py:31
+#: app/templates/ticket_detalle.html:282 app/traducciones.py:32
 msgid "Escalamiento"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:164 app/traducciones.py:32
+#: app/templates/ticket_detalle.html:286 app/traducciones.py:33
 msgid "Cambio de prioridad"
 msgstr ""
 
-#: app/templates/auditoria.html:29 app/templates/base.html:133
-#: app/templates/base.html:175 app/templates/base.html:189
-#: app/templates/crear_ticket.html:3 app/templates/dashboard.html:7
-#: app/templates/demo.html:135 app/traducciones.py:33
+#: app/templates/articulo.html:106 app/templates/auditoria.html:33
+#: app/templates/base.html:51 app/templates/base.html:75
+#: app/templates/base.html:87 app/templates/base.html:327
+#: app/templates/base.html:353 app/templates/base.html:363
+#: app/templates/conocimiento.html:72 app/templates/crear_ticket.html:3
+#: app/templates/dashboard.html:92 app/templates/demo.html:131
+#: app/traducciones.py:34
 msgid "Crear ticket"
 msgstr ""
 
-#: app/templates/auditoria.html:30 app/templates/tickets_por_area.html:55
-#: app/traducciones.py:34
+#: app/templates/auditoria.html:34 app/templates/tickets_por_area.html:86
+#: app/traducciones.py:35
 msgid "Cambiar estado"
 msgstr ""
 
-#: app/templates/auditoria.html:31 app/traducciones.py:35
+#: app/templates/auditoria.html:35 app/traducciones.py:36
 msgid "Reasignar agente"
 msgstr ""
 
-#: app/templates/auditoria.html:32 app/traducciones.py:36
+#: app/templates/auditoria.html:36 app/traducciones.py:37
 msgid "Agregar comentario"
 msgstr ""
 
-#: app/templates/auditoria.html:33 app/traducciones.py:37
+#: app/templates/auditoria.html:37 app/traducciones.py:38
 msgid "Login exitoso"
 msgstr ""
 
-#: app/templates/auditoria.html:34 app/traducciones.py:38
+#: app/templates/auditoria.html:38 app/traducciones.py:39
 msgid "Login fallido"
 msgstr ""
 
-#: app/templates/auditoria.html:35 app/traducciones.py:39
+#: app/templates/auditoria.html:39 app/traducciones.py:40
 msgid "Cuenta bloqueada"
 msgstr ""
 
-#: app/templates/auditoria.html:36 app/traducciones.py:40
+#: app/templates/auditoria.html:40 app/traducciones.py:41
 msgid "Desbloqueo usuario"
 msgstr ""
 
-#: app/templates/auditoria.html:37 app/traducciones.py:41
+#: app/templates/auditoria.html:41 app/traducciones.py:42
 msgid "Registro exitoso"
 msgstr ""
 
-#: app/traducciones.py:42
+#: app/traducciones.py:43
 msgid "Cambio de contraseña"
 msgstr ""
 
-#: app/traducciones.py:43
-msgid "Cambio de nombre"
-msgstr ""
-
-#: app/templates/ticket_detalle.html:259 app/traducciones.py:44
-msgid "Solicitar transferencia"
+#: app/templates/dos_pasos_configurar.html:3
+#: app/templates/dos_pasos_configurar.html:7 app/templates/perfil.html:149
+#: app/traducciones.py:44
+msgid "Activar verificación en dos pasos"
 msgstr ""
 
 #: app/traducciones.py:45
-msgid "Aceptar transferencia"
+msgid "Desactivar verificación en dos pasos"
 msgstr ""
 
 #: app/traducciones.py:46
-msgid "Rechazar transferencia"
+msgid "Verificación en dos pasos fallida"
 msgstr ""
 
 #: app/traducciones.py:47
-msgid "Cancelar transferencia"
+msgid "Uso de código de respaldo"
 msgstr ""
 
 #: app/traducciones.py:48
-msgid "Escalar área"
+msgid "Regenerar códigos de respaldo"
 msgstr ""
 
 #: app/traducciones.py:49
-msgid "Aprobar escalamiento"
+msgid "Solicitud de recuperación de contraseña"
 msgstr ""
 
-#: app/traducciones.py:50
-msgid "Rechazar escalamiento"
+#: app/templates/email/recuperar_contrasena.html:7 app/traducciones.py:50
+msgid "Restablecer contraseña"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:321 app/traducciones.py:51
-msgid "Cambiar prioridad"
+#: app/traducciones.py:51
+msgid "Editar usuario"
 msgstr ""
 
 #: app/traducciones.py:52
-msgid "Aprobar cambio de prioridad"
+msgid "Desactivar usuario"
 msgstr ""
 
 #: app/traducciones.py:53
+msgid "Reactivar usuario"
+msgstr ""
+
+#: app/traducciones.py:54
+msgid "Restablecer verificación en dos pasos (admin)"
+msgstr ""
+
+#: app/traducciones.py:55
+msgid "Crear artículo"
+msgstr ""
+
+#: app/templates/articulo_form.html:2 app/templates/articulo_form.html:7
+#: app/traducciones.py:56
+msgid "Editar artículo"
+msgstr ""
+
+#: app/traducciones.py:57
+msgid "Publicar artículo"
+msgstr ""
+
+#: app/traducciones.py:58
+msgid "Archivar artículo"
+msgstr ""
+
+#: app/traducciones.py:59
+msgid "Subir adjunto"
+msgstr ""
+
+#: app/traducciones.py:60
+msgid "Eliminar adjunto"
+msgstr ""
+
+#: app/traducciones.py:61
+msgid "Agregar nota interna"
+msgstr ""
+
+#: app/traducciones.py:62
+msgid "Crear respuesta rápida"
+msgstr ""
+
+#: app/traducciones.py:63
+msgid "Editar respuesta rápida"
+msgstr ""
+
+#: app/traducciones.py:64
+msgid "Eliminar respuesta rápida"
+msgstr ""
+
+#: app/traducciones.py:65
+msgid "Responder encuesta"
+msgstr ""
+
+#: app/traducciones.py:66
+msgid "Crear token de API"
+msgstr ""
+
+#: app/traducciones.py:67
+msgid "Revocar token de API"
+msgstr ""
+
+#: app/traducciones.py:68
+msgid "Marcar agente como ausente"
+msgstr ""
+
+#: app/traducciones.py:69
+msgid "Marcar agente como disponible"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:190 app/traducciones.py:70
+msgid "Poner en espera"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:149 app/traducciones.py:71
+msgid "Reanudar atención"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:171
+#: app/templates/tickets_por_area.html:184 app/traducciones.py:72
+msgid "Tomar cobertura"
+msgstr ""
+
+#: app/traducciones.py:73
+msgid "Crear webhook"
+msgstr ""
+
+#: app/traducciones.py:74
+msgid "Editar webhook"
+msgstr ""
+
+#: app/traducciones.py:75
+msgid "Eliminar webhook"
+msgstr ""
+
+#: app/traducciones.py:76
+msgid "Probar webhook"
+msgstr ""
+
+#: app/traducciones.py:77
+msgid "Cambio de nombre"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:433 app/traducciones.py:78
+msgid "Solicitar transferencia"
+msgstr ""
+
+#: app/traducciones.py:79
+msgid "Aceptar transferencia"
+msgstr ""
+
+#: app/traducciones.py:80
+msgid "Rechazar transferencia"
+msgstr ""
+
+#: app/traducciones.py:81
+msgid "Cancelar transferencia"
+msgstr ""
+
+#: app/traducciones.py:82
+msgid "Escalar área"
+msgstr ""
+
+#: app/traducciones.py:83
+msgid "Aprobar escalamiento"
+msgstr ""
+
+#: app/traducciones.py:84
+msgid "Rechazar escalamiento"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:495 app/traducciones.py:85
+msgid "Cambiar prioridad"
+msgstr ""
+
+#: app/traducciones.py:86
+msgid "Aprobar cambio de prioridad"
+msgstr ""
+
+#: app/traducciones.py:87
 msgid "Rechazar cambio de prioridad"
 msgstr ""
 
+#: app/routes/analitica.py:45
+msgid "Indicador"
+msgstr ""
+
+#: app/routes/analitica.py:45 app/routes/metricas.py:91
+#: app/routes/metricas.py:106
+msgid "Valor"
+msgstr ""
+
+#: app/routes/analitica.py:45
+msgid "Periodo anterior"
+msgstr ""
+
+#: app/routes/analitica.py:47 app/templates/perfil.html:231
+msgid "Tickets creados"
+msgstr ""
+
+#: app/routes/analitica.py:47 app/templates/perfil.html:236
+msgid "Tickets cerrados"
+msgstr ""
+
+#: app/routes/analitica.py:48
+msgid "Tiempo medio de resolución (h)"
+msgstr ""
+
+#: app/routes/analitica.py:48
+msgid "Mediana de resolución (h)"
+msgstr ""
+
+#: app/routes/analitica.py:49
+msgid "Cumplimiento de SLA (%)"
+msgstr ""
+
+#: app/routes/analitica.py:49
+msgid "Primera respuesta, mediana (h)"
+msgstr ""
+
+#: app/routes/analitica.py:50
+msgid "Tickets con respuesta (%)"
+msgstr ""
+
+#: app/routes/analitica.py:54
+msgid "CSAT (%)"
+msgstr ""
+
+#: app/routes/analitica.py:57 app/routes/tickets.py:505
+#: app/templates/admin_tickets.html:29 app/templates/admin_tickets.html:73
+#: app/templates/analitica.html:28 app/templates/analitica.html:128
+#: app/templates/articulo_form.html:54 app/templates/dashboard.html:62
+#: app/templates/palabras_clave.html:23 app/templates/palabras_clave.html:40
+#: app/templates/palabras_clave.html:83
+#: app/templates/respuestas_predefinidas.html:17
+#: app/templates/ticket_detalle.html:530
+msgid "Categoría"
+msgstr ""
+
+#: app/routes/analitica.py:57 app/templates/analitica.html:39
+#: app/templates/analitica.html:87 app/templates/analitica.html:110
+#: app/templates/analitica.html:128 app/templates/analitica.html:263
+#: app/templates/usuario_detalle.html:29
+msgid "Creados"
+msgstr ""
+
+#: app/routes/analitica.py:57 app/routes/analitica.py:63
+#: app/templates/analitica.html:44 app/templates/analitica.html:88
+#: app/templates/analitica.html:110 app/templates/analitica.html:178
+#: app/templates/analitica.html:263 app/templates/dashboard.html:46
+#: app/templates/panel_metricas.html:227
+msgid "Cerrados"
+msgstr ""
+
+#: app/routes/analitica.py:57 app/templates/dashboard.html:32
+msgid "Abiertos"
+msgstr ""
+
+#: app/routes/analitica.py:57 app/routes/analitica.py:63
+msgid "MTTR (h)"
+msgstr ""
+
+#: app/routes/analitica.py:57 app/routes/analitica.py:63
+msgid "SLA (%)"
+msgstr ""
+
+#: app/routes/analitica.py:63 app/templates/analitica.html:178
+#: app/templates/busqueda.html:42 app/templates/busqueda.html:92
+#: app/templates/cobertura.html:66 app/templates/cobertura.html:129
+#: app/templates/cobertura.html:172 app/templates/cobertura.html:218
+#: app/templates/panel_metricas.html:190 app/templates/usuarios.html:40
+#: app/templates/usuarios.html:59
+msgid "Área"
+msgstr ""
+
+#: app/routes/analitica.py:63 app/templates/ticket_detalle.html:101
+msgid "Carga actual"
+msgstr ""
+
+#: app/routes/analitica.py:63
+msgid "CSAT"
+msgstr ""
+
 #: app/routes/apelacion.py:22 app/routes/solicitudes.py:32
-#: app/routes/solicitudes.py:162 app/routes/solicitudes.py:234
-#: app/routes/tickets.py:148 app/routes/tickets.py:197
-#: app/routes/tickets.py:217
+#: app/routes/solicitudes.py:162 app/routes/solicitudes.py:233
+#: app/routes/tickets.py:178 app/routes/tickets.py:249
+#: app/routes/tickets.py:277 app/routes/tickets.py:298
 msgid "Ticket no encontrado"
 msgstr ""
 
@@ -345,87 +716,212 @@ msgstr ""
 msgid "Apelacion rechazada"
 msgstr ""
 
-#: app/routes/auditoria.py:121 app/templates/apelaciones_pendientes.html:15
-#: app/templates/auditoria.html:64
+#: app/routes/api.py:51
+msgid "Límite de peticiones alcanzado"
+msgstr ""
+
+#: app/routes/api.py:126 app/routes/api.py:229
+#, python-format
+msgid "Valor no válido para «%(p)s»"
+msgstr ""
+
+#: app/routes/api.py:155
+msgid "El campo «texto» es obligatorio (mínimo 10 caracteres)"
+msgstr ""
+
+#: app/routes/api.py:157
+msgid "El campo «texto» no puede superar 1200 caracteres"
+msgstr ""
+
+#: app/routes/api.py:180 app/routes/api.py:204
+msgid "El ticket no existe o no tienes acceso"
+msgstr ""
+
+#: app/routes/api.py:255
+msgid "Solo administradores"
+msgstr ""
+
+#: app/routes/api.py:272
+msgid "Recurso no encontrado"
+msgstr ""
+
+#: app/routes/api.py:298
+msgid "Token creado. Cópialo ahora: no se volverá a mostrar."
+msgstr ""
+
+#: app/routes/api.py:309
+msgid "Token revocado"
+msgstr ""
+
+#: app/routes/auditoria.py:121 app/templates/auditoria.html:68
+#: app/templates/webhook_detalle.html:82
 msgid "Fecha"
 msgstr ""
 
-#: app/routes/auditoria.py:121 app/templates/auditoria.html:16
-#: app/templates/auditoria.html:64
+#: app/routes/auditoria.py:121 app/templates/auditoria.html:20
+#: app/templates/auditoria.html:68 app/templates/usuarios.html:59
 msgid "Usuario"
 msgstr ""
 
-#: app/routes/auditoria.py:121 app/templates/auditoria.html:26
-#: app/templates/auditoria.html:64
+#: app/routes/auditoria.py:121 app/templates/auditoria.html:30
+#: app/templates/auditoria.html:68
 msgid "Acción"
 msgstr ""
 
-#: app/routes/auditoria.py:121 app/templates/auditoria.html:64
+#: app/routes/auditoria.py:121 app/templates/auditoria.html:68
+#: app/templates/webhook_detalle.html:88
 msgid "Detalle"
 msgstr ""
 
 #: app/routes/auditoria.py:131 app/routes/auditoria.py:152
-#: app/routes/tickets.py:397 app/routes/tickets.py:421
+#: app/routes/tickets.py:520 app/routes/tickets.py:544
 msgid "Desconocido"
 msgstr ""
 
-#: app/routes/auth.py:37
+#: app/routes/auth.py:52 app/routes/decoradores.py:16
+msgid "Tu cuenta no está activa. Contacta a un administrador."
+msgstr ""
+
+#: app/routes/auth.py:62
 msgid "usuario o contraseña incorrectos"
 msgstr ""
 
-#: app/routes/auth.py:40
+#: app/routes/auth.py:65
 msgid "Ocurrio un error interno, intentelo mas tarde "
 msgstr ""
 
-#: app/routes/auth.py:43
+#: app/routes/auth.py:68
 msgid "Se ha detectado un error externo, contacte con soporte"
 msgstr ""
 
-#: app/routes/auth.py:47
+#: app/routes/auth.py:72
 msgid "Usuario usted se encuentra bloqueado"
 msgstr ""
 
-#: app/routes/auth.py:50
+#: app/routes/auth.py:75
 msgid "Usuario usted ha sido bloqueado"
 msgstr ""
 
-#: app/routes/auth.py:75
+#: app/routes/auth.py:106
 msgid "Sesión cerrada correctamente"
 msgstr ""
 
-#: app/routes/auth.py:97
+#: app/routes/auth.py:128
 msgid "UN agente debe tener un area especifica"
 msgstr ""
 
-#: app/routes/auth.py:113
+#: app/routes/auth.py:144
 msgid "No se pudo registrar el usuario por un error interno, intente más tarde"
 msgstr ""
 
-#: app/routes/auth.py:117
+#: app/routes/auth.py:148
 msgid "Ya existe un usuario con ese email"
 msgstr ""
 
-#: app/routes/auth.py:120
+#: app/routes/auth.py:151
 msgid "Usuario registrado con éxito"
 msgstr ""
 
-#: app/routes/auth.py:171
+#: app/routes/auth.py:204 app/routes/usuarios.py:165
+msgid "La fecha indicada no es válida"
+msgstr ""
+
+#: app/routes/auth.py:215
+msgid "Quedaste marcado como disponible"
+msgstr ""
+
+#: app/routes/auth.py:223
+msgid ""
+"Quedaste marcado como ausente. No apareceras en sugerencias ni como "
+"destino de transferencias mientras dure la ausencia."
+msgstr ""
+
+#: app/routes/auth.py:241
 msgid "Contraseña cambiada con exito"
 msgstr ""
 
-#: app/routes/auth.py:189
+#: app/routes/auth.py:259
 msgid "Nombre actualizado con éxito"
 msgstr ""
 
-#: app/routes/auth.py:207
+#: app/routes/auth.py:277
 msgid "Foto de perfil actualizada"
 msgstr ""
 
-#: app/routes/decoradores.py:9 app/routes/decoradores.py:19
+#: app/routes/colaboracion.py:45 app/services/adjuntos.py:100
+#: app/services/autenticacion.py:292
+msgid "No se seleccionó ningún archivo"
+msgstr ""
+
+#: app/routes/colaboracion.py:54
+#, python-format
+msgid "%(n)s archivo(s) adjuntado(s)"
+msgstr ""
+
+#: app/routes/colaboracion.py:93
+msgid "Archivo eliminado"
+msgstr ""
+
+#: app/routes/colaboracion.py:106
+msgid "Ya no sigues este ticket"
+msgstr ""
+
+#: app/routes/colaboracion.py:109
+msgid "Ahora sigues este ticket: te avisaremos de su actividad"
+msgstr ""
+
+#: app/routes/colaboracion.py:124
+msgid "¡Gracias por tu opinión!"
+msgstr ""
+
+#: app/routes/colaboracion.py:138 app/services/base_conocimiento.py:73
+#: app/services/respuestas_predefinidas.py:50
+msgid "Categoría no válida"
+msgstr ""
+
+#: app/routes/colaboracion.py:151
+msgid "Respuesta predefinida creada"
+msgstr ""
+
+#: app/routes/colaboracion.py:171
+msgid "Respuesta predefinida actualizada"
+msgstr ""
+
+#: app/routes/colaboracion.py:182
+msgid "Respuesta predefinida eliminada"
+msgstr ""
+
+#: app/routes/conocimiento.py:92 app/routes/conocimiento.py:129
+msgid "Artículo publicado"
+msgstr ""
+
+#: app/routes/conocimiento.py:92
+msgid "Borrador guardado"
+msgstr ""
+
+#: app/routes/conocimiento.py:110
+msgid "Artículo actualizado"
+msgstr ""
+
+#: app/routes/conocimiento.py:129
+msgid "Artículo archivado"
+msgstr ""
+
+#: app/routes/conocimiento.py:141
+msgid "¡Gracias por tu valoración!"
+msgstr ""
+
+#: app/routes/conocimiento.py:159
+msgid ""
+"¡Genial! Nos alegra que lo hayas resuelto sin necesidad de abrir un "
+"ticket."
+msgstr ""
+
+#: app/routes/decoradores.py:11
 msgid "Debes iniciar sesión"
 msgstr ""
 
-#: app/routes/decoradores.py:22
+#: app/routes/decoradores.py:41 app/routes/decoradores.py:54
 msgid "No tienes permiso para entrar en esta funcion"
 msgstr ""
 
@@ -448,11 +944,11 @@ msgstr ""
 msgid "Correo destinatario inválido"
 msgstr ""
 
-#: app/routes/demo.py:96 app/templates/demo.html:63
+#: app/routes/demo.py:96 app/templates/demo.html:61
 msgid "El envío de correos está suprimido (TESTING=true)"
 msgstr ""
 
-#: app/routes/demo.py:98 app/templates/demo.html:65
+#: app/routes/demo.py:98 app/templates/demo.html:63
 msgid "Falta configurar MAIL_USERNAME y MAIL_PASSWORD en el .env"
 msgstr ""
 
@@ -495,7 +991,7 @@ msgstr ""
 msgid "Escribe el texto del ticket"
 msgstr ""
 
-#: app/routes/demo.py:163 app/routes/tickets.py:36
+#: app/routes/demo.py:163 app/routes/tickets.py:44
 #, python-format
 msgid "Ticket #%(id)s creado. Categoría: %(categoria)s, prioridad: %(prioridad)s"
 msgstr ""
@@ -509,47 +1005,43 @@ msgstr ""
 msgid "Se borraron %(n)s notificaciones de tu usuario"
 msgstr ""
 
-#: app/routes/metricas.py:66
+#: app/routes/metricas.py:75
 #, python-format
 msgid "Tickets por estado - %(valor)s"
 msgstr ""
 
-#: app/routes/metricas.py:69
+#: app/routes/metricas.py:78
 #, python-format
 msgid "Tickets por categoría - %(valor)s"
 msgstr ""
 
-#: app/routes/metricas.py:72
+#: app/routes/metricas.py:81
 #, python-format
 msgid "Tickets por prioridad - %(valor)s"
 msgstr ""
 
-#: app/routes/metricas.py:74
+#: app/routes/metricas.py:83
 msgid "Tickets vencidos actualmente"
 msgstr ""
 
-#: app/routes/metricas.py:75
+#: app/routes/metricas.py:84
 msgid "Tickets próximos a vencer"
 msgstr ""
 
-#: app/routes/metricas.py:76
+#: app/routes/metricas.py:85
 msgid "Tickets vencidos últimos 30 días"
 msgstr ""
 
-#: app/routes/metricas.py:77 app/templates/panel_metricas.html:47
+#: app/routes/metricas.py:86 app/templates/panel_metricas.html:55
 msgid "Cantidad de agentes"
 msgstr ""
 
-#: app/routes/metricas.py:82 app/routes/metricas.py:97
+#: app/routes/metricas.py:91 app/routes/metricas.py:106
 msgid "Métrica"
 msgstr ""
 
-#: app/routes/metricas.py:82 app/routes/metricas.py:97
-msgid "Valor"
-msgstr ""
-
 #: app/routes/palabra_clave.py:30 app/routes/palabra_clave.py:61
-#: app/routes/tickets.py:454
+#: app/routes/tickets.py:577
 msgid "Categoría inválida"
 msgstr ""
 
@@ -571,6 +1063,36 @@ msgstr ""
 
 #: app/routes/palabra_clave.py:99
 msgid "Palabra clave reactivada"
+msgstr ""
+
+#: app/routes/seguridad.py:44
+msgid "Tu sesión de verificación expiró. Inicia sesión de nuevo."
+msgstr ""
+
+#: app/routes/seguridad.py:58
+msgid "Demasiados códigos incorrectos. Inicia sesión de nuevo."
+msgstr ""
+
+#: app/routes/seguridad.py:120
+msgid "Verificación en dos pasos activada"
+msgstr ""
+
+#: app/routes/seguridad.py:133
+msgid "Se generaron nuevos códigos de respaldo; los anteriores ya no sirven"
+msgstr ""
+
+#: app/routes/seguridad.py:142
+msgid "Verificación en dos pasos desactivada"
+msgstr ""
+
+#: app/routes/seguridad.py:161
+msgid ""
+"Si el email está registrado, te enviamos un enlace para restablecer la "
+"contraseña. Revisa tu bandeja de entrada."
+msgstr ""
+
+#: app/routes/seguridad.py:188
+msgid "Contraseña restablecida. Ya puedes iniciar sesión."
 msgstr ""
 
 #: app/routes/solicitudes.py:39 app/routes/solicitudes.py:169
@@ -618,130 +1140,290 @@ msgstr ""
 msgid "Solicitud de escalamiento enviada"
 msgstr ""
 
-#: app/routes/solicitudes.py:208
+#: app/routes/solicitudes.py:207
 msgid "Escalamiento aprobado"
 msgstr ""
 
-#: app/routes/solicitudes.py:222
+#: app/routes/solicitudes.py:221
 msgid "Escalamiento rechazado"
 msgstr ""
 
-#: app/routes/solicitudes.py:241
+#: app/routes/solicitudes.py:240
 msgid "No tienes permiso para cambiar este ticket"
 msgstr ""
 
-#: app/routes/solicitudes.py:248
+#: app/routes/solicitudes.py:247
 msgid "La prioridad no es válida"
 msgstr ""
 
-#: app/routes/solicitudes.py:258
+#: app/routes/solicitudes.py:257
 msgid "Solicitud de cambio de prioridad enviada"
 msgstr ""
 
-#: app/routes/solicitudes.py:283
+#: app/routes/solicitudes.py:281
 msgid "Cambio de prioridad aprobado"
 msgstr ""
 
-#: app/routes/solicitudes.py:298
+#: app/routes/solicitudes.py:296
 msgid "Cambio de prioridad rechazado"
 msgstr ""
 
-#: app/routes/tickets.py:39
+#: app/routes/tickets.py:47
 msgid "No se pudo crear el ticket, intenta de nuevo"
 msgstr ""
 
-#: app/routes/tickets.py:54
+#: app/routes/tickets.py:69 app/services/usuarios.py:111
 msgid "Área no válida"
 msgstr ""
 
-#: app/routes/tickets.py:63
+#: app/routes/tickets.py:78
 msgid "No tienes permiso para ver tickets de esa área"
 msgstr ""
 
-#: app/routes/tickets.py:154
+#: app/routes/tickets.py:184
 msgid "No tienes permiso sobre tickets de esa área"
 msgstr ""
 
-#: app/routes/tickets.py:169
+#: app/routes/tickets.py:207
 msgid "Debes indicar el motivo para cerrar un ticket sin pasar por en progreso"
 msgstr ""
 
-#: app/routes/tickets.py:177
+#: app/routes/tickets.py:216
+#, python-format
+msgid ""
+"Ticket #%(id)s en espera del solicitante. Su SLA queda detenido hasta que"
+" responda."
+msgstr ""
+
+#: app/routes/tickets.py:219
 #, python-format
 msgid "Ticket #%(id)s actualizado a %(estado)s"
 msgstr ""
 
-#: app/routes/tickets.py:183
+#: app/routes/tickets.py:225
 #, python-format
 msgid "El ticket se cerró, pero no se pudo guardar el motivo: %(error)s"
 msgstr ""
 
-#: app/routes/tickets.py:206
+#: app/routes/tickets.py:232
+#, python-format
+msgid "El ticket quedó en espera, pero no se pudo guardar el mensaje: %(error)s"
+msgstr ""
+
+#: app/routes/tickets.py:254
+msgid "Elige el agente que se queda con el ticket"
+msgstr ""
+
+#: app/routes/tickets.py:259
+#, python-format
+msgid "Ticket #%(id)s cubierto correctamente"
+msgstr ""
+
+#: app/routes/tickets.py:286
 #, python-format
 msgid "Ticket #%(id)s reasignado correctamente"
 msgstr ""
 
-#: app/routes/tickets.py:226
+#: app/routes/tickets.py:314
+msgid "Nota interna agregada"
+msgstr ""
+
+#: app/routes/tickets.py:314
 msgid "Comentario agregado"
 msgstr ""
 
-#: app/routes/tickets.py:382 app/templates/admin_tickets.html:68
-#: app/templates/dashboard.html:16 app/templates/tickets_por_area.html:54
+#: app/routes/tickets.py:505 app/templates/admin_tickets.html:73
+#: app/templates/busqueda.html:40 app/templates/cobertura.html:64
+#: app/templates/cobertura.html:127 app/templates/dashboard.html:62
+#: app/templates/tickets_por_area.html:85
 msgid "ID"
 msgstr ""
 
-#: app/routes/tickets.py:382 app/templates/admin_tickets.html:68
-#: app/templates/dashboard.html:16 app/templates/demo.html:119
-#: app/templates/palabras_clave.html:37 app/templates/palabras_clave.html:76
-#: app/templates/palabras_clave.html:116 app/templates/ticket_detalle.html:9
-#: app/templates/tickets_por_area.html:54
+#: app/routes/tickets.py:505 app/templates/admin_tickets.html:73
+#: app/templates/busqueda.html:41 app/templates/cobertura.html:65
+#: app/templates/cobertura.html:128 app/templates/dashboard.html:62
+#: app/templates/demo.html:115 app/templates/palabras_clave.html:40
+#: app/templates/palabras_clave.html:79 app/templates/palabras_clave.html:119
+#: app/templates/respuestas_predefinidas.html:11
+#: app/templates/tickets_por_area.html:85
 msgid "Texto"
 msgstr ""
 
-#: app/routes/tickets.py:382 app/templates/admin_tickets.html:24
-#: app/templates/admin_tickets.html:68 app/templates/dashboard.html:16
-#: app/templates/palabras_clave.html:20 app/templates/palabras_clave.html:37
-#: app/templates/palabras_clave.html:80 app/templates/ticket_detalle.html:11
-msgid "Categoría"
-msgstr ""
-
-#: app/routes/tickets.py:382 app/templates/admin_tickets.html:38
-#: app/templates/admin_tickets.html:68 app/templates/dashboard.html:16
-#: app/templates/ticket_detalle.html:13 app/templates/tickets_por_area.html:20
-#: app/templates/tickets_por_area.html:54
+#: app/routes/tickets.py:505 app/templates/admin_tickets.html:43
+#: app/templates/admin_tickets.html:73 app/templates/cobertura.html:130
+#: app/templates/dashboard.html:62 app/templates/ticket_detalle.html:529
+#: app/templates/tickets_por_area.html:51
+#: app/templates/tickets_por_area.html:85
 msgid "Prioridad"
 msgstr ""
 
-#: app/routes/tickets.py:382 app/templates/admin_tickets.html:14
-#: app/templates/admin_tickets.html:68 app/templates/dashboard.html:17
-#: app/templates/palabras_clave.html:37 app/templates/ticket_detalle.html:15
-#: app/templates/tickets_por_area.html:10
-#: app/templates/tickets_por_area.html:54
+#: app/routes/tickets.py:505 app/templates/admin_tickets.html:18
+#: app/templates/admin_tickets.html:73 app/templates/busqueda.html:43
+#: app/templates/busqueda.html:93 app/templates/cobertura.html:68
+#: app/templates/cobertura.html:177 app/templates/dashboard.html:63
+#: app/templates/palabras_clave.html:40 app/templates/ticket_detalle.html:528
+#: app/templates/tickets_por_area.html:40
+#: app/templates/tickets_por_area.html:85 app/templates/usuarios.html:44
+#: app/templates/usuarios.html:60 app/templates/webhook_detalle.html:35
+#: app/templates/webhooks.html:29
 msgid "Estado"
 msgstr ""
 
-#: app/routes/tickets.py:383
+#: app/routes/tickets.py:506
 msgid "Creador"
 msgstr ""
 
-#: app/routes/tickets.py:383 app/templates/dashboard.html:17
-#: app/templates/ticket_detalle.html:23
+#: app/routes/tickets.py:506 app/templates/dashboard.html:63
+#: app/templates/ticket_detalle.html:533
 msgid "Fecha creación"
 msgstr ""
 
-#: app/routes/tickets.py:383 app/templates/admin_tickets.html:68
+#: app/routes/tickets.py:506 app/templates/admin_tickets.html:73
+#: app/templates/cobertura.html:132
 #: app/templates/email/ticket_notificacion.html:80
-#: app/templates/ticket_detalle.html:25 app/templates/tickets_por_area.html:55
+#: app/templates/ticket_detalle.html:534 app/templates/tickets_por_area.html:86
 msgid "Fecha límite"
 msgstr ""
 
-#: app/routes/tickets.py:459
+#: app/routes/tickets.py:582
 msgid "Categoría del ticket confirmada"
 msgstr ""
 
-#: app/services/apelacion.py:26 app/services/solicitud_transferencia.py:27
-#: app/services/solicitud_transferencia.py:207
-#: app/services/solicitud_transferencia.py:378 app/services/tickets.py:278
+#: app/routes/usuarios.py:86
+msgid "Usuario actualizado"
+msgstr ""
+
+#: app/routes/usuarios.py:86
+msgid "No había cambios que guardar"
+msgstr ""
+
+#: app/routes/usuarios.py:88
+msgid "Datos no válidos"
+msgstr ""
+
+#: app/routes/usuarios.py:133
+msgid "Cuenta reactivada"
+msgstr ""
+
+#: app/routes/usuarios.py:133
+msgid "Cuenta desactivada"
+msgstr ""
+
+#: app/routes/usuarios.py:141
+msgid "Cuenta desbloqueada"
+msgstr ""
+
+#: app/routes/usuarios.py:148
+msgid ""
+"Verificación en dos pasos restablecida. El usuario podrá configurarla de "
+"nuevo."
+msgstr ""
+
+#: app/routes/usuarios.py:155
+msgid "Enlace de recuperación enviado al correo del usuario"
+msgstr ""
+
+#: app/routes/usuarios.py:181
+msgid "Agente marcado como disponible"
+msgstr ""
+
+#: app/routes/usuarios.py:197
+msgid "Ausencia registrada"
+msgstr ""
+
+#: app/routes/webhooks.py:26
+#, python-format
+msgid ""
+"Webhook «%(nombre)s» registrado. Copia el secreto ahora para configurarlo"
+" en el destino."
+msgstr ""
+
+#: app/routes/webhooks.py:77
+msgid "Webhook activado"
+msgstr ""
+
+#: app/routes/webhooks.py:77
+msgid "Webhook desactivado"
+msgstr ""
+
+#: app/routes/webhooks.py:87
+#, python-format
+msgid "Prueba entregada (HTTP %(codigo)s)"
+msgstr ""
+
+#: app/routes/webhooks.py:89
+#, python-format
+msgid "La prueba falló: %(error)s"
+msgstr ""
+
+#: app/routes/webhooks.py:89 app/templates/webhook_detalle.html:103
+msgid "sin respuesta"
+msgstr ""
+
+#: app/routes/webhooks.py:100
+msgid "Webhook eliminado"
+msgstr ""
+
+#: app/services/adjuntos.py:86
+msgid "El archivo no existe"
+msgstr ""
+
+#: app/services/adjuntos.py:97 app/services/demo.py:41 app/services/demo.py:87
+#: app/services/encuestas.py:48 app/services/seguimiento.py:38
+#: app/services/tickets.py:133 app/services/tickets.py:225
+#: app/services/tickets.py:258
+msgid "El ticket no a sido encontrado"
+msgstr ""
+
+#: app/services/adjuntos.py:107
+#, python-format
+msgid "Tipo de archivo no permitido. Formatos aceptados: %(f)s"
+msgstr ""
+
+#: app/services/adjuntos.py:112
+#, python-format
+msgid "El ticket ya tiene el máximo de %(n)s archivos"
+msgstr ""
+
+#: app/services/adjuntos.py:116
+msgid "El archivo está vacío"
+msgstr ""
+
+#: app/services/adjuntos.py:118
+#, python-format
+msgid "El archivo supera el tamaño máximo de %(t)s"
+msgstr ""
+
+#: app/services/adjuntos.py:120
+msgid "El contenido del archivo no corresponde a su extensión"
+msgstr ""
+
+#: app/services/adjuntos.py:144
+msgid "No se pudo guardar el archivo"
+msgstr ""
+
+#: app/services/adjuntos.py:149
+#, python-format
+msgid "Archivo «%(p1)s» adjuntado al ticket #%(p2)s"
+msgstr ""
+
+#: app/services/adjuntos.py:158
+msgid "Solo quien subió el archivo o un administrador puede eliminarlo"
+msgstr ""
+
+#: app/services/adjuntos.py:167
+msgid "No se pudo eliminar el archivo"
+msgstr ""
+
+#: app/services/adjuntos.py:173
+#, python-format
+msgid "Archivo «%(p1)s» eliminado del ticket #%(p2)s"
+msgstr ""
+
+#: app/services/apelacion.py:26 app/services/solicitud_transferencia.py:28
+#: app/services/solicitud_transferencia.py:212
+#: app/services/solicitud_transferencia.py:382 app/services/tickets.py:361
+#: app/services/tickets.py:508
 msgid "El ticket no ha sido encontrado"
 msgstr ""
 
@@ -811,7 +1493,7 @@ msgstr ""
 msgid "Login exitoso para %(p1)s"
 msgstr ""
 
-#: app/services/autenticacion.py:174
+#: app/services/autenticacion.py:174 app/services/doble_factor.py:247
 msgid "la contraseña actual es incorrecta"
 msgstr ""
 
@@ -865,10 +1547,6 @@ msgstr ""
 msgid "Se realizó un cambio de nombre para el usuario: %(p1)s"
 msgstr ""
 
-#: app/services/autenticacion.py:292
-msgid "No se seleccionó ningún archivo"
-msgstr ""
-
 #: app/services/autenticacion.py:298
 msgid "Formato no permitido. Usa JPG, PNG o WEBP"
 msgstr ""
@@ -881,50 +1559,248 @@ msgstr ""
 msgid "El archivo no es una imagen válida"
 msgstr ""
 
-#: app/services/demo.py:45 app/services/demo.py:93 app/services/tickets.py:109
-#: app/services/tickets.py:160 app/services/tickets.py:189
-msgid "El ticket no a sido encontrado"
+#: app/services/base_conocimiento.py:67
+#: app/services/respuestas_predefinidas.py:44
+#, python-format
+msgid "El título debe tener al menos %(n)s caracteres"
 msgstr ""
 
-#: app/services/demo.py:55
+#: app/services/base_conocimiento.py:69
+msgid "El título no puede superar los 160 caracteres"
+msgstr ""
+
+#: app/services/base_conocimiento.py:71
+#: app/services/respuestas_predefinidas.py:48
+#, python-format
+msgid "El contenido debe tener al menos %(n)s caracteres"
+msgstr ""
+
+#: app/services/base_conocimiento.py:89
+msgid "El artículo no existe"
+msgstr ""
+
+#: app/services/base_conocimiento.py:105
+msgid "No se pudo crear el artículo"
+msgstr ""
+
+#: app/services/base_conocimiento.py:109
+#, python-format
+msgid "Artículo #%(p1)s creado: %(p2)s"
+msgstr ""
+
+#: app/services/base_conocimiento.py:124
+msgid "No se pudo actualizar el artículo"
+msgstr ""
+
+#: app/services/base_conocimiento.py:128
+#, python-format
+msgid "Artículo #%(p1)s editado: %(p2)s"
+msgstr ""
+
+#: app/services/base_conocimiento.py:139
+msgid "No se pudo cambiar la publicación del artículo"
+msgstr ""
+
+#: app/services/base_conocimiento.py:143
+#, python-format
+msgid "Artículo #%(p1)s publicado"
+msgstr ""
+
+#: app/services/base_conocimiento.py:144
+#, python-format
+msgid "Artículo #%(p1)s archivado"
+msgstr ""
+
+#: app/services/base_conocimiento.py:258
+msgid "No se pudo registrar tu voto"
+msgstr ""
+
+#: app/services/base_conocimiento.py:272
+msgid "No se pudo registrar la resolución"
+msgstr ""
+
+#: app/services/demo.py:51
 msgid "Plantilla de notificación inválida"
 msgstr ""
 
-#: app/services/demo.py:71
+#: app/services/demo.py:67
 msgid "Plantilla de correo inválida"
 msgstr ""
 
-#: app/services/demo.py:95
+#: app/services/demo.py:89
 msgid ""
 "El ticket está cerrado; el SLA solo aplica a tickets abiertos o en "
 "progreso"
 msgstr ""
 
-#: app/services/demo.py:108
+#: app/services/demo.py:101
 msgid "Modo de SLA inválido"
 msgstr ""
 
-#: app/services/metricas.py:180
+#: app/services/disponibilidad.py:158 app/services/usuarios.py:35
+msgid "El usuario no existe"
+msgstr ""
+
+#: app/services/disponibilidad.py:267 app/services/disponibilidad.py:315
+msgid "Solo los agentes tienen estado de disponibilidad"
+msgstr ""
+
+#: app/services/disponibilidad.py:269 app/services/usuarios.py:215
+msgid "La cuenta está desactivada"
+msgstr ""
+
+#: app/services/disponibilidad.py:273
+msgid "La fecha de regreso debe ser posterior a la de salida"
+msgstr ""
+
+#: app/services/disponibilidad.py:278
+#, python-format
+msgid "El motivo no puede superar los %(n)s caracteres"
+msgstr ""
+
+#: app/services/disponibilidad.py:284
+msgid "No se pudo registrar la ausencia"
+msgstr ""
+
+#: app/services/disponibilidad.py:287
+#, python-format
+msgid "Agente %(p1)s ausente desde %(p2)s hasta nuevo aviso"
+msgstr ""
+
+#: app/services/disponibilidad.py:290
+#, python-format
+msgid "Agente %(p1)s ausente del %(p2)s al %(p3)s"
+msgstr ""
+
+#: app/services/disponibilidad.py:323
+msgid "No se pudo registrar el regreso"
+msgstr ""
+
+#: app/services/disponibilidad.py:328
+#, python-format
+msgid "Agente %(p1)s marcado como disponible"
+msgstr ""
+
+#: app/services/doble_factor.py:124 app/services/doble_factor.py:153
+msgid "La verificación en dos pasos ya está activa"
+msgstr ""
+
+#: app/services/doble_factor.py:137
+msgid "No se pudo iniciar la configuración de la verificación en dos pasos"
+msgstr ""
+
+#: app/services/doble_factor.py:151
+msgid "Primero inicia la configuración de la verificación en dos pasos"
+msgstr ""
+
+#: app/services/doble_factor.py:158
+msgid ""
+"El código no es válido. Revisa que la hora de tu teléfono esté "
+"sincronizada."
+msgstr ""
+
+#: app/services/doble_factor.py:165
+msgid "No se pudo activar la verificación en dos pasos"
+msgstr ""
+
+#: app/services/doble_factor.py:170
+#, python-format
+msgid "Se activó la verificación en dos pasos para %(p1)s"
+msgstr ""
+
+#: app/services/doble_factor.py:178 app/services/doble_factor.py:251
+msgid "La verificación en dos pasos no está activa"
+msgstr ""
+
+#: app/services/doble_factor.py:182
+msgid "Demasiados códigos incorrectos. Intenta de nuevo en unos minutos."
+msgstr ""
+
+#: app/services/doble_factor.py:208
+msgid "No se pudo registrar el intento de verificación"
+msgstr ""
+
+#: app/services/doble_factor.py:212
+msgid "Código de verificación en dos pasos incorrecto"
+msgstr ""
+
+#: app/services/doble_factor.py:214
+msgid "El código no es válido"
+msgstr ""
+
+#: app/services/doble_factor.py:218
+msgid "No se pudo completar la verificación en dos pasos"
+msgstr ""
+
+#: app/services/doble_factor.py:224
+#, python-format
+msgid "Se usó un código de respaldo (quedan %(p1)s)"
+msgstr ""
+
+#: app/services/doble_factor.py:234
+msgid "No se pudieron regenerar los códigos de respaldo"
+msgstr ""
+
+#: app/services/doble_factor.py:238
+#, python-format
+msgid "Se regeneraron los códigos de respaldo de %(p1)s"
+msgstr ""
+
+#: app/services/doble_factor.py:254
+msgid "No se pudo desactivar la verificación en dos pasos"
+msgstr ""
+
+#: app/services/doble_factor.py:258
+#, python-format
+msgid "Se desactivó la verificación en dos pasos para %(p1)s"
+msgstr ""
+
+#: app/services/encuestas.py:50
+msgid "Solo quien creó el ticket puede calificar la atención"
+msgstr ""
+
+#: app/services/encuestas.py:52
+msgid "Ya calificaste la atención de este ticket"
+msgstr ""
+
+#: app/services/encuestas.py:54
+msgid "La encuesta no está disponible para este ticket"
+msgstr ""
+
+#: app/services/encuestas.py:58 app/services/encuestas.py:60
+msgid "Selecciona una calificación de 1 a 5"
+msgstr ""
+
+#: app/services/encuestas.py:75
+msgid "No se pudo guardar tu calificación"
+msgstr ""
+
+#: app/services/encuestas.py:80
+#, python-format
+msgid "Ticket #%(p1)s calificado con %(p2)s/5"
+msgstr ""
+
+#: app/services/metricas.py:179 app/templates/ticket_detalle.html:69
 msgid "Excelente"
 msgstr ""
 
-#: app/services/metricas.py:181
+#: app/services/metricas.py:180
 msgid "Muy bueno"
 msgstr ""
 
-#: app/services/metricas.py:182
+#: app/services/metricas.py:181
 msgid "Aceptable"
 msgstr ""
 
-#: app/services/metricas.py:183
+#: app/services/metricas.py:182
 msgid "Necesita mejorar"
 msgstr ""
 
-#: app/services/metricas.py:317
+#: app/services/metricas.py:315
 msgid "Es el único agente disponible en esta área"
 msgstr ""
 
-#: app/services/metricas.py:320
+#: app/services/metricas.py:318
 #, python-format
 msgid ""
 "Comparte la carga de trabajo más baja del área (%(n)s tickets en "
@@ -932,7 +1808,7 @@ msgid ""
 " caso"
 msgstr ""
 
-#: app/services/metricas.py:327
+#: app/services/metricas.py:325
 #, python-format
 msgid ""
 "Tiene la carga de trabajo más baja del área (%(n)s tickets en progreso) "
@@ -988,589 +1864,2282 @@ msgstr ""
 msgid "palabra #%(p1)s reactivada"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:30
+#: app/services/recuperacion.py:66
+msgid "No se pudo procesar la solicitud de recuperación"
+msgstr ""
+
+#: app/services/recuperacion.py:71
+#, python-format
+msgid "Se solicitó recuperar la contraseña de %(p1)s"
+msgstr ""
+
+#: app/services/recuperacion.py:81
+msgid "Sistema de Tickets IT — Restablecer contraseña"
+msgstr ""
+
+#: app/services/recuperacion.py:83
+#, python-format
+msgid ""
+"Hola %(nombre)s, recibimos una solicitud para restablecer tu contraseña. "
+"Abre este enlace en los próximos %(min)s minutos: %(enlace)s . Si no "
+"fuiste tú, ignora este correo."
+msgstr ""
+
+#: app/services/recuperacion.py:121 app/services/recuperacion.py:124
+msgid "El enlace de recuperación no es válido o ya expiró"
+msgstr ""
+
+#: app/services/recuperacion.py:134 app/templates/base.html:422
+msgid "Las contraseñas no coinciden"
+msgstr ""
+
+#: app/services/recuperacion.py:149
+msgid "No se pudo restablecer la contraseña"
+msgstr ""
+
+#: app/services/recuperacion.py:154
+#, python-format
+msgid "Se restableció la contraseña de %(p1)s mediante enlace de recuperación"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:36
+msgid "Solo agentes y administradores pueden usar respuestas predefinidas"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:46
+msgid "El título no puede superar los 120 caracteres"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:68
+msgid "La respuesta predefinida no existe"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:84
+msgid "No se pudo crear la respuesta predefinida"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:88
+#, python-format
+msgid "Respuesta predefinida creada: %(p1)s"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:97
+msgid "Solo el autor o un administrador puede modificar esta respuesta"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:103
+msgid "No se pudo actualizar la respuesta predefinida"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:107
+#, python-format
+msgid "Respuesta predefinida editada: %(p1)s"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:116
+msgid "Solo el autor o un administrador puede eliminar esta respuesta"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:119
+msgid "No se pudo eliminar la respuesta predefinida"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:123
+#, python-format
+msgid "Respuesta predefinida eliminada: %(p1)s"
+msgstr ""
+
+#: app/services/respuestas_predefinidas.py:131
+msgid "No se pudo registrar el uso"
+msgstr ""
+
+#: app/services/seguimiento.py:40
+msgid "Solo agentes y administradores pueden seguir tickets"
+msgstr ""
+
+#: app/services/seguimiento.py:49
+msgid "No se pudo seguir el ticket"
+msgstr ""
+
+#: app/services/seguimiento.py:62
+msgid "No se pudo dejar de seguir el ticket"
+msgstr ""
+
+#: app/services/solicitud_transferencia.py:31
 msgid "El ticket debe estar en progreso para solicitar transferencia"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:39
-#: app/services/solicitud_transferencia.py:220
-#: app/services/solicitud_transferencia.py:391
+#: app/services/solicitud_transferencia.py:40
+#: app/services/solicitud_transferencia.py:225
+#: app/services/solicitud_transferencia.py:395
 msgid "Ya hay una solicitud en curso con este ticket"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:44
+#: app/services/solicitud_transferencia.py:45
 msgid "El agente destinatario no existe"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:46
+#: app/services/solicitud_transferencia.py:47
 msgid "El destinarario no es un agente"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:48
+#: app/services/solicitud_transferencia.py:49
+msgid "El agente destinatario tiene la cuenta desactivada"
+msgstr ""
+
+#: app/services/solicitud_transferencia.py:51
 msgid "El agente no pertenece al area correcta"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:50
+#: app/services/solicitud_transferencia.py:53
+msgid "El agente destinatario está marcado como ausente"
+msgstr ""
+
+#: app/services/solicitud_transferencia.py:55
 msgid "El agente destinatario no puede ser el mismo"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:66
+#: app/services/solicitud_transferencia.py:71
 msgid "No se pudo crear la solicitud de transferencia"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:71
+#: app/services/solicitud_transferencia.py:76
 #, python-format
 msgid "Ticket #%(p1)s: solicitud a agente %(p2)s"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:89
-#: app/services/solicitud_transferencia.py:135
-#: app/services/solicitud_transferencia.py:172
-#: app/services/solicitud_transferencia.py:266
-#: app/services/solicitud_transferencia.py:317
-#: app/services/solicitud_transferencia.py:438
-#: app/services/solicitud_transferencia.py:495
+#: app/services/solicitud_transferencia.py:94
+#: app/services/solicitud_transferencia.py:140
+#: app/services/solicitud_transferencia.py:177
+#: app/services/solicitud_transferencia.py:271
+#: app/services/solicitud_transferencia.py:323
+#: app/services/solicitud_transferencia.py:442
+#: app/services/solicitud_transferencia.py:499
 msgid "La solicitud no ha sido encontrada"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:92
-#: app/services/solicitud_transferencia.py:138
-#: app/services/solicitud_transferencia.py:175
-#: app/services/solicitud_transferencia.py:269
-#: app/services/solicitud_transferencia.py:320
-#: app/services/solicitud_transferencia.py:441
-#: app/services/solicitud_transferencia.py:498
+#: app/services/solicitud_transferencia.py:97
+#: app/services/solicitud_transferencia.py:143
+#: app/services/solicitud_transferencia.py:180
+#: app/services/solicitud_transferencia.py:274
+#: app/services/solicitud_transferencia.py:326
+#: app/services/solicitud_transferencia.py:445
+#: app/services/solicitud_transferencia.py:502
 msgid "La solicitud ya fue resuelta"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:97
-#: app/services/solicitud_transferencia.py:274
-#: app/services/solicitud_transferencia.py:446
+#: app/services/solicitud_transferencia.py:102
+#: app/services/solicitud_transferencia.py:279
+#: app/services/solicitud_transferencia.py:450
 msgid "El ticket no tiene el estado permitido"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:113
+#: app/services/solicitud_transferencia.py:118
 msgid "No se pudo aceptar la solicitud"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:118
+#: app/services/solicitud_transferencia.py:123
 #, python-format
 msgid "Ticket #%(p1)s: %(p2)s -> %(p3)s (solicitud #%(p4)s)"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:149
-#: app/services/solicitud_transferencia.py:331
-#: app/services/solicitud_transferencia.py:509
+#: app/services/solicitud_transferencia.py:154
+#: app/services/solicitud_transferencia.py:337
+#: app/services/solicitud_transferencia.py:513
 msgid "No se pudo rechazar la solicitud"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:154
-#: app/services/solicitud_transferencia.py:336
+#: app/services/solicitud_transferencia.py:159
+#: app/services/solicitud_transferencia.py:342
 #, python-format
 msgid "Solicitud #%(p1)s rechazada (ticket #%(p2)s)"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:186
+#: app/services/solicitud_transferencia.py:191
 msgid "No se pudo cancelar la solicitud"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:191
+#: app/services/solicitud_transferencia.py:196
 #, python-format
 msgid "Solicitud #%(p1)s cancelada (ticket #%(p2)s)"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:210
+#: app/services/solicitud_transferencia.py:215
 msgid "El ticket debe estar en progreso para solicitar cambio de area"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:222
+#: app/services/solicitud_transferencia.py:227
 msgid "El area no puede ser la misma"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:224
-#: app/services/solicitud_transferencia.py:395
+#: app/services/solicitud_transferencia.py:229
+#: app/services/solicitud_transferencia.py:399
 msgid "La solicitud requiere motivo"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:241
+#: app/services/solicitud_transferencia.py:246
 msgid "No se pudo crear la solicitud de escalamiento"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:246
+#: app/services/solicitud_transferencia.py:251
 #, python-format
 msgid "Ticket #%(p1)s: escalamiento solicitado de %(p2)s a %(p3)s"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:277
+#: app/services/solicitud_transferencia.py:282
 msgid "Esta solicitud no es un escalamiento de área"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:294
+#: app/services/solicitud_transferencia.py:300
 msgid "No se pudo aceptar la solicitud de escalamiento"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:299
+#: app/services/solicitud_transferencia.py:305
 #, python-format
 msgid "Ticket #%(p1)s: escalamiento aprobado a %(p2)s (solicitud #%(p3)s)"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:381
+#: app/services/solicitud_transferencia.py:385
 msgid "El ticket debe estar en progreso para solicitar cambio de prioridad"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:393
+#: app/services/solicitud_transferencia.py:397
 msgid "La prioridad no puede ser la misma"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:413
+#: app/services/solicitud_transferencia.py:417
 msgid "No se pudo crear la solicitud de cambio de prioridad"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:418
+#: app/services/solicitud_transferencia.py:422
 #, python-format
 msgid "Ticket #%(p1)s: cambio de prioridad solicitado de %(p2)s a %(p3)s"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:449
+#: app/services/solicitud_transferencia.py:453
 msgid "Esta solicitud no es un cambio de prioridad"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:471
+#: app/services/solicitud_transferencia.py:475
 msgid "No se pudo aceptar la solicitud de cambio de prioridad"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:476
+#: app/services/solicitud_transferencia.py:480
 #, python-format
 msgid "Ticket #%(p1)s: cambio de prioridad aprobado a %(p2)s (solicitud #%(p3)s)"
 msgstr ""
 
-#: app/services/solicitud_transferencia.py:514
+#: app/services/solicitud_transferencia.py:518
 #, python-format
 msgid "Solicitud #%(p1)s cambio a %(p2)s rechazada (ticket #%(p3)s)"
 msgstr ""
 
-#: app/services/tickets.py:61
+#: app/services/tickets.py:70
 msgid "No se pudo crear el ticket"
 msgstr ""
 
-#: app/services/tickets.py:76
+#: app/services/tickets.py:87
 #, python-format
 msgid "Ticket #%(p1)s creado: categoria=%(p2)s, prioridad=%(p3)s"
 msgstr ""
 
-#: app/services/tickets.py:112
+#: app/services/tickets.py:136
 msgid "La transicion no es valida"
 msgstr ""
 
-#: app/services/tickets.py:118
+#: app/services/tickets.py:144
+msgid "Debes indicar qué se le está pidiendo al solicitante"
+msgstr ""
+
+#: app/services/tickets.py:150
 msgid "Se requiere un agente_id para pasar a EN_PROGRESO"
 msgstr ""
 
-#: app/services/tickets.py:137
+#: app/services/tickets.py:180
 msgid "No se pudo cambiar el estado del ticket"
 msgstr ""
 
-#: app/services/tickets.py:143
+#: app/services/tickets.py:183
 #, python-format
 msgid "Ticket #%(p1)s: %(p2)s -> %(p3)s"
 msgstr ""
 
-#: app/services/tickets.py:163
+#: app/services/tickets.py:228
 msgid "Este ticket no esta en un estado valido para su reasignacion"
 msgstr ""
 
-#: app/services/tickets.py:165
+#: app/services/tickets.py:230 app/services/tickets.py:376
 msgid "Este ticket ya tiene asignado a este mismo agente"
 msgstr ""
 
-#: app/services/tickets.py:176
+#: app/services/tickets.py:243
 msgid "No se pudo reasignar el agente"
 msgstr ""
 
-#: app/services/tickets.py:182
+#: app/services/tickets.py:249
 #, python-format
 msgid "Ticket #%(p1)s: agente %(p2)s -> %(p3)s"
 msgstr ""
 
-#: app/services/tickets.py:192
+#: app/services/tickets.py:261
 msgid "El comentario no puede estar vacio"
 msgstr ""
 
-#: app/services/tickets.py:204
+#: app/services/tickets.py:265
+msgid "Solo agentes y administradores pueden agregar notas internas"
+msgstr ""
+
+#: app/services/tickets.py:278
 msgid "No se pudo agregar el comentario"
 msgstr ""
 
-#: app/services/tickets.py:210
+#: app/services/tickets.py:284
+#, python-format
+msgid "Se agrego una nota interna al ticket #%(p1)s"
+msgstr ""
+
+#: app/services/tickets.py:285
 #, python-format
 msgid "Se agrego un comentario al ticket #%(p1)s"
 msgstr ""
 
-#: app/services/tickets.py:281
+#: app/services/tickets.py:363
+msgid "Este ticket no necesita cobertura"
+msgstr ""
+
+#: app/services/tickets.py:367 app/services/tickets.py:369
+msgid "El agente destino no es válido"
+msgstr ""
+
+#: app/services/tickets.py:372
+msgid "El agente destino no pertenece al área del ticket"
+msgstr ""
+
+#: app/services/tickets.py:374
+msgid "El agente destino está ausente"
+msgstr ""
+
+#: app/services/tickets.py:396
+msgid "No se pudo tomar la cobertura del ticket"
+msgstr ""
+
+#: app/services/tickets.py:401
+#, python-format
+msgid "Ticket #%(p1)s: cobertura tomada por %(p2)s (agente anterior %(p3)s)"
+msgstr ""
+
+#: app/services/tickets.py:511
 msgid "Este ticket ya tiene confirmada su categoría"
 msgstr ""
 
-#: app/services/tickets.py:305
+#: app/services/tickets.py:535
 msgid "No se pudo confirmar la clasificación"
+msgstr ""
+
+#: app/services/tokens_api.py:77
+msgid "El nombre del token debe tener entre 3 y 80 caracteres"
+msgstr ""
+
+#: app/services/tokens_api.py:79
+msgid "Duración no válida"
+msgstr ""
+
+#: app/services/tokens_api.py:81
+#, python-format
+msgid ""
+"Alcanzaste el máximo de %(n)s tokens activos. Revoca alguno antes de "
+"crear otro."
+msgstr ""
+
+#: app/services/tokens_api.py:97
+msgid "No se pudo crear el token"
+msgstr ""
+
+#: app/services/tokens_api.py:101
+#, python-format
+msgid "Token de API «%(p1)s» creado (%(p2)s…)"
+msgstr ""
+
+#: app/services/tokens_api.py:109
+msgid "El token no existe"
+msgstr ""
+
+#: app/services/tokens_api.py:117
+msgid "No se pudo revocar el token"
+msgstr ""
+
+#: app/services/tokens_api.py:121
+#, python-format
+msgid "Token de API «%(p1)s» revocado"
+msgstr ""
+
+#: app/services/tokens_api.py:128
+msgid "Token ausente o con formato inválido"
+msgstr ""
+
+#: app/services/tokens_api.py:133
+msgid "Token inválido, revocado o expirado"
+msgstr ""
+
+#: app/services/tokens_api.py:136
+msgid "La cuenta asociada al token no está activa"
+msgstr ""
+
+#: app/services/usuarios.py:105
+msgid "El nombre debe tener al menos 2 caracteres"
+msgstr ""
+
+#: app/services/usuarios.py:107
+msgid "El nombre no puede superar los 100 caracteres"
+msgstr ""
+
+#: app/services/usuarios.py:109
+msgid "Rol o nivel no válido"
+msgstr ""
+
+#: app/services/usuarios.py:113
+msgid "Un agente debe tener un área de soporte"
+msgstr ""
+
+#: app/services/usuarios.py:119
+msgid "No puedes quitarte tu propio rol de administrador"
+msgstr ""
+
+#: app/services/usuarios.py:121 app/services/usuarios.py:164
+msgid "Debe quedar al menos un administrador activo"
+msgstr ""
+
+#: app/services/usuarios.py:126
+msgid ""
+"El agente tiene tickets en progreso. Reasígnalos antes de cambiar su rol "
+"o área."
+msgstr ""
+
+#: app/services/usuarios.py:131
+msgid "nombre"
+msgstr ""
+
+#: app/services/usuarios.py:133
+#, python-format
+msgid "rol: %(a)s → %(b)s"
+msgstr ""
+
+#: app/services/usuarios.py:135
+#, python-format
+msgid "nivel: %(a)s → %(b)s"
+msgstr ""
+
+#: app/services/usuarios.py:137
+#, python-format
+msgid "área: %(a)s → %(b)s"
+msgstr ""
+
+#: app/services/usuarios.py:147
+msgid "No se pudo actualizar el usuario"
+msgstr ""
+
+#: app/services/usuarios.py:151
+#, python-format
+msgid "Usuario %(p1)s editado (%(p2)s)"
+msgstr ""
+
+#: app/services/usuarios.py:162
+msgid "No puedes desactivar tu propia cuenta"
+msgstr ""
+
+#: app/services/usuarios.py:167
+msgid ""
+"El usuario tiene tickets en progreso asignados. Reasígnalos antes de "
+"desactivarlo."
+msgstr ""
+
+#: app/services/usuarios.py:170
+msgid "No se pudo cambiar el estado del usuario"
+msgstr ""
+
+#: app/services/usuarios.py:174
+#, python-format
+msgid "Cuenta reactivada: %(p1)s"
+msgstr ""
+
+#: app/services/usuarios.py:175
+#, python-format
+msgid "Cuenta desactivada: %(p1)s"
+msgstr ""
+
+#: app/services/usuarios.py:184
+msgid "No se pudo desbloquear al usuario"
+msgstr ""
+
+#: app/services/usuarios.py:188
+#, python-format
+msgid "Desbloqueo manual de %(p1)s por un administrador"
+msgstr ""
+
+#: app/services/usuarios.py:199
+msgid "El usuario no tiene configurada la verificación en dos pasos"
+msgstr ""
+
+#: app/services/usuarios.py:201
+msgid "No se pudo restablecer la verificación en dos pasos"
+msgstr ""
+
+#: app/services/usuarios.py:205
+#, python-format
+msgid "Verificación en dos pasos restablecida para %(p1)s"
+msgstr ""
+
+#: app/services/usuarios.py:219
+msgid ""
+"Se alcanzó el límite de enlaces de recuperación para este usuario. "
+"Intenta más tarde."
+msgstr ""
+
+#: app/services/webhooks.py:89
+msgid "Se registró un ticket nuevo"
+msgstr ""
+
+#: app/services/webhooks.py:90
+msgid "Un ticket cambió de agente"
+msgstr ""
+
+#: app/services/webhooks.py:91
+msgid "Un ticket cambió de estado"
+msgstr ""
+
+#: app/services/webhooks.py:92
+msgid "Un ticket se cerró"
+msgstr ""
+
+#: app/services/webhooks.py:93
+msgid "Un ticket pasó su fecha límite"
+msgstr ""
+
+#: app/services/webhooks.py:94
+msgid "Un ticket quedó sin agente disponible"
+msgstr ""
+
+#: app/services/webhooks.py:110
+msgid "El webhook no existe"
+msgstr ""
+
+#: app/services/webhooks.py:136
+msgid "La URL es obligatoria"
+msgstr ""
+
+#: app/services/webhooks.py:138
+msgid "La URL es demasiado larga"
+msgstr ""
+
+#: app/services/webhooks.py:142
+msgid "La URL debe empezar por http:// o https://"
+msgstr ""
+
+#: app/services/webhooks.py:150
+msgid "No se permiten destinos locales"
+msgstr ""
+
+#: app/services/webhooks.py:156
+msgid "No se permiten destinos de la red interna"
+msgstr ""
+
+#: app/services/webhooks.py:163
+msgid "Elige al menos un evento válido"
+msgstr ""
+
+#: app/services/webhooks.py:181
+msgid "El nombre es obligatorio"
+msgstr ""
+
+#: app/services/webhooks.py:183
+msgid "El nombre no puede superar los 80 caracteres"
+msgstr ""
+
+#: app/services/webhooks.py:190
+#, python-format
+msgid "No puedes tener más de %(n)s webhooks registrados"
+msgstr ""
+
+#: app/services/webhooks.py:202
+msgid "No se pudo registrar el webhook"
+msgstr ""
+
+#: app/services/webhooks.py:207
+#, python-format
+msgid "Webhook %(p1)s creado hacia %(p2)s (%(p3)s)"
+msgstr ""
+
+#: app/services/webhooks.py:219
+msgid "No se pudo actualizar el webhook"
+msgstr ""
+
+#: app/services/webhooks.py:224
+#, python-format
+msgid "Webhook %(p1)s %(p2)s"
+msgstr ""
+
+#: app/services/webhooks.py:225
+msgid "activado"
+msgstr ""
+
+#: app/services/webhooks.py:225
+msgid "desactivado"
+msgstr ""
+
+#: app/services/webhooks.py:236
+msgid "No se pudo eliminar el webhook"
+msgstr ""
+
+#: app/services/webhooks.py:241
+#, python-format
+msgid "Webhook %(p1)s eliminado"
+msgstr ""
+
+#: app/services/webhooks.py:384
+#, python-format
+msgid "Webhook %(p1)s desactivado automáticamente tras %(p2)s fallos seguidos"
+msgstr ""
+
+#: app/services/webhooks.py:473
+#, python-format
+msgid "Prueba enviada al webhook %(p1)s: %(p2)s"
 msgstr ""
 
 #: app/templates/admin_tickets.html:2
 msgid "Tickets (Admin)"
 msgstr ""
 
-#: app/templates/admin_tickets.html:5
+#: app/templates/admin_tickets.html:7
 msgid "Tickets del sistema"
 msgstr ""
 
-#: app/templates/admin_tickets.html:7 app/templates/auditoria.html:7
-#: app/templates/panel_metricas.html:7
+#: app/templates/admin_tickets.html:8
+msgid "Todos los tickets, con filtros por estado, categoría, prioridad y SLA."
+msgstr ""
+
+#: app/templates/admin_tickets.html:11 app/templates/auditoria.html:11
+#: app/templates/panel_metricas.html:12
 msgid "Exportar CSV"
 msgstr ""
 
-#: app/templates/admin_tickets.html:8 app/templates/auditoria.html:8
-#: app/templates/panel_metricas.html:8
+#: app/templates/admin_tickets.html:12 app/templates/auditoria.html:12
+#: app/templates/panel_metricas.html:13
 msgid "Exportar Excel"
 msgstr ""
 
-#: app/templates/admin_tickets.html:16 app/templates/auditoria.html:18
-#: app/templates/tickets_por_area.html:12
+#: app/templates/admin_tickets.html:20 app/templates/auditoria.html:22
+#: app/templates/tickets_por_area.html:42
 msgid "-- Todos --"
 msgstr ""
 
-#: app/templates/admin_tickets.html:26 app/templates/admin_tickets.html:40
-#: app/templates/auditoria.html:28 app/templates/tickets_por_area.html:22
+#: app/templates/admin_tickets.html:31 app/templates/admin_tickets.html:45
+#: app/templates/auditoria.html:32 app/templates/tickets_por_area.html:53
 msgid "-- Todas --"
 msgstr ""
 
-#: app/templates/admin_tickets.html:48
+#: app/templates/admin_tickets.html:53
 msgid "Vista especial"
 msgstr ""
 
-#: app/templates/admin_tickets.html:50
+#: app/templates/admin_tickets.html:55
 msgid "-- Ninguna --"
 msgstr ""
 
-#: app/templates/admin_tickets.html:51 app/templates/panel_metricas.html:17
+#: app/templates/admin_tickets.html:56 app/templates/base.html:341
+#: app/templates/panel_metricas.html:23
 msgid "Vencidos actualmente"
 msgstr ""
 
-#: app/templates/admin_tickets.html:52 app/templates/panel_metricas.html:27
+#: app/templates/admin_tickets.html:57 app/templates/base.html:342
+#: app/templates/panel_metricas.html:34
 msgid "Próximos a vencer"
 msgstr ""
 
-#: app/templates/admin_tickets.html:53 app/templates/panel_metricas.html:37
+#: app/templates/admin_tickets.html:58 app/templates/panel_metricas.html:45
 msgid "Vencidos últimos 30 días"
 msgstr ""
 
-#: app/templates/admin_tickets.html:58 app/templates/auditoria.html:52
-#: app/templates/tickets_por_area.html:40
+#: app/templates/admin_tickets.html:63 app/templates/auditoria.html:56
+#: app/templates/tickets_por_area.html:71 app/templates/usuarios.html:51
 msgid "Filtrar"
 msgstr ""
 
-#: app/templates/admin_tickets.html:59 app/templates/auditoria.html:53
-#: app/templates/demo.html:150 app/templates/tickets_por_area.html:41
+#: app/templates/admin_tickets.html:64 app/templates/auditoria.html:57
+#: app/templates/demo.html:145 app/templates/perfil.html:223
+#: app/templates/tickets_por_area.html:72
 msgid "Limpiar"
 msgstr ""
 
-#: app/templates/admin_tickets.html:68 app/templates/ticket_detalle.html:32
+#: app/templates/admin_tickets.html:73 app/templates/ticket_detalle.html:94
 msgid "Agente sugerido"
 msgstr ""
 
-#: app/templates/admin_tickets.html:84
+#: app/templates/admin_tickets.html:89
 msgid "ya asignado"
 msgstr ""
 
-#: app/templates/admin_tickets.html:92 app/templates/ticket_detalle.html:68
+#: app/templates/admin_tickets.html:97 app/templates/ticket_detalle.html:130
 msgid "Asignar"
 msgstr ""
 
-#: app/templates/admin_tickets.html:96
+#: app/templates/admin_tickets.html:101
 msgid "sin agentes en el área"
 msgstr ""
 
-#: app/templates/admin_tickets.html:107
+#: app/templates/admin_tickets.html:112
 msgid "Paginación de tickets"
 msgstr ""
 
-#: app/templates/admin_tickets.html:113 app/templates/auditoria.html:86
+#: app/templates/admin_tickets.html:118 app/templates/auditoria.html:90
+#: app/templates/usuarios.html:96
 msgid "Anterior"
 msgstr ""
 
-#: app/templates/admin_tickets.html:116 app/templates/auditoria.html:90
+#: app/templates/admin_tickets.html:121 app/templates/auditoria.html:94
+#: app/templates/usuarios.html:97
 #, python-format
 msgid "Página %(page)s de %(pages)s"
 msgstr ""
 
-#: app/templates/admin_tickets.html:119 app/templates/auditoria.html:94
+#: app/templates/admin_tickets.html:124 app/templates/auditoria.html:98
+#: app/templates/usuarios.html:98
 msgid "Siguiente"
 msgstr ""
 
-#: app/templates/admin_tickets.html:125 app/templates/tickets_por_area.html:47
+#: app/templates/admin_tickets.html:130 app/templates/tickets_por_area.html:78
 msgid "No hay tickets que coincidan con los filtros seleccionados."
 msgstr ""
 
-#: app/templates/apelaciones_pendientes.html:2
-#: app/templates/apelaciones_pendientes.html:5
+#: app/templates/analitica.html:2 app/templates/analitica.html:18
+#: app/templates/base.html:46 app/templates/base.html:333
+msgid "Analítica"
+msgstr ""
+
+#: app/templates/analitica.html:7
+msgid "Respecto al periodo anterior"
+msgstr ""
+
+#: app/templates/analitica.html:19
+#, python-format
+msgid "Del %(d)s al %(h)s, comparado con el periodo anterior de igual duración."
+msgstr ""
+
+#: app/templates/analitica.html:22
+msgid "Periodo"
+msgstr ""
+
+#: app/templates/analitica.html:29
+msgid "Todas las categorías"
+msgstr ""
+
+#: app/templates/analitica.html:49
+msgid "Pendientes ahora"
+msgstr ""
+
+#: app/templates/analitica.html:51
+#, python-format
+msgid "%(num)s vencido"
+msgid_plural "%(num)s vencidos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/analitica.html:55
+msgid "Resolución media"
+msgstr ""
+
+#: app/templates/analitica.html:57
+msgid "Mediana"
+msgstr ""
+
+#: app/templates/analitica.html:61
+msgid "Primera respuesta"
+msgstr ""
+
+#: app/templates/analitica.html:63
+#, python-format
+msgid "Mediana · %(p)s respondidos"
+msgstr ""
+
+#: app/templates/analitica.html:67 app/templates/panel_metricas.html:229
+#: app/templates/panel_metricas.html:316
+msgid "Cumplimiento SLA"
+msgstr ""
+
+#: app/templates/analitica.html:72
+msgid "Satisfacción (CSAT)"
+msgstr ""
+
+#: app/templates/analitica.html:74
+#, python-format
+msgid "%(p)s/5 · %(n)s encuestas"
+msgstr ""
+
+#: app/templates/analitica.html:74
+msgid "Sin encuestas"
+msgstr ""
+
+#: app/templates/analitica.html:83
+msgid "Volumen diario"
+msgstr ""
+
+#: app/templates/analitica.html:84 app/templates/analitica.html:91
+msgid "Tickets creados y cerrados por día"
+msgstr ""
+
+#: app/templates/analitica.html:98 app/templates/analitica.html:102
+msgid "Pendientes al cierre del día"
+msgstr ""
+
+#: app/templates/analitica.html:99
+msgid "Tickets abiertos o en progreso acumulados"
+msgstr ""
+
+#: app/templates/analitica.html:107
+msgid "Ver los datos en tabla"
+msgstr ""
+
+#: app/templates/analitica.html:110
+msgid "Día"
+msgstr ""
+
+#: app/templates/analitica.html:110 app/templates/analitica.html:128
+#: app/templates/analitica.html:263
+msgid "Pendientes"
+msgstr ""
+
+#: app/templates/analitica.html:123 app/templates/panel_metricas.html:83
+msgid "Por categoría"
+msgstr ""
+
+#: app/templates/analitica.html:128 app/templates/analitica.html:179
+msgid "MTTR"
+msgstr ""
+
+#: app/templates/analitica.html:143
+msgid "Sin datos en este periodo."
+msgstr ""
+
+#: app/templates/analitica.html:150
+msgid "¿Cuándo llegan los tickets?"
+msgstr ""
+
+#: app/templates/analitica.html:151 app/templates/analitica.html:154
+msgid "Tickets creados por día de la semana y hora"
+msgstr ""
+
+#: app/templates/analitica.html:153
+msgid "Lun"
+msgstr ""
+
+#: app/templates/analitica.html:153
+msgid "Mar"
+msgstr ""
+
+#: app/templates/analitica.html:153
+msgid "Mié"
+msgstr ""
+
+#: app/templates/analitica.html:153
+msgid "Jue"
+msgstr ""
+
+#: app/templates/analitica.html:153
+msgid "Vie"
+msgstr ""
+
+#: app/templates/analitica.html:153
+msgid "Sáb"
+msgstr ""
+
+#: app/templates/analitica.html:153
+msgid "Dom"
+msgstr ""
+
+#: app/templates/analitica.html:160
+#, python-format
+msgid "%(num)s ticket"
+msgid_plural "%(num)s tickets"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/analitica.html:166
+msgid "Menos"
+msgstr ""
+
+#: app/templates/analitica.html:166
+msgid "Más"
+msgstr ""
+
+#: app/templates/analitica.html:173
+msgid "Rendimiento de agentes"
+msgstr ""
+
+#: app/templates/analitica.html:197
+msgid "No hay agentes en este filtro."
+msgstr ""
+
+#: app/templates/analitica.html:205
+msgid "Satisfacción"
+msgstr ""
+
+#: app/templates/analitica.html:229
+msgid ""
+"Aún no hay encuestas respondidas en este periodo. Los usuarios califican "
+"la atención al cerrarse sus tickets."
+msgstr ""
+
+#: app/templates/analitica.html:236 app/templates/base.html:336
+#: app/templates/base.html:356 app/templates/busqueda.html:63
+#: app/templates/conocimiento.html:2
+msgid "Base de conocimiento"
+msgstr ""
+
+#: app/templates/analitica.html:239 app/templates/base.html:60
+#: app/templates/base.html:80
+msgid "Artículos"
+msgstr ""
+
+#: app/templates/analitica.html:240 app/templates/articulo.html:70
+#: app/templates/conocimiento.html:61
+msgid "Vistas"
+msgstr ""
+
+#: app/templates/analitica.html:241 app/templates/articulo.html:71
+msgid "Tickets evitados"
+msgstr ""
+
+#: app/templates/analitica.html:242
+msgid "Utilidad"
+msgstr ""
+
+#: app/templates/apelaciones_pendientes.html:3
+#: app/templates/apelaciones_pendientes.html:7
 msgid "Apelaciones pendientes"
 msgstr ""
 
-#: app/templates/apelaciones_pendientes.html:13
-#: app/templates/cambios_prioridad_pendientes.html:19
-#: app/templates/demo.html:45 app/templates/demo.html:76
-#: app/templates/escalamientos_pendientes.html:19
-#: app/templates/revision_clasificacion.html:17
-#: app/templates/solicitudes_pendientes.html:20
-#: app/templates/ticket_detalle.html:5
-msgid "Ticket"
+#: app/templates/apelaciones_pendientes.html:8
+msgid "Usuarios que no están de acuerdo con el cierre de su ticket."
 msgstr ""
 
-#: app/templates/apelaciones_pendientes.html:14
-msgid "Motivo"
+#: app/templates/apelaciones_pendientes.html:25
+#: app/templates/cambios_prioridad_pendientes.html:33
+#: app/templates/demo.html:163 app/templates/email/ticket_notificacion.html:102
+#: app/templates/escalamientos_pendientes.html:33
+#: app/templates/solicitudes_pendientes.html:37
+msgid "Ver ticket"
 msgstr ""
 
-#: app/templates/apelaciones_pendientes.html:16
-#: app/templates/palabras_clave.html:37
-msgid "Acciones"
-msgstr ""
-
-#: app/templates/apelaciones_pendientes.html:32
-#: app/templates/solicitudes_pendientes.html:40
-#: app/templates/ticket_detalle.html:130 app/templates/ticket_detalle.html:188
-msgid "Aceptar"
-msgstr ""
-
-#: app/templates/apelaciones_pendientes.html:36
-#: app/templates/cambios_prioridad_pendientes.html:35
-#: app/templates/escalamientos_pendientes.html:35
-#: app/templates/solicitudes_pendientes.html:45
-#: app/templates/ticket_detalle.html:136 app/templates/ticket_detalle.html:194
-#: app/templates/ticket_detalle.html:207 app/templates/ticket_detalle.html:220
+#: app/templates/apelaciones_pendientes.html:28
+#: app/templates/cambios_prioridad_pendientes.html:36
+#: app/templates/escalamientos_pendientes.html:36
+#: app/templates/solicitudes_pendientes.html:46
+#: app/templates/ticket_detalle.html:258 app/templates/ticket_detalle.html:316
+#: app/templates/ticket_detalle.html:329 app/templates/ticket_detalle.html:342
 msgid "Rechazar"
 msgstr ""
 
-#: app/templates/apelaciones_pendientes.html:46
+#: app/templates/apelaciones_pendientes.html:32
+#: app/templates/solicitudes_pendientes.html:50
+#: app/templates/ticket_detalle.html:252 app/templates/ticket_detalle.html:310
+msgid "Aceptar"
+msgstr ""
+
+#: app/templates/apelaciones_pendientes.html:40
 msgid "No hay apelaciones pendientes."
 msgstr ""
 
-#: app/templates/auditoria.html:2 app/templates/auditoria.html:5
-#: app/templates/base.html:155
+#: app/templates/api_docs.html:2 app/templates/api_docs.html:8
+#: app/templates/base.html:200 app/templates/base.html:371
+#: app/templates/perfil.html:159
+msgid "API y tokens"
+msgstr ""
+
+#: app/templates/api_docs.html:9
+msgid ""
+"Integra el sistema de tickets con tus scripts, monitores o herramientas "
+"internas."
+msgstr ""
+
+#: app/templates/api_docs.html:14 app/templates/articulo_form.html:27
+msgid "Contenido"
+msgstr ""
+
+#: app/templates/api_docs.html:15
+msgid "Tus tokens"
+msgstr ""
+
+#: app/templates/api_docs.html:16 app/templates/api_docs.html:89
+msgid "Autenticación"
+msgstr ""
+
+#: app/templates/api_docs.html:17 app/templates/api_docs.html:96
+msgid "Errores y límites"
+msgstr ""
+
+#: app/templates/api_docs.html:18 app/templates/api_docs.html:115
+msgid "Endpoints"
+msgstr ""
+
+#: app/templates/api_docs.html:19 app/templates/api_docs.html:138
+msgid "Ejemplos"
+msgstr ""
+
+#: app/templates/api_docs.html:25
+msgid "Tus tokens personales"
+msgstr ""
+
+#: app/templates/api_docs.html:26
+msgid ""
+"Cada token actúa en tu nombre y con tus permisos. Guárdalo como una "
+"contraseña: solo se muestra una vez."
+msgstr ""
+
+#: app/templates/api_docs.html:30
+msgid "Tu nuevo token"
+msgstr ""
+
+#: app/templates/api_docs.html:33 app/templates/base.html:421
+#: app/templates/dos_pasos_configurar.html:26
+#: app/templates/respuestas_predefinidas.html:60
+#: app/templates/ticket_detalle.html:11
+msgid "Copiar"
+msgstr ""
+
+#: app/templates/api_docs.html:35
+msgid ""
+"Cópialo ahora. Por seguridad solo guardamos su huella y no podremos "
+"mostrártelo de nuevo."
+msgstr ""
+
+#: app/templates/api_docs.html:42 app/templates/busqueda.html:89
+#: app/templates/registro.html:18 app/templates/usuario_detalle.html:45
+#: app/templates/webhooks.html:25 app/templates/webhooks.html:85
+msgid "Nombre"
+msgstr ""
+
+#: app/templates/api_docs.html:43
+msgid "Ej.: Script de monitoreo"
+msgstr ""
+
+#: app/templates/api_docs.html:46
+msgid "Caduca en"
+msgstr ""
+
+#: app/templates/api_docs.html:48
+#, python-format
+msgid "%(num)s día"
+msgid_plural "%(num)s días"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/api_docs.html:49 app/templates/usuario_detalle.html:103
+#: app/templates/usuarios.html:80
+msgid "Nunca"
+msgstr ""
+
+#: app/templates/api_docs.html:53
+msgid "Crear token"
+msgstr ""
+
+#: app/templates/api_docs.html:65 app/templates/busqueda.html:44
+#: app/templates/webhook_detalle.html:42
+msgid "Creado"
+msgstr ""
+
+#: app/templates/api_docs.html:66
+msgid "Revocado"
+msgstr ""
+
+#: app/templates/api_docs.html:67
+msgid "Caducado"
+msgstr ""
+
+#: app/templates/api_docs.html:68
+msgid "caduca"
+msgstr ""
+
+#: app/templates/api_docs.html:69
+msgid "sin caducidad"
+msgstr ""
+
+#: app/templates/api_docs.html:70
+msgid "último uso"
+msgstr ""
+
+#: app/templates/api_docs.html:70
+msgid "nunca usado"
+msgstr ""
+
+#: app/templates/api_docs.html:76
+#, python-format
+msgid "Las integraciones que usen «%(n)s» dejarán de funcionar de inmediato."
+msgstr ""
+
+#: app/templates/api_docs.html:76
+msgid "Revocar"
+msgstr ""
+
+#: app/templates/api_docs.html:83
+#, python-format
+msgid "Aún no tienes tokens. Puedes tener hasta %(n)s activos."
+msgstr ""
+
+#: app/templates/api_docs.html:90
+msgid "Envía el token en la cabecera Authorization de cada petición:"
+msgstr ""
+
+#: app/templates/api_docs.html:92
+msgid ""
+"La API respeta los mismos permisos que la web: un usuario final solo ve "
+"sus tickets, un agente los de su área y un administrador todos. Las notas"
+" internas solo llegan a agentes y administradores."
+msgstr ""
+
+#: app/templates/api_docs.html:97
+msgid "Los errores siempre devuelven el mismo formato:"
+msgstr ""
+
+#: app/templates/api_docs.html:101 app/templates/articulo_form.html:39
+#: app/templates/dos_pasos_configurar.html:36 app/templates/perfil.html:138
+#: app/templates/verificar_2fa.html:12
+msgid "Código"
+msgstr ""
+
+#: app/templates/api_docs.html:101
+msgid "Cuándo ocurre"
+msgstr ""
+
+#: app/templates/api_docs.html:103
+msgid "Un filtro tiene un valor no válido"
+msgstr ""
+
+#: app/templates/api_docs.html:104
+msgid "Token ausente, revocado o caducado"
+msgstr ""
+
+#: app/templates/api_docs.html:105
+msgid "Tu rol no permite la operación"
+msgstr ""
+
+#: app/templates/api_docs.html:106
+msgid "El recurso no existe o no tienes acceso"
+msgstr ""
+
+#: app/templates/api_docs.html:107
+msgid "El cuerpo de la petición no es válido"
+msgstr ""
+
+#: app/templates/api_docs.html:108
+#, python-format
+msgid "Superaste %(n)s peticiones por minuto (revisa Retry-After)"
+msgstr ""
+
+#: app/templates/api_docs.html:118
+msgid "Tu usuario y los datos del token"
+msgstr ""
+
+#: app/templates/api_docs.html:119
+msgid ""
+"Lista paginada. Filtros: estado, categoria, prioridad, pagina, por_pagina"
+" (máx. 100)"
+msgstr ""
+
+#: app/templates/api_docs.html:120
+#, python-brace-format
+msgid "Crea un ticket. Cuerpo: {\"texto\": \"…\"}. Se clasifica automáticamente"
+msgstr ""
+
+#: app/templates/api_docs.html:121
+msgid "Detalle con comentarios y adjuntos"
+msgstr ""
+
+#: app/templates/api_docs.html:122
+#, python-brace-format
+msgid "Comenta. Cuerpo: {\"texto\": \"…\", \"interno\": false}"
+msgstr ""
+
+#: app/templates/api_docs.html:123
+msgid "Busca en la base de conocimiento. Filtros: q, categoria"
+msgstr ""
+
+#: app/templates/api_docs.html:124
+msgid "Artículo completo"
+msgstr ""
+
+#: app/templates/api_docs.html:125
+msgid "Indicadores del periodo (solo administradores). Filtro: dias"
+msgstr ""
+
+#: app/templates/api_docs.html:126
+msgid "Estado del servicio, sin autenticación"
+msgstr ""
+
+#: app/templates/api_docs.html:145
+msgid "Listar mis tickets abiertos"
+msgstr ""
+
+#: app/templates/api_docs.html:149 app/templates/base.html:291
+msgid "Crear un ticket"
+msgstr ""
+
+#: app/templates/api_docs.html:172
+msgid "Respuesta de ejemplo de un ticket:"
+msgstr ""
+
+#: app/templates/articulo.html:5
+msgid "Volver al centro de ayuda"
+msgstr ""
+
+#: app/templates/articulo.html:12 app/templates/busqueda.html:71
+#: app/templates/conocimiento.html:56
+msgid "Borrador"
+msgstr ""
+
+#: app/templates/articulo.html:18
+msgid "Equipo de soporte"
+msgstr ""
+
+#: app/templates/articulo.html:19
+msgid "Actualizado"
+msgstr ""
+
+#: app/templates/articulo.html:20
+#, python-format
+msgid "%(num)s vista"
+msgid_plural "%(num)s vistas"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/articulo.html:28
+msgid "¿Te resultó útil este artículo?"
+msgstr ""
+
+#: app/templates/articulo.html:30
+#, python-format
+msgid "%(p)s%% de las personas lo encontró útil"
+msgstr ""
+
+#: app/templates/articulo.html:37 app/templates/cobertura.html:155
+msgid "Sí"
+msgstr ""
+
+#: app/templates/articulo.html:42
+msgid "No"
+msgstr ""
+
+#: app/templates/articulo.html:50
+msgid "¿Esto resolvió tu problema?"
+msgstr ""
+
+#: app/templates/articulo.html:51
+msgid "Si es así, no hace falta abrir un ticket."
+msgstr ""
+
+#: app/templates/articulo.html:56
+msgid "Sí, ya está resuelto"
+msgstr ""
+
+#: app/templates/articulo.html:58
+msgid "No, continuar con mi ticket"
+msgstr ""
+
+#: app/templates/articulo.html:68
+msgid "Gestión"
+msgstr ""
+
+#: app/templates/articulo.html:72
+msgid "Votos"
+msgstr ""
+
+#: app/templates/articulo.html:75 app/templates/palabras_clave.html:53
+#: app/templates/respuestas_predefinidas.html:62
+msgid "Editar"
+msgstr ""
+
+#: app/templates/articulo.html:79
+msgid "El artículo dejará de ser visible para los usuarios."
+msgstr ""
+
+#: app/templates/articulo.html:80
+msgid "Archivar"
+msgstr ""
+
+#: app/templates/articulo.html:80
+msgid "Publicar"
+msgstr ""
+
+#: app/templates/articulo.html:83 app/templates/ticket_detalle.html:33
+msgid "Copiar enlace"
+msgstr ""
+
+#: app/templates/articulo.html:92 app/templates/ticket_detalle.html:611
+msgid "Artículos relacionados"
+msgstr ""
+
+#: app/templates/articulo.html:104
+msgid "¿Sigues con el problema?"
+msgstr ""
+
+#: app/templates/articulo.html:105
+msgid "Nuestro equipo te ayuda. Indica qué pasos de esta guía ya probaste."
+msgstr ""
+
+#: app/templates/articulo_form.html:2 app/templates/articulo_form.html:7
+#: app/templates/base.html:61 app/templates/base.html:81
+#: app/templates/base.html:337 app/templates/base.html:357
+#: app/templates/conocimiento.html:22
+msgid "Nuevo artículo"
+msgstr ""
+
+#: app/templates/articulo_form.html:8
+msgid ""
+"Escribe guías claras y accionables. Los usuarios las verán al crear un "
+"ticket con un problema parecido."
+msgstr ""
+
+#: app/templates/articulo_form.html:18 app/templates/articulo_form.html:34
+#: app/templates/respuestas_predefinidas.html:7
+msgid "Título"
+msgstr ""
+
+#: app/templates/articulo_form.html:19
+msgid "Ej.: Cómo conectarte a la VPN desde casa"
+msgstr ""
+
+#: app/templates/articulo_form.html:22 app/templates/base.html:45
+msgid "Resumen"
+msgstr ""
+
+#: app/templates/articulo_form.html:22 app/templates/crear_ticket.html:31
+msgid "opcional"
+msgstr ""
+
+#: app/templates/articulo_form.html:23
+msgid "Una frase que explique qué resuelve esta guía"
+msgstr ""
+
+#: app/templates/articulo_form.html:29
+msgid "Escribir"
+msgstr ""
+
+#: app/templates/articulo_form.html:30
+msgid "Vista previa"
+msgstr ""
+
+#: app/templates/articulo_form.html:35
+msgid "Negrita"
+msgstr ""
+
+#: app/templates/articulo_form.html:36
+msgid "Cursiva"
+msgstr ""
+
+#: app/templates/articulo_form.html:37
+msgid "Lista"
+msgstr ""
+
+#: app/templates/articulo_form.html:38
+msgid "Lista numerada"
+msgstr ""
+
+#: app/templates/articulo_form.html:40
+msgid "Nota"
+msgstr ""
+
+#: app/templates/articulo_form.html:44
+msgid ""
+"Formato admitido: ## títulos, **negrita**, *cursiva*, listas con - o 1., "
+"`código`, > notas y [texto](https://enlace)."
+msgstr ""
+
+#: app/templates/articulo_form.html:52
+msgid "Publicación"
+msgstr ""
+
+#: app/templates/articulo_form.html:62
+msgid "Etiquetas"
+msgstr ""
+
+#: app/templates/articulo_form.html:64
+msgid "Separadas por comas. Mejoran las sugerencias automáticas."
+msgstr ""
+
+#: app/templates/articulo_form.html:68
+msgid "Visible para todos los usuarios"
+msgstr ""
+
+#: app/templates/articulo_form.html:71 app/templates/palabras_clave.html:100
+#: app/templates/perfil.html:114 app/templates/respuestas_predefinidas.html:73
+msgid "Guardar"
+msgstr ""
+
+#: app/templates/articulo_form.html:72 app/templates/base.html:273
+#: app/templates/respuestas_predefinidas.html:74
+#: app/templates/solicitudes_pendientes.html:41
+msgid "Cancelar"
+msgstr ""
+
+#: app/templates/auditoria.html:2 app/templates/auditoria.html:7
+#: app/templates/base.html:64 app/templates/base.html:339
 msgid "Log de auditoría"
 msgstr ""
 
-#: app/templates/auditoria.html:42 app/templates/tickets_por_area.html:30
+#: app/templates/auditoria.html:8
+msgid ""
+"Registro de cada acción relevante: inicios de sesión, cambios de estado, "
+"comentarios y más."
+msgstr ""
+
+#: app/templates/auditoria.html:46 app/templates/cobertura.html:219
+#: app/templates/perfil.html:62 app/templates/perfil.html:85
+#: app/templates/tickets_por_area.html:61
+#: app/templates/usuario_detalle.html:156
 msgid "Desde"
 msgstr ""
 
-#: app/templates/auditoria.html:47 app/templates/tickets_por_area.html:35
+#: app/templates/auditoria.html:51 app/templates/cobertura.html:220
+#: app/templates/perfil.html:64 app/templates/perfil.html:90
+#: app/templates/tickets_por_area.html:66
+#: app/templates/usuario_detalle.html:161
 msgid "Hasta"
 msgstr ""
 
-#: app/templates/auditoria.html:71
+#: app/templates/auditoria.html:75
 #, python-format
 msgid "Usuario #%(id)s"
 msgstr ""
 
-#: app/templates/auditoria.html:80
+#: app/templates/auditoria.html:84
 msgid "Paginación del log de auditoría"
 msgstr ""
 
-#: app/templates/auditoria.html:100
+#: app/templates/auditoria.html:104
 msgid "No hay registros de auditoría que coincidan con los filtros seleccionados."
 msgstr ""
 
-#: app/templates/base.html:29
-msgid "Idioma"
+#: app/templates/base.html:38
+msgid "Saltar al contenido"
 msgstr ""
 
-#: app/templates/base.html:40 app/templates/base.html:50
-msgid "Notificaciones"
-msgstr ""
-
-#: app/templates/base.html:53
-msgid "Marcar todas como leídas"
-msgstr ""
-
-#: app/templates/base.html:82 app/templates/base.html:227
-msgid "Sin notificaciones"
-msgstr ""
-
-#: app/templates/base.html:90 app/templates/perfil.html:33
-msgid "Foto de perfil"
-msgstr ""
-
-#: app/templates/base.html:95
-msgid "Cuenta"
-msgstr ""
-
-#: app/templates/base.html:102 app/templates/perfil.html:2
-#: app/templates/perfil.html:25
-msgid "Mi perfil"
-msgstr ""
-
-#: app/templates/base.html:104
-msgid "Cerrar sesión"
-msgstr ""
-
-#: app/templates/base.html:110
-msgid "Abrir menú de navegación"
-msgstr ""
-
-#: app/templates/base.html:123
+#: app/templates/base.html:44 app/templates/base.html:324
 msgid "Panel"
 msgstr ""
 
-#: app/templates/base.html:129
+#: app/templates/base.html:47 app/templates/cobertura.html:6
+msgid "Cobertura"
+msgstr ""
+
+#: app/templates/base.html:48 app/templates/base.html:73
+#: app/templates/base.html:382 app/templates/busqueda.html:35
 msgid "Tickets"
 msgstr ""
 
-#: app/templates/base.html:131
+#: app/templates/base.html:49 app/templates/base.html:325
 msgid "Todos los tickets"
 msgstr ""
 
-#: app/templates/base.html:132 app/templates/base.html:171
-#: app/templates/base.html:185 app/templates/dashboard.html:2
-#: app/templates/dashboard.html:5
+#: app/templates/base.html:50 app/templates/base.html:74
+#: app/templates/base.html:85 app/templates/base.html:86
+#: app/templates/base.html:326 app/templates/base.html:352
+#: app/templates/base.html:362 app/templates/dashboard.html:2
+#: app/templates/dashboard.html:8
 msgid "Mis tickets"
 msgstr ""
 
-#: app/templates/base.html:139 app/templates/base.html:179
-msgid "Solicitudes"
-msgstr ""
-
-#: app/templates/base.html:141
-msgid "Transferencias"
-msgstr ""
-
-#: app/templates/base.html:142
-msgid "Escalamientos"
-msgstr ""
-
-#: app/templates/base.html:143
-msgid "Cambios de prioridad"
-msgstr ""
-
-#: app/templates/base.html:144
+#: app/templates/base.html:52 app/templates/base.html:331
 msgid "Revisión IA"
 msgstr ""
 
-#: app/templates/base.html:145
+#: app/templates/base.html:53 app/templates/base.html:76
+#: app/templates/base.html:338 app/templates/base.html:355
+#: app/templates/respuestas_predefinidas.html:2
+#: app/templates/respuestas_predefinidas.html:34
+#: app/templates/ticket_detalle.html:393
+msgid "Respuestas rápidas"
+msgstr ""
+
+#: app/templates/base.html:54 app/templates/base.html:77
+#: app/templates/base.html:78 app/templates/base.html:354
+msgid "Solicitudes"
+msgstr ""
+
+#: app/templates/base.html:55 app/templates/base.html:328
+msgid "Transferencias"
+msgstr ""
+
+#: app/templates/base.html:56 app/templates/base.html:329
+msgid "Escalamientos"
+msgstr ""
+
+#: app/templates/base.html:57 app/templates/base.html:330
+msgid "Cambios de prioridad"
+msgstr ""
+
+#: app/templates/base.html:58 app/templates/base.html:332
 msgid "Apelaciones"
 msgstr ""
 
-#: app/templates/base.html:152
+#: app/templates/base.html:59 app/templates/base.html:79
+msgid "Conocimiento"
+msgstr ""
+
+#: app/templates/base.html:62
 msgid "Administración"
 msgstr ""
 
-#: app/templates/base.html:154 app/templates/registro.html:3
-msgid "Registrar usuario"
+#: app/templates/base.html:63 app/templates/base.html:334
+#: app/templates/busqueda.html:84 app/templates/usuarios.html:2
+#: app/templates/usuarios.html:8
+msgid "Usuarios"
 msgstr ""
 
-#: app/templates/base.html:156
+#: app/templates/base.html:65 app/templates/base.html:340
 msgid "Palabras clave"
 msgstr ""
 
-#: app/templates/base.html:159 app/templates/demo.html:2
-#: app/templates/demo.html:6
+#: app/templates/base.html:66 app/templates/base.html:344
+#: app/templates/webhooks.html:2 app/templates/webhooks.html:7
+msgid "Webhooks"
+msgstr ""
+
+#: app/templates/base.html:67 app/templates/base.html:347
+#: app/templates/demo.html:2 app/templates/demo.html:6
 msgid "Modo demo"
 msgstr ""
 
-#: app/templates/base.html:167
+#: app/templates/base.html:71 app/templates/base.html:72
+#: app/templates/base.html:350
 msgid "Mi área"
 msgstr ""
 
-#: app/templates/base.html:205 app/templates/base.html:228
-#: app/templates/tickets_por_area.html:90
-#: app/templates/tickets_por_area.html:110
+#: app/templates/base.html:88 app/templates/base.html:89
+#: app/templates/base.html:364 app/templates/conocimiento.html:2
+#: app/templates/crear_ticket.html:64
+msgid "Centro de ayuda"
+msgstr ""
+
+#: app/templates/base.html:106
+msgid "Abrir menú de navegación"
+msgstr ""
+
+#: app/templates/base.html:114
+msgid "Módulos"
+msgstr ""
+
+#: app/templates/base.html:123 app/templates/base.html:289
+#: app/templates/base.html:307 app/templates/base.html:312
+msgid "Buscar o ir a…"
+msgstr ""
+
+#: app/templates/base.html:129
+msgid "Nuevo ticket"
+msgstr ""
+
+#: app/templates/base.html:132 app/templates/perfil.html:203
+#: app/templates/perfil.html:206
+msgid "Idioma"
+msgstr ""
+
+#: app/templates/base.html:138
+msgid "Cambiar tema"
+msgstr ""
+
+#: app/templates/base.html:146 app/templates/base.html:152
+msgid "Notificaciones"
+msgstr ""
+
+#: app/templates/base.html:155
+msgid "Marcar todas como leídas"
+msgstr ""
+
+#: app/templates/base.html:177 app/templates/base.html:438
+msgid "Sin notificaciones"
+msgstr ""
+
+#: app/templates/base.html:180
+msgid "Activar notificaciones de escritorio"
+msgstr ""
+
+#: app/templates/base.html:186
+msgid "Mi cuenta"
+msgstr ""
+
+#: app/templates/base.html:195
+msgid "Cuenta"
+msgstr ""
+
+#: app/templates/base.html:199 app/templates/base.html:370
+#: app/templates/perfil.html:2 app/templates/perfil.html:6
+msgid "Mi perfil"
+msgstr ""
+
+#: app/templates/base.html:201 app/templates/base.html:284
+#: app/templates/base.html:375
+msgid "Atajos de teclado"
+msgstr ""
+
+#: app/templates/base.html:203 app/templates/base.html:376
+msgid "Cerrar sesión"
+msgstr ""
+
+#: app/templates/base.html:221 app/templates/base.html:382
+msgid "Navegación"
+msgstr ""
+
+#: app/templates/base.html:224 app/templates/base.html:249
+#: app/templates/base.html:285 app/templates/base.html:439
+#: app/templates/tickets_por_area.html:133
+#: app/templates/tickets_por_area.html:147
+#: app/templates/tickets_por_area.html:160
 msgid "Cerrar"
 msgstr ""
 
-#: app/templates/base.html:222
+#: app/templates/base.html:257
+msgid "Volver arriba"
+msgstr ""
+
+#: app/templates/base.html:267 app/templates/base.html:394
+msgid "Confirmar acción"
+msgstr ""
+
+#: app/templates/base.html:268 app/templates/base.html:395
+msgid "Esta acción no se puede deshacer fácilmente."
+msgstr ""
+
+#: app/templates/base.html:274 app/templates/revision_clasificacion.html:39
+msgid "Confirmar"
+msgstr ""
+
+#: app/templates/base.html:290
+msgid "Buscar en la tabla"
+msgstr ""
+
+#: app/templates/base.html:292
+msgid "Ir al panel"
+msgstr ""
+
+#: app/templates/base.html:293
+msgid "Ir a la lista de tickets"
+msgstr ""
+
+#: app/templates/base.html:294
+msgid "Ir a mis tickets"
+msgstr ""
+
+#: app/templates/base.html:295 app/templates/base.html:372
+msgid "Cambiar tema claro / oscuro"
+msgstr ""
+
+#: app/templates/base.html:296
+msgid "Moverse entre filas de la tabla"
+msgstr ""
+
+#: app/templates/base.html:297
+msgid "Abrir la fila seleccionada"
+msgstr ""
+
+#: app/templates/base.html:298
+msgid "Escribir un comentario (en un ticket)"
+msgstr ""
+
+#: app/templates/base.html:299
+msgid "Mostrar esta ayuda"
+msgstr ""
+
+#: app/templates/base.html:300
+msgid "Enviar el formulario desde un cuadro de texto"
+msgstr ""
+
+#: app/templates/base.html:312
+msgid "Escribe para buscar páginas o un número de ticket"
+msgstr ""
+
+#: app/templates/base.html:316 app/templates/base.html:397
+msgid "Ningún resultado coincide con tu búsqueda."
+msgstr ""
+
+#: app/templates/base.html:335 app/templates/registro.html:3
+msgid "Registrar usuario"
+msgstr ""
+
+#: app/templates/base.html:343 app/templates/cobertura.html:2
+msgid "Cobertura y tickets sin asignar"
+msgstr ""
+
+#: app/templates/base.html:345 app/templates/base.html:358
+#: app/templates/base.html:365
+msgid "Búsqueda avanzada"
+msgstr ""
+
+#: app/templates/base.html:351 app/templates/perfil.html:50
+msgid "Mi disponibilidad"
+msgstr ""
+
+#: app/templates/base.html:381
+#, python-format
+msgid "Ir al ticket #%(id)s"
+msgstr ""
+
+#: app/templates/base.html:382 app/templates/palabras_clave.html:40
+msgid "Acciones"
+msgstr ""
+
+#: app/templates/base.html:382 app/templates/conocimiento.html:44
+msgid "Recientes"
+msgstr ""
+
+#: app/templates/base.html:392
+msgid "Mostrar contraseña"
+msgstr ""
+
+#: app/templates/base.html:393
+msgid "Ocultar contraseña"
+msgstr ""
+
+#: app/templates/base.html:396
+msgid "Filtrar en esta página…"
+msgstr ""
+
+#: app/templates/base.html:398
+msgid "Copiado"
+msgstr ""
+
+#: app/templates/base.html:399
+msgid "Contraer menú"
+msgstr ""
+
+#: app/templates/base.html:400
+msgid "Expandir menú"
+msgstr ""
+
+#: app/templates/base.html:401 app/templates/conocimiento.html:43
+msgid "Ordenar"
+msgstr ""
+
+#: app/templates/base.html:402
+msgid "Buenos días"
+msgstr ""
+
+#: app/templates/base.html:403
+msgid "Buenas tardes"
+msgstr ""
+
+#: app/templates/base.html:404
+msgid "Buenas noches"
+msgstr ""
+
+#: app/templates/base.html:405
+msgid "Sin conexión. Lo que envíes no llegará hasta que vuelvas a estar en línea."
+msgstr ""
+
+#: app/templates/base.html:406
+msgid "Conexión restablecida."
+msgstr ""
+
+#: app/templates/base.html:407
+msgid "Tiempo restante"
+msgstr ""
+
+#: app/templates/base.html:408
+msgid "Vencido hace"
+msgstr ""
+
+#: app/templates/base.html:409
+msgid "Borrador restaurado"
+msgstr ""
+
+#: app/templates/base.html:410
+msgid "Descartar"
+msgstr ""
+
+#: app/templates/base.html:411
+msgid "Notificaciones de escritorio activadas"
+msgstr ""
+
+#: app/templates/base.html:412
+msgid "caracteres"
+msgstr ""
+
+#: app/templates/base.html:413
+msgid "Añade más detalle para una mejor clasificación automática."
+msgstr ""
+
+#: app/templates/base.html:414
+msgid "Bloq Mayús está activado"
+msgstr ""
+
+#: app/templates/base.html:415
+msgid "Al menos 8 caracteres"
+msgstr ""
+
+#: app/templates/base.html:415
+msgid "Una mayúscula"
+msgstr ""
+
+#: app/templates/base.html:415
+msgid "Una minúscula"
+msgstr ""
+
+#: app/templates/base.html:415
+msgid "Un número"
+msgstr ""
+
+#: app/templates/base.html:415
+msgid "Un símbolo"
+msgstr ""
+
+#: app/templates/base.html:416
+msgid "Filtros activos"
+msgstr ""
+
+#: app/templates/base.html:417
+msgid "Quitar filtro"
+msgstr ""
+
+#: app/templates/base.html:418
+msgid "Limpiar todo"
+msgstr ""
+
+#: app/templates/base.html:419 app/templates/perfil.html:213
+#: app/templates/perfil.html:216
+msgid "Vista compacta"
+msgstr ""
+
+#: app/templates/base.html:420 app/templates/base.html:433
 msgid "Notificación nueva"
 msgstr ""
 
-#: app/templates/base.html:223
+#: app/templates/base.html:423 app/templates/dos_pasos_codigos.html:3
+msgid "Códigos de respaldo"
+msgstr ""
+
+#: app/templates/base.html:434
 msgid "ahora"
 msgstr ""
 
-#: app/templates/base.html:224
+#: app/templates/base.html:435
 #, python-format
 msgid "hace %(n)s min"
 msgstr ""
 
-#: app/templates/base.html:225
+#: app/templates/base.html:436
 #, python-format
 msgid "hace %(n)s h"
 msgstr ""
 
-#: app/templates/base.html:226
+#: app/templates/base.html:437
 #, python-format
 msgid "hace %(n)s d"
 msgstr ""
 
-#: app/templates/cambios_prioridad_pendientes.html:3
-#: app/templates/cambios_prioridad_pendientes.html:7
+#: app/templates/busqueda.html:2 app/templates/busqueda.html:7
+#: app/templates/busqueda.html:16 app/templates/conocimiento.html:14
+#: app/templates/palabras_clave.html:18 app/templates/usuarios.html:34
+msgid "Buscar"
+msgstr ""
+
+#: app/templates/busqueda.html:8
+msgid ""
+"Tickets, artículos de la base de conocimiento y, si eres administrador, "
+"cuentas."
+msgstr ""
+
+#: app/templates/busqueda.html:15
+msgid "Número de ticket, palabra del texto, título de artículo, nombre o correo"
+msgstr ""
+
+#: app/templates/busqueda.html:22
+#, python-format
+msgid "Escribe al menos %(n)s caracteres."
+msgstr ""
+
+#: app/templates/busqueda.html:26
+msgid "Escribe algo para buscar."
+msgstr ""
+
+#: app/templates/busqueda.html:30
+#, python-format
+msgid "Nada coincide con «%(q)s»."
+msgstr ""
+
+#: app/templates/busqueda.html:90
+msgid "Correo"
+msgstr ""
+
+#: app/templates/busqueda.html:91 app/templates/registro.html:31
+#: app/templates/usuario_detalle.html:49 app/templates/usuarios.html:36
+#: app/templates/usuarios.html:59
+msgid "Rol"
+msgstr ""
+
+#: app/templates/busqueda.html:105 app/templates/palabras_clave.html:50
+#: app/templates/perfil.html:127 app/templates/usuario_detalle.html:22
+#: app/templates/usuario_detalle.html:104 app/templates/usuarios.html:85
+msgid "Activa"
+msgstr ""
+
+#: app/templates/busqueda.html:107 app/templates/palabras_clave.html:50
+#: app/templates/perfil.html:129
+msgid "Inactiva"
+msgstr ""
+
+#: app/templates/cambios_prioridad_pendientes.html:4
+#: app/templates/cambios_prioridad_pendientes.html:9
 msgid "Cambios de prioridad pendientes"
 msgstr ""
 
-#: app/templates/cambios_prioridad_pendientes.html:12
+#: app/templates/cambios_prioridad_pendientes.html:10
+msgid "Al aprobar, el SLA del ticket se recalcula con la nueva prioridad."
+msgstr ""
+
+#: app/templates/cambios_prioridad_pendientes.html:16
 msgid "No hay cambios de prioridad pendientes de aprobación."
 msgstr ""
 
-#: app/templates/cambios_prioridad_pendientes.html:22
-#: app/templates/escalamientos_pendientes.html:22
-#: app/templates/solicitudes_pendientes.html:24
+#: app/templates/cambios_prioridad_pendientes.html:29
+#: app/templates/escalamientos_pendientes.html:29
+#: app/templates/solicitudes_pendientes.html:33
 #, python-format
 msgid "Solicitado el %(fecha)s"
 msgstr ""
 
-#: app/templates/cambios_prioridad_pendientes.html:26
-#: app/templates/demo.html:168 app/templates/email/ticket_notificacion.html:102
-#: app/templates/escalamientos_pendientes.html:26
-#: app/templates/solicitudes_pendientes.html:30
-msgid "Ver ticket"
-msgstr ""
-
-#: app/templates/cambios_prioridad_pendientes.html:30
-#: app/templates/escalamientos_pendientes.html:30
-#: app/templates/ticket_detalle.html:201 app/templates/ticket_detalle.html:214
+#: app/templates/cambios_prioridad_pendientes.html:40
+#: app/templates/escalamientos_pendientes.html:40
+#: app/templates/ticket_detalle.html:323 app/templates/ticket_detalle.html:336
 msgid "Aprobar"
 msgstr ""
 
-#: app/templates/crear_ticket.html:10
-msgid "Reportar un problema"
+#: app/templates/cobertura.html:8
+msgid ""
+"Los tickets que nadie ha tomado y las áreas que se quedaron sin agentes "
+"disponibles."
+msgstr ""
+
+#: app/templates/cobertura.html:17
+msgid "Tickets sin asignar"
+msgstr ""
+
+#: app/templates/cobertura.html:25
+msgid "Áreas sin cobertura con trabajo pendiente"
+msgstr ""
+
+#: app/templates/cobertura.html:35
+msgid "Agentes ausentes hoy"
+msgstr ""
+
+#: app/templates/cobertura.html:43
+msgid "Tickets por cubrir"
+msgstr ""
+
+#: app/templates/cobertura.html:50
+msgid "Tickets de agentes ausentes"
+msgstr ""
+
+#: app/templates/cobertura.html:52
+msgid ""
+"Siguen asignados a alguien que no está trabajando. El sistema no los "
+"reparte solo: elige quién los cubre."
+msgstr ""
+
+#: app/templates/cobertura.html:57
+msgid "Ningún ticket quedó en manos de un agente ausente."
+msgstr ""
+
+#: app/templates/cobertura.html:67
+msgid "Agente ausente"
+msgstr ""
+
+#: app/templates/cobertura.html:69 app/templates/cobertura.html:131
+msgid "SLA consumido"
+msgstr ""
+
+#: app/templates/cobertura.html:70
+msgid "Cubrir con"
+msgstr ""
+
+#: app/templates/cobertura.html:86 app/templates/cobertura.html:147
+#: app/templates/panel_metricas.html:143 app/templates/panel_metricas.html:158
+#: app/templates/perfil.html:247 app/templates/perfil.html:259
+#: app/templates/ticket_detalle.html:113 app/templates/ticket_detalle.html:122
+msgid "sin datos"
+msgstr ""
+
+#: app/templates/cobertura.html:96 app/templates/ticket_detalle.html:167
+#: app/templates/tickets_por_area.html:118
+#: app/templates/tickets_por_area.html:169
+msgid "-- agente --"
+msgstr ""
+
+#: app/templates/cobertura.html:99
+msgid "Cubrir"
+msgstr ""
+
+#: app/templates/cobertura.html:102
+msgid "El área no tiene agentes disponibles"
+msgstr ""
+
+#: app/templates/cobertura.html:112
+msgid "Sin asignar, por cercanía al vencimiento"
+msgstr ""
+
+#: app/templates/cobertura.html:114
+#, python-format
+msgid ""
+"Al pasar el %(pct)s%% de su plazo sin agente, el ticket se escala al "
+"administrador una sola vez."
+msgstr ""
+
+#: app/templates/cobertura.html:120
+msgid "Todos los tickets abiertos tienen un agente asignado."
+msgstr ""
+
+#: app/templates/cobertura.html:133
+msgid "Escalado"
+msgstr ""
+
+#: app/templates/cobertura.html:167
+msgid "Cobertura por área"
+msgstr ""
+
+#: app/templates/cobertura.html:173
+msgid "Agentes activos"
+msgstr ""
+
+#: app/templates/cobertura.html:174
+msgid "Disponibles"
+msgstr ""
+
+#: app/templates/cobertura.html:175
+msgid "Ausentes"
+msgstr ""
+
+#: app/templates/cobertura.html:176
+msgid "Sin asignar"
+msgstr ""
+
+#: app/templates/cobertura.html:192
+msgid "Sin agentes asignados al área"
+msgstr ""
+
+#: app/templates/cobertura.html:194
+msgid "Sin cobertura con trabajo pendiente"
+msgstr ""
+
+#: app/templates/cobertura.html:196
+msgid "Sin cobertura"
+msgstr ""
+
+#: app/templates/cobertura.html:198
+msgid "Cubierta"
+msgstr ""
+
+#: app/templates/cobertura.html:207 app/templates/usuarios.html:49
+msgid "Agentes ausentes"
+msgstr ""
+
+#: app/templates/cobertura.html:210
+msgid "Ningún agente está marcado como ausente."
+msgstr ""
+
+#: app/templates/cobertura.html:221
+msgid "Motivo"
+msgstr ""
+
+#: app/templates/cobertura.html:231 app/templates/perfil.html:65
+#: app/templates/usuario_detalle.html:143
+msgid "nuevo aviso"
+msgstr ""
+
+#: app/templates/conocimiento.html:7
+msgid "¿En qué podemos ayudarte?"
+msgstr ""
+
+#: app/templates/conocimiento.html:8
+msgid ""
+"Guías paso a paso para resolver los problemas más comunes sin esperar a "
+"soporte."
+msgstr ""
+
+#: app/templates/conocimiento.html:11
+msgid "Busca: VPN, impresora, contraseña…"
+msgstr ""
+
+#: app/templates/conocimiento.html:11
+msgid "Buscar artículos"
+msgstr ""
+
+#: app/templates/conocimiento.html:20
+msgid "Ocultar borradores"
+msgstr ""
+
+#: app/templates/conocimiento.html:20
+msgid "Ver borradores"
+msgstr ""
+
+#: app/templates/conocimiento.html:27
+msgid "Categorías"
+msgstr ""
+
+#: app/templates/conocimiento.html:29 app/templates/palabras_clave.html:25
+#: app/templates/respuestas_predefinidas.html:19
+msgid "Todas"
+msgstr ""
+
+#: app/templates/conocimiento.html:40
+#, python-format
+msgid "%(num)s resultado para «%(q)s»"
+msgid_plural "%(num)s resultados para «%(q)s»"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/conocimiento.html:41
+#, python-format
+msgid "%(num)s artículo"
+msgid_plural "%(num)s artículos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/conocimiento.html:44
+msgid "Más vistos"
+msgstr ""
+
+#: app/templates/conocimiento.html:44
+msgid "Más útiles"
+msgstr ""
+
+#: app/templates/conocimiento.html:62
+msgid "Valoración positiva"
+msgstr ""
+
+#: app/templates/conocimiento.html:70
+msgid "No encontramos artículos con esos criterios."
+msgstr ""
+
+#: app/templates/conocimiento.html:71
+msgid "Prueba con otras palabras o crea un ticket y te ayudamos."
 msgstr ""
 
 #: app/templates/crear_ticket.html:11
+msgid "Reportar un problema"
+msgstr ""
+
+#: app/templates/crear_ticket.html:12
 msgid ""
 "Describe la situación con el mayor detalle posible para agilizar la "
 "atención."
 msgstr ""
 
-#: app/templates/crear_ticket.html:15
+#: app/templates/crear_ticket.html:16
 msgid "Describe el problema"
 msgstr ""
 
-#: app/templates/crear_ticket.html:18
+#: app/templates/crear_ticket.html:19 app/templates/ticket_detalle.html:421
+msgid "Ctrl + Enter para enviar"
+msgstr ""
+
+#: app/templates/crear_ticket.html:25
+msgid "Quizá esto te ayude antes de enviar"
+msgstr ""
+
+#: app/templates/crear_ticket.html:31
+msgid "Adjuntos"
+msgstr ""
+
+#: app/templates/crear_ticket.html:35
+msgid "Arrastra capturas o archivos"
+msgstr ""
+
+#: app/templates/crear_ticket.html:35
+msgid "o haz clic para elegirlos"
+msgstr ""
+
+#: app/templates/crear_ticket.html:36
+msgid "Imágenes, PDF, texto, Office o ZIP · máx. 5 MB cada uno"
+msgstr ""
+
+#: app/templates/crear_ticket.html:39
+msgid "Consejo: también puedes pegar una captura con Ctrl + V en la descripción."
+msgstr ""
+
+#: app/templates/crear_ticket.html:42
 msgid "Enviar ticket"
 msgstr ""
 
+#: app/templates/crear_ticket.html:50
+msgid "Consejos para un buen reporte"
+msgstr ""
+
+#: app/templates/crear_ticket.html:52
+msgid "Qué pasa y desde cuándo"
+msgstr ""
+
+#: app/templates/crear_ticket.html:53
+msgid "Equipo, programa o servicio afectado"
+msgstr ""
+
+#: app/templates/crear_ticket.html:54
+msgid "Mensajes de error exactos"
+msgstr ""
+
+#: app/templates/crear_ticket.html:55
+msgid "Una captura de pantalla"
+msgstr ""
+
+#: app/templates/crear_ticket.html:57
+msgid ""
+"La categoría y la prioridad se asignan automáticamente a partir de tu "
+"descripción."
+msgstr ""
+
+#: app/templates/crear_ticket.html:65
+msgid "Muchas incidencias se resuelven en minutos con nuestras guías."
+msgstr ""
+
+#: app/templates/dashboard.html:9
+msgid "Sigue el estado de tus solicitudes y sus plazos de atención."
+msgstr ""
+
 #: app/templates/dashboard.html:17
+#, python-format
+msgid "Tienes %(num)s ticket resuelto por calificar"
+msgid_plural "Tienes %(num)s tickets resueltos por calificar"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/dashboard.html:18
+msgid "Cuéntanos cómo fue la atención: nos ayuda a mejorar."
+msgstr ""
+
+#: app/templates/dashboard.html:20
+msgid "Calificar"
+msgstr ""
+
+#: app/templates/dashboard.html:53
+msgid "Vencidos"
+msgstr ""
+
+#: app/templates/dashboard.html:63 app/templates/tickets_por_area.html:86
 msgid "SLA"
 msgstr ""
 
-#: app/templates/dashboard.html:31 app/templates/demo.html:99
+#: app/templates/dashboard.html:77 app/templates/demo.html:96
 msgid "Vencido"
 msgstr ""
 
-#: app/templates/dashboard.html:33 app/templates/demo.html:98
+#: app/templates/dashboard.html:79 app/templates/demo.html:95
 msgid "Próximo a vencer"
 msgstr ""
 
-#: app/templates/dashboard.html:35
+#: app/templates/dashboard.html:81
 msgid "En plazo"
 msgstr ""
 
-#: app/templates/dashboard.html:45
+#: app/templates/dashboard.html:91
 msgid "No has creado ningún ticket todavía."
+msgstr ""
+
+#: app/templates/dashboard.html:97
+msgid "Guías populares"
 msgstr ""
 
 #: app/templates/demo.html:7
@@ -1583,407 +4152,634 @@ msgstr ""
 msgid "Último ticket creado"
 msgstr ""
 
-#: app/templates/demo.html:28
+#: app/templates/demo.html:27
 msgid "Notificación en tiempo real"
 msgstr ""
 
-#: app/templates/demo.html:29
+#: app/templates/demo.html:28
 msgid ""
 "Crea una notificación y la empuja por socket.io: aparece el toast y se "
 "actualiza la campanita sin recargar."
 msgstr ""
 
-#: app/templates/demo.html:31 app/templates/demo.html:68
+#: app/templates/demo.html:30 app/templates/demo.html:66
 msgid "Plantilla"
 msgstr ""
 
-#: app/templates/demo.html:37
+#: app/templates/demo.html:36
 msgid "Destinatario"
 msgstr ""
 
-#: app/templates/demo.html:41
+#: app/templates/demo.html:40
 msgid "yo"
 msgstr ""
 
-#: app/templates/demo.html:47
+#: app/templates/demo.html:44 app/templates/demo.html:74
+#: app/templates/ticket_detalle.html:10 app/templates/webhook_detalle.html:84
+msgid "Ticket"
+msgstr ""
+
+#: app/templates/demo.html:46
 msgid "Enviar notificación"
 msgstr ""
 
-#: app/templates/demo.html:50
+#: app/templates/demo.html:49
 msgid "Ráfaga de 3 notificaciones para mí"
 msgstr ""
 
-#: app/templates/demo.html:60
+#: app/templates/demo.html:58
 msgid "Correo HTML"
 msgstr ""
 
-#: app/templates/demo.html:61
+#: app/templates/demo.html:59
 msgid ""
 "Envía por SMTP el correo que recibe el usuario, o ábrelo en una pestaña "
 "para mostrarlo sin depender del correo."
 msgstr ""
 
-#: app/templates/demo.html:74
+#: app/templates/demo.html:72
 msgid "Enviar a"
 msgstr ""
 
-#: app/templates/demo.html:79
+#: app/templates/demo.html:77
 msgid "Enviar correo"
 msgstr ""
 
-#: app/templates/demo.html:80
+#: app/templates/demo.html:78
 msgid "Previsualizar"
 msgstr ""
 
-#: app/templates/demo.html:91
+#: app/templates/demo.html:88
 msgid "Alertas de SLA"
 msgstr ""
 
-#: app/templates/demo.html:92
+#: app/templates/demo.html:89
 msgid ""
 "Mueve la fecha límite del ticket y corre la verificación de SLA del "
 "scheduler: notifica (y envía correo) al creador y al agente."
 msgstr ""
 
-#: app/templates/demo.html:95
+#: app/templates/demo.html:92
 msgid "Ticket abierto o en progreso"
 msgstr ""
 
-#: app/templates/demo.html:103
+#: app/templates/demo.html:100
 msgid "No hay tickets abiertos o en progreso."
 msgstr ""
 
-#: app/templates/demo.html:106
+#: app/templates/demo.html:103
 msgid "Ejecutar verificación de SLA ahora"
 msgstr ""
 
-#: app/templates/demo.html:116
+#: app/templates/demo.html:112
 msgid "Crear ticket (clasificador)"
 msgstr ""
 
-#: app/templates/demo.html:117
+#: app/templates/demo.html:113
 msgid ""
 "Crea un ticket por el flujo normal: se clasifica, se le asigna prioridad "
 "y SLA. Si la confianza es baja, llega la notificación de revisión a los "
 "admins."
 msgstr ""
 
-#: app/templates/demo.html:125
+#: app/templates/demo.html:121
 msgid "Ambiguo"
 msgstr ""
 
-#: app/templates/demo.html:127 app/templates/ticket_detalle.html:18
+#: app/templates/demo.html:123 app/templates/ticket_detalle.html:531
 msgid "Creado por"
 msgstr ""
 
-#: app/templates/demo.html:149
+#: app/templates/demo.html:144
 msgid "Registro de eventos"
 msgstr ""
 
-#: app/templates/demo.html:153
+#: app/templates/demo.html:148
 msgid "Aún no has disparado ningún evento."
 msgstr ""
 
-#: app/templates/demo.html:157
+#: app/templates/demo.html:152
 msgid "Borrar mis notificaciones"
 msgstr ""
 
-#: app/templates/demo.html:168
+#: app/templates/demo.html:163
 msgid "Error"
 msgstr ""
 
-#: app/templates/demo.html:168
+#: app/templates/demo.html:163
 msgid "Procesando…"
 msgstr ""
 
-#: app/templates/escalamientos_pendientes.html:3
+#: app/templates/dos_pasos_codigos.html:7
+msgid "Guarda tus códigos de respaldo"
+msgstr ""
+
+#: app/templates/dos_pasos_codigos.html:8
+msgid ""
+"Úsalos si pierdes el teléfono. Cada código sirve una vez y no se volverán"
+" a mostrar."
+msgstr ""
+
+#: app/templates/dos_pasos_codigos.html:16
+msgid ""
+"Guárdalos en un lugar seguro (gestor de contraseñas o impresos). Quien "
+"los tenga puede pasar el segundo paso."
+msgstr ""
+
+#: app/templates/dos_pasos_codigos.html:22
+msgid "Copiar todos"
+msgstr ""
+
+#: app/templates/dos_pasos_codigos.html:23
+msgid "Descargar .txt"
+msgstr ""
+
+#: app/templates/dos_pasos_codigos.html:24 app/templates/ticket_detalle.html:31
+msgid "Imprimir"
+msgstr ""
+
+#: app/templates/dos_pasos_codigos.html:25
+msgid "Ya los guardé"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:8
+msgid ""
+"Además de tu contraseña, se pedirá un código de tu teléfono al iniciar "
+"sesión."
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:17
+msgid "Instala una app de autenticación"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:18
+msgid "Google Authenticator, Microsoft Authenticator, Authy o la que prefieras."
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:21
+msgid "Escanea este código QR"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:23
+msgid "Código QR para la app de autenticación"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:25
+msgid "¿No puedes escanearlo? Ingresa esta clave manualmente:"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:27
+#, python-format
+msgid "Cuenta: %(email)s · Tipo: basado en tiempo"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:32
+msgid "Escribe el código que muestra la app"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:37
+#: app/templates/webhook_detalle.html:19
+msgid "Activar"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:45
+msgid "¿Por qué activarla?"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:47
+msgid "Una contraseña filtrada ya no basta para entrar"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:48
+msgid "El código cambia cada 30 segundos"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:49
+msgid "Funciona sin internet en el teléfono"
+msgstr ""
+
+#: app/templates/dos_pasos_configurar.html:51
+msgid "Al activarla recibirás códigos de respaldo por si pierdes el teléfono."
+msgstr ""
+
+#: app/templates/error.html:9
+msgid "Volver al inicio"
+msgstr ""
+
+#: app/templates/error.html:10
+msgid "Página anterior"
+msgstr ""
+
+#: app/templates/escalamientos_pendientes.html:4
 msgid "Escalamientos pendientes"
 msgstr ""
 
-#: app/templates/escalamientos_pendientes.html:7
+#: app/templates/escalamientos_pendientes.html:9
 msgid "Escalamientos de área pendientes"
 msgstr ""
 
-#: app/templates/escalamientos_pendientes.html:12
+#: app/templates/escalamientos_pendientes.html:10
+msgid "Tickets que un agente pidió mover a otra área de soporte."
+msgstr ""
+
+#: app/templates/escalamientos_pendientes.html:16
 msgid "No hay escalamientos pendientes de aprobación."
 msgstr ""
 
-#: app/templates/login.html:3 app/templates/login.html:13
+#: app/templates/login.html:4 app/templates/login.html:10
 msgid "Iniciar sesión"
 msgstr ""
 
-#: app/templates/login.html:14
-msgid "Accede con tus credenciales para gestionar tickets."
+#: app/templates/login.html:11
+msgid "Reporta incidencias y sigue su atención hasta el cierre."
 msgstr ""
 
-#: app/templates/login.html:18 app/templates/registro.html:22
+#: app/templates/login.html:20 app/templates/recuperar.html:12
+#: app/templates/registro.html:22
 msgid "Email"
 msgstr ""
 
-#: app/templates/login.html:22 app/templates/registro.html:26
+#: app/templates/login.html:25 app/templates/registro.html:26
 msgid "Contraseña"
 msgstr ""
 
-#: app/templates/login.html:25
+#: app/templates/login.html:26
+msgid "¿Olvidaste tu contraseña?"
+msgstr ""
+
+#: app/templates/login.html:32
+msgid "Recordar mi email en este equipo"
+msgstr ""
+
+#: app/templates/login.html:34
 msgid "Entrar"
 msgstr ""
 
-#: app/templates/palabras_clave.html:2 app/templates/palabras_clave.html:5
+#: app/templates/login.html:36
+msgid ""
+"Las cuentas las crea el área de soporte. Si no tienes una, pídela a un "
+"administrador."
+msgstr ""
+
+#: app/templates/palabras_clave.html:2 app/templates/palabras_clave.html:6
 msgid "Palabras clave del clasificador"
 msgstr ""
 
-#: app/templates/palabras_clave.html:8
+#: app/templates/palabras_clave.html:7
+msgid ""
+"Términos y pesos que usa la primera capa del clasificador para sugerir la"
+" categoría."
+msgstr ""
+
+#: app/templates/palabras_clave.html:11
 msgid "Ocultar inactivas"
 msgstr ""
 
-#: app/templates/palabras_clave.html:8
+#: app/templates/palabras_clave.html:11
 msgid "Mostrar inactivas"
 msgstr ""
 
-#: app/templates/palabras_clave.html:15
-msgid "Buscar"
-msgstr ""
-
-#: app/templates/palabras_clave.html:17
+#: app/templates/palabras_clave.html:20
 msgid "Buscar por texto..."
 msgstr ""
 
-#: app/templates/palabras_clave.html:22
-msgid "Todas"
-msgstr ""
-
-#: app/templates/palabras_clave.html:37 app/templates/palabras_clave.html:92
-#: app/templates/palabras_clave.html:130
+#: app/templates/palabras_clave.html:40 app/templates/palabras_clave.html:95
+#: app/templates/palabras_clave.html:133
 msgid "Peso"
 msgstr ""
 
-#: app/templates/palabras_clave.html:47
-msgid "Activa"
-msgstr ""
-
-#: app/templates/palabras_clave.html:47
-msgid "Inactiva"
-msgstr ""
-
-#: app/templates/palabras_clave.html:50
-msgid "Editar"
-msgstr ""
-
-#: app/templates/palabras_clave.html:54
+#: app/templates/palabras_clave.html:57 app/templates/perfil.html:144
+#: app/templates/webhook_detalle.html:19
 msgid "Desactivar"
 msgstr ""
 
-#: app/templates/palabras_clave.html:59
+#: app/templates/palabras_clave.html:62
 msgid "Reactivar"
 msgstr ""
 
-#: app/templates/palabras_clave.html:71
+#: app/templates/palabras_clave.html:74
 msgid "Editar palabra clave"
 msgstr ""
 
-#: app/templates/palabras_clave.html:97 app/templates/perfil.html:69
-msgid "Guardar"
-msgstr ""
-
-#: app/templates/palabras_clave.html:108
+#: app/templates/palabras_clave.html:111
 msgid "No hay palabras clave registradas."
 msgstr ""
 
-#: app/templates/palabras_clave.html:112
+#: app/templates/palabras_clave.html:115
 msgid "Nueva palabra clave"
 msgstr ""
 
-#: app/templates/palabras_clave.html:133
+#: app/templates/palabras_clave.html:136
 msgid "Agregar"
 msgstr ""
 
-#: app/templates/panel_metricas.html:2 app/templates/panel_metricas.html:5
+#: app/templates/panel_metricas.html:2 app/templates/panel_metricas.html:8
 msgid "Panel de Métricas"
 msgstr ""
 
-#: app/templates/panel_metricas.html:58
+#: app/templates/panel_metricas.html:9
+msgid "Estado general del soporte, SLA y desempeño del equipo."
+msgstr ""
+
+#: app/templates/panel_metricas.html:66
 msgid "Por estado"
 msgstr ""
 
-#: app/templates/panel_metricas.html:75
-msgid "Por categoría"
-msgstr ""
-
-#: app/templates/panel_metricas.html:92
+#: app/templates/panel_metricas.html:100 app/templates/tickets_por_area.html:36
 msgid "Por prioridad"
 msgstr ""
 
-#: app/templates/panel_metricas.html:112
+#: app/templates/panel_metricas.html:120
 msgid "Confianza del clasificador"
 msgstr ""
 
-#: app/templates/panel_metricas.html:118
+#: app/templates/panel_metricas.html:127
 msgid "Tickets en revisión"
 msgstr ""
 
-#: app/templates/panel_metricas.html:128
+#: app/templates/panel_metricas.html:138
 msgid "Tasa de corrección (30 días)"
 msgstr ""
 
-#: app/templates/panel_metricas.html:133 app/templates/panel_metricas.html:147
-#: app/templates/perfil.html:113 app/templates/perfil.html:125
-#: app/templates/ticket_detalle.html:51 app/templates/ticket_detalle.html:60
-msgid "sin datos"
-msgstr ""
-
-#: app/templates/panel_metricas.html:142
+#: app/templates/panel_metricas.html:153
 msgid "Exactitud en producción (30 días)"
 msgstr ""
 
-#: app/templates/panel_metricas.html:156
+#: app/templates/panel_metricas.html:168
 msgid "Exactitud de laboratorio"
 msgstr ""
 
-#: app/templates/panel_metricas.html:161
+#: app/templates/panel_metricas.html:173
 msgid "modelo sin entrenar"
 msgstr ""
 
-#: app/templates/panel_metricas.html:176
+#: app/templates/panel_metricas.html:188
 msgid "Desempeño de agentes (últimos 30 días)"
 msgstr ""
 
-#: app/templates/panel_metricas.html:178
-msgid "Área"
-msgstr ""
-
-#: app/templates/panel_metricas.html:180
+#: app/templates/panel_metricas.html:192
+#: app/templates/respuestas_predefinidas.html:54 app/templates/usuarios.html:41
 msgid "Todas las áreas"
 msgstr ""
 
-#: app/templates/panel_metricas.html:198
+#: app/templates/panel_metricas.html:210
 #, python-format
-msgid "%(n)s agentes"
-msgstr ""
+msgid "%(num)d agente"
+msgid_plural "%(num)d agentes"
+msgstr[0] ""
+msgstr[1] ""
 
-#: app/templates/panel_metricas.html:199
+#: app/templates/panel_metricas.html:211
 #, python-format
-msgid "%(n)s cerrados"
-msgstr ""
+msgid "%(num)d cerrado"
+msgid_plural "%(num)d cerrados"
+msgstr[0] ""
+msgstr[1] ""
 
-#: app/templates/panel_metricas.html:201
+#: app/templates/panel_metricas.html:213
 msgid "SLA prom."
 msgstr ""
 
-#: app/templates/panel_metricas.html:207 app/templates/panel_metricas.html:280
+#: app/templates/panel_metricas.html:219 app/templates/panel_metricas.html:345
 msgid "Expandir"
 msgstr ""
 
-#: app/templates/panel_metricas.html:215
-msgid "Cerrados"
-msgstr ""
-
-#: app/templates/panel_metricas.html:216
+#: app/templates/panel_metricas.html:228
 msgid "Tiempo prom. (h)"
 msgstr ""
 
-#: app/templates/panel_metricas.html:217 app/templates/panel_metricas.html:258
-msgid "Cumplimiento SLA"
-msgstr ""
-
-#: app/templates/panel_metricas.html:279
+#: app/templates/panel_metricas.html:344
 msgid "Contraer"
 msgstr ""
 
-#: app/templates/perfil.html:46
+#: app/templates/perfil.html:15
+msgid "Foto de perfil"
+msgstr ""
+
+#: app/templates/perfil.html:28
 msgid "Subir foto"
 msgstr ""
 
-#: app/templates/perfil.html:48
+#: app/templates/perfil.html:30
 msgid "JPG, PNG o WEBP, máximo 2MB."
 msgstr ""
 
-#: app/templates/perfil.html:54
+#: app/templates/perfil.html:36
 msgid "Datos de la cuenta"
 msgstr ""
 
-#: app/templates/perfil.html:55
+#: app/templates/perfil.html:37
 msgid "Email:"
 msgstr ""
 
-#: app/templates/perfil.html:56
+#: app/templates/perfil.html:38
 msgid "Rol:"
 msgstr ""
 
-#: app/templates/perfil.html:58
+#: app/templates/perfil.html:40
 msgid "Área de soporte:"
 msgstr ""
 
-#: app/templates/perfil.html:65
-msgid "Cambiar nombre"
+#: app/templates/perfil.html:52
+msgid ""
+"Mientras estés ausente no apareces en las sugerencias de asignación, ni "
+"como destino de transferencias, ni cuentas para la cobertura de tu área."
 msgstr ""
 
-#: app/templates/perfil.html:76
-msgid "Cambiar contraseña"
+#: app/templates/perfil.html:56
+msgid "Disponible"
 msgstr ""
 
-#: app/templates/perfil.html:80
-msgid "Contraseña actual"
+#: app/templates/perfil.html:56 app/templates/usuario_detalle.html:24
+#: app/templates/usuarios.html:84
+msgid "Ausente"
 msgstr ""
 
-#: app/templates/perfil.html:84
-msgid "Nueva contraseña"
+#: app/templates/perfil.html:73
+msgid "Ya volví, marcarme disponible"
+msgstr ""
+
+#: app/templates/perfil.html:78
+msgid ""
+"Eres el único agente disponible en tu área. Si te marcas ausente, las "
+"alertas de SLA de tu área pasarán al administrador."
 msgstr ""
 
 #: app/templates/perfil.html:87
-msgid "Guardar cambios"
+msgid "Si lo dejas vacío, cuenta desde ahora."
 msgstr ""
 
-#: app/templates/perfil.html:96
-msgid "Mis estadísticas"
+#: app/templates/perfil.html:92 app/templates/usuario_detalle.html:163
+msgid "Vacío = hasta nuevo aviso."
+msgstr ""
+
+#: app/templates/perfil.html:95 app/templates/ticket_detalle.html:447
+#: app/templates/usuario_detalle.html:166
+msgid "Motivo (opcional)"
 msgstr ""
 
 #: app/templates/perfil.html:97
-msgid "Tickets creados"
+msgid "vacaciones, capacitación, incapacidad..."
 msgstr ""
 
-#: app/templates/perfil.html:101
+#: app/templates/perfil.html:100
+msgid "Marcarme ausente"
+msgstr ""
+
+#: app/templates/perfil.html:110
+msgid "Cambiar nombre"
+msgstr ""
+
+#: app/templates/perfil.html:123 app/templates/verificar_2fa.html:3
+#: app/templates/verificar_2fa.html:8
+msgid "Verificación en dos pasos"
+msgstr ""
+
+#: app/templates/perfil.html:124
+msgid "Pide un código de tu teléfono además de la contraseña."
+msgstr ""
+
+#: app/templates/perfil.html:134
+#, python-format
+msgid "Te queda %(num)d código de respaldo."
+msgid_plural "Te quedan %(num)d códigos de respaldo."
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/perfil.html:139
+msgid "Nuevos códigos de respaldo"
+msgstr ""
+
+#: app/templates/perfil.html:143 app/templates/perfil.html:172
+msgid "Contraseña actual"
+msgstr ""
+
+#: app/templates/perfil.html:144
+msgid "Tu cuenta quedará protegida solo con la contraseña."
+msgstr ""
+
+#: app/templates/perfil.html:160
+msgid "Crea tokens personales para integrar tus scripts y herramientas."
+msgstr ""
+
+#: app/templates/perfil.html:168
+msgid "Cambiar contraseña"
+msgstr ""
+
+#: app/templates/perfil.html:176 app/templates/restablecer.html:3
+#: app/templates/restablecer.html:14
+msgid "Nueva contraseña"
+msgstr ""
+
+#: app/templates/perfil.html:179 app/templates/usuario_detalle.html:69
+msgid "Guardar cambios"
+msgstr ""
+
+#: app/templates/perfil.html:188
+msgid "Preferencias"
+msgstr ""
+
+#: app/templates/perfil.html:189
+msgid "Se guardan en este navegador."
+msgstr ""
+
+#: app/templates/perfil.html:192 app/templates/perfil.html:195
+msgid "Tema"
+msgstr ""
+
+#: app/templates/perfil.html:193
+msgid "Apariencia de la aplicación"
+msgstr ""
+
+#: app/templates/perfil.html:196
+msgid "Oscuro"
+msgstr ""
+
+#: app/templates/perfil.html:197
+msgid "Claro"
+msgstr ""
+
+#: app/templates/perfil.html:198
+msgid "Sistema"
+msgstr ""
+
+#: app/templates/perfil.html:204
+msgid "Idioma de la interfaz"
+msgstr ""
+
+#: app/templates/perfil.html:214
+msgid "Filas más densas en las tablas"
+msgstr ""
+
+#: app/templates/perfil.html:220
+msgid "Historial de recientes"
+msgstr ""
+
+#: app/templates/perfil.html:221
+msgid "Tickets visitados que aparecen en Ctrl+K"
+msgstr ""
+
+#: app/templates/perfil.html:230
+msgid "Mis estadísticas"
+msgstr ""
+
+#: app/templates/perfil.html:235
 msgid "Tickets tomados"
 msgstr ""
 
-#: app/templates/perfil.html:102
-msgid "Tickets cerrados"
-msgstr ""
-
-#: app/templates/perfil.html:106 app/templates/ticket_detalle.html:43
+#: app/templates/perfil.html:240 app/templates/ticket_detalle.html:105
 msgid "Cerrados (últimos 30 días)"
 msgstr ""
 
-#: app/templates/perfil.html:109 app/templates/ticket_detalle.html:47
+#: app/templates/perfil.html:243 app/templates/ticket_detalle.html:109
 msgid "Tiempo promedio de resolución"
 msgstr ""
 
-#: app/templates/perfil.html:111 app/templates/ticket_detalle.html:49
+#: app/templates/perfil.html:245 app/templates/ticket_detalle.html:111
 msgid "h"
 msgstr ""
 
-#: app/templates/perfil.html:118 app/templates/ticket_detalle.html:55
+#: app/templates/perfil.html:252 app/templates/ticket_detalle.html:117
 msgid "Cumplimiento de SLA"
 msgstr ""
 
-#: app/templates/perfil.html:139
+#: app/templates/perfil.html:273
 msgid "Comparativa con tu área"
 msgstr ""
 
-#: app/templates/perfil.html:146
+#: app/templates/perfil.html:280
 msgid "Promedio del área"
 msgstr ""
 
-#: app/templates/perfil.html:149
+#: app/templates/perfil.html:283
 msgid "pts vs. el promedio"
 msgstr ""
 
-#: app/templates/perfil.html:155
+#: app/templates/perfil.html:289
 #, python-format
 msgid "Puesto %(pos)s de %(total)s en tu área"
 msgstr ""
 
-#: app/templates/perfil.html:156
+#: app/templates/perfil.html:290
 msgid "¡El mejor de tu área en los últimos 30 días!"
+msgstr ""
+
+#: app/templates/recuperar.html:3 app/templates/recuperar.html:8
+msgid "Recuperar contraseña"
+msgstr ""
+
+#: app/templates/recuperar.html:9
+msgid ""
+"Escribe el email de tu cuenta y te enviaremos un enlace para crear una "
+"contraseña nueva."
+msgstr ""
+
+#: app/templates/recuperar.html:14
+msgid "Enviar enlace"
+msgstr ""
+
+#: app/templates/recuperar.html:17
+msgid "Volver a iniciar sesión"
 msgstr ""
 
 #: app/templates/registro.html:13
@@ -1994,19 +4790,12 @@ msgstr ""
 msgid "Crea una cuenta y asigna su rol dentro del sistema."
 msgstr ""
 
-#: app/templates/registro.html:18
-msgid "Nombre"
-msgstr ""
-
-#: app/templates/registro.html:31
-msgid "Rol"
-msgstr ""
-
-#: app/templates/registro.html:39
+#: app/templates/registro.html:39 app/templates/usuario_detalle.html:62
+#: app/templates/usuarios.html:59
 msgid "Nivel"
 msgstr ""
 
-#: app/templates/registro.html:47
+#: app/templates/registro.html:47 app/templates/usuario_detalle.html:55
 msgid "Área de soporte"
 msgstr ""
 
@@ -2014,58 +4803,132 @@ msgstr ""
 msgid "-- No aplica --"
 msgstr ""
 
-#: app/templates/registro.html:59
+#: app/templates/registro.html:59 app/templates/webhooks.html:107
 msgid "Registrar"
 msgstr ""
 
-#: app/templates/revision_clasificacion.html:3
+#: app/templates/respuestas_predefinidas.html:8
+msgid "Ej.: Solicitar captura del error"
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:12
+#, python-brace-format
+msgid "Hola {nombre}, para avanzar con el ticket {ticket}…"
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:13
+msgid "Variables disponibles:"
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:26
+msgid "Compartir con el equipo"
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:35
+msgid ""
+"Plantillas reutilizables para responder tickets en segundos. Insértalas "
+"desde la conversación de cualquier ticket."
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:43
+msgid "Filtrar respuestas…"
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:55
+msgid "Privada"
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:57
+#, python-format
+msgid "%(num)s uso"
+msgid_plural "%(num)s usos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/respuestas_predefinidas.html:65
+#: app/templates/ticket_detalle.html:572 app/templates/webhook_detalle.html:24
+msgid "Eliminar"
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:65
+#, python-format
+msgid "Se eliminará la respuesta «%(t)s»."
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:86
+msgid "Todavía no hay respuestas rápidas. Crea la primera con el formulario."
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:93
+msgid "Nueva respuesta"
+msgstr ""
+
+#: app/templates/respuestas_predefinidas.html:96
+msgid "Crear respuesta"
+msgstr ""
+
+#: app/templates/restablecer.html:8
+msgid "Crea una contraseña nueva"
+msgstr ""
+
+#: app/templates/restablecer.html:9
+#, python-format
+msgid "Para la cuenta %(email)s."
+msgstr ""
+
+#: app/templates/restablecer.html:18
+msgid "Confirmar contraseña"
+msgstr ""
+
+#: app/templates/restablecer.html:21
+msgid "Guardar contraseña"
+msgstr ""
+
+#: app/templates/revision_clasificacion.html:4
 msgid "Revisión de clasificación"
 msgstr ""
 
-#: app/templates/revision_clasificacion.html:7
+#: app/templates/revision_clasificacion.html:9
 msgid "Tickets pendientes de revisión de categoría"
 msgstr ""
 
-#: app/templates/revision_clasificacion.html:12
+#: app/templates/revision_clasificacion.html:10
+msgid ""
+"El clasificador no estuvo seguro: confirma la categoría correcta. Tus "
+"correcciones ayudan a reentrenarlo."
+msgstr ""
+
+#: app/templates/revision_clasificacion.html:16
 msgid "No hay tickets pendientes de revisión."
 msgstr ""
 
-#: app/templates/revision_clasificacion.html:23
-#: app/templates/ticket_detalle.html:82
+#: app/templates/revision_clasificacion.html:34
+#: app/templates/ticket_detalle.html:204
 msgid "-- elegir categoría --"
 msgstr ""
 
-#: app/templates/revision_clasificacion.html:32
-msgid "Confirmar"
-msgstr ""
-
-#: app/templates/solicitudes_pendientes.html:3
+#: app/templates/solicitudes_pendientes.html:4
 msgid "Solicitudes de transferencia"
 msgstr ""
 
-#: app/templates/solicitudes_pendientes.html:7
+#: app/templates/solicitudes_pendientes.html:9
 msgid "Todas las solicitudes de transferencia pendientes"
 msgstr ""
 
-#: app/templates/solicitudes_pendientes.html:7
+#: app/templates/solicitudes_pendientes.html:9
 msgid "Solicitudes de transferencia pendientes"
 msgstr ""
 
-#: app/templates/solicitudes_pendientes.html:13
+#: app/templates/solicitudes_pendientes.html:10
+msgid "Traspasos de tickets entre agentes que esperan una decisión."
+msgstr ""
+
+#: app/templates/solicitudes_pendientes.html:17
 msgid "No hay solicitudes de transferencia pendientes en el sistema."
 msgstr ""
 
-#: app/templates/solicitudes_pendientes.html:13
+#: app/templates/solicitudes_pendientes.html:17
 msgid "No tienes solicitudes pendientes."
-msgstr ""
-
-#: app/templates/solicitudes_pendientes.html:22
-#, python-format
-msgid "Destino: %(nombre)s"
-msgstr ""
-
-#: app/templates/solicitudes_pendientes.html:35
-msgid "Cancelar"
 msgstr ""
 
 #: app/templates/ticket_detalle.html:2
@@ -2073,131 +4936,299 @@ msgstr ""
 msgid "Ticket #%(id)s"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:18 app/templates/ticket_detalle.html:121
-#: app/templates/ticket_detalle.html:170 app/templates/ticket_detalle.html:175
-#: app/templates/ticket_detalle.html:235
+#: app/templates/ticket_detalle.html:6 app/templates/ticket_detalle.html:243
+#: app/templates/ticket_detalle.html:292 app/templates/ticket_detalle.html:297
+#: app/templates/ticket_detalle.html:358
 msgid "Usuario desconocido"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:39
-msgid "Carga actual"
+#: app/templates/ticket_detalle.html:27
+msgid "Siguiendo"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:40
+#: app/templates/ticket_detalle.html:27
+msgid "Seguir"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:44
+msgid "Descripción"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:62
+msgid "¿Cómo fue la atención?"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:63
+msgid "Tu calificación ayuda al equipo a mejorar. Solo toma un segundo."
+msgstr ""
+
+#: app/templates/ticket_detalle.html:66
+msgid "Calificación"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:69
+msgid "Muy mala"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:69
+msgid "Mala"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:69
+msgid "Regular"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:69
+msgid "Buena"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:72
+msgid "¿Algo que quieras contarnos? (opcional)"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:73
+msgid "Enviar calificación"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:80
+#, python-format
+msgid "Calificación: %(n)s de 5"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:84
+#, python-format
+msgid "Atención calificada con %(n)s/5"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:102
 #, python-format
 msgid "%(n)s tickets en progreso"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:76
+#: app/templates/ticket_detalle.html:140
+msgid ""
+"Este ticket está en espera del solicitante: su SLA está detenido y la "
+"fecha límite se corre lo que dure la espera."
+msgstr ""
+
+#: app/templates/ticket_detalle.html:143
+msgid ""
+"En cuanto respondas en la conversación, el ticket vuelve a atención "
+"automáticamente."
+msgstr ""
+
+#: app/templates/ticket_detalle.html:159
+msgid ""
+"El agente asignado a este ticket está ausente. Alguien del área tiene que"
+" cubrirlo para que no se venza sin dueño real."
+msgstr ""
+
+#: app/templates/ticket_detalle.html:180
+msgid "¿Estás esperando algo del solicitante?"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:182
+msgid ""
+"Al dejarlo en espera, el reloj del SLA se detiene y el solicitante recibe"
+" aviso por correo. Vuelve a atención en cuanto responda."
+msgstr ""
+
+#: app/templates/ticket_detalle.html:189
+msgid "Qué necesitas de quien lo reportó"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:198
 msgid ""
 "La categoría de este ticket fue asignada automáticamente con baja "
 "confianza y está pendiente de revisión."
 msgstr ""
 
-#: app/templates/ticket_detalle.html:91
+#: app/templates/ticket_detalle.html:213
 msgid "Confirmar categoría"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:101
+#: app/templates/ticket_detalle.html:223
 msgid "Apelación en revisión"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:102
+#: app/templates/ticket_detalle.html:224
 msgid ""
 "Tu apelación sobre el cierre de este ticket está pendiente de revisión "
 "por un administrador."
 msgstr ""
 
-#: app/templates/ticket_detalle.html:104
+#: app/templates/ticket_detalle.html:226
 msgid "¿No estás de acuerdo con el cierre de este ticket?"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:108
+#: app/templates/ticket_detalle.html:230
 msgid "Explica por qué crees que este cierre fue incorrecto"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:109
+#: app/templates/ticket_detalle.html:231
 msgid "Apelar decisión"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:119
+#: app/templates/ticket_detalle.html:241
 msgid "Apelación pendiente de este ticket"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:121 app/templates/ticket_detalle.html:175
+#: app/templates/ticket_detalle.html:243 app/templates/ticket_detalle.html:297
 #, python-format
 msgid "Solicitado por %(nombre)s"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:153
+#: app/templates/ticket_detalle.html:275
 msgid "Solicitudes del ticket"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:168
+#: app/templates/ticket_detalle.html:290
 msgid "Transferencia"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:177
+#: app/templates/ticket_detalle.html:299
 msgid "resuelto"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:232
-msgid "Comentarios"
+#: app/templates/ticket_detalle.html:354
+msgid "Conversación"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:240
+#: app/templates/ticket_detalle.html:364 app/templates/ticket_detalle.html:390
+msgid "Nota interna"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:365
+msgid "Soporte"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:380
 msgid "Sin comentarios todavía."
 msgstr ""
 
-#: app/templates/ticket_detalle.html:247
+#: app/templates/ticket_detalle.html:389
+msgid "Responder"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:395
+msgid "Buscar respuesta…"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:403
+msgid "Gestionar respuestas"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:409 app/templates/ticket_detalle.html:411
+#: app/templates/ticket_detalle.html:412
 msgid "Escribe un comentario..."
 msgstr ""
 
-#: app/templates/ticket_detalle.html:249
+#: app/templates/ticket_detalle.html:413
+msgid "Solo visible para agentes y administradores…"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:417
+msgid "Adjuntar archivos"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:418
+msgid "Adjuntar"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:422
 msgid "Comentar"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:255
+#: app/templates/ticket_detalle.html:422
+msgid "Guardar nota"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:429
 msgid "Acciones sobre el ticket"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:256
+#: app/templates/ticket_detalle.html:430
 msgid "Todas requieren aprobación antes de aplicarse."
 msgstr ""
 
-#: app/templates/ticket_detalle.html:263
+#: app/templates/ticket_detalle.html:437
 msgid "Agente destino"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:273
-msgid "Motivo (opcional)"
-msgstr ""
-
-#: app/templates/ticket_detalle.html:277 app/templates/ticket_detalle.html:313
-#: app/templates/ticket_detalle.html:339
+#: app/templates/ticket_detalle.html:451 app/templates/ticket_detalle.html:487
+#: app/templates/ticket_detalle.html:513
 msgid "Enviar"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:285
+#: app/templates/ticket_detalle.html:459
 msgid "Escalar a otra área"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:286
+#: app/templates/ticket_detalle.html:460
 msgid ""
 "El ticket queda sin agente asignado, disponible para cualquier agente del"
 " área destino."
 msgstr ""
 
-#: app/templates/ticket_detalle.html:290
+#: app/templates/ticket_detalle.html:464
 msgid "Área destino"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:309 app/templates/ticket_detalle.html:335
+#: app/templates/ticket_detalle.html:483 app/templates/ticket_detalle.html:509
 msgid "Motivo (obligatorio)"
 msgstr ""
 
-#: app/templates/ticket_detalle.html:325
+#: app/templates/ticket_detalle.html:499
 msgid "Nueva prioridad"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:526
+msgid "Detalles"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:536
+msgid "Tiempo en espera"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:543
+msgid "en pausa"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:560
+msgid "Archivos"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:572
+msgid "El archivo se eliminará de forma permanente."
+msgstr ""
+
+#: app/templates/ticket_detalle.html:579
+msgid "Sin archivos adjuntos."
+msgstr ""
+
+#: app/templates/ticket_detalle.html:585
+msgid "Subir archivos"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:588
+#, python-format
+msgid "Máx. %(t)s por archivo · %(n)s archivos por ticket"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:597
+msgid "Seguidores"
+msgstr ""
+
+#: app/templates/ticket_detalle.html:603
+msgid "Nadie sigue este ticket. Síguelo para recibir avisos de su actividad."
+msgstr ""
+
+#: app/templates/ticket_detalle.html:612
+msgid "Comparte una guía con el usuario en tu respuesta."
+msgstr ""
+
+#: app/templates/ticket_detalle.html:617
+msgid "Insertar enlace en la respuesta"
 msgstr ""
 
 #: app/templates/tickets_por_area.html:2
@@ -2205,34 +5236,447 @@ msgstr ""
 msgid "Tickets - %(area)s"
 msgstr ""
 
-#: app/templates/tickets_por_area.html:5
+#: app/templates/tickets_por_area.html:7
 #, python-format
 msgid "Tickets del área: %(area)s"
 msgstr ""
 
-#: app/templates/tickets_por_area.html:75
-#: app/templates/tickets_por_area.html:100
-msgid "-- agente --"
+#: app/templates/tickets_por_area.html:13
+#, python-format
+msgid ""
+"Ninguno de los %(n)s agentes de esta área está disponible hoy. Las "
+"alertas de SLA de los tickets sin asignar se están enviando al "
+"administrador."
 msgstr ""
 
-#: app/templates/tickets_por_area.html:83
+#: app/templates/tickets_por_area.html:17
+#, python-format
+msgid "%(disp)s de %(tot)s agentes disponibles en el área (%(aus)s ausentes)."
+msgstr ""
+
+#: app/templates/tickets_por_area.html:24
+#, python-format
+msgid ""
+"%(n)s ticket(s) de esta área siguen asignados a un agente ausente y "
+"necesitan cobertura:"
+msgstr ""
+
+#: app/templates/tickets_por_area.html:33
+msgid "Orden"
+msgstr ""
+
+#: app/templates/tickets_por_area.html:35
+msgid "Por vencer primero"
+msgstr ""
+
+#: app/templates/tickets_por_area.html:126
 msgid "Tomar"
 msgstr ""
 
-#: app/templates/tickets_por_area.html:89
+#: app/templates/tickets_por_area.html:132
 msgid "Motivo del cierre directo"
 msgstr ""
 
-#: app/templates/tickets_por_area.html:110
+#: app/templates/tickets_por_area.html:141
+msgid "Qué esperas del solicitante"
+msgstr ""
+
+#: app/templates/tickets_por_area.html:155
+msgid "Reanudar"
+msgstr ""
+
+#: app/templates/tickets_por_area.html:177
 msgid "Reabrir"
 msgstr ""
 
-#: app/templates/tickets_por_area.html:114
-msgid "Sin transiciones"
+#: app/templates/tickets_por_area.html:196
+msgid "Reasignar"
 msgstr ""
 
-#: app/templates/tickets_por_area.html:125
-msgid "Reasignar"
+#: app/templates/usuario_detalle.html:5
+msgid "Volver a usuarios"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:15
+msgid "Tú"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:20 app/templates/usuarios.html:82
+msgid "Desactivada"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:21
+#, python-format
+msgid "Bloqueada hasta %(f)s"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:30
+msgid "Asignados"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:40
+msgid "Datos y permisos"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:68
+msgid ""
+"Los usuarios VIP reciben plazos de SLA más cortos. Un agente con tickets "
+"en progreso no puede cambiar de área hasta reasignarlos."
+msgstr ""
+
+#: app/templates/usuario_detalle.html:76
+msgid "Actividad reciente"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:90
+msgid "Ver todo en el log de auditoría"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:92
+msgid "Sin actividad registrada."
+msgstr ""
+
+#: app/templates/usuario_detalle.html:101
+msgid "Acceso y seguridad"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:103 app/templates/usuarios.html:60
+msgid "Último acceso"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:104
+msgid "Dos pasos"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:104
+msgid "No configurada"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:105
+msgid "Intentos fallidos"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:111
+msgid "Desbloquear cuenta"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:117
+msgid "Se enviará al usuario un enlace para crear una nueva contraseña."
+msgstr ""
+
+#: app/templates/usuario_detalle.html:117
+msgid "Enviar enlace de recuperación"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:123
+msgid ""
+"Se eliminará su verificación en dos pasos. Úsalo solo si perdió el acceso"
+" a su app y a sus códigos de respaldo."
+msgstr ""
+
+#: app/templates/usuario_detalle.html:123
+msgid "Restablecer verificación en dos pasos"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:133
+msgid "Disponibilidad"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:135
+msgid ""
+"Un agente ausente no aparece en las sugerencias de asignación, ni como "
+"destino de transferencias, ni cuenta para la cobertura de su área. Los "
+"tickets que ya tiene asignados no se tocan: reasignarlos sigue siendo tu "
+"decisión."
+msgstr ""
+
+#: app/templates/usuario_detalle.html:140
+msgid "Ausente desde"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:142
+msgid "hasta"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:149
+msgid "Marcar como disponible"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:158
+msgid "Vacío = desde ahora."
+msgstr ""
+
+#: app/templates/usuario_detalle.html:170
+msgid "Marcar como ausente"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:181
+#: app/templates/usuario_detalle.html:192
+msgid "Reactivar cuenta"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:181
+#: app/templates/usuario_detalle.html:190
+msgid "Desactivar cuenta"
+msgstr ""
+
+#: app/templates/usuario_detalle.html:183
+msgid ""
+"El usuario no podrá iniciar sesión ni usar la API. Su historial se "
+"conserva y puedes reactivarlo cuando quieras."
+msgstr ""
+
+#: app/templates/usuario_detalle.html:184
+msgid "El usuario podrá volver a iniciar sesión con su contraseña actual."
+msgstr ""
+
+#: app/templates/usuario_detalle.html:190
+#, python-format
+msgid "¿Desactivar la cuenta de %(n)s?"
+msgstr ""
+
+#: app/templates/usuarios.html:9
+msgid "Gestiona cuentas, roles, accesos y seguridad de todo el equipo."
+msgstr ""
+
+#: app/templates/usuarios.html:11
+msgid "Nuevo usuario"
+msgstr ""
+
+#: app/templates/usuarios.html:16
+msgid "Cuentas"
+msgstr ""
+
+#: app/templates/usuarios.html:17
+msgid "Agentes"
+msgstr ""
+
+#: app/templates/usuarios.html:18 app/templates/usuarios.html:47
+msgid "Bloqueadas"
+msgstr ""
+
+#: app/templates/usuarios.html:19 app/templates/usuarios.html:48
+msgid "Desactivadas"
+msgstr ""
+
+#: app/templates/usuarios.html:34
+msgid "Buscar por nombre o email…"
+msgstr ""
+
+#: app/templates/usuarios.html:37
+msgid "Todos los roles"
+msgstr ""
+
+#: app/templates/usuarios.html:45
+msgid "Cualquier estado"
+msgstr ""
+
+#: app/templates/usuarios.html:46
+msgid "Activas"
+msgstr ""
+
+#: app/templates/usuarios.html:74
+#, python-format
+msgid "%(num)s abierto"
+msgid_plural "%(num)s abiertos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/templates/usuarios.html:77
+msgid "Verificación en dos pasos activa"
+msgstr ""
+
+#: app/templates/usuarios.html:78
+msgid "Solo contraseña"
+msgstr ""
+
+#: app/templates/usuarios.html:83
+msgid "Bloqueada"
+msgstr ""
+
+#: app/templates/usuarios.html:93
+msgid "Paginación"
+msgstr ""
+
+#: app/templates/usuarios.html:104
+msgid "Ningún usuario coincide con los filtros."
+msgstr ""
+
+#: app/templates/usuarios.html:105
+msgid "Limpiar filtros"
+msgstr ""
+
+#: app/templates/verificar_2fa.html:9
+msgid "Abre tu app de autenticación e ingresa el código de 6 dígitos."
+msgstr ""
+
+#: app/templates/verificar_2fa.html:15
+msgid "Verificar"
+msgstr ""
+
+#: app/templates/verificar_2fa.html:18
+msgid "¿No tienes tu teléfono?"
+msgstr ""
+
+#: app/templates/verificar_2fa.html:19
+msgid ""
+"Escribe uno de tus códigos de respaldo (formato XXXX-XXXX) en el mismo "
+"campo. Cada código sirve una sola vez."
+msgstr ""
+
+#: app/templates/verificar_2fa.html:22
+msgid "Usar otra cuenta"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:13
+msgid "Enviar prueba"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:33
+msgid "Configuración"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:37 app/templates/webhooks.html:45
+msgid "Activo"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:39 app/templates/webhooks.html:47
+msgid "Inactivo"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:43 app/templates/webhooks.html:28
+msgid "Último intento"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:46
+msgid "Fallos seguidos"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:51
+msgid "Eventos suscritos"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:62
+msgid "Secreto de firma"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:64
+msgid ""
+"Configúralo en el destino para validar la cabecera X-Tickets-Signature. "
+"Si se filtra, elimina el webhook y vuelve a crearlo: se genera un secreto"
+" nuevo."
+msgstr ""
+
+#: app/templates/webhook_detalle.html:72
+msgid "Últimas entregas"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:75
+msgid "Este webhook todavía no ha recibido ningún evento."
+msgstr ""
+
+#: app/templates/webhook_detalle.html:83
+msgid "Evento"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:85
+msgid "Resultado"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:86
+msgid "Intentos"
+msgstr ""
+
+#: app/templates/webhook_detalle.html:87
+msgid "Duración"
+msgstr ""
+
+#: app/templates/webhooks.html:9
+msgid ""
+"Avisa a otro sistema cuando pasa algo con un ticket. Cada envío es un "
+"POST con el cuerpo en JSON, firmado con HMAC-SHA256."
+msgstr ""
+
+#: app/templates/webhooks.html:18
+msgid "Todavía no hay webhooks registrados."
+msgstr ""
+
+#: app/templates/webhooks.html:26
+msgid "Destino"
+msgstr ""
+
+#: app/templates/webhooks.html:27 app/templates/webhooks.html:96
+msgid "Eventos"
+msgstr ""
+
+#: app/templates/webhooks.html:50
+#, python-format
+msgid "%(n)s fallos"
+msgstr ""
+
+#: app/templates/webhooks.html:62
+msgid "Cómo valida el destino que el aviso es nuestro"
+msgstr ""
+
+#: app/templates/webhooks.html:64
+msgid ""
+"Cada petición lleva la cabecera X-Tickets-Signature con el formato "
+"t=<marca de tiempo>,v1=<firma>. La firma es el HMAC-SHA256 de "
+"«marca.cuerpo» con el secreto del webhook. La marca de tiempo va dentro "
+"de la firma para que una copia capturada no se pueda reenviar después."
+msgstr ""
+
+#: app/templates/webhooks.html:81
+msgid "Registrar un webhook"
+msgstr ""
+
+#: app/templates/webhooks.html:87
+msgid "Ej.: Canal de guardia"
+msgstr ""
+
+#: app/templates/webhooks.html:90
+msgid "URL de destino"
+msgstr ""
+
+#: app/templates/webhooks.html:93
+msgid "Solo http:// o https://. Los destinos de la red interna están bloqueados."
+msgstr ""
+
+#: app/templates/webhooks.html:109
+#, python-format
+msgid ""
+"Máximo %(n)s webhooks. Uno que falle %(f)s veces seguidas se desactiva "
+"solo."
+msgstr ""
+
+#: app/templates/email/recuperar_contrasena.html:21
+msgid "Restablece tu contraseña"
+msgstr ""
+
+#: app/templates/email/recuperar_contrasena.html:22
+#, python-format
+msgid "Hola %(nombre)s,"
+msgstr ""
+
+#: app/templates/email/recuperar_contrasena.html:23
+#, python-format
+msgid ""
+"Recibimos una solicitud para restablecer la contraseña de tu cuenta. El "
+"enlace vence en %(min)s minutos y solo funciona una vez."
+msgstr ""
+
+#: app/templates/email/recuperar_contrasena.html:26
+msgid "Crear contraseña nueva"
+msgstr ""
+
+#: app/templates/email/recuperar_contrasena.html:29
+msgid "Si el botón no funciona, copia este enlace en tu navegador:"
+msgstr ""
+
+#: app/templates/email/recuperar_contrasena.html:33
+msgid ""
+"Si no solicitaste este cambio, ignora este correo: tu contraseña seguirá "
+"siendo la misma."
 msgstr ""
 
 #: app/templates/email/ticket_notificacion.html:36

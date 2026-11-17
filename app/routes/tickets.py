@@ -11,7 +11,7 @@ from app.models.usuario import Usuario
 from app.models.ticket import Ticket
 from app.models.comentario import Comentario 
 from app.models.enum import Categoria, EstadoTicket, RolUsuario, AccionAuditoria, Prioridad, EstadoApelacion
-from app.routes.decoradores import requiere_login,requiere_admin
+from app.routes.decoradores import requiere_login,requiere_admin,requiere_personal
 from app.services.gestor_sla import GestorSLA
 from app.models.apelacion import ApelacionCierre
 from datetime import datetime, timedelta
@@ -25,7 +25,7 @@ from app.services.seguimiento import ServicioSeguimiento
 from app.services.encuestas import ServicioEncuestas
 from app.services.respuestas_predefinidas import ServicioRespuestasPredefinidas
 from app.services.base_conocimiento import ServicioBaseConocimiento
-from app.services.exceptions import AdjuntoInvalidoError, PermisoDenegadoError
+from app.services.exceptions import AdjuntoInvalidoError, PermisoDenegadoError, MotivoRequeridoError, CoberturaNoRequeridaError, AgenteDestinoInvalidoError
 tickets_bp = Blueprint("tickets", __name__)
 
 
@@ -150,11 +150,13 @@ def listar_por_area(area):
 
     ahora = datetime.now()
     consumo_por_ticket = {t.id: GestorSLA.consumo_sla(t, ahora) for t in tickets}
+    pendientes_cobertura = ServicioTickets.listar_pendientes_cobertura(area=categoria)
 
     return render_template(
         "tickets_por_area.html",
         tickets=tickets,
         area=area,
+        pendientes_cobertura=pendientes_cobertura,
         transiciones_por_ticket=transiciones_por_ticket,
         agentes_disponibles=agentes_disponibles,
         cobertura=cobertura,
@@ -192,17 +194,29 @@ def cambiar_estado(ticket_id):
 
     cierre_directo = ticket.estado == EstadoTicket.ABIERTO and nuevo_estado == EstadoTicket.CERRADO
     causa = request.form.get("causa", "").strip()
+    # Lo que se le pide al solicitante al dejar el ticket en espera. Va al
+    # servicio (que lo exige) y tambien como comentario publico, porque de
+    # nada sirve pausar el reloj si el solicitante no sabe que le toca a el.
+    motivo_espera = request.form.get("motivo", "").strip()
+    pausa = nuevo_estado == EstadoTicket.EN_ESPERA
+    volver_al_detalle = request.form.get("origen") == "detalle"
+    destino = (url_for("tickets.detalle", ticket_id=ticket_id) if volver_al_detalle
+               else url_for("tickets.listar_por_area", area=ticket.categoria.value))
 
     if cierre_directo and not causa:
         flash(_("Debes indicar el motivo para cerrar un ticket sin pasar por en progreso"), "danger")
-        return redirect(url_for("tickets.listar_por_area", area=ticket.categoria.value))
+        return redirect(destino)
 
     try:
         estado = ServicioTickets.cambiar_estado(
             ticket_id=ticket_id, nuevo_estado=nuevo_estado,
-            actor_id=actor_id, agente_id=agente_id
+            actor_id=actor_id, agente_id=agente_id, motivo=motivo_espera
         )
-        flash(_("Ticket #%(id)s actualizado a %(estado)s", id=ticket_id, estado=estado.value), "success")
+        if pausa:
+            flash(_("Ticket #%(id)s en espera del solicitante. Su SLA queda detenido hasta que responda.",
+                    id=ticket_id), "success")
+        else:
+            flash(_("Ticket #%(id)s actualizado a %(estado)s", id=ticket_id, estado=estado.value), "success")
 
         if cierre_directo:
             try:
@@ -210,9 +224,47 @@ def cambiar_estado(ticket_id):
             except (ComentarioVacioError, ErrorPersistencia) as e:
                 flash(_("El ticket se cerró, pero no se pudo guardar el motivo: %(error)s", error=e), "warning")
 
-    except (TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError, ErrorPersistencia) as e:
+        if pausa and motivo_espera:
+            try:
+                ServicioTickets.agregar_comentario(ticket_id=ticket_id, autor_id=actor_id,
+                                                   texto=motivo_espera, notificar=False)
+            except (ComentarioVacioError, ErrorPersistencia) as e:
+                flash(_("El ticket quedó en espera, pero no se pudo guardar el mensaje: %(error)s", error=e), "warning")
+
+    except (TransicionInvalidaError, AgenteYaAsignadoError, TicketNoEncontradoError, MotivoRequeridoError, ErrorPersistencia) as e:
         flash(str(e), "danger")
 
+    return redirect(destino)
+
+
+@tickets_bp.route("/tickets/<int:ticket_id>/tomar-cobertura", methods=["POST"])
+@requiere_personal
+def tomar_cobertura(ticket_id):
+    """Un agente del area (o el admin, por otro) se queda con un ticket huerfano."""
+    actor_id = session["usuario_id"]
+    rol = session.get("rol")
+
+    ticket = db.session.execute(select(Ticket).where(Ticket.id == ticket_id)).scalar()
+    if ticket is None:
+        flash(_("Ticket no encontrado"), "danger")
+        return redirect(url_for("auth.dashboard"))
+
+    agente_id = request.form.get("agente_id", type=int) if rol == RolUsuario.ADMIN else actor_id
+    if agente_id is None:
+        flash(_("Elige el agente que se queda con el ticket"), "warning")
+        return redirect(url_for("metricas.cobertura"))
+
+    try:
+        ServicioTickets.tomar_cobertura(ticket_id=ticket_id, agente_id=agente_id, actor_id=actor_id)
+        flash(_("Ticket #%(id)s cubierto correctamente", id=ticket_id), "success")
+    except (TicketNoEncontradoError, CoberturaNoRequeridaError, AgenteDestinoInvalidoError,
+            AgenteYaAsignadoError, ErrorPersistencia) as e:
+        flash(str(e), "danger")
+
+    if request.form.get("origen") == "detalle":
+        return redirect(url_for("tickets.detalle", ticket_id=ticket_id))
+    if rol == RolUsuario.ADMIN:
+        return redirect(url_for("metricas.cobertura"))
     return redirect(url_for("tickets.listar_por_area", area=ticket.categoria.value))
 
 @tickets_bp.route("/tickets/<int:ticket_id>/reasignar", methods=["POST"])
@@ -341,6 +393,12 @@ def detalle(ticket_id):
         puede_calificar=ServicioEncuestas.puede_responder(ticket, usuario.id),
         respuestas=respuestas,
         articulos_sugeridos=articulos_sugeridos,
+        agente_ausente=(ServicioDisponibilidad.esta_ausente(db.session.get(Usuario, ticket.agente_id))
+                        if ticket.agente_id else False),
+        puede_cubrir=(ticket.requiere_cobertura and ServicioPermisos.es_personal(usuario)
+                      and (rol == RolUsuario.ADMIN
+                           or (usuario.area_soporte == ticket.categoria
+                               and ServicioDisponibilidad.esta_disponible(usuario)))),
         limite_adjuntos=MAX_ADJUNTOS_POR_TICKET,
         tamano_maximo=formato_tamano(TAMANO_MAXIMO_BYTES),
         extensiones=",".join("." + e for e in sorted(TIPOS_PERMITIDOS)),
